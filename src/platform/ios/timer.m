@@ -8,25 +8,25 @@
 
 #import <Foundation/Foundation.h>
 
-static void(*_timercb)();
 static NSTimer* _timer1;
 NSTimeInterval _timerInterval;
 
 #define ratio 100.0
 
 @interface GamTimerRecv: NSObject
+@property void(*callback)();
 @end
 
 @implementation GamTimerRecv
 - (void)timerFired
 {
-    if (_timercb) {
-        _timercb();
+    if (_callback) {
+        _callback();
     }
 }
 @end
 
-GamTimerRecv *receiver;
+static GamTimerRecv *receiver;
 
 int gam_timer_interval()
 {
@@ -40,7 +40,7 @@ void gam_timer_init()
 
 void gam_timer_set_callback(void(*cb)())
 {
-    _timercb = cb;
+    receiver.callback = cb;
 }
 
 void gam_timer_open(int interval)
@@ -62,6 +62,25 @@ void gam_timer_close()
         if (_timer1) {
             [_timer1 invalidate];
             _timer1 = nil;
+        }
+    });
+}
+
+
+static NSTimer* timer2;
+static GamTimerRecv *receiver2;
+
+void gam_timer2_open(int interval, void(*callback))
+{
+    receiver2 = [GamTimerRecv new];
+    receiver2.callback = callback;
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (!timer2) {
+            timer2 = [NSTimer scheduledTimerWithTimeInterval:interval / ratio
+                                                       target:receiver2
+                                                     selector:@selector(timerFired)
+                                                     userInfo:nil repeats:YES];
         }
     });
 }

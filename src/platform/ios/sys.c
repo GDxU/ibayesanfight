@@ -13,6 +13,7 @@
 #include "timer.h"
 
 void gam_timer_init();
+void gam_timer2_open(int interval, void(*callback));
 static void(*_lcd_fluch_cb)(char*buffer);
 
 #define SCR_W 160
@@ -21,17 +22,28 @@ static void(*_lcd_fluch_cb)(char*buffer);
 #define CLR 0
 
 static char buffer[SCR_W*SCR_H];
+static char isLcdDirty = 0;
 
 void GamSetLcdFlushCallback(void(*lcd_fluch_cb)(char*buffer))
 {
     _lcd_fluch_cb = lcd_fluch_cb;
 }
 
+static void timed_flush_lcd()
+{
+    static int tick = 0;
+    ++tick;
+    if (tick && isLcdDirty && _lcd_fluch_cb) {
+        _lcd_fluch_cb(buffer);
+        isLcdDirty = 0;
+    }
+}
+
 FAR void logLcd()
 {
     int x, y;
     if (_lcd_fluch_cb) {
-        _lcd_fluch_cb(buffer);
+        isLcdDirty = 1;
     }
     else
     {
@@ -151,6 +163,7 @@ FAR	void	SysMemInit(U16 start,U16 len)
 {
     gam_timer_init();
     gam_timer_set_callback(_timercb);
+    gam_timer2_open(3, timed_flush_lcd);
 }
 
 FAR void SysPicture(U8 sX, U8 sY, U8 eX, U8 eY, U8*pic , U8 flag)
