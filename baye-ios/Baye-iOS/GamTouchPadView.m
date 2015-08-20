@@ -97,17 +97,17 @@
     CGFloat dP = point - *previousStayPoint;
     
     speedMax = pow(speedMax, 3);
-    speedThreshold = pow(speedThreshold, 3);
-    speed = fabs(pow(speed, 3));
-    
+    speed = fabs(speed);
     if (speed > speedThreshold) {
         speed -= speedThreshold;
     }
     else {
         speed = 0;
     }
+    speed = pow(speed, 3);
     speed = MIN(speed, speedMax);
-    step = stepMax - speed / speedMax * (stepMax - stepMin + 1);
+    
+    step = stepMax - speed / speedMax * (stepMax - stepMin);
     
     count = fabs(dP) / step;
     if (count) {
@@ -147,7 +147,7 @@
                       previousStayPoint:&_lastY
                                      dT:dt
                                 stepMax:30
-                                stepMin:2
+                                stepMin:0.3
                                speedMax:2000
                          speedThreshold:800
                                    vkUp:VK_UP
