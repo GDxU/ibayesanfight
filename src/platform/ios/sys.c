@@ -126,7 +126,7 @@ FAR void SysLcdPartClear(U8 x1,U8 y1,U8 x2,U8 y2)
 {
     U8 x, y;
     for (y = y1; y <= y2; y++) {
-        for (x = x1; x < x2; x++) {
+        for (x = x1; x <= x2; x++) {
             int ind = SCR_W * y + x;
             buffer[ind] = CLR;
         }
