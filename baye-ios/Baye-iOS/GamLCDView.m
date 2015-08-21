@@ -34,7 +34,7 @@
                 CGContextSetRGBFillColor(ctx, 0, 0, 0, 1);
             }
             else {
-                CGContextSetRGBFillColor(ctx, 1, 1, 1, 1);
+                CGContextSetRGBFillColor(ctx, 0.8, 0.85, 0.8, 1);
             }
             CGContextFillRect(ctx, CGRectMake(x*ratio, (y)*ratio, ratio, ratio));
         }
