@@ -126,6 +126,11 @@ static void sendKey(int key)
     [[UIApplication sharedApplication] openURL:url];
 }
 
+- (IBAction)sourceAction:(id)sender {
+    NSURL *url = [NSURL URLWithString:@"http://git.oschina.net/loongw/iBaye"];
+    [[UIApplication sharedApplication] openURL:url];
+}
+
 #pragma mark - touchPadDelegate
 - (void)touchPad:(GamTouchPadView *)view raiseKey:(U8)key
 {

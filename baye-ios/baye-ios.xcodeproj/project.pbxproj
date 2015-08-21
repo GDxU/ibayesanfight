@@ -91,7 +91,7 @@
 		1437473D1B7CBC2300939571 /* sem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sem.h; sourceTree = "<group>"; };
 		1437473F1B7CCB5B00939571 /* gui.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gui.c; sourceTree = "<group>"; };
 		143747411B7CCC1300939571 /* sys.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sys.c; sourceTree = "<group>"; };
-		1437474B1B7E67C900939571 /* Baye.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Baye.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1437474B1B7E67C900939571 /* Baye-Mac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Baye-Mac.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1437474E1B7E67C900939571 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1437474F1B7E67C900939571 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		143747501B7E67C900939571 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -244,7 +244,7 @@
 		1444A9421B7B6EFE0085EC83 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1437474B1B7E67C900939571 /* Baye.app */,
+				1437474B1B7E67C900939571 /* Baye-Mac.app */,
 				148718681B7FB0C000AC88EB /* Baye-iOS.app */,
 			);
 			name = Products;
@@ -416,7 +416,7 @@
 			);
 			name = "Baye-Mac";
 			productName = Baye;
-			productReference = 1437474B1B7E67C900939571 /* Baye.app */;
+			productReference = 1437474B1B7E67C900939571 /* Baye-Mac.app */;
 			productType = "com.apple.product-type.application";
 		};
 		148718671B7FB0C000AC88EB /* Baye-iOS */ = {
