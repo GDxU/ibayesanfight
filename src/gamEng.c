@@ -37,7 +37,7 @@ static gam_FILE* sav_fopen(U8*filename, U8 mode)
 /*------------------------------------------*/
 U8 GamVarInit(void);
 void GamVarRst(void);
-void GamMovie(U16 speID);
+U8 GamMovie(U16 speID);
 bool GamMainChose(void);
 void GamMakerInf(void);
 void GamShowErrInf(U8 idx);
@@ -253,7 +253,14 @@ U8 GamPicMenu(U16 picID,U16 speID)
 	PlcRPicShow(picID,1,WK_SX,WK_SY,false);
 	while(1)
 	{
-		GamGetMsg(&pMsg);
+        U8 key = GamMovie(speID + mIdx);
+        if (key == 0 || key == 0xff) {
+            GamGetMsg(&pMsg);
+        }
+        else {
+            pMsg.type = VM_CHAR_FUN;
+            pMsg.param = key;
+        }
 		if(VM_CHAR_FUN == pMsg.type)
 		{
 			switch(pMsg.param)
@@ -274,7 +281,6 @@ U8 GamPicMenu(U16 picID,U16 speID)
 			mIdx = mIdx % 4;
 			PlcRPicShow(picID,1,WK_SX,WK_SY,false);
 		}
-		GamMovie(speID + mIdx);
 	}
 }
 /***********************************************************************
@@ -428,12 +434,12 @@ void GamShowKing(U8 pTop)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
 ***********************************************************************/
-void GamMovie(U16 speID)
+U8 GamMovie(U16 speID)
 {
 	SPERES	*srsptr;
 	
 	srsptr = (SPERES *)ResLoadToCon(speID,1,g_CBnkPtr);
-	PlcMovie(speID,0,srsptr->endfrm,true,WK_SX,WK_SY);
+	return PlcMovie(speID,0,srsptr->endfrm,true,WK_SX,WK_SY);
 }
 /***********************************************************************
  * 说明:     显示出错信息

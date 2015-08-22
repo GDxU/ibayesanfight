@@ -168,7 +168,12 @@ FAR U8 PlcMovie(U16 speid,U8 startfrm,U8 endfrm,U8 keyflag,U8 x,U8 y)
 			clsflag = 0;
 		}
 		else
-			GamDelay(1,false);				/* 延时1%秒 */
+        {
+			U8 key = GamDelay(1, keyflag);				/* 延时1%秒 */
+            if (key && (keyflag & 0x01)) {
+                return key;
+            }
+        }
 		if (spem[mcount] >= 1)
 			spem[mcount] --;
 		while ((spem[mcount] <= 1) && (mcount + startfrm < endfrm))
