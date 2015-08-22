@@ -117,7 +117,7 @@ static void sendKey(int key)
 }
 
 - (IBAction)feedbackAction:(id)sender {
-    NSURL *url = [NSURL URLWithString:@"http://tieba.baidu.com/p/3976788746"];
+    NSURL *url = [NSURL URLWithString:@"http://git.oschina.net/loongw/iBaye"];
     [[UIApplication sharedApplication] openURL:url];
 }
 
