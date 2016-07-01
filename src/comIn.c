@@ -128,7 +128,7 @@ FAR void GamGetMsg(GMType *pMsg)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
 ***********************************************************************/
-FAR U8 GamDelay(U16 dly,bool keyflag)
+FAR U8 GamDelay(U16 dly, BOOL keyflag)
 {
 	U8	tInt;
 	GMType	pMsg;

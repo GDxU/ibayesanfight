@@ -11,7 +11,6 @@
 #include "inc/dictsys.h"
 #include "sem.h"
 
-
 struct QueueNode {
     struct QueueNode* next;
     struct QueueNode* prev;
@@ -20,7 +19,7 @@ struct QueueNode {
 static struct MsgQueue {
     struct QueueNode node;
     GAM_SEM msg_queue_sem;
-    GAM_SEM msg_queue_lck;
+    GAM_LOCK msg_queue_lck;
 }msg_queue;
 
 struct MsgNode {
@@ -28,14 +27,63 @@ struct MsgNode {
     MsgType msg;
 };
 
+#ifdef __EMSCRIPTEN__
+#define MSG_POOL_SIZE 100
+
+static struct MsgNode msg_pool[MSG_POOL_SIZE];
+static int msg_pool_free[MSG_POOL_SIZE];
+static int cur = -1;
+
+struct MsgNode *msg_new(void) {
+    if (cur == -1) {
+        // init the pool indexes
+        for (int i = 0; i < MSG_POOL_SIZE; ++i) {
+            msg_pool_free[i] = i;
+        }
+        cur = 0;
+    } else if (cur == MSG_POOL_SIZE) {
+        return NULL;
+    }
+    struct MsgNode msg = {0};
+    struct MsgNode* new_msg = &msg_pool[msg_pool_free[cur]];
+    *new_msg = msg;
+    cur += 1;
+    return new_msg;
+}
+
+void msg_free(struct MsgNode *msg) {
+    if (msg == NULL) return;
+
+    int ind = msg - msg_pool;
+    cur -= 1;
+    msg_pool_free[cur] = ind;
+}
+
+#else
+
+struct MsgNode *msg_new(void) {
+    return (struct MsgNode *)calloc(1, sizeof(struct MsgNode));
+}
+
+void msg_free(struct MsgNode *msg) {
+    free(msg);
+}
+
+#endif
+
+
+
 static void msg_queue_put(struct MsgQueue*q, MsgType* pMsg)
 {
-    struct MsgNode *node = calloc(1, sizeof(struct MsgNode));
+    struct MsgNode *node = msg_new();
     struct QueueNode *first, *last;
+    if (node == NULL) {
+        return;
+    }
     node->msg = *pMsg;
-    
-    gam_sem_wait(q->msg_queue_lck);
-    
+
+    gam_lock_lock(q->msg_queue_lck);
+
     first = q->node.next;
     last = q->node.prev;
     
@@ -43,42 +91,42 @@ static void msg_queue_put(struct MsgQueue*q, MsgType* pMsg)
     node->node.prev = last;
     node->node.next = &q->node;
     last->next = &node->node;
-    
-    gam_sem_signal(q->msg_queue_lck);
+
+    gam_lock_unlock(q->msg_queue_lck);
     gam_sem_signal(q->msg_queue_sem);
 }
 
 static int msg_queue_get(struct MsgQueue*q, MsgType *msg)
 {
     struct QueueNode *first;
-    
+
     gam_sem_wait(q->msg_queue_sem);
-    
-    gam_sem_wait(q->msg_queue_lck);
+
+    gam_lock_lock(q->msg_queue_lck);
+
     first = q->node.next;
     if (first->next == first) {
-        gam_sem_signal(q->msg_queue_lck);
+        gam_lock_unlock(q->msg_queue_lck);
         return 0;
     }
     first->next->prev = first->prev;
     first->prev->next = first->next;
-    gam_sem_signal(q->msg_queue_lck);
+    gam_lock_unlock(q->msg_queue_lck);
     
     *msg = ((struct MsgNode*)first)->msg;
-    free(first);
+    msg_free((struct MsgNode*)first);
     return 1;
 }
 
 
-U16 GuiGetKbdState()
+U16 GuiGetKbdState(void)
 {
     return 0;
 }
 
 U8 GuiInit(void){
     msg_queue.msg_queue_sem = gam_sem_create();
-    msg_queue.msg_queue_lck = gam_sem_create();
-    gam_sem_signal(msg_queue.msg_queue_lck);
+    msg_queue.msg_queue_lck = gam_lock_create();
     msg_queue.node.prev = &msg_queue.node;
     msg_queue.node.next = &msg_queue.node;
     return 1;
@@ -104,12 +152,10 @@ U8 GuiGetMsg(PtrMsg pMsg)
 
 FAR	U8		GuiMsgBox( U8*  strMsg, U16		nTimeout)
 {
-    printf("GuiMsgBox:%s\n", strMsg);
     return 0;
 }
 
 FAR	U8		GuiQueryBox(U8	sel , U8	infoType , U8	*infoData)
 {
-    printf("GuiQueryBox:%s\n", infoData);
     return 1;
 }

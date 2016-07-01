@@ -42,11 +42,11 @@ static void _shm_init()
     _ORDERQUEUE = malloc(1200);
 }
 
-void FlashInit()
+void FlashInit(void)
 {
     _shm_init();
 }
 
-void ResetFlash()
+void ResetFlash(void)
 {
 }

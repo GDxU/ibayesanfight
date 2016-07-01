@@ -9,7 +9,6 @@
 #ifndef __baye_ios__itoa__
 #define __baye_ios__itoa__
 
-#include <stdio.h>
 char* itoa(int num, char*str, int radix);
 char* ltoa(long num, char*str, int radix);
 

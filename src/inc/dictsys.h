@@ -312,8 +312,8 @@ FAR	void SysYinBiao(U8 x,U8 y,U16 Hz);
 *-----------------------------------------------------------------------------------------*/
 FAR	U8 OpenCursorInit(U8 x, U8 y);
 FAR void CursorInit(U8 width, U8 high);
-FAR U8 OpenCursor();
-FAR U8 CloseCursor();
+FAR U8 OpenCursor(void);
+FAR U8 CloseCursor(void);
 FAR void MoveCursor(U8 x, U8 y);
 FAR	void SysCursorReadParam(U8* ptr);
 FAR	void SysCursorWriteParam(U8* ptr);
@@ -321,9 +321,9 @@ FAR	void SysCursorWriteParam(U8* ptr);
 /*-----------------------------------------------------------------------------------------
 *			时间相关函数
 *-----------------------------------------------------------------------------------------*/
-FAR U8 SysGetSecond();
-FAR U8 SysGetMinute();
-FAR U8 SysGetHour();
+FAR U8 SysGetSecond(void);
+FAR U8 SysGetMinute(void);
+FAR U8 SysGetHour(void);
 FAR	void SysGetDay(U16 *day);
 FAR	void SysSetSecond(U8 sec);
 FAR	void SysSetMinute(U8 min);
@@ -331,8 +331,8 @@ FAR	void SysSetHour(U8 hour);
 FAR	void SysSetDay(U16 day);
 
 FAR void SysTimer1Open(U8 times);
-FAR void SysTimer1Close();
-FAR	U8 SysGetTimer1Number();
+FAR void SysTimer1Close(void);
+FAR	U8 SysGetTimer1Number(void);
 
 /*-----------------------------------------------------------------------------------------
 *			Icon  操作函数
@@ -418,18 +418,18 @@ FAR	void SetAutoOffValue(U8	);
 FAR void SysSetDownAppStartAddr(U32 startaddr);
 FAR void SysGetDownAppStartAddr(U32* startaddr);
 FAR void SysSetKeySound(U8 keySoundFlag);
-FAR U8   SysGetKeySound();
-FAR U8	 SysGetKey();
+FAR U8   SysGetKeySound(void);
+FAR U8	 SysGetKey(void);
 FAR void SysSetVolume(U8 volume);
-FAR U8   SysGetVolume();
+FAR U8   SysGetVolume(void);
 FAR	U8	 SetAutoPowerOffTimeOut(U8);
 FAR U8 	 GetAutoPowerOffTimeOut();
 FAR	void SysLCDVoltage(U8 voltage);		/*voltage: 0 - 63 */
-FAR void OpenAlarm();
-FAR void CloseAlarm();
-FAR	void SysClearKeyBuffer();			/* 清除键盘缓冲区 */
+FAR void OpenAlarm(void);
+FAR void CloseAlarm(void);
+FAR	void SysClearKeyBuffer(void);			/* 清除键盘缓冲区 */
 FAR void	SysPlayMelody(U8 melodyNum);
-FAR	void	SysStopMelody();
+FAR	void	SysStopMelody(void);
 
 /******************************************************************************************
 *						杂类函数
@@ -460,9 +460,9 @@ FAR	U8      GuiPushMsg(PtrMsg pMsg);
 FAR	U8		GuiGetMsg(PtrMsg pMsg);
 FAR	U8		GuiTranslateMsg(PtrMsg	pMsg);		/* 转换扫描码为字符，或从输入法得到汉字等 */
 FAR	U8		GuiInit(void);
-FAR	void	GuiKeyEmuInit();
+FAR	void	GuiKeyEmuInit(void);
 
-FAR	U16		GuiGetKbdState();					/* 取键盘状态 */
+FAR	U16		GuiGetKbdState(void);					/* 取键盘状态 */
 FAR	void	GuiSetKbdState(U16 state);			/* 恢复键盘状态 */
 
 FAR	U8		GuiStartDownApp(void );
@@ -480,9 +480,9 @@ FAR	void	GuiLeavePswCheck();
 #define		ID_GUI_NULL_HELP		0xffff
 FAR	void	GuiHelp(U16		id );
 
-FAR	U8		GuiTimeDjsMsg();			/* 倒计时 */
-FAR	U8		GuiTimeJnrMsg();			/* 纪念日 */
-FAR	void	GuiTimeDayIntRefresh();			/* 天中断刷新 */
+FAR	U8		GuiTimeDjsMsg(void);			/* 倒计时 */
+FAR	U8		GuiTimeJnrMsg(void);			/* 纪念日 */
+FAR	void	GuiTimeDayIntRefresh(void);			/* 天中断刷新 */
 
 FAR	U8		GuiSetKjDisp();				/* 开机显示 */
 FAR	void	GuiHwSelfCheck();			

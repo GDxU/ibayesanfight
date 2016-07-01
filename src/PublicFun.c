@@ -60,7 +60,7 @@ FAR U8 PlcMovie(U16 speid,U8 startfrm,U8 endfrm,U8 keyflag,U8 x,U8 y)
 		gamTraceP(speid);
 		return(0xff);
 	}
-	
+
 	count  = *(srsptr+2);
 	picmax = *(srsptr+3);
 	srsptr+=6;
@@ -448,7 +448,7 @@ FAR void PlcRPicShow(U16 id,U8 idx,U8 x,U8 y,U8 flag)
 	U8	*pic;
 	U8	wid,high,mode;
 	U16	off;
-	
+
 	pic = ResLoadToCon(id,1,g_CBnkPtr);
 	if(NULL == pic)
 		return;

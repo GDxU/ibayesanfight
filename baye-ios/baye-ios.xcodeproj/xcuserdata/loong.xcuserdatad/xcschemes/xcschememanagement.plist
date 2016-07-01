@@ -7,12 +7,17 @@
 		<key>Baye-Mac.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>1</integer>
+			<integer>0</integer>
+		</dict>
+		<key>Baye-iOS copy.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
 		</dict>
 		<key>Baye-iOS.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>3</integer>
+			<integer>1</integer>
 		</dict>
 		<key>baye-ios.xcscheme</key>
 		<dict>
@@ -33,6 +38,11 @@
 			<true/>
 		</dict>
 		<key>1444A9401B7B6EFE0085EC83</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>14585C471D26BF9C00DCE3BA</key>
 		<dict>
 			<key>primary</key>
 			<true/>

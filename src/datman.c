@@ -89,7 +89,6 @@ FAR U8 *ResLoadToCon(U16 ResId,U8 idx,U8 *cbnk)
 	U16	tmp;
 	U32	addr;
 	RCHEAD	*reshead;
-	
 	if(!idx)
 		return (U8 *) NULL;
 	idx-=1;

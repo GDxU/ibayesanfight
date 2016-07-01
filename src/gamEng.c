@@ -69,10 +69,10 @@ FAR void GamBaYeEng(void)
 		GamShowErrInf(0);
 		return;
 	}
-	
+
 	/* 显示游戏开始动画 */
 	GamMovie(MAIN_SPE);
-	
+
 	/* 初始化游戏变量 */
 	if(GamVarInit())
 	{
@@ -90,6 +90,7 @@ FAR void GamBaYeEng(void)
 
 		GameDevDrv();	 	/* 游戏引擎入口程序 */
 	} while (1);
+
 
 	GamVarRst();
 	GamConRst();
@@ -172,7 +173,8 @@ bool GamMainChose(void)
 	
 	while(1)
 	{
-		switch(GamPicMenu(MAIN_PIC,MAIN_ICON1))
+        U8 choice = GamPicMenu(MAIN_PIC,MAIN_ICON1);
+		switch(choice)
 		{
 		case 0:		/* 新君登基 */
 			idx = GamPicMenu(YEAR_PIC,YEAR_ICON1);
@@ -249,7 +251,7 @@ U8 GamPicMenu(U16 picID,U16 speID)
 	U8	mIdx;
 	GMType	pMsg;
 	
-	mIdx = 0;	
+	mIdx = 0;
 	PlcRPicShow(picID,1,WK_SX,WK_SY,false);
 	while(1)
 	{
@@ -437,7 +439,7 @@ void GamShowKing(U8 pTop)
 U8 GamMovie(U16 speID)
 {
 	SPERES	*srsptr;
-	
+
 	srsptr = (SPERES *)ResLoadToCon(speID,1,g_CBnkPtr);
 	return PlcMovie(speID,0,srsptr->endfrm,true,WK_SX,WK_SY);
 }

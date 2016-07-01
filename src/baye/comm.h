@@ -1,6 +1,7 @@
 #ifndef	_COMM_H
 #define	_COMM_H
 
+#define BOOL U8
 /*======================================
   引擎程序相对于环境独立性
 ======================================*/
@@ -91,7 +92,7 @@ typedef	struct {
 FAR	U8	GamConInit(void);						/* 游戏系统环境初始化，根据不同环境调用不同的初始化函数 */
 FAR	void	GamConRst(void);						/* 游戏系统环境恢复，根据不同环境调用不同的恢复函数 */
 FAR	void	GamGetMsg(GMType *pMsg);					/* 封装系统的输入，并将其转换成游戏的消息机制 */
-FAR	U8	GamDelay(U16 dly,bool keyflag);					/* 1%秒延时 */
+FAR	U8	GamDelay(U16 dly, BOOL keyflag);					/* 1%秒延时 */
 FAR	void	GamMsgBox(U8 *buf,U8 delay);					/* 信息框 */
 FAR	void	GamShowFrame(U8 *vscr);						/* 将虚拟屏幕show到屏幕上 */
 FAR	void	GamPicShowS(U8 x,U8 y,U8 wid,U8 hgt,U8 *pic);			/* 显示图片到屏幕 */

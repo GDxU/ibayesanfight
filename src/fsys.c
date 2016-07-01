@@ -19,7 +19,7 @@
 #include "baye/comm.h"
 #include "baye/enghead.h"
 
-struct {
+typedef struct {
 	U8	handle;			/* 文件操作句柄 */
 	U8	ftype;			/* 文件类型 */
 	U8	openmode;		/* 打开方式 */

@@ -3,6 +3,7 @@
 #undef	Debug
 #define	Debug
 #include	"baye/fundec.h"
+#include <stdio.h>
 
 FAR void	gamTraceP(U32	num)
 {

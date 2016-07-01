@@ -29,3 +29,12 @@ void gam_sem_wait(GAM_SEM sem)
 {
     dispatch_semaphore_wait((__bridge dispatch_semaphore_t)sem, DISPATCH_TIME_FOREVER);
 }
+
+GAM_LOCK gam_lock_create() {
+    GAM_LOCK lck = gam_sem_create();
+    gam_lock_unlock(lck);
+    return lck;
+}
+void gam_lock_delete(GAM_LOCK lck) { gam_sem_delete(lck); }
+void gam_lock_lock(GAM_LOCK lck) { gam_sem_wait(lck); }
+void gam_lock_unlock(GAM_LOCK lck) { gam_sem_signal(lck); }

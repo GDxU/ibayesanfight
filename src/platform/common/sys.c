@@ -86,26 +86,28 @@ FAR void logPicture(U8 wid, U8 hgt, U8* pic)
 
 FAR void SysAscii(U8 x,U8 y,U8 asc)
 {
-#warning todo
-    printf("%s:%c\n", __func__, asc);
 }
 
-FAR U8 SysGetKey()
+FAR U8 SysGetKey(void)
 {
     return 0xff;
 }
 
-FAR U8   SysGetKeySound()
+FAR U8   SysGetKeySound(void)
 {
     return 0;
 }
 
-FAR U8 SysGetSecond()
+FAR U8 SysGetSecond(void)
 {
+#ifdef __EMSCRIPTEN__
+    return (U8)0;
+#else
     return (U8)time(0);
+#endif
 }
 
-FAR	U8 SysGetTimer1Number()
+FAR	U8 SysGetTimer1Number(void)
 {
     return (U8)gam_timer_interval();
 }
@@ -148,8 +150,6 @@ FAR void SysLcdReverse(U8 x1,U8 y1,U8 x2,U8 y2)
 
 FAR void SysLine(U8 x1,U8 y1,U8 x2,U8 y2)
 {
-#warning todo
-    printf("%s\n", __func__);
 }
 
 static void _timercb()
@@ -262,10 +262,9 @@ FAR void SysRectClear(U8 x1,U8 y1,U8 x2,U8 y2)
 
 FAR void SysSetKeySound(U8 keySoundFlag)
 {
-    printf("%s\n", __func__);
 }
 
-FAR void SysTimer1Close()
+FAR void SysTimer1Close(void)
 {
     gam_timer_close();
 }

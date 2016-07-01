@@ -8,7 +8,7 @@
 
 // ref: http://baike.baidu.com/link?url=bvt24BXRjzFt3zMMXh8xIItmVdbXikNWtdKV-TMPwJlxq5AlGZUWNuS2a0Ri3AzT8eLnlR9bFjTgQ1lsKAIsPa
 
-#include "itoa.h"
+#include "baye/itoa.h"
 
 char* ltoa(long num, char*str, int radix)
 {/*索引表*/

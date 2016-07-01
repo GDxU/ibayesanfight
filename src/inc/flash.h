@@ -196,7 +196,7 @@ FAR	U8 	FileSeek(U8 filehandle,U32 fileoffset,U8 origin);
 		;-----------------------------------------------------------------------;
 */
 	
-FAR	void	ResetFlash();
+FAR	void	ResetFlash(void);
 
 /*	11.	FileClearDataChip:	
 		;-----------------------------------------------------------------------;
@@ -211,7 +211,7 @@ FAR	void	ResetFlash();
 		; 关机状改下整理数据扇区.						;
 		;-----------------------------------------------------------------------;
 */
-FAR	void	FileClearDataChip();
+FAR	void	FileClearDataChip(void);
 
 /*	12.	FlashInit:
 		;-----------------------------------------------------------------------;
@@ -226,7 +226,7 @@ FAR	void	FileClearDataChip();
 		; 开机时调用.(进入个模块时也可以调用,可避免别的模块的干扰).							;	
 		;-----------------------------------------------------------------------;
 */	
-FAR	void	FlashInit();
+FAR	void	FlashInit(void);
 
 /*	13.	FileTell:
 		;-----------------------------------------------------------------------;
@@ -319,7 +319,7 @@ FAR	U8 	FileSearch(U8 filetype,U16 fileorder,U16 * filename,U8 * information);
 		; 关机状改下整理索引扇区.						;	
 		;-----------------------------------------------------------------------;
 */
-FAR	void 	FileClearIndexChip();
+FAR	void 	FileClearIndexChip(void);
 
 
 
@@ -368,7 +368,7 @@ FAR	U8	FileChangeCardInf(U8 filetype, U16  filename,U8 order, U8 Byte);
 		; 关机下状合并小数据扇区.						;	
 		;-----------------------------------------------------------------------;
 */
-FAR	void	FileSectorUnite();
+FAR	void	FileSectorUnite(void);
 
 /*	23.	FileGetLogAdr:
 		;-----------------------------------------------------------------------;
