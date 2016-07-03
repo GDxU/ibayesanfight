@@ -16,12 +16,14 @@ void gam_timer_init();
 void gam_timer2_open(int interval, void(*callback));
 static void(*_lcd_fluch_cb)(char*buffer);
 
-#define SCR_W 160
-#define SCR_H 96
+#define SCR_W SCR_WID
+#define SCR_H SCR_HGT
+#define BYTES_PERLINE (SCR_LINE * 8)
+
 #define DOT 1
 #define CLR 0
 
-static char buffer[SCR_W*SCR_H];
+static char buffer[WK_BLEN * 8];
 static char isLcdDirty = 0;
 
 void GamSetLcdFlushCallback(void(*lcd_fluch_cb)(char*buffer))
@@ -45,18 +47,17 @@ FAR void logLcd()
     if (_lcd_fluch_cb) {
         isLcdDirty = 1;
     }
-    else
-    {
-        int perLine = SCR_W;
+    else {
+        int perLine = BYTES_PERLINE;
         for (y = 0; y < SCR_H; y++) {
             for (x = 0; x < SCR_W; x++) {
                 bool pixel = buffer[perLine*y + x];
-                printf("%s", pixel ? "  " : "##");
+                printf("%s ", pixel ? "  " : "##");
             }
             printf("\n");
         }
         printf("\n");
-        printf("----------------------------------\n");
+        printf("---------------%dx%d-------------------\n", SCR_W, SCR_H);
         printf("\n");
     }
 }
@@ -129,7 +130,7 @@ FAR void SysLcdPartClear(U8 x1,U8 y1,U8 x2,U8 y2)
     U8 x, y;
     for (y = y1; y <= y2; y++) {
         for (x = x1; x <= x2; x++) {
-            int ind = SCR_W * y + x;
+            int ind = BYTES_PERLINE * y + x;
             buffer[ind] = CLR;
         }
     }
@@ -141,7 +142,7 @@ FAR void SysLcdReverse(U8 x1,U8 y1,U8 x2,U8 y2)
     U8 x, y;
     for (y = y1; y <= y2; y++) {
         for (x = x1; x <= x2; x++) {
-            int ind = SCR_W * y + x;
+            int ind = BYTES_PERLINE * y + x;
             buffer[ind] = !buffer[ind];
         }
     }
@@ -171,8 +172,8 @@ FAR void SysPicture(U8 sX, U8 sY, U8 eX, U8 eY, U8*pic , U8 flag)
     int wid = eX - sX + 1;
     int hgt = eY - sY + 1;
     int x, y, X, Y;
-    int scrPerLine = SCR_W;
-    
+    int scrPerLine = BYTES_PERLINE;
+
     {
         int picPerLine = (wid + 7) / 8;
         for (y = 0; y < hgt; y++) {
@@ -223,7 +224,7 @@ FAR void SysPicture(U8 sX, U8 sY, U8 eX, U8 eY, U8*pic , U8 flag)
 
 FAR void SysPutPixel(U8 x,U8 y,U8 data)
 {
-    int ind = SCR_W * y + x;
+    int ind = BYTES_PERLINE * y + x;
     buffer[ind] = data;
     logLcd();
 }
@@ -233,22 +234,22 @@ FAR void SysRect(U8 x1,U8 y1,U8 x2,U8 y2)
     U8 x, y;
     y = y1;
     for (x = x1; x <= x2; x++) {
-        int ind = SCR_W * y + x;
+        int ind = BYTES_PERLINE * y + x;
         buffer[ind] = DOT;
     }
     y = y2;
     for (x = x1; x <= x2; x++) {
-        int ind = SCR_W * y + x;
+        int ind = BYTES_PERLINE * y + x;
         buffer[ind] = DOT;
     }
     x = x1;
     for (y = y1; y <= y2; y++) {
-        int ind = SCR_W * y + x;
+        int ind = BYTES_PERLINE * y + x;
         buffer[ind] = DOT;
     }
     x = x2;
     for (y = y1; y <= y2; y++) {
-        int ind = SCR_W * y + x;
+        int ind = BYTES_PERLINE * y + x;
         buffer[ind] = DOT;
     }
     logLcd();

@@ -8,8 +8,11 @@
 
 #import "GamLCDView.h"
 
-#define SCREEN_WIDTH 160
-#define SCREEN_HEIGHT 96
+#include "consdef.h"
+
+#define SCR_W SCR_WID
+#define SCR_H SCR_HGT
+#define BYTES_PERLINE (SCR_LINE * 8)
 
 @implementation GamLCDView
 
@@ -23,11 +26,11 @@
     CGContextRef ctx = UIGraphicsGetCurrentContext();
     int ind = 0;
     int x, y;
-    float ratio = self.frame.size.width / SCREEN_WIDTH;
+    float ratio = self.frame.size.width / SCR_W;
     
-    for (y = 0; y < SCREEN_HEIGHT; y++) {
-        for (x = 0; x < SCREEN_WIDTH; x++) {
-            ind = SCREEN_WIDTH*y + x;
+    for (y = 0; y < SCR_H; y++) {
+        for (x = 0; x < SCR_W; x++) {
+            ind = BYTES_PERLINE*y + x;
             int pixel = self.buffer[ind];
             
             if (pixel) {

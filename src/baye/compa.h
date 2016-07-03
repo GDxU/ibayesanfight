@@ -3,6 +3,7 @@
 #include "../inc/dictsys.h"
 #include <stdlib.h>
 #include <string.h>
+#include "consdef.h"
 
 typedef	char bool;
 /*+++++++++++++++

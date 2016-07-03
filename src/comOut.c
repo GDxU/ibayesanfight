@@ -465,7 +465,7 @@ FAR	void	GamePictureDummy(U8 sX,U8 sY,U8 eX,U8 eY,U8* pic,U8* scr,U8 flag)
     int wid = eX - sX + 1;
     int hgt = eY - sY + 1;
     int x, y, X, Y;
-    int scrPerLine = 20;
+    int scrPerLine = SCR_LINE;
     
     {
         int picPerLine = (wid + 7) / 8;

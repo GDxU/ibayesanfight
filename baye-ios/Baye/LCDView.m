@@ -6,7 +6,14 @@
 //
 //
 
+#include "consdef.h"
 #import "LCDView.h"
+
+#include "consdef.h"
+
+#define SCR_W SCR_WID
+#define SCR_H SCR_HGT
+#define BYTES_PERLINE (SCR_LINE * 8)
 
 @implementation LCDView
 
@@ -21,9 +28,9 @@
     float ratio = 2;
     NSColor *color;
     
-    for (y = 0; y < 96; y++) {
-        for (x = 0; x < 160; x++) {
-            ind = 160*y + x;
+    for (y = 0; y < SCR_H; y++) {
+        for (x = 0; x < SCR_W; x++) {
+            ind = BYTES_PERLINE*y + x;
             int pixel = self.buffer[ind];
             
             if (pixel) {
@@ -32,7 +39,7 @@
             else {
                 color = [NSColor whiteColor];
             }
-            [color drawSwatchInRect:NSMakeRect(x*ratio, (95-y)*ratio, ratio, ratio)];
+            [color drawSwatchInRect:NSMakeRect(x*ratio, (SCR_HGT-1-y)*ratio, ratio, ratio)];
         }
     }
 }
