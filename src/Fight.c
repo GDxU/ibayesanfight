@@ -752,6 +752,12 @@ void FgtIntScr(void)
 	FgtSetFocus(0);
 	GamDelay(SHOW_DLYBASE * 10,false);
 }
+
+void FgtShowStateBackground() {
+    gam_clrvscr(STA_SX, STA_SY, STA_EX, STA_EY, g_VisScr);
+	FgtRPicShowV(STATE_PIC,1,STA_SX,STA_SY);
+}
+
 /***********************************************************************
  * 说明:     显示战斗状态
  * 输入参数: 无
@@ -763,7 +769,7 @@ void FgtIntScr(void)
 ***********************************************************************/
 void FgtShowState()
 {
-	FgtRPicShowV(STATE_PIC,1,STA_SX,STA_SY);			/* 显示背景图 */
+    FgtShowStateBackground();			/* 显示背景图 */
 	PlcNumShow(STA_LCX,STA_LCY,g_FgtParam.MProvender,3,g_VisScr);	/* 显示粮草 */
 	FgtRPicShowV(WEATHER_PIC,g_FgtWeather,STA_TQX,STA_TQY);		/* 显示天气 */
 }

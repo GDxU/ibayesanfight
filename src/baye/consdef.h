@@ -24,8 +24,13 @@
 /*------------------------
   界面相关定义
 ------------------------*/
-#define	SCR_WID			180                         /* 屏幕宽度 */
-#define	SCR_HGT			100                         /* 屏幕高度 */
+#ifdef BIG_LCD
+#   define	SCR_WID			(16*14)                 /* 屏幕宽度 */
+#   define	SCR_HGT			(16*9)                  /* 屏幕高度 */
+#else
+#   define	SCR_WID			(16*10)                 /* 屏幕宽度 */
+#   define	SCR_HGT			(16*6)                  /* 屏幕高度 */
+#endif
 #define	WK_SX			0                           /* 游戏工作区坐标 */
 #define	WK_SY			0                           /* 游戏工作区坐标 */
 #define	WK_EX			(SCR_WID - 1)               /* 游戏工作区坐标 */

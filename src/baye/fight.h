@@ -27,14 +27,14 @@
 /*------------------------
   战斗界面相关定义
 ------------------------*/
-#define	SCR_MAPWID		10		/* 屏幕横向地图块个数 */
-#define	SCR_MAPHGT		5		/* 屏幕纵向地图块个数 */
-#define	SHOW_MX			4		/* 当前将领屏幕地图块坐标 */
-#define	SHOW_MY			2		/* 当前将领屏幕地图块坐标 */
+#define	SCR_MAPWID		(SCR_WID/16)            /* 屏幕横向地图块个数 */
+#define	SCR_MAPHGT		(SCR_HGT/16 - 1)		/* 屏幕纵向地图块个数 */
+#define	SHOW_MX			(SCR_MAPWID / 2)        /* 当前将领屏幕地图块坐标 */
+#define	SHOW_MY			(SCR_MAPHGT / 2)        /* 当前将领屏幕地图块坐标 */
 
 /* 战斗特效播放坐标 */
-#define	FGT_SPESX		WK_SX+14	/* (158-130) / 2 */
-#define	FGT_SPESY		WK_SY+10	/* (96-64) / 2 */
+#define	FGT_SPESX		((SCR_WID-130) / 2)
+#define	FGT_SPESY		((SCR_HGT-64) / 2)
 #define	KING_TX			WK_SX + 72
 #define	KING_TY			WK_SY + 4
 #define	KING_SX			WK_SX+16	/* 君主显示坐标 */
