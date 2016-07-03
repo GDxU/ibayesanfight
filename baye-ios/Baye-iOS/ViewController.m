@@ -12,6 +12,7 @@
 
 #include	"inc/dictsys.h"
 #include	"baye/comm.h"
+#include	"baye/consdef.h"
 FAR void GamBaYeEng(void);
 
 
@@ -75,6 +76,15 @@ static void _lcd_flush_cb(char*buffer)
         GamSetLcdFlushCallback(_lcd_flush_cb);
         GamBaYeEng();
     });
+
+    NSLayoutConstraint* constrait = [NSLayoutConstraint constraintWithItem:self.lcdView
+                                                                 attribute:NSLayoutAttributeHeight
+                                                                 relatedBy:NSLayoutRelationEqual
+                                                                    toItem:self.lcdView
+                                                                 attribute:NSLayoutAttributeWidth
+                                                                multiplier:SCR_HGT / (CGFloat)SCR_WID
+                                                                  constant:0];
+    [self.lcdView addConstraint:constrait];
 }
 
 - (void)lcdFlush:(NSNotification*)notification
