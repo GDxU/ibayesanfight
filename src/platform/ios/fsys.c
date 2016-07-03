@@ -19,7 +19,7 @@
 FAR gam_FILE *gam_fopen(const U8 *fname,U8 pmode)
 {
     U8 mode[2] = {pmode};
-    return fopen((char*)fname, (char *)mode);
+    return (gam_FILE *)fopen((char*)fname, (char *)mode);
 }
 /***********************************************************************
  * 说明:     将当前文件系统的文件关闭函数封装为标准的fclose函数
@@ -28,7 +28,7 @@ FAR gam_FILE *gam_fopen(const U8 *fname,U8 pmode)
 ***********************************************************************/
 FAR U8 gam_fclose(gam_FILE *fhandle)
 {
-    return fclose(fhandle);
+    return fclose((FILE*)fhandle);
 }
 /***********************************************************************
  * 说明:     将当前文件系统的文件指针定位函数封装为标准的fseek函数
@@ -37,7 +37,7 @@ FAR U8 gam_fclose(gam_FILE *fhandle)
 ***********************************************************************/
 FAR U8 gam_fseek (gam_FILE *fhandle, U32 offset, U8 fromwhere)
 {
-    return fseek(fhandle, offset, fromwhere);
+    return fseek((FILE*)fhandle, offset, fromwhere);
 }
 /***********************************************************************
  * 说明:     将当前文件系统的文件读取函数封装为标准的fread函数
@@ -46,7 +46,7 @@ FAR U8 gam_fseek (gam_FILE *fhandle, U32 offset, U8 fromwhere)
 ***********************************************************************/
 FAR U32 gam_fread(U8 *buf, U8 size, U16 count, gam_FILE *fhandle)
 {
-    return (U32)fread(buf, size, count, fhandle);
+    return (U32)fread(buf, size, count, (FILE*)fhandle);
 }
 /***********************************************************************
  * 说明:     将当前文件系统的文件写入函数封装为标准的fwrite函数
@@ -55,7 +55,7 @@ FAR U32 gam_fread(U8 *buf, U8 size, U16 count, gam_FILE *fhandle)
 ***********************************************************************/
 FAR U32 gam_fwrite(U8 *buf, U8 size, U16 count, gam_FILE *fhandle)
 {
-    return (U32)fwrite(buf, size, count, fhandle);
+    return (U32)fwrite(buf, size, count, (FILE*)fhandle);
 }
 /***********************************************************************
  * 说明:     将当前文件系统的文件指针查询函数封装为标准的ftell函数
@@ -64,7 +64,7 @@ FAR U32 gam_fwrite(U8 *buf, U8 size, U16 count, gam_FILE *fhandle)
 ***********************************************************************/
 FAR U32 gam_ftell(gam_FILE *fhandle)
 {
-    return (U32)ftell(fhandle);
+    return (U32)ftell((FILE*)fhandle);
 }
 /***********************************************************************
  * 说明:     增强功能函数—按照页面方式将指定地址下的数据载入到常量页
