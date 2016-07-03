@@ -68,7 +68,7 @@ void gam_timer_close()
 
 
 static timer_t timer2 = {
-    1, NULL
+    0, 0, 1, NULL
 };
 
 void gam_timer2_open(int interval, void(*callback))
