@@ -121,7 +121,7 @@ FAR U8 ExchangeMake(U8 city)
 				if (cptr->Money / 5)
 				{
 					exc = GetFood(1,cptr->Money / 5);
-					if (0xffff != exc)
+					if ((U16)0xffff != exc)
 					{
 						cptr->Food += exc;
 						exc *= 5;
@@ -135,7 +135,7 @@ FAR U8 ExchangeMake(U8 city)
 				if (cptr->Food)
 				{
 					exc = GetFood(1,cptr->Food);
-					if (0xffff != exc)
+					if ((U16)0xffff != exc)
 					{
 						cptr->Food -= exc;
 						exc *= 2;
@@ -291,7 +291,7 @@ FAR U8 TransportationMake(U8 city)
 		else if (1 == pcount)
 		{
 			order.Food = GetFood(0,g_Cities[city].Food);
-			if (0xffff == order.Food)
+			if ((U16)0xffff == order.Food)
 				pcount = 0;
 			else
 				pcount = 2;
@@ -299,7 +299,7 @@ FAR U8 TransportationMake(U8 city)
 		else if (2 == pcount)
 		{
 			order.Money = GetMoney(0,g_Cities[city].Money);
-			if (0xffff == order.Money)
+			if ((U16)0xffff == order.Money)
 				pcount = 1;
 			else
 				pcount = 3;
@@ -307,7 +307,7 @@ FAR U8 TransportationMake(U8 city)
 		else if (3 == pcount)
 		{
 			order.Arms = GetArmy(0,g_Cities[city].MothballArms);
-			if (0xffff == order.Arms)
+			if ((U16)0xffff == order.Arms)
 				pcount = 2;
 			else
 				pcount = 4;
@@ -990,7 +990,7 @@ FAR U8 ConscriptionMake(U8 city)
 				}
 				
 				arms = GetArmy(10,arms);
-				if (0xffff != arms)
+				if ((U16)0xffff != arms)
 				{
 					g_Cities[city].MothballArms += arms;
 					OrderConsumeThew(p,CONSCRIPTION);
@@ -1091,7 +1091,7 @@ FAR U8 DistributeMake(U8 city)
 			}
 			
 			armys = GetArmy(0,armys);
-			if (0xffff == armys)
+			if ((U16)0xffff == armys)
 			{
 				pcount = 0;
 			}

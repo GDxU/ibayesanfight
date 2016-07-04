@@ -43,8 +43,14 @@
 *******************************************************************************************/
 
 typedef		unsigned	char		U8;
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+typedef		emscripten_align1_short U16;
+typedef		emscripten_align1_int U32;
+#else
 typedef		unsigned	short		U16;
 typedef		unsigned	int         U32;
+#endif
 
 #define		TRUE		1
 #define		true		1
