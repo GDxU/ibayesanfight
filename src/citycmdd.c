@@ -88,7 +88,7 @@ FAR U8 BattleMake(U8 city)
 		/*gam_clrlcd(WK_SX,WK_SY,WK_EX,WK_EY);*/
 		ShowMapClear();
 		order.Food = GetFood(1,g_Cities[city].Food);
-		if ((U16)0xffff == order.Food)
+		if (0xffff == order.Food)
 		{
 			for (i --;(U8)(i + 1) >= 1;i --)
 			{

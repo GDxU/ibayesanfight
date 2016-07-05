@@ -51,14 +51,18 @@ void gam_timer_set_callback(void(*cb)(void))
     timer1.cb = cb;
 }
 
+static void _timer_open(timer_t* timer) {
+    timer->active = 1;
+    if (!timer->started) {
+        timer->started = 1;
+        schedule_timer(timer);
+    }
+}
+
 void gam_timer_open(int interval)
 {
     timer1.interval = interval;
-    timer1.active = 1;
-    if (!timer1.started) {
-        timer1.started = 1;
-        schedule_timer(&timer1);
-    }
+    _timer_open(&timer1);
 }
 
 void gam_timer_close()
@@ -75,5 +79,5 @@ void gam_timer2_open(int interval, void(*callback))
 {
     timer2.interval = interval;
     timer2.cb = callback;
-    schedule_timer(&timer2);
+    _timer_open(&timer2);
 }

@@ -33,9 +33,7 @@ void GamSetLcdFlushCallback(void(*lcd_fluch_cb)(char*buffer))
 
 static void timed_flush_lcd()
 {
-    static int tick = 0;
-    ++tick;
-    if (tick && isLcdDirty && _lcd_fluch_cb) {
+    if (isLcdDirty && _lcd_fluch_cb) {
         _lcd_fluch_cb(buffer);
         isLcdDirty = 0;
     }
