@@ -763,8 +763,8 @@ FAR void KingOverDeal(U8 king)
 	U8 ccount,pcount,pcode;
 	
 	KingDeadNote(king);
-	cqptr = SHARE_MEM + CITY_MAX;
-	pqptr = SHARE_MEM;
+	cqptr = SHARE_MEM;
+	pqptr = cqptr + CITY_MAX;
 	ccount = GetKingCitys(king,cqptr);
 	if (ccount)
 	{
