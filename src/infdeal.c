@@ -453,7 +453,7 @@ FAR U8 PersonUpDatadate(void)
 		}
 	}
 	
-	
+/*
 	for (c = 0;c < CITY_MAX;c ++)
 	{
 		e = g_Cities[c].PersonQueue + g_Cities[c].Persons;
@@ -472,7 +472,7 @@ FAR U8 PersonUpDatadate(void)
 			}
 		}
 	}
-	
+*/	
 	return(1);
 }
 
