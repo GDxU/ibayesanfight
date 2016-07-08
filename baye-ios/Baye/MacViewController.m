@@ -34,6 +34,11 @@ FAR void GamBaYeEng(void);
 
 @end
 
+@interface ViewController()
+<KeyboardDelegate>
+
+@end
+
 @implementation ViewController
 
 - (void)viewDidLoad {
@@ -120,4 +125,36 @@ static void sendKey(int key)
 - (IBAction)enterAction:(id)sender {
     sendKey(VK_ENTER);
 }
+
+- (void)keyDown:(NSEvent *)theEvent {
+    switch (theEvent.keyCode) {
+        case 123:
+            sendKey(VK_LEFT);
+            break;
+        case 124:
+            sendKey(VK_RIGHT);
+            break;
+        case 125:
+            sendKey(VK_DOWN);
+            break;
+        case 126:
+            sendKey(VK_UP);
+            break;
+        case 36:
+            sendKey(VK_ENTER);
+            break;
+        case 49:
+            sendKey(VK_EXIT);
+            break;
+        case 4:
+            sendKey(VK_HELP);
+            break;
+        case 1:
+            sendKey(VK_SEARCH);
+            break;
+        default:
+            break;
+    }
+}
+
 @end

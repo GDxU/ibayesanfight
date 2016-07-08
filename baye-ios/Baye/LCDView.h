@@ -8,7 +8,16 @@
 
 #import <Cocoa/Cocoa.h>
 
+@protocol KeyboardDelegate <NSObject>
+
+- (void)keyDown:(NSEvent *)theEvent;
+
+
+@end
+
 @interface LCDView : NSView
+
+@property (weak) id<KeyboardDelegate> delegate;
 @property char *buffer;
 
 @end

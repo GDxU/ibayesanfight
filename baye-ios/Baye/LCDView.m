@@ -16,6 +16,14 @@
 #define BYTES_PERLINE (SCR_LINE * 8)
 
 @implementation LCDView
+- (void)keyDown:(NSEvent *)theEvent {
+    [self.delegate keyDown: theEvent];
+    [super keyDown:theEvent];
+}
+
+- (BOOL)acceptsFirstResponder {
+    return YES;
+}
 
 - (void)drawRect:(NSRect)dirtyRect {
     [super drawRect:dirtyRect];
@@ -25,7 +33,7 @@
     }
     int ind = 0;
     int x, y;
-    float ratio = 2;
+    float ratio = 2.5;
     NSColor *color;
     
     for (y = 0; y < SCR_H; y++) {
