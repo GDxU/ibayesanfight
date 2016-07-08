@@ -107,7 +107,8 @@ FAR	void	GamStrShowV(U8 x,U8 y,U8 *str,U8 *vscr);			/* 显示12汉字到虚拟�
 FAR	void	GamePictureDummy(U8 l,U8 t,U8 r,U8 b,U8* p,U8* s,U8 f);		/* 显示图片到虚拟屏幕 */
 
 FAR void GamSetResourcePath(const U8* datPath, const U8*fontPath);
-FAR void GamSetDataDir(U8*dataDir);
+FAR void GamSetAltLibPath(const U8* datPath);
+FAR void GamSetDataDir(const U8*dataDir);
 
 
 #endif	/* _COMM_H */

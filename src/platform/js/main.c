@@ -33,6 +33,7 @@ void sendKey(int key)
 int main(int argc, char*argv[])
 {
     GamSetResourcePath((U8*)"/rom/dat.lib", (U8*)"/rom/font.bin");
+    GamSetAltLibPath((U8*)"/data/dat.lib");
     GamSetDataDir((U8*)"/data/");
     GamSetLcdFlushCallback(_lcd_flush_cb);
     GamBaYeEng();

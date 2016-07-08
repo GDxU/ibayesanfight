@@ -26,6 +26,7 @@
 
 static const U8* fontFilePath = (U8*)GAM_FONT_FNAME;
 static const U8* datFilePath = (U8*)GAM_LIB_FNAME;
+static const U8* altDatFilePath = NULL;
 
 /***********************************************************************
  * 说明:     初始化游戏引擎所在的机型环境
@@ -55,7 +56,17 @@ FAR U8 GamConInit(void)
 	g_FontFp = gam_fopen(fontFilePath,'r');			/*打开字库文件*/
 	if(NULL == g_FontFp)
 		return 1;
-	g_LibFp = gam_fopen(datFilePath,'r');			/*打开资源库文件*/
+
+    if (altDatFilePath) {
+        g_LibFp = gam_fopen(altDatFilePath,'r');			/*打开自定义资源库文件*/
+    }
+
+    if(NULL == g_LibFp) {
+        g_LibFp = gam_fopen(datFilePath,'r');			/*打开资源库文件*/
+    } else {
+        printf("Using custom lib");
+    }
+
 	if(NULL == g_LibFp)
 		return 1;
 	g_CBnkPtr = gam_freadall(g_LibFp);				/*常量页面指针*/
@@ -165,4 +176,9 @@ FAR void GamSetResourcePath(const U8* datPath, const U8*fontPath)
 {
     datFilePath = (U8*)strdup((char*)datPath);
     fontFilePath = (U8*)strdup((char*)fontPath);
+}
+
+FAR void GamSetAltLibPath(const U8* datPath)
+{
+    altDatFilePath = (U8*)strdup((char*)datPath);
 }

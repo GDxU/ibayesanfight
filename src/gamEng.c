@@ -671,7 +671,7 @@ bool GamSaveRcd(U8 idx)
 	return true;	
 }
 
-void GamSetDataDir(U8*dataDir_)
+void GamSetDataDir(const U8*dataDir_)
 {
     dataDir = (U8*)strdup((const char*)dataDir_);
 }
