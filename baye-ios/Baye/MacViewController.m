@@ -58,6 +58,7 @@ FAR void GamBaYeEng(void);
         GamSetResourcePath((U8*)[datPath UTF8String], (U8*)[fontPath UTF8String]);
         GamSetDataDir((U8*)[documentsDir UTF8String]);
         GamBaYeEng();
+        exit(0);
     });
     
     [[NSNotificationCenter defaultCenter] addObserver:self

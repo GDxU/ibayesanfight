@@ -75,6 +75,7 @@ static void _lcd_flush_cb(char*buffer)
         GamSetDataDir((U8*)[documentsDir UTF8String]);
         GamSetLcdFlushCallback(_lcd_flush_cb);
         GamBaYeEng();
+        exit(0);
     });
 
     NSLayoutConstraint* constrait = [NSLayoutConstraint constraintWithItem:self.lcdView

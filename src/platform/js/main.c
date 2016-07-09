@@ -37,5 +37,10 @@ int main(int argc, char*argv[])
     GamSetDataDir((U8*)"/data/");
     GamSetLcdFlushCallback(_lcd_flush_cb);
     GamBaYeEng();
+
+    EM_ASM({
+        window.location.reload();
+    });
+    return 0;
 }
 
