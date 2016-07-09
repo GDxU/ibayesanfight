@@ -42,6 +42,7 @@
 *						系统数据类型定义
 *******************************************************************************************/
 
+typedef		char                    I8;
 typedef		unsigned	char		U8;
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
