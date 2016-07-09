@@ -422,7 +422,7 @@ FAR U8 GoodsUpDatadate(void)
 FAR U8 PersonUpDatadate(void)
 {
 	U8 *pinf;	/* -- 武将信息指针*/
-	U8 c,e,p;
+	U8 c,p;
 	U16 t;
 	
 	if (1 == g_MonthDate)
