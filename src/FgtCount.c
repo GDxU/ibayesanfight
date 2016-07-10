@@ -214,6 +214,20 @@ FAR U16 CountAtkHurt(void)
 const float AtkModulus[] ={1.0,0.8,0.9,0.8,1.3,0.4};	/* 各兵种攻击系数 */
 const float DfModulus[] ={0.7,1.2,1.0,1.1,1.2,0.6};	/* 各兵种防御系数 */
 const float TerrDfModu[] = {1.0,1.0,1.3,1.15,1.1,1.5,1.2,0.8};	/* 各种地形防御系数 */
+
+static U16 calcAt(I8 mModu, U16 at) {
+    if (0 <= mModu && mModu <= 3) {
+        // 兼容原版计算方式
+        return at >> mModu;
+    } else
+    {
+        // 优化计算方式
+        if (mModu > 99) mModu = 99;
+        if (mModu < -99) mModu = -99;
+        return at - (at * (U32)mModu / 100);
+    }
+}
+
 FAR void BuiltAtkAttr(U8 idx,U8 pIdx)
 {
     U8	pGen,pTer;
@@ -243,14 +257,11 @@ FAR void BuiltAtkAttr(U8 idx,U8 pIdx)
 	mptr += pGen * TERRAIN_MAX;
 	mModu = (I8)mptr[pTer];
 
-    if (mModu > 9) mModu = 9;
-    if (mModu < -9) mModu = -9;
-
     U16 at = (U16)((U16)(pTyp->Force) * (pTyp->Level + 10) * AtkModulus[pGen]);
     U16 df = (U16)((U16)(pTyp->IQ) * (pTyp->Level + 10) * DfModulus[pGen]);
 
-	pAtk->at = at - (at * mModu / 10);
-	pAtk->df = df - (df * mModu / 10);
+    pAtk->at = calcAt(mModu, at);
+	pAtk->df = calcAt(mModu, df);
 	pAtk->df *= TerrDfModu[pTer];
 }
 /***********************************************************************

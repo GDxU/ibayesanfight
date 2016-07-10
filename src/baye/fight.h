@@ -234,4 +234,6 @@ typedef	struct {
 #define	FgtGetScrX(tx)		((tx - g_MapSX) << 4) + WK_SX
 #define	FgtGetScrY(ty)		((ty - g_MapSY) << 4) + WK_SY
 
+FAR void setAtCalcMethod(U8 method);
+
 #endif	/* _FIGHT_H */
