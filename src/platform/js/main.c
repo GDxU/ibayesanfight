@@ -39,7 +39,7 @@ int main(int argc, char*argv[])
     GamBaYeEng();
 
     EM_ASM({
-        window.location.reload();
+        goHome();
     });
     return 0;
 }
