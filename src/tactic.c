@@ -1243,6 +1243,14 @@ FAR U16 NumOperate(U16 min,U16 max)
 			case VK_ENTER:
 				return(donum);
 				break;
+			case VK_HELP:
+                if (donum != max) {
+                    donum = max;
+                } else {
+                    donum = min;
+                }
+                showflag = 1;
+				break;
 			case VK_EXIT:
 				return(0xffff);
 			}
