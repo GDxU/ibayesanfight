@@ -50,6 +50,8 @@
 		143747B41B7E68C300939571 /* varma.c in Sources */ = {isa = PBXBuildFile; fileRef = 1444A98C1B7B6F1F0085EC83 /* varma.c */; };
 		143747B51B7E68C300939571 /* itoa.c in Sources */ = {isa = PBXBuildFile; fileRef = 1444A9B01B7BA09C0085EC83 /* itoa.c */; };
 		143747BA1B7E808700939571 /* timer.m in Sources */ = {isa = PBXBuildFile; fileRef = 143747B71B7E7AFB00939571 /* timer.m */; };
+		1455A6011D37B538005780D7 /* config.c in Sources */ = {isa = PBXBuildFile; fileRef = 1455A6001D37B538005780D7 /* config.c */; };
+		1455A6021D37B538005780D7 /* config.c in Sources */ = {isa = PBXBuildFile; fileRef = 1455A6001D37B538005780D7 /* config.c */; };
 		14585C751D26C04F00DCE3BA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 143747521B7E67C900939571 /* main.m */; };
 		14585C761D26CA8700DCE3BA /* gui.c in Sources */ = {isa = PBXBuildFile; fileRef = 142D1CED1D22B82800CA443B /* gui.c */; };
 		14585C771D26CA8A00DCE3BA /* bios.c in Sources */ = {isa = PBXBuildFile; fileRef = 142D1CE41D22A3BA00CA443B /* bios.c */; };
@@ -191,6 +193,7 @@
 		1444A98C1B7B6F1F0085EC83 /* varma.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = varma.c; sourceTree = "<group>"; };
 		1444A9AA1B7B79D10085EC83 /* fsys.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fsys.c; sourceTree = "<group>"; };
 		1444A9B01B7BA09C0085EC83 /* itoa.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = itoa.c; sourceTree = "<group>"; };
+		1455A6001D37B538005780D7 /* config.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = config.c; sourceTree = "<group>"; };
 		14585C731D26BF9C00DCE3BA /* Baye-iOS copy-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Baye-iOS copy-Info.plist"; path = "/Users/loong/l/lab/oc/iBaye/baye-ios/Baye-iOS copy-Info.plist"; sourceTree = "<absolute>"; };
 		148718611B7F821B00AC88EB /* LCDView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCDView.h; sourceTree = "<group>"; };
 		148718621B7F821B00AC88EB /* LCDView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LCDView.m; sourceTree = "<group>"; };
@@ -343,6 +346,7 @@
 				1444A9B01B7BA09C0085EC83 /* itoa.c */,
 				141D69561DA250D6000F772D /* touch.c */,
 				141D69571DA250D6000F772D /* touch.h */,
+				1455A6001D37B538005780D7 /* config.c */,
 			);
 			name = src;
 			path = ../src;
@@ -569,6 +573,7 @@
 				1437478C1B7E68C300939571 /* citycmdd.c in Sources */,
 				1437478D1B7E68C300939571 /* citycmde.c in Sources */,
 				141D694B1D8CD1E9000F772D /* bind-objects.c in Sources */,
+				1455A6011D37B538005780D7 /* config.c in Sources */,
 				1437478E1B7E68C300939571 /* cityedit.c in Sources */,
 				1437478F1B7E68C300939571 /* comIn.c in Sources */,
 				143747901B7E68C300939571 /* comOut.c in Sources */,
@@ -639,6 +644,7 @@
 				148718D51B7FB87D00AC88EB /* varma.c in Sources */,
 				148718D61B7FB87D00AC88EB /* itoa.c in Sources */,
 				141D69551D9EABA6000F772D /* dummy-script.c in Sources */,
+				1455A6021D37B538005780D7 /* config.c in Sources */,
 				148718901B7FB47600AC88EB /* GamLCDView.m in Sources */,
 				148718731B7FB0C000AC88EB /* ViewController.m in Sources */,
 				148718701B7FB0C000AC88EB /* AppDelegate.m in Sources */,

@@ -22,8 +22,7 @@ static void(*_lcd_fluch_cb)(char*buffer);
 
 #define DOT 1
 #define CLR 0
-
-static char buffer[WK_BLEN * 8];
+static char buffer[WK_BLEN_MAX * 8];
 static char isLcdDirty = 0;
 
 void GamSetLcdFlushCallback(void(*lcd_fluch_cb)(char*buffer))

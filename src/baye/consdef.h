@@ -1,5 +1,6 @@
 #ifndef	_CONS_DEF_H
 #define	_CONS_DEF_H
+#include <inc/dictsys.h>
 
 /*======================================
   定义游戏系统的常量
@@ -24,19 +25,18 @@
 /*------------------------
   界面相关定义
 ------------------------*/
-#ifdef BIG_LCD
-#   define	SCR_WID			(16*14)                 /* 屏幕宽度 */
-#   define	SCR_HGT			(16*9)                  /* 屏幕高度 */
-#else
-#   define	SCR_WID			(16*10)                 /* 屏幕宽度 */
-#   define	SCR_HGT			(16*6)                  /* 屏幕高度 */
-#endif
+extern U16 g_screenWidth;
+extern U16 g_screenHeight;
+
+#define	SCR_WID			g_screenWidth               /* 屏幕宽度 */
+#define	SCR_HGT			g_screenHeight              /* 屏幕高度 */
 #define	WK_SX			0                           /* 游戏工作区坐标 */
 #define	WK_SY			0                           /* 游戏工作区坐标 */
 #define	WK_EX			(SCR_WID - 1)               /* 游戏工作区坐标 */
 #define	WK_EY			(SCR_HGT - 1)               /* 游戏工作区坐标 */
 #define	SCR_LINE		((SCR_WID+7)/8)             /* 屏幕每行字节数 */
 #define	WK_BLEN			(SCR_LINE * SCR_HGT)        /* 虚拟屏幕字节长度=(WK_EX-WK_SX)/8*(WK_EY-WK_SY) */
+#define WK_BLEN_MAX     (300*300)
 #define	LINE_BYTES		SCR_LINE                    /* 屏幕每行字节个数 */
 #define	ASC_WID			6		/* Ascii字模宽度 */
 #define	ASC_HGT			12		/* Ascii字模高度 */

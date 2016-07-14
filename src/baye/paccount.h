@@ -73,6 +73,9 @@ typedef struct CitySet
 #define SHOWMAP_WS	((WK_EX-WK_SX+1+1)/CITYMAP_TIL_W-2)	/*屏幕显示地图块数*/
 #define SHOWMAP_HS	((WK_EY-WK_SY+1)/CITYMAP_TIL_H)	/*屏幕显示地图块数*/
 
+#define SHOWMAP_WS_MAX	30	/*屏幕最大支持显示地图块数*/
+#define SHOWMAP_HS_MAX	30	/*屏幕最大支持显示地图块数*/
+
 FAR void InitItem(U8 x0,U8 y0,U8 x1,U8 y1,PosItemType *positem);
 FAR U8 AddItem(U8 wid,U8 hig,PosItemType *positem,U8 *x,U8 *y);
 FAR U8 NextLineItem(PosItemType *positem);
