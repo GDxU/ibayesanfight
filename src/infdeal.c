@@ -395,7 +395,7 @@ FAR U8 GoodsUpDatadate(void)
 	
 	ginf = ResLoadToCon(GOODS_CON,g_PIdx,g_CBnkPtr);
 	
-	for (g = 0,t = 0;g < PERSON_MAX;g ++,t += 3)
+	for (g = 0,t = 0;g < GOODS_MAX;g ++,t += 3)
 	{
 		if (ginf[t] == g_YearDate)
 		{
