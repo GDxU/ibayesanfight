@@ -6,8 +6,7 @@ enum {
     dFgtJNArray,
     /* 各种地形对不同兵种的移动力影响 */
     dFgtLandR,
-    /* 各种地形对不同兵种的战力量影响
-     草地 平原 山地 森林 村庄 城池 营寨 河流 */
+    /* 各种地形对不同兵种的战力量影响 草地 平原 山地 森林 村庄 城池 营寨 河流 */
     dFgtLandF,
     
     /* 战斗初始化坐标 攻击方*8+防守方 */
@@ -16,17 +15,22 @@ enum {
     /* 城市数组 */
     dCityPos,
     
-    /*  */
+    /* 道具属性显示宽度 */
     GOODS_PRO_WID,
+    /* 武将属性显示宽度 */
     PERSON_PRO_WID,
-    /*  */
+    /* 无用数据 */
     DirectP,
     /* 指令消耗体力		任 开 招 搜 治 出 招 处 流 赏 没 交 宴 输 移 离 招 策 反 劝 无 无 无 侦 征 分 掠 出 */
     ConsumeThew,
     /* 指令消耗金钱		 任  开  招  搜  治  出  招  处  流  赏  没  交  宴  输  移  离  招  策  反  劝  无  无  无  侦  征  分  掠  出 */
     ConsumeMoney,
+    /* 君主产生“内政、协调” 策略几率 */
     KingTacticOddsIH,
+    /* 君主产生“外交”、“军备”策略几率 */
     KingTacticOddsD,
+    /* city map */
     C_MAP,
+    /* 城市战斗地图ID */
     dCityMapId
 };
