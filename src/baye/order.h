@@ -2,7 +2,7 @@
 #define ORDER_H
 
 #define ORDER_INTERIOR		1		/*内政指令*/
-/*#define APPOINT			0	任命*/
+#define NOP             0	/*什么也不做*/
 #define ASSART			1	/*开垦*/
 #define ACCRACTBUSINESS		2	/*招商*/
 #define SEARCH			3	/*搜寻*/

@@ -981,9 +981,8 @@ U8 OrderExec(OrderType *Order)
 	switch (Order->OrderId)
 	{
 	/*内政指令*/
-	/*case APPOINT:		任命
-		AppointDrv(Order);
-		break;*/
+	case NOP:
+		break;
 	case ASSART:		/*开垦*/
 		AssartDrv(Order);
 		break;

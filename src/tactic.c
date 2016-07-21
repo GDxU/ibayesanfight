@@ -307,7 +307,7 @@ void ComputerTacticDiplomatism(U8 city)
 			{
 				continue;
 			}
-			order.OrderId = SURRENDER;
+			order.OrderId = NOP;
 			break;
 		case 1:		/*处斩*/
 			/*ecount = GetCityCaptives(city,eqptr);*/
