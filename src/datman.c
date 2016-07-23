@@ -67,6 +67,9 @@ FAR U8 ResLoadToMem(U16 ResId,U8 idx,U8 *ptr)
 	GetResItem(addr,idx,&reshead,&rIdx);
 	addr+=rIdx.offset;
 	plen = rIdx.rlen;
+    if (plen == 0) {
+        return 2;
+    }
 	gam_fseek(g_LibFp,addr,SEEK_SET);
 	gam_fread(ptr,1,plen,g_LibFp);
 	ptr[plen] = 0;
@@ -97,8 +100,9 @@ FAR U8 *ResLoadToCon(U16 ResId,U8 idx,U8 *cbnk)
 		return (U8 *) NULL;
 	ptr=gam_fload(cbnk,addr,g_LibFp);
 	reshead=(RCHEAD	*)ptr;
-	if(reshead->ItmCnt<idx || reshead->ResKey!=0)
+    if(reshead->ItmCnt <= idx || reshead->ResKey!=0) {
 		return (U8 *) NULL;
+    }
 	if(reshead->ItmLen!=0)
 	{
 		ptr+=sizeof(RCHEAD);
@@ -148,7 +152,11 @@ U16 GetResItem(U32 addr,U8 idx,RCHEAD *reshead,RIDX *rIdx)
 {	
 	gam_fseek(g_LibFp,addr,SEEK_SET);
 	gam_fread((U8*)reshead,sizeof(RCHEAD),1,g_LibFp);
-	if(reshead->ItmLen!=0)
+    if ((idx - 1) >= reshead->ItmCnt) {
+        rIdx->offset = 0;
+        rIdx->rlen = 0;
+        return 0;
+    } else if(reshead->ItmLen!=0)
 	{
 		rIdx->offset = idx - 1;
 		rIdx->offset *= reshead->ItmLen;
@@ -186,5 +194,9 @@ U32 GetResStartAddr(U16 id)
 	/* 获取资源索引（实际就是资源存储的数据地址）*/
 	gam_fseek(g_LibFp,addr,SEEK_SET);
 	gam_fread((U8*)&addr,4,1,g_LibFp);
+
+    if (addr == (U32)-1) {
+        addr = 0;
+    }
 	return addr;
 }

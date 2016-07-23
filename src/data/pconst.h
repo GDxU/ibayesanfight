@@ -32,5 +32,21 @@ enum {
     /* city map */
     C_MAP,
     /* 城市战斗地图ID */
-    dCityMapId
+    dCityMapId,
+
+    /* 引擎参数配置 */
+    dEngineConfig,
+
+    /*兵种移动力*/
+    dFgtIntMove,
+
+    /*相克系数*/
+    dSubduModu,
+
+    /*各兵种攻击系数*/
+    dAtkModulus,
+    /*各兵种防御系数*/
+    dDfModulus,
+    /*各地形防御系数*/
+    dTerrDfModu,
 };

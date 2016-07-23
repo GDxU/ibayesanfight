@@ -48,6 +48,7 @@ U8 GamPicMenu(U16 picID,U16 speID);
 void GamRcdIFace(void);
 bool GamSaveRcd(U8 idx);
 bool GamLoadRcd(U8 idx);
+void GamLoadEngineConfig(void);
 
 #define	DBG_MEM_AFTER	0
 #define	DBG_MEM_BEFURE	1
@@ -69,6 +70,9 @@ FAR void GamBaYeEng(void)
 		GamShowErrInf(0);
 		return;
 	}
+
+	/* 从lib读取引擎参数 */
+    GamLoadEngineConfig();
 
 	/* 显示游戏开始动画 */
 	GamMovie(MAIN_SPE);
@@ -673,4 +677,15 @@ bool GamSaveRcd(U8 idx)
 void GamSetDataDir(const U8*dataDir_)
 {
     dataDir = (U8*)strdup((const char*)dataDir_);
+}
+
+
+EngineConfig g_engineConfig = {
+    0
+};
+
+void GamLoadEngineConfig(void) {
+    ResLoadToMem(IFACE_CONID, dEngineConfig, (U8*)&g_engineConfig);
+    FgtLoadConsts();   /* 初始化战斗参数 */
+
 }

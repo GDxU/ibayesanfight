@@ -151,7 +151,7 @@ void CountBaseAttr(U8 i)
  *             高国军          2005.5.16       完成基本功能
 ***********************************************************************/
 /* 兵种起始移动力 */
-const U8 FgtIntMove[6]={MOV_QIBING,MOV_BUBING,MOV_GOBING,MOV_SHUIJUN,MOV_JIBING,MOV_XUANBING};
+static U8 FgtIntMove[6]={MOV_QIBING,MOV_BUBING,MOV_GOBING,MOV_SHUIJUN,MOV_JIBING,MOV_XUANBING};
 FAR void CountMoveP(U8 i)
 {
 	U8	lp,arm;
@@ -189,7 +189,7 @@ FAR void CountMoveP(U8 i)
  *             高国军          2005.5.16       完成基本功能
 ***********************************************************************/
 /* 相克系数 */
-const float SubduModu[ARMTYP_NUM][ARMTYP_NUM] = {
+static float SubduModu[ARMTYP_NUM][ARMTYP_NUM] = {
 	{1.0,1.2,0.8,1.0,0.7,1.3},{0.8,1.0,1.2,1.0,0.6,1.2},{1.2,0.8,1.0,1.0,1.1,1.2},
 	{1.0,1.0,1.0,1.0,1.0,1.0},{1.1,1.3,0.9,1.0,1.0,1.5},{0.6,0.6,0.6,0.6,0.6,0.6}};
 FAR U16 CountAtkHurt(void)
@@ -211,9 +211,9 @@ FAR U16 CountAtkHurt(void)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
 ***********************************************************************/
-const float AtkModulus[] ={1.0,0.8,0.9,0.8,1.3,0.4};	/* 各兵种攻击系数 */
-const float DfModulus[] ={0.7,1.2,1.0,1.1,1.2,0.6};	/* 各兵种防御系数 */
-const float TerrDfModu[] = {1.0,1.0,1.3,1.15,1.1,1.5,1.2,0.8};	/* 各种地形防御系数 */
+static float AtkModulus[] ={1.0,0.8,0.9,0.8,1.3,0.4};	/* 各兵种攻击系数 */
+static float DfModulus[] ={0.7,1.2,1.0,1.1,1.2,0.6};	/* 各兵种防御系数 */
+static float TerrDfModu[] = {1.0,1.0,1.3,1.15,1.1,1.5,1.2,0.8};	/* 各种地形防御系数 */
 
 static U16 calcAt(I8 mModu, U16 at) {
     if (0 <= mModu && mModu <= 3) {
@@ -758,4 +758,12 @@ void FgtUnfurlTree(U8 idx,U8 *buf,U8 *len)
 		}
 	}
 	*len = plen;
+}
+
+FAR void FgtLoadConsts(void) {
+    ResLoadToMem(IFACE_CONID, dFgtIntMove, FgtIntMove);
+    ResLoadToMem(IFACE_CONID, dSubduModu, (U8*)SubduModu);
+    ResLoadToMem(IFACE_CONID, dAtkModulus, (U8*)AtkModulus);
+    ResLoadToMem(IFACE_CONID, dDfModulus, (U8*)DfModulus);
+    ResLoadToMem(IFACE_CONID, dTerrDfModu, (U8*)TerrDfModu);
 }

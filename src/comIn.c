@@ -88,7 +88,7 @@ FAR U8 GamConInit(void)
     g_VisScr = VS_PTR;
     g_BVisScr = BVS_PTR;
 	gam_memset(g_VisScr,0,WK_BLEN);
-	
+
 	return 0;
 }
 /***********************************************************************

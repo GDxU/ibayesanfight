@@ -201,4 +201,11 @@ typedef struct City				/*城市属性(30 Bytes)*/
 	U8 Tools;			/*道具数*/
 }CityType;
 
+
+typedef struct {
+    U8 fixCityOffset;
+} EngineConfig;
+
+extern EngineConfig g_engineConfig;
+
 #endif

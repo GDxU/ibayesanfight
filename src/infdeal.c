@@ -445,6 +445,10 @@ FAR U8 PersonUpDatadate(void)
 			{
 				c = gam_rand() % CITY_MAX;
 			}
+
+            if (g_engineConfig.fixCityOffset) {
+                c -= 1;
+            }
 				
 			if (!AddPerson(c,p))
 				return(0);
