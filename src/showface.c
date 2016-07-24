@@ -65,7 +65,7 @@ void ShowGoodsPro(U8 goods,U8 pro,U8 x,U8 y,U8 wid)
 		return;
 	}
 	
-	ResLoadToMem(IFACE_CONID,GOODS_PRO_WID,ptr);
+	ResItemGet(IFACE_CONID,GOODS_PRO_WID,ptr);
 	for (i = pro;i < 5;i ++)
 	{
 		if (AddItem(ASC_WID * ptr[i] + 1,ASC_HGT,&positem,&sx,&sy))
@@ -181,7 +181,7 @@ U8 ShowGoodsProStr(U8 pro,U8 x,U8 y,U8 wid)
 		return(0);
 	}
 	
-	ResLoadToMem(IFACE_CONID,GOODS_PRO_WID,ptr);
+	ResItemGet(IFACE_CONID,GOODS_PRO_WID,ptr);
 	for (i = pro;i < 5;i ++)
 	{
 		if (AddItem(ASC_WID * ptr[i] + 1,ASC_HGT,&positem,&sx,&sy))
@@ -586,7 +586,7 @@ U8 ShowPersonProStr(U8 pro,U8 x,U8 y,U8 wid)
 		return(0);
 	}
 	
-	ResLoadToMem(IFACE_CONID,PERSON_PRO_WID,ptr);
+	ResItemGet(IFACE_CONID,PERSON_PRO_WID,ptr);
 	for (i = pro;i < 13;i ++)
 	{
 		if (AddItem(ASC_WID * ptr[i] + 1,ASC_HGT,&positem,&sx,&sy))

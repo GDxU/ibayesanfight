@@ -761,9 +761,9 @@ void FgtUnfurlTree(U8 idx,U8 *buf,U8 *len)
 }
 
 FAR void FgtLoadConsts(void) {
-    ResLoadToMem(IFACE_CONID, dFgtIntMove, FgtIntMove);
-    ResLoadToMem(IFACE_CONID, dSubduModu, (U8*)SubduModu);
-    ResLoadToMem(IFACE_CONID, dAtkModulus, (U8*)AtkModulus);
-    ResLoadToMem(IFACE_CONID, dDfModulus, (U8*)DfModulus);
-    ResLoadToMem(IFACE_CONID, dTerrDfModu, (U8*)TerrDfModu);
+    ResItemGet(IFACE_CONID, dFgtIntMove, FgtIntMove);
+    ResItemGet(IFACE_CONID, dSubduModu, (U8*)SubduModu);
+    ResItemGet(IFACE_CONID, dAtkModulus, (U8*)AtkModulus);
+    ResItemGet(IFACE_CONID, dDfModulus, (U8*)DfModulus);
+    ResItemGet(IFACE_CONID, dTerrDfModu, (U8*)TerrDfModu);
 }

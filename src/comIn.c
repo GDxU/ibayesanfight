@@ -64,7 +64,7 @@ FAR U8 GamConInit(void)
     if(NULL == g_LibFp) {
         g_LibFp = gam_fopen(datFilePath,'r');			/*打开资源库文件*/
     } else {
-        printf("Using custom lib");
+        printf("Using custom lib\n");
     }
 
 	if(NULL == g_LibFp)

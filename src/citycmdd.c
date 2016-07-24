@@ -189,7 +189,7 @@ FAR U8 BattleDrv(OrderType *Order)
 	ob = g_Cities[o].Belong;
 	pb = g_Persons[fpptr[0] - 1].Belong;
 	
-	ResLoadToMem(IFACE_CONID,dCityMapId,midx);
+	ResItemGet(IFACE_CONID,dCityMapId,midx);
 	g_FgtParam.MapId = FIGHT_MAP + midx[o];
 	g_FgtParam.Way = GetDirect(o,Order->City);
 	do

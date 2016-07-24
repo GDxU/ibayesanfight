@@ -44,6 +44,30 @@ FAR U16 ResGetItemLen(U16 ResId,U8 idx)
 		return 0;
 	return GetResItem(addr,idx,&reshead,&rIdx);
 }
+
+FAR U8 ResItemGet(U16 ResId,U8 idx,U8 *ptr)
+{
+	U16	plen;
+	U32	addr;	
+	RIDX	rIdx;
+	RCHEAD	reshead;	
+
+	addr=GetResStartAddr(ResId);
+	if(addr==0)
+		return 1;
+	GetResItem(addr,idx,&reshead,&rIdx);
+	addr+=rIdx.offset;
+	plen = rIdx.rlen;
+    if (plen == 0) {
+        return 2;
+    }
+	gam_fseek(g_LibFp,addr,SEEK_SET);
+	gam_fread(ptr,1,plen,g_LibFp);
+	if(reshead.ResKey)
+		ExpDataWithKey(ptr,reshead.ResKey,plen);
+	return 0;
+}
+
 /***********************************************************************
  * 说明:     将指定的资源载入到内存中
  * 输入参数: ResId-资源id	idx-目标在资源队列中的序号
@@ -77,6 +101,7 @@ FAR U8 ResLoadToMem(U16 ResId,U8 idx,U8 *ptr)
 		ExpDataWithKey(ptr,reshead.ResKey,plen);
 	return 0;
 }
+
 /***********************************************************************
  * 说明:     将指定的资源载入到常量页面（没有常量页的系统用堆来模拟）
  * 输入参数: ResId-资源id		idx-目标在资源队列中的序号
