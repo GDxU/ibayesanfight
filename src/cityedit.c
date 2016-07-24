@@ -163,7 +163,7 @@ FAR U8 AddGoods(U8 city,U8 goods)
 		g_Cities[i].ToolQueue += 1;
 	}
 	
-	return(1);
+	return(qnum + 1);
 }
 
 /******************************************************************************

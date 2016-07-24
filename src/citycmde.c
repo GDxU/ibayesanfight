@@ -101,8 +101,8 @@ FAR U8 ConfiscateMake(U8 city)
 						else
 							g_Persons[p].Devotion -= 20;
 					}
-					AddGoods(city,gq[g]);
-					SetGoods(gq[g]);
+					U8 index = AddGoods(city,gq[g]);
+					SetGoodsByIndex(index - 1);
 					DelGoodsPerson(gq[g],p);
 					gptr[g] = 0;
 				}

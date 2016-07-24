@@ -168,6 +168,7 @@ INFDEAL_C void ShowConstStrMsg(U8 idx);
 INFDEAL_C void ShowPersonHead(U8 x,U8 y,U8 id);
 INFDEAL_C void ShowGReport(U8 person,U8 *str);
 INFDEAL_C void SetGoods(U8 goods);
+INFDEAL_C void SetGoodsByIndex(U8 goods);
 INFDEAL_C U8 GetCityPGoods(U8 city,U8 *gqueue);
 INFDEAL_C U8 GetCityDispGoods(U8 city,U8 *gqueue);
 INFDEAL_C U8 GetPersonsCount(U8 king);

@@ -968,13 +968,13 @@ FAR U8 KillMake(U8 city)
 		gptr = g_Persons[pqptr[pcode]].Equip;
 		if (gptr[0])
 		{
-			AddGoods(city,gptr[0] - 1);
-			SetGoods(gptr[0] - 1);
+			U16 index = AddGoods(city,gptr[0] - 1);
+			SetGoodsByIndex(index - 1);
 		}
 		if (gptr[1])
 		{
-			AddGoods(city,gptr[1] - 1);
-			SetGoods(gptr[1] - 1);
+			U16 index = AddGoods(city,gptr[1] - 1);
+			SetGoodsByIndex(index-1);
 		}
 		str = SHARE_MEM + 300;
 		ResLoadToMem(STRING_CONST,P_SAY_STR4 + (gam_rand() % 3),str);

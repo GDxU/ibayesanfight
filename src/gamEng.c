@@ -540,7 +540,13 @@ void GamRcdIFace(void)
 			ResLoadToMem(IFACE_STRID,dNullFNam,fnam);	/* fnam = "空" */
 		else
 		{
-			gam_fread((U8 *)&g_PIdx,1,1,fp);
+            U8 verFlag;
+            gam_fread((U8 *)&verFlag,1,1,fp);
+            if (verFlag & 0x80) {
+                gam_fread((U8 *)&g_PIdx,1,1,fp);
+            } else {
+                g_PIdx = verFlag;
+            }
 			gam_fread((U8 *)&king,1,1,fp);
 			gam_fread((U8 *)&year,1,2,fp);
 			gam_fclose(fp);

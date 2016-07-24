@@ -679,12 +679,32 @@ FAR void SetGoods(U8 goods)
 	qc = g_Cities[CITY_MAX - 1].ToolQueue + g_Cities[CITY_MAX - 1].Tools;
 	for (i = 0;i < qc;i ++)
 	{
-		if ((g_GoodsQueue[i] & 0x7f) == goods)
+		if ((g_GoodsQueue[i] & 0x7f) == goods && !(g_GoodsQueue[i] & 0x80))
 		{
 			g_GoodsQueue[i] |= 0x80;
 			break;
 		}
 	}
+}
+
+/******************************************************************************
+* 函数名:SetGoodsByIndex
+* 说  明:设定指定道具为已发现道具
+*
+* 入口参数：指定道具队列索引
+*
+* 出口参数：无
+*
+* 修改历史:
+*		姓名		日期			说明
+*		----		----			-----------
+*		陈泽伟		2005-8-19 11:22	基本功能完成
+******************************************************************************/
+FAR void SetGoodsByIndex(U8 index) {
+
+    if (index == 0xff) return;
+
+    g_GoodsQueue[index] |= 0x80;
 }
 
 
