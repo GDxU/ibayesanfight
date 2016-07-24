@@ -569,7 +569,8 @@ bool GamLoadRcd(U8 idx)
 {
 	U8	tbuf[20];
 	gam_FILE	*fp;
-	
+    U8 verFlag = 0;
+
 	ResLoadToMem(IFACE_STRID,dReading,tbuf);
 	GamMsgBox(tbuf,0);
 	ResLoadToMem(IFACE_STRID,dSaveFNam,tbuf);
@@ -583,7 +584,17 @@ bool GamLoadRcd(U8 idx)
 		GamMsgBox(tbuf,2);
 		return false;
 	}
-	gam_fread((U8 *)&g_PIdx,1,1,fp);
+
+	gam_fread((U8 *)&verFlag,1,1,fp);
+
+    U16 goodsQueueLen;
+    if (verFlag & 0x80) {
+        goodsQueueLen = GOODS_MAX;
+        gam_fread((U8 *)&g_PIdx,1,1,fp);
+    } else {// 旧版
+        goodsQueueLen = 33;
+        g_PIdx = verFlag;
+    }
 	gam_fread((U8 *)&g_PlayerKing,1,1,fp);
 	gam_fread((U8 *)&g_YearDate,2,1,fp);
 	gam_fread((U8 *)&g_LookEnemy,1,1,fp);
@@ -593,7 +604,7 @@ bool GamLoadRcd(U8 idx)
 	gam_fread((U8 *)&g_CityPos,sizeof(CitySetType),1,fp);
 	gam_fread((U8 *)g_Persons,sizeof(PersonType),PERSON_MAX,fp);
 	gam_fread((U8 *)g_PersonsQueue,1,PERSON_MAX,fp);
-	gam_fread((U8 *)g_GoodsQueue,1,GOODS_MAX,fp);
+    gam_fread((U8 *)g_GoodsQueue,1,goodsQueueLen,fp);
 	gam_fclose(fp);
 
 	/* 读取第二个文件 */
@@ -642,6 +653,9 @@ bool GamSaveRcd(U8 idx)
 		GamMsgBox(tbuf,2);
 		return false;
 	}
+    
+    U8 verFlag = 0x80;
+	gam_fwrite((U8 *)&verFlag,1,1,fp);
 	gam_fwrite((U8 *)&g_PIdx,1,1,fp);
 	gam_fwrite((U8 *)&g_PlayerKing,1,1,fp);
 	gam_fwrite((U8 *)&g_YearDate,2,1,fp);

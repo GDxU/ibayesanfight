@@ -3,7 +3,7 @@
 
 #define PERSON_MAX		200	/*最大武将数*/
 #define CITY_MAX		38	/*最大城市数*/
-#define GOODS_MAX		33	/*最大道具数*/
+#define GOODS_MAX		200	/*最大道具数*/
 #define PERSON_DEATH_AGE	90	/*武将寿命*/
 #define PERSON_APPEAR_AGE	16	/*武将出现年龄*/
 

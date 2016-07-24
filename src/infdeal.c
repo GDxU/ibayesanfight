@@ -392,10 +392,10 @@ FAR U8 GoodsUpDatadate(void)
 	U8 *ginf;	/* -- 道具信息指针*/
 	U8 g;
 	U16 t;
-	
+    U16 l = ResGetItemLen(GOODS_CON, g_PIdx);
 	ginf = ResLoadToCon(GOODS_CON,g_PIdx,g_CBnkPtr);
 	
-	for (g = 0,t = 0;g < GOODS_MAX;g ++,t += 3)
+	for (g = 0,t = 0;t < l;g ++,t += 3)
 	{
 		if (ginf[t] == g_YearDate)
 		{

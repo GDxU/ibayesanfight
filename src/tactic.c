@@ -1043,10 +1043,11 @@ U8* loadPerson(PersonType*person, U8*raw)
     return raw;
 }
 
-U8* loadPersons(PersonType*person, U8*raw)
+U8* loadPersons(PersonType*person, U8*raw, U16 length)
 {
     int i;
-    for (i = 0; i < PERSON_MAX; i++) {
+    U16 pcount = length/sizeof(PersonType);
+    for (i = 0; i < pcount; i++) {
         raw = loadPerson(person+i, raw);
     }
     return raw;
@@ -1060,16 +1061,14 @@ void LoadPeriod(U8 period)
 	ptr = ResLoadToCon(CITY_RESID,period,g_CBnkPtr);
     ptr = loadCities(g_Cities, ptr);
 	g_YearDate = *((U16 *) ptr);
-	
+
+    U16 length = ResGetItemLen(GENERAL_RESID, period);
 	ptr = ResLoadToCon(GENERAL_RESID,period,g_CBnkPtr);
-    loadPersons(g_Persons, ptr);
+    loadPersons(g_Persons, ptr, length);
 	
-	ptr = ResLoadToCon(GENERAL_QUEUE,period,g_CBnkPtr);
-	gam_memcpy(g_PersonsQueue,ptr,PERSON_MAX);
-	
-	ptr = ResLoadToCon(GOODS_QUEUE,period,g_CBnkPtr);
-	gam_memcpy(g_GoodsQueue,ptr,GOODS_MAX);
-	
+    ResLoadToMem(GENERAL_QUEUE, period, g_PersonsQueue);
+    ResLoadToMem(GOODS_QUEUE, period, g_GoodsQueue);
+
 	gam_memset(FIGHTERS_IDX,0,FIGHT_ORDER_MAX);
 	gam_memset((U8 *)ORDERQUEUE,0xff,(U16)ORDER_MAX * sizeof(OrderType));
 	
