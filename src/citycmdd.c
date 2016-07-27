@@ -970,6 +970,7 @@ FAR U8 AddOrderHead(OrderType *Order)
 			return(0);
 		}
 	}
+    GamMsgBox((U8*)"Error: Order queue is full", 5);
 	
 	/*OrderQueueType *orderadd;
 	orderadd = (OrderQueueType *) gam_malloc(sizeof(OrderQueueType));
