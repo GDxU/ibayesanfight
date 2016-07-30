@@ -253,8 +253,9 @@ void ComputerTacticInterior(U8 city)
 		order.City = city;
 		order.Object = city;
 		order.TimeCount = 0;
-		AddOrderHead(&order);
-		DelPerson(city,pqptr[i]);
+        if (AddOrderHead(&order)) {
+            DelPerson(city,pqptr[i]);
+        }
 	}
 }
 
@@ -390,8 +391,9 @@ void ComputerTacticDiplomatism(U8 city)
 		order.Person = pqptr[i];
 		order.City = city;
 		order.TimeCount = 0;
-		AddOrderHead(&order);
-		DelPerson(city,pqptr[i]);
+        if (AddOrderHead(&order)) {
+            DelPerson(city,pqptr[i]);
+        }
 	}
 }
 
@@ -481,8 +483,9 @@ void ComputerTacticHarmonize(U8 city)
 		order.Person = pqptr[i];
 		order.City = city;
 		order.TimeCount = 0;
-		AddOrderHead(&order);
-		DelPerson(city,pqptr[i]);
+        if (AddOrderHead(&order)) {
+            DelPerson(city,pqptr[i]);
+        }
 	}
 }
 
@@ -617,14 +620,18 @@ void ComputerTacticArmament(U8 city)
 					}
 					for (j = 0;j < fpcount;j ++)
 					{
-						DelPerson(city,cqptr[j]);
 						fp[j] = cqptr[j] + 1;
 					}
 					/*order.Person = fpcount;*/
 					order.City = city;
 					order.Food = g_Cities[city].Food;
 					order.TimeCount = 0;
-					AddFightOrder(&order,fp);
+                    if (AddFightOrder(&order,fp)) {
+                        for (j = 0;j < fpcount;j ++)
+                        {
+                            DelPerson(city,cqptr[j]);
+                        }
+                    }
 					return;
 				}
 			}
@@ -638,8 +645,9 @@ void ComputerTacticArmament(U8 city)
 		order.Person = pqptr[i];
 		order.City = city;
 		order.TimeCount = 0;
-		AddOrderHead(&order);
-		DelPerson(city,pqptr[i]);
+        if (AddOrderHead(&order)) {
+            DelPerson(city,pqptr[i]);
+        }
 	}
 }
 

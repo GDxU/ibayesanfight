@@ -151,8 +151,9 @@ FAR U8 ExchangeMake(U8 city)
 			order.Person = p;
 			order.City = city;
 			order.TimeCount = 0;
-			AddOrderHead(&order);
-			DelPerson(city,p);
+            if (AddOrderHead(&order)) {
+                DelPerson(city,p);
+            }
 		}
 		break;
 	} while (1);
@@ -358,8 +359,9 @@ FAR U8 TransportationMake(U8 city)
 					order.City = city;
 					order.Object = ocity;
 					order.TimeCount = odis;
-					AddOrderHead(&order);
-					DelPerson(city,p);
+                    if (AddOrderHead(&order)) {
+                        DelPerson(city,p);
+                    }
 					break;
 				}
 				else
@@ -466,8 +468,9 @@ FAR U8 MoveMake(U8 city)
 					order.City = city;
 					order.Object = ocity;
 					order.TimeCount = odis;
-					AddOrderHead(&order);
-					DelPerson(city,p);
+                    if (AddOrderHead(&order)) {
+                        DelPerson(city,p);
+                    }
 					break;
 				}
 				else
@@ -542,8 +545,9 @@ FAR U8 AlienateMake(U8 city)
 				order.City = city;
 				order.Object = pqptr[pcode];
 				order.TimeCount = 10;
-				AddOrderHead(&order);
-				DelPerson(city,pp);
+                if (AddOrderHead(&order)) {
+                    DelPerson(city,pp);
+                }
 			}
 			else
 			{
@@ -617,8 +621,9 @@ FAR U8 CanvassMake(U8 city)
 				order.City = city;
 				order.Object = pqptr[pcode];
 				order.TimeCount = 10;
-				AddOrderHead(&order);
-				DelPerson(city,pp);
+                if (AddOrderHead(&order)) {
+                    DelPerson(city,pp);
+                }
 			}
 			else
 			{
@@ -698,8 +703,9 @@ FAR U8 CounterespiongeMake(U8 city)
 				order.City = city;
 				order.Object = pqptr[pcode];
 				order.TimeCount = 10;
-				AddOrderHead(&order);
-				DelPerson(city,pp);
+                if (AddOrderHead(&order)) {
+                    DelPerson(city,pp);
+                }
 			}
 			else
 			{
@@ -790,8 +796,9 @@ FAR U8 InduceMake(U8 city)
 				order.City = city;
 				order.Object = pqptr[pcode];
 				order.TimeCount = 10;
-				AddOrderHead(&order);
-				DelPerson(city,pp);
+                if (AddOrderHead(&order)) {
+                    DelPerson(city,pp);
+                }
 			}
 			else
 			{
@@ -913,8 +920,9 @@ FAR U8 ReconnoitreMake(U8 city)
 					order.City = city;
 					order.Object = ocity;
 					order.TimeCount = 1;
-					AddOrderHead(&order);
-					DelPerson(city,p);
+                    if (AddOrderHead(&order)) {
+                        DelPerson(city,p);
+                    }
 					break;
 				}
 			}
@@ -1002,8 +1010,9 @@ FAR U8 ConscriptionMake(U8 city)
 					order.Person = p;
 					order.City = city;
 					order.TimeCount = 0;
-					AddOrderHead(&order);
-					DelPerson(city,p);
+                    if (AddOrderHead(&order)) {
+                        DelPerson(city,p);
+                    }
 				}
 				else
 				{

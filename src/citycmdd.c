@@ -133,7 +133,12 @@ FAR U8 BattleMake(U8 city)
 							order.City = city;
 							order.Object = ocity;
 							order.TimeCount = odis;
-							AddFightOrder(&order,fpptr);
+                            if (!AddFightOrder(&order,fpptr)) {
+                                for (i --;(U8)(i + 1) >= 1;i --)
+                                {
+                                    AddPerson(city,fpptr[i] - 1);
+                                }
+                            }
 							break;
 						}
 						else
@@ -967,7 +972,7 @@ FAR U8 AddOrderHead(OrderType *Order)
 		if (0xff == inode[i].OrderId)
 		{
 			gam_memcpy((U8 *) &inode[i],(U8 *) Order,sizeof(OrderType));
-			return(0);
+			return(1);
 		}
 	}
     GamMsgBox((U8*)"Error: Order queue is full", 5);
@@ -983,7 +988,7 @@ FAR U8 AddOrderHead(OrderType *Order)
 	orderadd->nOrder = g_OrderHead;
 	g_OrderHead = orderadd;*/
 	
-	return(1);
+	return(0);
 }
 
 /******************************************************************************
@@ -1010,9 +1015,10 @@ FAR U8 AddOrderEnd(OrderType *Order)
 		if (0xff == inode[i].OrderId)
 		{
 			gam_memcpy((U8 *) &inode[i],(U8 *) Order,sizeof(OrderType));
-			return(0);
+			return(1);
 		}
 	}
+    GamMsgBox((U8*)"Error: Order queue is full", 5);
 	
 	/*OrderQueueType *orderadd;
 	orderadd = (OrderQueueType *) gam_malloc(sizeof(OrderQueueType));
@@ -1033,7 +1039,7 @@ FAR U8 AddOrderEnd(OrderType *Order)
 	g_OrderEnd = orderadd;
 	g_OrderEnd->nOrder = (OrderQueueType *) NULL;*/
 	
-	return(1);
+	return(0);
 }
 
 /******************************************************************************
@@ -1056,20 +1062,22 @@ FAR U8 AddFightOrder(OrderType *Order,U8 *Fighters)
 	U16 clen;
 	
 	fiptr = FIGHTERS_IDX;
-	for (i = 0;i < ORDER_MAX;i ++)
+	for (i = 0;i < FIGHT_ORDER_MAX;i ++)
 	{
 		if (!fiptr[i])
 		{
-			fiptr[i] = 1;
-			fptr = FIGHTERS;
-			clen = 10;
-			clen *= i;
-			gam_memcpy(&fptr[clen],Fighters,10);
 			Order->Person = i;
-			AddOrderEnd(Order);
-			return(1);
+            if (AddOrderEnd(Order)) {
+    			fiptr[i] = 1;
+    			fptr = FIGHTERS;
+    			clen = 10;
+    			clen *= i;
+    			gam_memcpy(&fptr[clen],Fighters,10);
+                return(1);
+            }
 		}
 	}
+    GamMsgBox((U8*)"Error: Fight Order queue is full", 5);
 	return(0);
 }
 

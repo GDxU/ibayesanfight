@@ -405,8 +405,9 @@ FAR U8 AssartMake(U8 city)
 				order.Person = p;
 				order.City = city;
 				order.TimeCount = 0;
-				AddOrderHead(&order);
-				DelPerson(city,p);
+                if (AddOrderHead(&order)) {
+                    DelPerson(city,p);
+                }
 				break;
 			}
 			else
@@ -501,8 +502,9 @@ FAR U8 AccractbusinessMake(U8 city)
 				order.Person = p;
 				order.City = city;
 				order.TimeCount = 0;
-				AddOrderHead(&order);
-				DelPerson(city,p);
+                if (AddOrderHead(&order)) {
+                    DelPerson(city,p);
+                }
 			}
 			else
 			{
@@ -644,8 +646,9 @@ FAR U8 SearchMake(U8 city)
 				order.Person = p;
 				order.City = city;
 				order.TimeCount = 0;
-				AddOrderHead(&order);
-				DelPerson(city,p);
+                if (AddOrderHead(&order)) {
+                    DelPerson(city,p);
+                }
 			}
 			else
 			{
@@ -735,8 +738,9 @@ FAR U8 FatherMake(U8 city)
 				order.Person = p;
 				order.City = city;
 				order.TimeCount = 0;
-				AddOrderHead(&order);
-				DelPerson(city,p);
+                if (AddOrderHead(&order)) {
+                    DelPerson(city,p);
+                }
 			}
 			else
 			{
@@ -827,8 +831,9 @@ FAR U8 InspectionMake(U8 city)
 				order.Person = p;
 				order.City = city;
 				order.TimeCount = 0;
-				AddOrderHead(&order);
-				DelPerson(city,p);
+                if (AddOrderHead(&order)) {
+                    DelPerson(city,p);
+                }
 			}
 			else
 			{
@@ -913,12 +918,13 @@ FAR U8 SurrenderMake(U8 city)
 					order.City = city;
 					order.Object = pp;
 					order.TimeCount = 0;
-					AddOrderHead(&order);
-					DelPerson(city,p);
-					str = SHARE_MEM;
-					ResLoadToMem(STRING_CONST,P_SAY_STR41,str);
-					ShowMapClear();
-					ShowGReport(p,str);
+                    if (AddOrderHead(&order)) {
+                        DelPerson(city,p);
+    					str = SHARE_MEM;
+    					ResLoadToMem(STRING_CONST,P_SAY_STR41,str);
+    					ShowMapClear();
+    					ShowGReport(p,str);
+                    }
 				}
 				break;
 			} while (1);
