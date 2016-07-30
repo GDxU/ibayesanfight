@@ -83,6 +83,12 @@ U8 AssartDrv(OrderType *Order)
 	return(1);
 }
 
+U8 NopDrv(OrderType *Order)
+{
+	AddPerson(Order->City,Order->Person);
+	return(1);
+}
+
 /******************************************************************************
 * 函数名:AccractbusinessDrv
 * 说  明:“招商”命令驱动
@@ -982,6 +988,7 @@ U8 OrderExec(OrderType *Order)
 	{
 	/*内政指令*/
 	case NOP:
+        NopDrv(Order);
 		break;
 	case ASSART:		/*开垦*/
 		AssartDrv(Order);

@@ -28,6 +28,7 @@ CITYEDIT_C U8 GetRoundSelfCity(U8 city,U8 *cqueue);
 
 /*CITYCMD_C U8 AppointDrv(OrderType *Order);*/
 CITYCMD_C U8 AssartDrv(OrderType *Order);
+CITYCMD_C U8 NopDrv(OrderType *Order);
 CITYCMD_C U8 AccractbusinessDrv(OrderType *Order);
 CITYCMD_C U8 SearchDrv(OrderType *Order);
 CITYCMD_C U8 FatherDrv(OrderType *Order);
