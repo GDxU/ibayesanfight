@@ -108,8 +108,9 @@
 typedef struct {
 	U8	idx;			/* 道具序号 */
 	U8	useflag;		/* 使用标志：是被使用还是被装备*/
-	U8	name[10];		/* 道具名字 */
-	U8	inf[50];		/* 道具说明 */
+	U8	atRange[30];		/* 攻击范围数据 */
+    U8  changeAttackRange; 	/* 是否改变攻击范围 */
+	U8	reserved[60-31];
 	U8	at;			/* 对武力的加层 */
 	U8	iq;			/* 对智力的加层 */
 	U8	move;			/* 对移动力的加层 */
@@ -204,6 +205,7 @@ typedef struct City				/*城市属性(30 Bytes)*/
 
 typedef struct {
     U8 fixCityOffset;
+    U8 enableToolAttackRange;
 } EngineConfig;
 
 extern EngineConfig g_engineConfig;

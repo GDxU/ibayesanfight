@@ -121,7 +121,7 @@ U8 GamVarInit(void)
 	g_FightPath = gam_malloc(FGT_MRG*FGT_MRG + 25);		/* 250 */
 	if (NULL == g_FightPath)
 		return 1;
-	g_FgtAtkRng = gam_malloc(SKILL_RANGE + 5);		/* 86 */
+	g_FgtAtkRng = gam_malloc(TOOL_ATT_RANGE + 5);		/* 86 */
 	if (NULL == g_FgtAtkRng)
 		return 1;
 
@@ -701,7 +701,7 @@ void GamSetDataDir(const U8*dataDir_)
 
 
 EngineConfig g_engineConfig = {
-    0
+    0, 0
 };
 
 void GamLoadEngineConfig(void) {

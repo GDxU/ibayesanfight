@@ -149,6 +149,12 @@
 #define	CMD_REST		3		/* 休息命令 */
 
 /*------------------------
+  武器攻击范围相关定义
+------------------------*/
+#define	TOOL_ATT_RANGEUNIT		15
+#define	TOOL_ATT_RANGE		TOOL_ATT_RANGEUNIT*TOOL_ATT_RANGEUNIT
+
+/*------------------------
   攻击范围相关定义
 ------------------------*/
 #define	ATT_RANGEUNIT		5

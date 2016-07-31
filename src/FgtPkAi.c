@@ -560,6 +560,24 @@ void FgtGetAtkRng(U8 idx,U8 x,U8 y)
 	pos->x = bakx;
 	pos->y = baky;
 }
+
+static U8 bits_to_bytes(U8* dst, U8* src, U16 w, U16 h, U8 orMode) {
+    U16 lineLen = (w + 7) / 8;
+
+    for (U16 row = 0; row < h; row ++) {
+        for (U16 col = 0; col < w; col++) {
+            U8 col_ind = col / 8;
+            U8 col_offset = col % 8;
+            U8 v = src[lineLen*row + col_ind] & (0x80 >> col_offset);
+
+            if (v || !orMode) {
+                dst[w*row + col] = !!v;
+            }
+        }
+    }
+    return 0;
+}
+
 /***********************************************************************
  * 说明:     获取命令的攻击范围
  * 输入参数: type-命令类型	param-命令参数	idx-命令执行者
@@ -571,33 +589,46 @@ void FgtGetAtkRng(U8 idx,U8 x,U8 y)
 ***********************************************************************/
 FAR void FgtGetCmdRng(U8 type,U8 param,U8 idx)
 {
-	U8	item = 0,rngb = 0,*ptr;
-	U16	offset = 0, id = 0;
+	U8 rngb = 0,*ptr;
+    U8 tool_rng_data[TOOL_ATT_RANGEUNIT*TOOL_ATT_RANGEUNIT] = {0};
 
 	switch(type)
 	{
-		case CMD_ATK:
-			offset = ATT_RANGE * (U16)g_Persons[g_FgtParam.GenArray[idx] - 1].ArmsType;
-			id = IFACE_CONID;
-			item = dFgtAtRange;
+        case CMD_ATK:{
+			U16 offset = ATT_RANGE * (U16)g_Persons[g_FgtParam.GenArray[idx] - 1].ArmsType;
 			rngb = ATT_RANGEUNIT;
+            ptr = ResLoadToCon(IFACE_CONID,dFgtAtRange,g_CBnkPtr) + offset;
+
+            if (g_engineConfig.enableToolAttackRange) {
+                for (U8 i = 0; i < 2; i++) {
+                    U8 tid = g_Persons[g_FgtParam.GenArray[idx] - 1].Equip[i];
+                    if (tid) {
+                        U8 tind = tid - 1;
+                        U16 offset = sizeof(GOODS) * tind;
+                        GOODS *tool = (GOODS *)(ResLoadToCon(GOODS_RESID, 1, g_CBnkPtr) + offset);
+                        if (tool->changeAttackRange) {
+                            bits_to_bytes(tool_rng_data, tool->atRange, TOOL_ATT_RANGEUNIT, TOOL_ATT_RANGEUNIT, 1);
+                            rngb = TOOL_ATT_RANGEUNIT;
+                            ptr = tool_rng_data;
+                        }
+                    }
+                }
+            }
 			break;
+        }
 /*		case CMD_PK:
 			offset = ATT_RANGE * ARM_QIBING;
 			id = IFACE_CONID;
 			item = dFgtAtRange;
 			rngb = ATT_RANGEUNIT;
 			break;*/
-		case CMD_STGM:
-			offset = (U16)(param - 1) * SKILL_RANGE;
-			id = SKL_RNGID;
-			item = 1;
+        case CMD_STGM: {
+			U16 offset = (U16)(param - 1) * SKILL_RANGE;
 			rngb = SKILL_RANGEUNIT;
+            ptr = ResLoadToCon(SKL_RNGID, 1, g_CBnkPtr) + offset;
 			break;
+        }
 	}
-	ptr = ResLoadToCon(id,item,g_CBnkPtr) + offset;
-	if(rngb * rngb > SKILL_RANGE + 2)
-		return;
 	gam_memcpy(g_FgtAtkRng + 3,ptr,rngb * rngb);
 	g_FgtAtkRng[0] = rngb;
 	g_FgtAtkRng[1] = (U8)(g_GenPos[idx].x - (rngb >> 1));
