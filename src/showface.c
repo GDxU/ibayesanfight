@@ -669,6 +669,7 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 x0,U8 y0,U8 x1,U8 y1)
 		{
 			switch (Msg.param)
 			{
+			case VK_SEARCH:
 			case VK_PGUP:
 				if (set)
 				{
@@ -694,6 +695,7 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 x0,U8 y0,U8 x1,U8 y1)
 					}
 				}
 				break;
+			case VK_HELP:
 			case VK_PGDN:
 				if (set < pcount - 2)
 				{
