@@ -674,11 +674,13 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 x0,U8 y0,U8 x1,U8 y1)
 				if (set)
 				{
 					if (set < count)
-						set = 1;
+						set = 0;
 					else
 						set -= (count - 1);
+                    top = set;
 					showflag = 1;
 				}
+                break;
 			case VK_UP:
 				if (set)
 				{
@@ -697,13 +699,19 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 x0,U8 y0,U8 x1,U8 y1)
 				break;
 			case VK_HELP:
 			case VK_PGDN:
-				if (set < pcount - 2)
+				if (set < pcount - 1)
 				{
 					set += (count - 1);
 					if (set >= pcount - 1)
-						set = pcount - 2;
-					showflag = 1;
-				}
+						set = pcount - 1;
+                    showflag = 1;
+
+                    top = set;
+                    if (top > pcount - count) {
+                        top = pcount - count;
+                    }
+                }
+                break;
 			case VK_DOWN:
 				if (set < pcount - 1)
 				{

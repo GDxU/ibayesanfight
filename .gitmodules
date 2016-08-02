@@ -2,5 +2,5 @@
 	path = js/web
 	url = https://git.oschina.net/loongw/baye.git
 [submodule "js/engine"]
-	path = js/engine
+	path = js/baye-engine
 	url = https://git.oschina.net/loongw/baye-engine.git
