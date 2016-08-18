@@ -1027,21 +1027,8 @@ FAR U8 BanishMake(U8 city)
 	{	
 		p = pqptr[pcode];
 		g_Persons[p].Belong = 0;
-		rnd = gam_rand() % CITY_MAX;
-		if (0xff == g_Persons[p].Belong)
-		{
-			if (g_Persons[p].Id)
-			{
-				pcount = GetKingCitys(g_Persons[p].Id - 1,pqptr);
-				if (pcount)
-				{
-					g_Persons[p].Belong = g_Persons[p].Id;
-					rnd = gam_rand() % pcount;
-				}
-			}
-		}
-		
 		DelPerson(city,p);
+		rnd = gam_rand() % CITY_MAX;
 		AddPerson(rnd,p);
 	}
 	
