@@ -133,56 +133,6 @@ FAR U8 CitiesUpDataDate(void)
 			}
 		}
 	}
-
-#if 0	
-	inode = (OrderType *) ORDERQUEUE;
-	for (i = 0;i < ORDER_MAX;i ++)
-	{
-		o = inode[i].OrderId;
-		if (0xff == o)
-			continue;
-		
-		if ((o != MOVE) && (o != BATTLE))
-		{
-			c = inode[i].City;
-			p = inode[i].Person;
-			df = g_Persons[p].Arms;
-			switch (g_Cities[c].Id)
-			{
-			case STATE_NORMAL:	/*正常*/
-				break;
-			case STATE_FAMINE:	/*饥荒*/
-				df /= 2;
-				break;
-			case STATE_DROUGHT:	/*旱灾*/
-				df = df - df / 4;
-				break;
-			case STATE_FLOOD:	/*水灾*/
-				df = df - df / 4;
-				break;
-			case STATE_REBELLION:	/*暴动*/
-				df /= 2;
-				break;
-			}
-			g_Persons[p].Arms = df;
-			df /= 50;
-			food = &g_Cities[c].Food;
-			if (*food < df)
-			{
-				*food -= df;
-			}
-			else
-			{
-				*food = 0;
-				/*闹饥荒*/
-				s = g_Cities[c].Id;
-				g_Cities[c].Id = STATE_FAMINE;
-				if ((STATE_FAMINE != s) && (g_Cities[c].Belong == g_PlayerKing + 1))
-					ReportCalamity(c);
-			}
-		}
-	}
-#endif
 	return(1);
 }
 
