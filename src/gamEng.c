@@ -45,7 +45,7 @@ U8 GamGetKing(U8 num);
 void GamShowKing(U8 pTop);
 void GamRevCity(U8 cycnt,U8 *tbuf,U8 *pos);
 U8 GamPicMenu(U16 picID,U16 speID);
-void GamRcdIFace(void);
+void GamRcdIFace(U8 count);
 bool GamSaveRcd(U8 idx);
 bool GamLoadRcd(U8 idx);
 void GamLoadEngineConfig(void);
@@ -476,17 +476,19 @@ FAR U8 GamRecordMan(U8 flag)
 	U8	idx,ry;
 	bool	pflag;
 	GMType	pMsg;
+    U8 count = flag ? 4 : 3;
 
-	GamRcdIFace();
+	GamRcdIFace(count);
 	idx = 0;
-	ry = WK_SY + 34;
-	gam_revlcd(WK_SX + 31,ry,WK_SX + 31 + 96,ry + HZ_HGT);
+	ry = WK_SY + 33;
+    U8 right = WK_SX + 31 + 95;
+	gam_revlcd(WK_SX + 31,ry, right, ry + HZ_HGT);
 	while(1)
 	{
 		GamGetMsg(&pMsg);
 		if(VM_CHAR_FUN == pMsg.type)
 		{
-			gam_revlcd(WK_SX + 31,ry,WK_SX + 31 + 96,ry + HZ_HGT);
+			gam_revlcd(WK_SX + 31,ry,right,ry + HZ_HGT);
 			switch(pMsg.param)
 			{
 			case VK_UP:
@@ -502,14 +504,14 @@ FAR U8 GamRecordMan(U8 flag)
 					pflag = GamSaveRcd(idx);
 				if(pflag)
 					return idx;
-				GamRcdIFace();
+				GamRcdIFace(count);
 				break;
 			case VK_EXIT:
 				return MNU_EXIT;
 			}
-			idx = idx % 3;
-			ry = idx * 14 + WK_SY + 34;
-			gam_revlcd(WK_SX + 31,ry,WK_SX + 31 + 96,ry + HZ_HGT);
+			idx = idx % count;
+			ry = idx * 14 + WK_SY + 33;
+			gam_revlcd(WK_SX + 31,ry, right,ry + HZ_HGT);
 		}
 	}
 }
@@ -522,7 +524,7 @@ FAR U8 GamRecordMan(U8 flag)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
 ***********************************************************************/
-void GamRcdIFace(void)
+void GamRcdIFace(U8 count)
 {
 	U8	idx,king,fnam[20];
 	U8	pbak,tbuf[10];
@@ -531,7 +533,7 @@ void GamRcdIFace(void)
 
 	PlcRPicShow(SAVE_PIC,1,WK_SX,WK_SY,true);
 	pbak = g_PIdx;
-	for(idx = 0;idx < 3;idx += 1)
+	for(idx = 0;idx < count;idx += 1)
 	{
 		ResLoadToMem(IFACE_STRID,dSaveFNam,fnam);
 		fnam[5] = (idx << 1) + 0x30;		/* fnam = "sango?.sav" */
@@ -558,7 +560,7 @@ void GamRcdIFace(void)
 			king = gam_strlen(tbuf) + 1;
 			gam_memcpy(fnam + 10,tbuf,king);	/* fnam = "君主    ???年" */
 		}
-		GamStrShowS(WK_SX + 31,WK_SY + 34 + idx * 14,fnam);
+		GamStrShowS(WK_SX + 31,WK_SY + 33 + idx * 14,fnam);
 	}
 	g_PIdx = pbak;
 }
