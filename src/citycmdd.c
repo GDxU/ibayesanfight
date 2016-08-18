@@ -432,40 +432,6 @@ FAR U8 FightResultDeal(U8 city,U8 result)
 				AddPerson(city,ptr[i] - 1);
 			}
 		}
-		/*for (;i < 20;i ++)
-		{
-			if (ptr[i])
-			{
-				p = ptr[i] - 1;
-				rnd = gam_rand() % 100;
-				if (rnd > g_Persons[p].IQ)
-				{
-					if (g_Persons[p].Belong == ptr[i])
-						cking = p;
-					HoldCaptive(p,city);
-				}
-				else
-				{
-					if (!LostEscape(p,city))
-					{
-						if (g_Persons[p].Belong == ptr[i])
-							cking = p;
-						
-						gptr = g_Persons[p].Equip;
-						if (gptr[0])
-						{
-							AddGoods(city,gptr[0] - 1);
-							SetGoods(gptr[0] - 1);
-						}
-						if (gptr[1])
-						{
-							AddGoods(city,gptr[1] - 1);
-							SetGoods(gptr[1] - 1);
-						}
-					}
-				}
-			}
-		}*/
 		/*if (FGT_AUTO != g_FgtParam.Mode)*/
 		ShowFightWinNote(g_Persons[ptr[0] - 1].Belong - 1);
 		if (FGT_AT == g_FgtParam.Mode || FGT_AUTO == g_FgtParam.Mode)
@@ -478,39 +444,6 @@ FAR U8 FightResultDeal(U8 city,U8 result)
 			cking = i;
 		break;
 	case FGT_LOSE:
-		/*for (i = 0;i < 10;i ++)
-		{
-			if (ptr[i])
-			{
-				p = ptr[i] - 1;
-				rnd = gam_rand() % 100;
-				if (rnd > g_Persons[p].IQ)
-				{
-					if (g_Persons[p].Belong == ptr[i])
-						cking = p;
-					HoldCaptive(p,city);
-				}
-				else
-				{
-					if (!LostEscape(p,city))
-					{
-						if (g_Persons[p].Belong == ptr[i])
-							cking = p;	
-						gptr = g_Persons[p].Equip;
-						if (gptr[0])
-						{
-							AddGoods(city,gptr[0] - 1);
-							SetGoods(gptr[0] - 1);
-						}
-						if (gptr[1])
-						{
-							AddGoods(city,gptr[1] - 1);
-							SetGoods(gptr[1] - 1);
-						}
-					}
-				}
-			}
-		}*/
 		for (i = 10;i < 20;i ++)
 		{
 			if (ptr[i])
