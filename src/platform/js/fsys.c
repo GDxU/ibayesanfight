@@ -10,6 +10,7 @@
 #include "baye/comm.h"
 #include "baye/enghead.h"
 #include <stdio.h>
+#include <emscripten.h>
 
 #define ROM_PATH "/rom/"
 #define SAV_PATH "/data/"

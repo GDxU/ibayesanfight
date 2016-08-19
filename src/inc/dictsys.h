@@ -44,14 +44,8 @@
 
 typedef		char                    I8;
 typedef		unsigned	char		U8;
-#ifdef __EMSCRIPTEN__
-#include <emscripten.h>
 typedef unsigned short __attribute__((aligned(1))) U16;
 typedef unsigned int __attribute__((aligned(1))) U32;
-#else
-typedef		unsigned	short		U16;
-typedef		unsigned	int         U32;
-#endif
 
 #define		TRUE		1
 #define		true		1
