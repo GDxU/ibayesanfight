@@ -1,31 +1,31 @@
 /***********************************************************************
-*Copyright (c)2005 , 东莞步步高教育电子分公司
-*All rights reserved.
-**
-文件名称：	fsys.c
-*文件标识：	步步高电子词典的游戏引擎模块
-*摘要：		游戏系统对小机文件系统的封装
-**
-*移植性声明:
-*	1、符合标准：《游戏设计标准V1.0》
-*	2、兼容模式：本程序和界面无关，无兼容模式。
-*	3、小机环境发生变化是，需要修改本文件到相应的文件系统
-*修改历史：
-*	版本    日期     作者     改动内容和原因
-*   ----------------------------------------------------
-*	1.0    2005.5.16  高国军     基本的功能完成
-***********************************************************************/
+ *Copyright (c)2005 , 东莞步步高教育电子分公司
+ *All rights reserved.
+ **
+ 文件名称：	fsys.c
+ *文件标识：	步步高电子词典的游戏引擎模块
+ *摘要：		游戏系统对小机文件系统的封装
+ **
+ *移植性声明:
+ *	1、符合标准：《游戏设计标准V1.0》
+ *	2、兼容模式：本程序和界面无关，无兼容模式。
+ *	3、小机环境发生变化是，需要修改本文件到相应的文件系统
+ *修改历史：
+ *	版本    日期     作者     改动内容和原因
+ *   ----------------------------------------------------
+ *	1.0    2005.5.16  高国军     基本的功能完成
+ ***********************************************************************/
 #include "baye/stdsys.h"
 #include "baye/comm.h"
 #include "baye/enghead.h"
 
 typedef struct {
-	U8	handle;			/* 文件操作句柄 */
-	U8	ftype;			/* 文件类型 */
-	U8	openmode;		/* 打开方式 */
-	U8	fname[10];		/* 文件名 */	
-	U32	curset;			/* 当前文件指针位置 */
-	U32	flen;			/* 文件长度 */
+    U8	handle;			/* 文件操作句柄 */
+    U8	ftype;			/* 文件类型 */
+    U8	openmode;		/* 打开方式 */
+    U8	fname[10];		/* 文件名 */
+    U32	curset;			/* 当前文件指针位置 */
+    U32	flen;			/* 文件长度 */
 }gam_FILE;				/* 文件指针类型 */
 
 #ifdef	_EDICT_SERIES_A_
@@ -38,82 +38,82 @@ typedef struct {
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR gam_FILE *gam_fopen(U8 *fname,U8 pmode)
 {
-	U8	err,mode,pFHandle;
-	U8	tmpbuf[10],pInf[12];
-	U16	pfNum,i,tmpName;
-	U32	pLen;
-	gam_FILE *tmpFile;
-	
-	tmpFile=(gam_FILE *)gam_malloc(sizeof(gam_FILE)+4);
-	if(NULL == tmpFile)
-		return (gam_FILE *)NULL;
-	if(pmode=='w')
-		mode=OPEN_W;
-	else if(pmode=='r')
-		mode=OPEN_R;
-	else	/* if(pmode=='a') */
-		mode=OPEN_ADD;
-	
-	gam_memcpy(tmpFile->fname,fname,10);
-	tmpFile->curset=0;
-	tmpFile->openmode=mode;	
-	tmpFile->flen=0;
-	gam_memcpy(tmpbuf,GAM_LIB_FNAME,10);
-	if(!strcmp(tmpbuf,fname))
-	{
-		tmpFile->ftype=FILE_LIB;
-		return (gam_FILE *)tmpFile;
-	}
-	gam_memcpy(tmpbuf,GAM_FONT_FNAME,10);
-	if(!strcmp(tmpbuf,fname))
-	{
-		tmpFile->ftype=FILE_FONT;
-		return (gam_FILE *)tmpFile;
-	}
-	
-	/* 正常文件 */
-	tmpFile->ftype=FILE_NOR;
-	FileNum(GAME_SAVE,&pfNum);
-	err = 1;
-	for (i = 1;i <= pfNum;i ++)
-	{
-		gam_memset(pInf,0,12);
-		FileSearch(GAME_SAVE,i,&tmpName,pInf);
-		err = gam_strcmp(fname,pInf);
-		if(!err) break;
-	}
-	/* 没找到文件，且不是写模式 */	
-	if(err && OPEN_W != mode)
-	{
-		gam_free((U8 *)tmpFile);
-		return (gam_FILE *)NULL;
-	}
-	/* 找到了文件 */
-	if(!err)
-	{
-		FileOpen(tmpName,GAME_SAVE,mode,&pFHandle,&pLen);
-		if(OPEN_W != mode)
-		{
-			tmpFile->handle=pFHandle;
-			tmpFile->flen=pLen;
-			return (gam_FILE *)tmpFile;
-		}
-		FileDel(pFHandle);
-	}
-	/* 写模式下，新建文件 */
-	pLen = 0x1000;
-	err = FileCreat(GAME_SAVE,pLen,fname,&tmpName,&pFHandle);
-	if(!err)
-	{
-		gam_free((U8 *)tmpFile);
-		return (gam_FILE *)NULL;
-	}
-	tmpFile->handle=pFHandle;
-	tmpFile->flen=pLen;
-	return (gam_FILE *)tmpFile;
+    U8	err,mode,pFHandle;
+    U8	tmpbuf[10],pInf[12];
+    U16	pfNum,i,tmpName;
+    U32	pLen;
+    gam_FILE *tmpFile;
+
+    tmpFile=(gam_FILE *)gam_malloc(sizeof(gam_FILE)+4);
+    if(NULL == tmpFile)
+        return (gam_FILE *)NULL;
+    if(pmode=='w')
+        mode=OPEN_W;
+    else if(pmode=='r')
+        mode=OPEN_R;
+    else	/* if(pmode=='a') */
+        mode=OPEN_ADD;
+
+    gam_memcpy(tmpFile->fname,fname,10);
+    tmpFile->curset=0;
+    tmpFile->openmode=mode;
+    tmpFile->flen=0;
+    gam_memcpy(tmpbuf,GAM_LIB_FNAME,10);
+    if(!strcmp(tmpbuf,fname))
+    {
+        tmpFile->ftype=FILE_LIB;
+        return (gam_FILE *)tmpFile;
+    }
+    gam_memcpy(tmpbuf,GAM_FONT_FNAME,10);
+    if(!strcmp(tmpbuf,fname))
+    {
+        tmpFile->ftype=FILE_FONT;
+        return (gam_FILE *)tmpFile;
+    }
+
+    /* 正常文件 */
+    tmpFile->ftype=FILE_NOR;
+    FileNum(GAME_SAVE,&pfNum);
+    err = 1;
+    for (i = 1;i <= pfNum;i ++)
+    {
+        gam_memset(pInf,0,12);
+        FileSearch(GAME_SAVE,i,&tmpName,pInf);
+        err = gam_strcmp(fname,pInf);
+        if(!err) break;
+    }
+    /* 没找到文件，且不是写模式 */
+    if(err && OPEN_W != mode)
+    {
+        gam_free((U8 *)tmpFile);
+        return (gam_FILE *)NULL;
+    }
+    /* 找到了文件 */
+    if(!err)
+    {
+        FileOpen(tmpName,GAME_SAVE,mode,&pFHandle,&pLen);
+        if(OPEN_W != mode)
+        {
+            tmpFile->handle=pFHandle;
+            tmpFile->flen=pLen;
+            return (gam_FILE *)tmpFile;
+        }
+        FileDel(pFHandle);
+    }
+    /* 写模式下，新建文件 */
+    pLen = 0x1000;
+    err = FileCreat(GAME_SAVE,pLen,fname,&tmpName,&pFHandle);
+    if(!err)
+    {
+        gam_free((U8 *)tmpFile);
+        return (gam_FILE *)NULL;
+    }
+    tmpFile->handle=pFHandle;
+    tmpFile->flen=pLen;
+    return (gam_FILE *)tmpFile;
 }
 /***********************************************************************
  * 说明:     将当前文件系统的文件关闭函数封装为标准的fclose函数
@@ -123,12 +123,12 @@ FAR gam_FILE *gam_fopen(U8 *fname,U8 pmode)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U8 gam_fclose(gam_FILE *fhandle)
 {
-	if(fhandle->ftype==FILE_NOR)
-		FileClose(fhandle->handle);
-	gam_free((U8 *)fhandle);
+    if(fhandle->ftype==FILE_NOR)
+        FileClose(fhandle->handle);
+    gam_free((U8 *)fhandle);
 #warning
     return 0;
 }
@@ -140,19 +140,19 @@ FAR U8 gam_fclose(gam_FILE *fhandle)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U8 gam_fseek (gam_FILE *fhandle, U32 offset, U8 fromwhere)
 {
-	U32	tmp;
-		
-	tmp=fhandle->curset;
-	if(!fromwhere)
-		tmp=offset;
-	if(fromwhere==SEEK_CUR)
-		tmp+=offset;	
-	if(fromwhere==SEEK_END)
-		tmp=fhandle->flen-offset;
-	fhandle->curset=tmp;
+    U32	tmp;
+
+    tmp=fhandle->curset;
+    if(!fromwhere)
+        tmp=offset;
+    if(fromwhere==SEEK_CUR)
+        tmp+=offset;
+    if(fromwhere==SEEK_END)
+        tmp=fhandle->flen-offset;
+    fhandle->curset=tmp;
 #warning
     return 0;
 }
@@ -164,61 +164,61 @@ FAR U8 gam_fseek (gam_FILE *fhandle, U32 offset, U8 fromwhere)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U32 gam_fread(U8 *buf, U8 size, U16 count, gam_FILE *fhandle)
 {
-	U8	*ptr,tmp;
-	U16	i,lp,bnk;
-	U32	pLen,roff,addr;
-	
-	if(fhandle->openmode!=OPEN_R)
-		return 0;
-	pLen = size;
-	pLen *= count;
-	
-	addr=fhandle->curset;
-	bnk=(U16)(addr>>14);
-	bnk<<=2;
-	bnk+=c_FontBnkS;
-	switch(fhandle->ftype)
-	{
-	case FILE_LIB:
-		bnk+=GAM_FONT_BNK_NUM;
-		DataBankSwitch(9,4,bnk);
-		ptr=(U8 *)((U16)(addr&0x00003fff)+DAT_ADDR);
-		gam_memcpy(buf,ptr,(U16)pLen);
-		break;
-	case FILE_FONT:		
-		DataBankSwitch(9,4,bnk);
-		lp=(U16)(addr&0x00003fff);
-		if(0x4000-lp<18)
-			tmp=0x4000-lp;			/* 跨bnk取数据 */
-		else
-			tmp=18;
-		gam_memcpy(buf,(U8 *)(lp+DAT_ADDR),tmp);
-		if(tmp<18)				/* 跨页面字模再补取数据 */
-		{
-			DataBankSwitch(9,4,bnk+4);
-			gam_memcpy((U8 *)(buf+tmp),(U8 *)DAT_ADDR,18-tmp);
-		}
-		break;
-	case FILE_NOR:
-		ptr = (U8 *)&g_GenPos;			/* 复用战斗模块的全局变量 */
-		lp = pLen / 100;
-		roff = 0;
-		for(i = 0;i < lp;i += 1)
-		{
-			FileRead(fhandle->handle,100,ptr);
-			gam_memcpy(buf+roff,ptr,100);
-			roff += 100;
-		}
-		lp = (U8)(pLen - roff);
-		FileRead(fhandle->handle,lp,ptr);
-		gam_memcpy(buf+roff,ptr,lp);
-		break;
-	}
-	fhandle->curset+=pLen;
-	return pLen;
+    U8	*ptr,tmp;
+    U16	i,lp,bnk;
+    U32	pLen,roff,addr;
+
+    if(fhandle->openmode!=OPEN_R)
+        return 0;
+    pLen = size;
+    pLen *= count;
+
+    addr=fhandle->curset;
+    bnk=(U16)(addr>>14);
+    bnk<<=2;
+    bnk+=c_FontBnkS;
+    switch(fhandle->ftype)
+    {
+        case FILE_LIB:
+            bnk+=GAM_FONT_BNK_NUM;
+            DataBankSwitch(9,4,bnk);
+            ptr=(U8 *)((U16)(addr&0x00003fff)+DAT_ADDR);
+            gam_memcpy(buf,ptr,(U16)pLen);
+            break;
+        case FILE_FONT:
+            DataBankSwitch(9,4,bnk);
+            lp=(U16)(addr&0x00003fff);
+            if(0x4000-lp<18)
+                tmp=0x4000-lp;			/* 跨bnk取数据 */
+            else
+                tmp=18;
+            gam_memcpy(buf,(U8 *)(lp+DAT_ADDR),tmp);
+            if(tmp<18)				/* 跨页面字模再补取数据 */
+            {
+                DataBankSwitch(9,4,bnk+4);
+                gam_memcpy((U8 *)(buf+tmp),(U8 *)DAT_ADDR,18-tmp);
+            }
+            break;
+        case FILE_NOR:
+            ptr = (U8 *)&g_GenPos;			/* 复用战斗模块的全局变量 */
+            lp = pLen / 100;
+            roff = 0;
+            for(i = 0;i < lp;i += 1)
+            {
+                FileRead(fhandle->handle,100,ptr);
+                gam_memcpy(buf+roff,ptr,100);
+                roff += 100;
+            }
+            lp = (U8)(pLen - roff);
+            FileRead(fhandle->handle,lp,ptr);
+            gam_memcpy(buf+roff,ptr,lp);
+            break;
+    }
+    fhandle->curset+=pLen;
+    return pLen;
 }
 /***********************************************************************
  * 说明:     将当前文件系统的文件写入函数封装为标准的fwrite函数
@@ -228,32 +228,32 @@ FAR U32 gam_fread(U8 *buf, U8 size, U16 count, gam_FILE *fhandle)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U32 gam_fwrite(U8 *buf, U8 size, U16 count, gam_FILE *fhandle)
 {
-	U8	*ptr;
-	U16	i,lp;
-	U32	pLen,pOff;
+    U8	*ptr;
+    U16	i,lp;
+    U32	pLen,pOff;
 
-	if(fhandle->ftype!=FILE_NOR)
-		return 1;
+    if(fhandle->ftype!=FILE_NOR)
+        return 1;
 
-	ptr = (U8 *)&g_GenPos;			/* 复用战斗模块的全局变量 */
-	pLen=count;
-	pLen*=size;
-	lp=pLen / 100;
-	pOff=0;
-	for(i=0;i<lp;i++)
-	{
-		gam_memcpy(ptr,buf+pOff,100);
-		pOff+=100;
-		FileWrite(fhandle->handle,100,ptr);
-	}
-	lp = pLen-pOff;
-	gam_memcpy(ptr,buf+pOff,lp);
-	FileWrite(fhandle->handle,(U8)lp,ptr);
-	fhandle->curset+=pLen;
-	return 0;
+    ptr = (U8 *)&g_GenPos;			/* 复用战斗模块的全局变量 */
+    pLen=count;
+    pLen*=size;
+    lp=pLen / 100;
+    pOff=0;
+    for(i=0;i<lp;i++)
+    {
+        gam_memcpy(ptr,buf+pOff,100);
+        pOff+=100;
+        FileWrite(fhandle->handle,100,ptr);
+    }
+    lp = pLen-pOff;
+    gam_memcpy(ptr,buf+pOff,lp);
+    FileWrite(fhandle->handle,(U8)lp,ptr);
+    fhandle->curset+=pLen;
+    return 0;
 }
 /***********************************************************************
  * 说明:     将当前文件系统的文件指针查询函数封装为标准的ftell函数
@@ -263,10 +263,10 @@ FAR U32 gam_fwrite(U8 *buf, U8 size, U16 count, gam_FILE *fhandle)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U32 gam_ftell(gam_FILE *fhandle)
 {
-	return (U32) fhandle->curset;
+    return (U32) fhandle->curset;
 }
 /***********************************************************************
  * 说明:     增强功能函数—按照页面方式将指定地址下的数据载入到常量页
@@ -276,26 +276,26 @@ FAR U32 gam_ftell(gam_FILE *fhandle)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U8 *gam_fload(U8 *bptr, U32 addr, gam_FILE *fhandle)
 {
-	U8	*ptr,type;
-	U16	bnk,lp;
+    U8	*ptr,type;
+    U16	bnk,lp;
 
-	type=fhandle->ftype;
-	if(FILE_NOR==type)
-		return (U8 *)NULL;
-	
-	lp=(U16)(addr&0x00003fff);
-	ptr=(U8 *)(lp+bptr);
-	bnk=(U16)(addr>>14);
-	bnk<<=2;
-	bnk+=c_FontBnkS;
-	if(FILE_LIB==type)
-		bnk+=GAM_FONT_BNK_NUM;
+    type=fhandle->ftype;
+    if(FILE_NOR==type)
+        return (U8 *)NULL;
 
-	DataBankSwitch(9,4,bnk);
-	return (U8 *)ptr;
+    lp=(U16)(addr&0x00003fff);
+    ptr=(U8 *)(lp+bptr);
+    bnk=(U16)(addr>>14);
+    bnk<<=2;
+    bnk+=c_FontBnkS;
+    if(FILE_LIB==type)
+        bnk+=GAM_FONT_BNK_NUM;
+
+    DataBankSwitch(9,4,bnk);
+    return (U8 *)ptr;
 }
 /***********************************************************************
  * 说明:     增强功能函数—修改文件名
@@ -305,13 +305,13 @@ FAR U8 *gam_fload(U8 *bptr, U32 addr, gam_FILE *fhandle)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U8 gam_frename(gam_FILE *fhandle,U8 *newname)
 {
-	if(fhandle->ftype!=FILE_NOR)
-		return 1;
-	FileChangeInf(fhandle->handle,newname);
-	return 0;
+    if(fhandle->ftype!=FILE_NOR)
+        return 1;
+    FileChangeInf(fhandle->handle,newname);
+    return 0;
 }
 /***********************************************************************
  * 说明:     增强功能函数—文件删除
@@ -321,12 +321,12 @@ FAR U8 gam_frename(gam_FILE *fhandle,U8 *newname)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U8 gam_fdelete(gam_FILE *fhandle)
 {
-	if(fhandle->ftype!=FILE_NOR)
-		return 1;
-	return FileDel(fhandle->handle);
+    if(fhandle->ftype!=FILE_NOR)
+        return 1;
+    return FileDel(fhandle->handle);
 }
 #endif	/* _EDICT_SERIES_A_ */
 
@@ -339,10 +339,10 @@ FAR U8 gam_fdelete(gam_FILE *fhandle)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR gam_FILE *gam_fopen(U8 *fname,U8 pmode)
 {
-	
+
 }
 /***********************************************************************
  * 说明:     将当前文件系统的文件关闭函数封装为标准的fclose函数
@@ -352,7 +352,7 @@ FAR gam_FILE *gam_fopen(U8 *fname,U8 pmode)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U8 gam_fclose(gam_FILE *fhandle)
 {
 }
@@ -364,7 +364,7 @@ FAR U8 gam_fclose(gam_FILE *fhandle)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U8 gam_fseek (gam_FILE *fhandle, U32 offset, U8 fromwhere)
 {
 }
@@ -376,7 +376,7 @@ FAR U8 gam_fseek (gam_FILE *fhandle, U32 offset, U8 fromwhere)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U32 gam_fread(U8 *buf, U8 size, U16 count, gam_FILE *fhandle)
 {
 }
@@ -388,10 +388,10 @@ FAR U32 gam_fread(U8 *buf, U8 size, U16 count, gam_FILE *fhandle)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U32 gam_fwrite(U8 *buf, U8 size, U16 count, gam_FILE *fhandle)
 {
-	
+
 }
 /***********************************************************************
  * 说明:     将当前文件系统的文件指针查询函数封装为标准的ftell函数
@@ -401,7 +401,7 @@ FAR U32 gam_fwrite(U8 *buf, U8 size, U16 count, gam_FILE *fhandle)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U32 gam_ftell(gam_FILE *fhandle)
 {
 }
@@ -413,7 +413,7 @@ FAR U32 gam_ftell(gam_FILE *fhandle)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U8 *gam_fload(U8 *bptr, U32 addr, gam_FILE *fhandle)
 {
 }
@@ -425,7 +425,7 @@ FAR U8 *gam_fload(U8 *bptr, U32 addr, gam_FILE *fhandle)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U8 gam_frename(gam_FILE *fhandle,U8 *newname)
 {
 }
@@ -437,7 +437,7 @@ FAR U8 gam_frename(gam_FILE *fhandle,U8 *newname)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U8 gam_fdelete(gam_FILE *fhandle)
 {
 }
@@ -452,10 +452,10 @@ FAR U8 gam_fdelete(gam_FILE *fhandle)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR gam_FILE *gam_fopen(U8 *fname,U8 pmode)
 {
-	
+
 }
 /***********************************************************************
  * 说明:     将当前文件系统的文件关闭函数封装为标准的fclose函数
@@ -465,7 +465,7 @@ FAR gam_FILE *gam_fopen(U8 *fname,U8 pmode)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U8 gam_fclose(gam_FILE *fhandle)
 {
 }
@@ -477,7 +477,7 @@ FAR U8 gam_fclose(gam_FILE *fhandle)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U8 gam_fseek (gam_FILE *fhandle, U32 offset, U8 fromwhere)
 {
 }
@@ -489,7 +489,7 @@ FAR U8 gam_fseek (gam_FILE *fhandle, U32 offset, U8 fromwhere)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U32 gam_fread(U8 *buf, U8 size, U16 count, gam_FILE *fhandle)
 {
 }
@@ -501,10 +501,10 @@ FAR U32 gam_fread(U8 *buf, U8 size, U16 count, gam_FILE *fhandle)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U32 gam_fwrite(U8 *buf, U8 size, U16 count, gam_FILE *fhandle)
 {
-	
+
 }
 /***********************************************************************
  * 说明:     将当前文件系统的文件指针查询函数封装为标准的ftell函数
@@ -514,7 +514,7 @@ FAR U32 gam_fwrite(U8 *buf, U8 size, U16 count, gam_FILE *fhandle)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U32 gam_ftell(gam_FILE *fhandle)
 {
 }
@@ -526,7 +526,7 @@ FAR U32 gam_ftell(gam_FILE *fhandle)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U8 *gam_fload(U8 *bptr, U32 addr, gam_FILE *fhandle)
 {
 }
@@ -538,7 +538,7 @@ FAR U8 *gam_fload(U8 *bptr, U32 addr, gam_FILE *fhandle)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U8 gam_frename(gam_FILE *fhandle,U8 *newname)
 {
 }
@@ -550,7 +550,7 @@ FAR U8 gam_frename(gam_FILE *fhandle,U8 *newname)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U8 gam_fdelete(gam_FILE *fhandle)
 {
 }
@@ -565,10 +565,10 @@ FAR U8 gam_fdelete(gam_FILE *fhandle)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR gam_FILE *gam_fopen(U8 *fname,U8 pmode)
 {
-	
+
 }
 /***********************************************************************
  * 说明:     将当前文件系统的文件关闭函数封装为标准的fclose函数
@@ -578,7 +578,7 @@ FAR gam_FILE *gam_fopen(U8 *fname,U8 pmode)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U8 gam_fclose(gam_FILE *fhandle)
 {
 }
@@ -590,7 +590,7 @@ FAR U8 gam_fclose(gam_FILE *fhandle)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U8 gam_fseek (gam_FILE *fhandle, U32 offset, U8 fromwhere)
 {
 }
@@ -602,7 +602,7 @@ FAR U8 gam_fseek (gam_FILE *fhandle, U32 offset, U8 fromwhere)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U32 gam_fread(U8 *buf, U8 size, U16 count, gam_FILE *fhandle)
 {
 }
@@ -614,10 +614,10 @@ FAR U32 gam_fread(U8 *buf, U8 size, U16 count, gam_FILE *fhandle)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U32 gam_fwrite(U8 *buf, U8 size, U16 count, gam_FILE *fhandle)
 {
-	
+
 }
 /***********************************************************************
  * 说明:     将当前文件系统的文件指针查询函数封装为标准的ftell函数
@@ -627,7 +627,7 @@ FAR U32 gam_fwrite(U8 *buf, U8 size, U16 count, gam_FILE *fhandle)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U32 gam_ftell(gam_FILE *fhandle)
 {
 }
@@ -639,7 +639,7 @@ FAR U32 gam_ftell(gam_FILE *fhandle)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U8 *gam_fload(U8 *bptr, U32 addr, gam_FILE *fhandle)
 {
 }
@@ -651,7 +651,7 @@ FAR U8 *gam_fload(U8 *bptr, U32 addr, gam_FILE *fhandle)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U8 gam_frename(gam_FILE *fhandle,U8 *newname)
 {
 }
@@ -663,7 +663,7 @@ FAR U8 gam_frename(gam_FILE *fhandle,U8 *newname)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U8 gam_fdelete(gam_FILE *fhandle)
 {
 }
@@ -678,10 +678,10 @@ FAR U8 gam_fdelete(gam_FILE *fhandle)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR gam_FILE *gam_fopen(U8 *fname,U8 pmode)
 {
-	
+
 }
 /***********************************************************************
  * 说明:     将当前文件系统的文件关闭函数封装为标准的fclose函数
@@ -691,7 +691,7 @@ FAR gam_FILE *gam_fopen(U8 *fname,U8 pmode)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U8 gam_fclose(gam_FILE *fhandle)
 {
 }
@@ -703,7 +703,7 @@ FAR U8 gam_fclose(gam_FILE *fhandle)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U8 gam_fseek (gam_FILE *fhandle, U32 offset, U8 fromwhere)
 {
 }
@@ -715,7 +715,7 @@ FAR U8 gam_fseek (gam_FILE *fhandle, U32 offset, U8 fromwhere)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U32 gam_fread(U8 *buf, U8 size, U16 count, gam_FILE *fhandle)
 {
 }
@@ -727,10 +727,10 @@ FAR U32 gam_fread(U8 *buf, U8 size, U16 count, gam_FILE *fhandle)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U32 gam_fwrite(U8 *buf, U8 size, U16 count, gam_FILE *fhandle)
 {
-	
+
 }
 /***********************************************************************
  * 说明:     将当前文件系统的文件指针查询函数封装为标准的ftell函数
@@ -740,7 +740,7 @@ FAR U32 gam_fwrite(U8 *buf, U8 size, U16 count, gam_FILE *fhandle)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U32 gam_ftell(gam_FILE *fhandle)
 {
 }
@@ -752,7 +752,7 @@ FAR U32 gam_ftell(gam_FILE *fhandle)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U8 *gam_fload(U8 *bptr, U32 addr, gam_FILE *fhandle)
 {
 }
@@ -764,7 +764,7 @@ FAR U8 *gam_fload(U8 *bptr, U32 addr, gam_FILE *fhandle)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U8 gam_frename(gam_FILE *fhandle,U8 *newname)
 {
 }
@@ -776,7 +776,7 @@ FAR U8 gam_frename(gam_FILE *fhandle,U8 *newname)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U8 gam_fdelete(gam_FILE *fhandle)
 {
 }

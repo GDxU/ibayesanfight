@@ -1,20 +1,20 @@
 /***********************************************************************
-*Copyright (c)2005 , 东莞步步高教育电子分公司
-*All rights reserved.
-**
-文件名称：	comIn.c
-*文件标识：	步步高电子词典的游戏引擎模块
-*摘要：		封装系统输入及其它和显示无关的功能函数
-**
-*移植性声明:
-*	1、符合标准：《游戏设计标准V1.0》
-*	2、兼容模式：本程序和界面无关，无兼容模式。
-*	3、使用本封装程序的引擎要移植到其他环境中，系统的输入部分只需在此修改
-*修改历史：
-*	版本    日期     作者     改动内容和原因
-*   ----------------------------------------------------
-*	1.0    2005.5.16  高国军     基本的功能完成
-***********************************************************************/
+ *Copyright (c)2005 , 东莞步步高教育电子分公司
+ *All rights reserved.
+ **
+ 文件名称：	comIn.c
+ *文件标识：	步步高电子词典的游戏引擎模块
+ *摘要：		封装系统输入及其它和显示无关的功能函数
+ **
+ *移植性声明:
+ *	1、符合标准：《游戏设计标准V1.0》
+ *	2、兼容模式：本程序和界面无关，无兼容模式。
+ *	3、使用本封装程序的引擎要移植到其他环境中，系统的输入部分只需在此修改
+ *修改历史：
+ *	版本    日期     作者     改动内容和原因
+ *   ----------------------------------------------------
+ *	1.0    2005.5.16  高国军     基本的功能完成
+ ***********************************************************************/
 /* 声明本文件可以直接调用系统底层函数宏 */
 #define		_BE_CHANGED_
 #include "baye/stdsys.h"
@@ -36,26 +36,26 @@ static const U8* altDatFilePath = NULL;
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U8 GamConInit(void)
 {
-	/*系统环境初始化*/
-	GuiInit();						/*Gui OS 初始化，使用前一定要调用 */
-	FlashInit();						/*初始化flash文件系统变量*/
-	SysMemInit(MEM_HEAP_START,MEM_HEAP_SIZE);		/*初始化堆*/
-	SysIconAllClear();					/*清空所有Icon*/
-	g_GamKBState=GuiGetKbdState();				/*取键盘状态 */
-	GuiSetInputFilter(INPUT_ENG_ENABLE|INPUT_NUM_ENABLE);	/*只响应英文键盘*/
-	GuiSetKbdType(SYS_ENG_KBD|SYS_NUM_KBD);			/*设置新的键盘状态*/
-	g_GamKeySound=SysGetKeySound();				/*备份按键声音设定*/
-	SysSetKeySound(false);					/*关闭按键声音*/
-	SysTimer1Open(TIMER_INT);				/*设置定时器事件触发*/
-	DataBankSwitch(4,1,EXTMEM_BNKNUM);			/*将当前的第4个页面切换成内存-增加可用的内存空间*/
+    /*系统环境初始化*/
+    GuiInit();						/*Gui OS 初始化，使用前一定要调用 */
+    FlashInit();						/*初始化flash文件系统变量*/
+    SysMemInit(MEM_HEAP_START,MEM_HEAP_SIZE);		/*初始化堆*/
+    SysIconAllClear();					/*清空所有Icon*/
+    g_GamKBState=GuiGetKbdState();				/*取键盘状态 */
+    GuiSetInputFilter(INPUT_ENG_ENABLE|INPUT_NUM_ENABLE);	/*只响应英文键盘*/
+    GuiSetKbdType(SYS_ENG_KBD|SYS_NUM_KBD);			/*设置新的键盘状态*/
+    g_GamKeySound=SysGetKeySound();				/*备份按键声音设定*/
+    SysSetKeySound(false);					/*关闭按键声音*/
+    SysTimer1Open(TIMER_INT);				/*设置定时器事件触发*/
+    DataBankSwitch(4,1,EXTMEM_BNKNUM);			/*将当前的第4个页面切换成内存-增加可用的内存空间*/
 
-	/*文件指针初始化*/
-	g_FontFp = gam_fopen(fontFilePath,'r');			/*打开字库文件*/
-	if(NULL == g_FontFp)
-		return 1;
+    /*文件指针初始化*/
+    g_FontFp = gam_fopen(fontFilePath,'r');			/*打开字库文件*/
+    if(NULL == g_FontFp)
+        return 1;
 
     if (altDatFilePath) {
         g_LibFp = gam_fopen(altDatFilePath,'r');			/*打开自定义资源库文件*/
@@ -67,29 +67,29 @@ FAR U8 GamConInit(void)
         printf("Using custom lib\n");
     }
 
-	if(NULL == g_LibFp)
-		return 1;
-	g_CBnkPtr = gam_freadall(g_LibFp);				/*常量页面指针*/
+    if(NULL == g_LibFp)
+        return 1;
+    g_CBnkPtr = gam_freadall(g_LibFp);				/*常量页面指针*/
 
-	/*随机函数初始化*/
-	U8 i;
-	i = SysGetSecond();
-	gam_srand(i);						/*初始化随机数产生队列*/
+    /*随机函数初始化*/
+    U8 i;
+    i = SysGetSecond();
+    gam_srand(i);						/*初始化随机数产生队列*/
 
-	/*汉字显示初始化*/
-	GetDataBankNumber(9,&c_FontBnkS);			/*获取字库起始地址*/
-	c_ReFlag = true;
-	c_Sx = WK_SX;
-	c_Sy = WK_SY;
-	c_Ex = WK_EX;
-	c_Ey = WK_EY;
+    /*汉字显示初始化*/
+    GetDataBankNumber(9,&c_FontBnkS);			/*获取字库起始地址*/
+    c_ReFlag = true;
+    c_Sx = WK_SX;
+    c_Sy = WK_SY;
+    c_Ex = WK_EX;
+    c_Ey = WK_EY;
 
-	/*虚拟屏幕缓冲指针*/
+    /*虚拟屏幕缓冲指针*/
     g_VisScr = VS_PTR;
     g_BVisScr = BVS_PTR;
-	gam_memset(g_VisScr,0,WK_BLEN);
+    gam_memset(g_VisScr,0,WK_BLEN);
 
-	return 0;
+    return 0;
 }
 /***********************************************************************
  * 说明:     恢复系统参数
@@ -99,14 +99,14 @@ FAR U8 GamConInit(void)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR void GamConRst(void)
 {
-	SysTimer1Close();
-	gam_fclose(g_LibFp);
-//	gam_fclose(g_FontFp);
-	SysSetKeySound(g_GamKeySound);		/* 恢复按键声音设定 */
-	GuiSetKbdState(g_GamKBState);		/* 恢复键盘状态 */
+    SysTimer1Close();
+    gam_fclose(g_LibFp);
+    //	gam_fclose(g_FontFp);
+    SysSetKeySound(g_GamKeySound);		/* 恢复按键声音设定 */
+    GuiSetKbdState(g_GamKBState);		/* 恢复键盘状态 */
 }
 /***********************************************************************
  * 说明:     获取系统消息，并转换为游戏的消息体制
@@ -116,19 +116,19 @@ FAR void GamConRst(void)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR void GamGetMsg(GMType *pMsg)
 {
-	#if GAM_VER==GAM_DEBUG_MODE
-	if(g_RunErr!=NONE_ERR)
-		gamTraceP(0xFF000000+g_RunErr);
-	#endif	
-	while(1)
-	{
-		if(!GuiGetMsg((PtrMsg)pMsg))		continue;
-		if(!GuiTranslateMsg((PtrMsg)pMsg))	continue;
-		break;
-	}
+#if GAM_VER==GAM_DEBUG_MODE
+    if(g_RunErr!=NONE_ERR)
+        gamTraceP(0xFF000000+g_RunErr);
+#endif
+    while(1)
+    {
+        if(!GuiGetMsg((PtrMsg)pMsg))		continue;
+        if(!GuiTranslateMsg((PtrMsg)pMsg))	continue;
+        break;
+    }
 }
 /***********************************************************************
  * 说明:     延时程序
@@ -138,38 +138,38 @@ FAR void GamGetMsg(GMType *pMsg)
  *               姓名            日期             说明
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
-***********************************************************************/
+ ***********************************************************************/
 FAR U8 GamDelay(U16 dly, BOOL keyflag)
 {
-	U8	tInt;
-	GMType	pMsg;
-	
-	tInt = SysGetTimer1Number();
-	SysTimer1Close();
-	if(!dly)
-		GamGetMsg(&pMsg);
-	else
-	{
-		SysTimer1Open(TIMER_DLY);
-		while(1)
-		{
-			if(!dly) break;
-			GamGetMsg(&pMsg);
-			if(VM_TIMER == pMsg.type)
-				dly -= 1;
-			else
-			{
-				if(keyflag) break;
-			}
-			pMsg.param = 0;
-		}
-	}
-	if(tInt)
-	{
-		SysTimer1Close();
-		SysTimer1Open(tInt);
-	}
-	return (U8)pMsg.param;
+    U8	tInt;
+    GMType	pMsg;
+
+    tInt = SysGetTimer1Number();
+    SysTimer1Close();
+    if(!dly)
+        GamGetMsg(&pMsg);
+    else
+    {
+        SysTimer1Open(TIMER_DLY);
+        while(1)
+        {
+            if(!dly) break;
+            GamGetMsg(&pMsg);
+            if(VM_TIMER == pMsg.type)
+                dly -= 1;
+            else
+            {
+                if(keyflag) break;
+            }
+            pMsg.param = 0;
+        }
+    }
+    if(tInt)
+    {
+        SysTimer1Close();
+        SysTimer1Open(tInt);
+    }
+    return (U8)pMsg.param;
 }
 
 FAR void GamSetResourcePath(const U8* datPath, const U8*fontPath)

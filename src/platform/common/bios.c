@@ -33,8 +33,8 @@ U8 *_ORDERQUEUE;        /* 命令队列(12*100=1200个字节) */
 
 static void _shm_init()
 {
-//    char *p = malloc(WK_BLEN + WK_BLEN + 10240 + 30 + 300 + 1200);
-    
+    //    char *p = malloc(WK_BLEN + WK_BLEN + 10240 + 30 + 300 + 1200);
+
     _VS_PTR = malloc(WK_BLEN);
     _BVS_PTR = malloc(WK_BLEN);
     _SHARE_MEM = malloc(10240);

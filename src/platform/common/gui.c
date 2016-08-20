@@ -86,7 +86,7 @@ static void msg_queue_put(struct MsgQueue*q, MsgType* pMsg)
 
     first = q->node.next;
     last = q->node.prev;
-    
+
     q->node.prev = &node->node;
     node->node.prev = last;
     node->node.next = &q->node;
@@ -112,7 +112,7 @@ static int msg_queue_get(struct MsgQueue*q, MsgType *msg)
     first->next->prev = first->prev;
     first->prev->next = first->next;
     gam_lock_unlock(q->msg_queue_lck);
-    
+
     *msg = ((struct MsgNode*)first)->msg;
     msg_free((struct MsgNode*)first);
     return 1;
