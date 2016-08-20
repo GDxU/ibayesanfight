@@ -908,7 +908,8 @@ FAR U8 AddOrderHead(OrderType *Order)
 			return(1);
 		}
 	}
-    GamMsgBox((U8*)"Error: Order queue is full", 5);
+    // 命令队列已满
+    GamMsgBox((U8*)"\xc3\xfc\xc1\xee\xb6\xd3\xc1\xd0\xd2\xd1\xc2\xfa", 1);
 	
 	/*OrderQueueType *orderadd;
 	orderadd = (OrderQueueType *) gam_malloc(sizeof(OrderQueueType));
@@ -951,7 +952,8 @@ FAR U8 AddOrderEnd(OrderType *Order)
 			return(1);
 		}
 	}
-    GamMsgBox((U8*)"Error: Order queue is full", 5);
+    // 命令队列已满
+    GamMsgBox((U8*)"\xc3\xfc\xc1\xee\xb6\xd3\xc1\xd0\xd2\xd1\xc2\xfa", 1);
 	
 	/*OrderQueueType *orderadd;
 	orderadd = (OrderQueueType *) gam_malloc(sizeof(OrderQueueType));
@@ -1010,7 +1012,8 @@ FAR U8 AddFightOrder(OrderType *Order,U8 *Fighters)
             }
 		}
 	}
-    GamMsgBox((U8*)"Error: Fight Order queue is full", 5);
+    // 出征命令队列已满
+    GamMsgBox((U8*)"\xb3\xf6\xd5\xf7\xc3\xfc\xc1\xee\xb6\xd3\xc1\xd0\xd2\xd1\xc2\xfa", 1);
 	return(0);
 }
 
