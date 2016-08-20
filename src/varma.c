@@ -81,6 +81,7 @@ U8 g_GoodsQueue[GOODS_MAX];	/*道具队列*/
 OrderQueueType *g_OrderHead;	/*命令队列头指针*/
 OrderQueueType *g_OrderEnd;	/*命令队列末指针*/
 CitySetType g_CityPos;		/*当前城市地图显示位置结构*/
+U8 g_FromSave = 0;
 
 /*变量定义*/
 /*------------------------------------------*/

@@ -695,6 +695,7 @@ void ConditionUpdate(void)
 FAR U8 GameDevDrv(void)
 {
     U8 ral;
+    U8 skipUpdateSatrap = g_FromSave;
 
     while (1)
     {
@@ -710,7 +711,13 @@ FAR U8 GameDevDrv(void)
             ShowConstStrMsg(STR_GAMEWON);
             return(0);
         }
-        SetCitySatrap();
+
+        if (skipUpdateSatrap) {
+            skipUpdateSatrap = 0;
+        } else {
+            SetCitySatrap();
+        }
+
         /*玩家策略*/
         do
         {

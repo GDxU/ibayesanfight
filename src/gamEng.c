@@ -225,11 +225,13 @@ bool GamMainChose(void)
                         g_Cities[idx].Food += 1000;
                     }
                 }
+                g_FromSave = 0;
                 return true;
             case 1:		/* 重返沙场 */
                 idx = GamRecordMan(true);
                 if(idx == MNU_EXIT)
                     break;
+                g_FromSave = 1;
                 return true;
             case 2:		/* 制作群组 */
                 GamMakerInf();

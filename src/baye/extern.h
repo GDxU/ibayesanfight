@@ -73,6 +73,9 @@ extern U8 g_GoodsQueue[GOODS_MAX];	/*道具队列*/
 extern OrderQueueType *g_OrderHead;	/*命令队列头指针*/
 extern OrderQueueType *g_OrderEnd;	/*命令队列末指针*/
 extern CitySetType g_CityPos;		/*当前城市地图显示位置结构*/
+
+extern U8 g_FromSave;
+
 /*变量定义*/
 /*------------------------------------------*/
 extern U8 citymap[SHOWMAP_HS][SHOWMAP_WS];	/*当前显示城市地图*/
