@@ -10,6 +10,7 @@
 #include "baye/compa.h"
 #include "baye/comm.h"
 #include "baye/consdef.h"
+#include "baye/order.h"
 
 #pragma mark - bios
 
@@ -39,7 +40,7 @@ static void _shm_init()
     _SHARE_MEM = malloc(10240);
     _FIGHTERS_IDX = malloc(30);
     _FIGHTERS = malloc(300);
-    _ORDERQUEUE = malloc(1200);
+    _ORDERQUEUE = malloc(sizeof(OrderType) * ORDER_MAX);
 }
 
 void FlashInit(void)

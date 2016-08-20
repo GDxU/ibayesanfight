@@ -63,7 +63,7 @@
 #define THEW_BATTLE		4	/*出征消耗体力*/
 
 
-#define	ORDER_MAX		100	/*最大命令数*/
+#define	ORDER_MAX		200	/*最大命令数*/
 #define	FIGHT_ORDER_MAX		30	/*最大出征命令数*/
 
 

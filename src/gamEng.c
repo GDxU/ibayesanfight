@@ -595,14 +595,29 @@ bool GamLoadRcd(U8 idx)
 
 	gam_fread((U8 *)&verFlag,1,1,fp);
 
-    U16 goodsQueueLen;
+    U8 version = 0;
+
+    U16 goodsQueueLen = GOODS_MAX;
+    U16 orderQueueLen = ORDER_MAX;
+
     if (verFlag & 0x80) {
-        goodsQueueLen = GOODS_MAX;
-        gam_fread((U8 *)&g_PIdx,1,1,fp);
-    } else {// 旧版
-        goodsQueueLen = 33;
-        g_PIdx = verFlag;
+        version = verFlag;
     }
+
+    if (version == 0) {
+        g_PIdx = verFlag;
+    } else {
+        gam_fread((U8 *)&g_PIdx,1,1,fp);
+    }
+
+    if (version < 0x80) {
+        goodsQueueLen = 33;
+    }
+
+    if (version < 0x81) {
+        orderQueueLen = 100;
+    }
+
 	gam_fread((U8 *)&g_PlayerKing,1,1,fp);
 	gam_fread((U8 *)&g_YearDate,2,1,fp);
 	gam_fread((U8 *)&g_LookEnemy,1,1,fp);
@@ -627,7 +642,7 @@ bool GamLoadRcd(U8 idx)
 	
 	gam_fread((U8 *)FIGHTERS_IDX,1,FIGHT_ORDER_MAX,fp);
 	gam_fread((U8 *)FIGHTERS,10,FIGHT_ORDER_MAX,fp);
-	gam_fread((U8 *)ORDERQUEUE,sizeof(OrderType),ORDER_MAX,fp);
+	gam_fread((U8 *)ORDERQUEUE,sizeof(OrderType), orderQueueLen, fp);
 	gam_fread((U8 *)g_Cities,sizeof(CityType),CITY_MAX,fp);
 	
 	gam_fclose(fp);
@@ -662,7 +677,7 @@ bool GamSaveRcd(U8 idx)
 		return false;
 	}
     
-    U8 verFlag = 0x80;
+    U8 verFlag = 0x81;
 	gam_fwrite((U8 *)&verFlag,1,1,fp);
 	gam_fwrite((U8 *)&g_PIdx,1,1,fp);
 	gam_fwrite((U8 *)&g_PlayerKing,1,1,fp);
