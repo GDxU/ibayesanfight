@@ -811,6 +811,9 @@ FAR U8 GetEnemySatraps(U8 king,U8 *squeue)
 			continue;
 		
 		s = g_Cities[c].SatrapId;
+        if (!s) {
+            continue;
+        }
 		if ((b != (king + 1)) && (s != b))
 		{
 			squeue[count] = s - 1;
