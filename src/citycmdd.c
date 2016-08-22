@@ -210,7 +210,7 @@ FAR U8 BattleDrv(OrderType *Order)
                     if (fpptr[i])
                         AddPerson(o,fpptr[i] - 1);
                 }
-                ShowFightWinNote(pb);
+                ShowFightWinNote(pb - 1);
                 break;
             }
             /*添加进入战斗代码*/
@@ -247,7 +247,7 @@ FAR U8 BattleDrv(OrderType *Order)
                         AddPerson(o,fpptr[i] - 1);
                 }
                 g_Cities[o].Belong = pb;
-                ShowFightWinNote(pb);
+                ShowFightWinNote(pb - 1);
                 break;
             }
 
@@ -258,7 +258,7 @@ FAR U8 BattleDrv(OrderType *Order)
                 {
                     if (fpptr[i])
                         AddPerson(o,fpptr[i] - 1);
-                    ShowFightWinNote(pb);
+                    ShowFightWinNote(pb - 1);
                 }
                 break;
             }
@@ -323,7 +323,7 @@ FAR U8 BattleDrv(OrderType *Order)
                         AddPerson(o,fpptr[i] - 1);
                 }
                 g_Cities[o].Belong = pb;
-                ShowFightWinNote(pb);
+                ShowFightWinNote(pb - 1);
                 break;
             }
 
@@ -334,7 +334,7 @@ FAR U8 BattleDrv(OrderType *Order)
                     if (fpptr[i])
                         AddPerson(o,fpptr[i] - 1);
                 }
-                ShowFightWinNote(pb);
+                ShowFightWinNote(pb - 1);
                 break;
             }
             gam_memcpy(ptr,fpptr,10);
