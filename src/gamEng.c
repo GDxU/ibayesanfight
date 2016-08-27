@@ -222,7 +222,7 @@ bool GamMainChose(void)
                         {
                             g_Persons[posptr[i]].Arms = 800;
                         }
-                        g_Cities[idx].Food += 1000;
+                        ADD16(g_Cities[idx].Food, 1000);
                     }
                 }
                 g_FromSave = 0;
@@ -727,4 +727,15 @@ void GamLoadEngineConfig(void) {
     ResItemGet(IFACE_CONID, dEngineConfig, (U8*)&g_engineConfig);
     FgtLoadConsts();   /* 初始化战斗参数 */
     
+}
+
+U16 add_16(U16 dst, int n)
+{
+    unsigned int rv = dst + n;
+    U16 max = (U16)-1;
+    if (rv > max) {
+        return n > 0 ? max : 0;
+    } else {
+        return rv;
+    }
 }

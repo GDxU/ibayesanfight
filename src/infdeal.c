@@ -319,8 +319,13 @@ void HarvestryFood(void)
 
     for (c = 0;c < CITY_MAX;c ++)
     {
-        if (g_Cities[c].Food < 30000)
-            g_Cities[c].Food += g_Cities[c].Farming / 4;
+        if (g_Cities[c].Food < 30000) {
+            if (g_engineConfig.fixOverFlow16) {
+                ADD16(g_Cities[c].Food, g_Cities[c].Farming / 4);
+            } else {
+                g_Cities[c].Food += g_Cities[c].Farming / 4;
+            }
+        }
     }
 }
 

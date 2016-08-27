@@ -260,11 +260,19 @@ U8 SearchDrv(OrderType *Order)
             break;
         case 2:
             rnd = 10 + gam_rand() % (iq * 2);
-            g_Cities[Order->City].Money += rnd;
+            if (g_engineConfig.fixOverFlow16) {
+                ADD16(g_Cities[Order->City].Money, rnd);
+            } else {
+                g_Cities[Order->City].Money += rnd;
+            }
             break;
         case 3:
             rnd = 10 + gam_rand() % (iq * 2);
-            g_Cities[Order->City].Food += rnd;
+            if (g_engineConfig.fixOverFlow16) {
+                ADD16(g_Cities[Order->City].Food, rnd);
+            } else {
+                g_Cities[Order->City].Food += rnd;
+            }
             break;
     }
     while (pb == g_PlayerKing + 1)
@@ -466,9 +474,16 @@ U8 TransportationDrv(OrderType *Order)
     if (gam_rand() % 100 > 20)
     {
         ob = Order->Object;
-        g_Cities[ob].Food += Order->Food;
-        g_Cities[ob].Money += Order->Money;
-        g_Cities[ob].MothballArms += Order->Arms;
+
+        if (g_engineConfig.fixOverFlow16) {
+            ADD16(g_Cities[ob].Food, Order->Food);
+            ADD16(g_Cities[ob].Money, Order->Money);
+            ADD16(g_Cities[ob].MothballArms, Order->Arms);
+        } else {
+            g_Cities[ob].Food += Order->Food;
+            g_Cities[ob].Money += Order->Money;
+            g_Cities[ob].MothballArms += Order->Arms;
+        }
         rpi = STR_RP9;
     }
     else
@@ -947,8 +962,13 @@ U8 DepredateDrv(OrderType *Order)
     valf = g_Persons[Order->Person].IQ + g_Persons[Order->Person].Force;
     valm = valf * 2;
     valf *= 5;
-    cptr->Food += valf;
-    cptr->Money += valm;
+    if (g_engineConfig.fixOverFlow16) {
+        ADD16(cptr->Food, valf);
+        ADD16(cptr->Money, valm);
+    } else {
+        cptr->Food += valf;
+        cptr->Money += valm;
+    }
     if (g_Persons[Order->Person].Belong == g_PlayerKing + 1)
     {
         str = SHARE_MEM;

@@ -385,7 +385,11 @@ FAR void OrderConsumeMoney(U8 city,U8 order)
     U8 *ptr;
 
     ptr = ResLoadToCon(IFACE_CONID,ConsumeMoney,g_CBnkPtr);
-    g_Cities[city].Money -= ptr[order];
+    if (g_engineConfig.fixOverFlow16) {
+        ADD16(g_Cities[city].Money, -ptr[order]);
+    } else {
+        g_Cities[city].Money -= ptr[order];
+    }
 }
 
 /******************************************************************************
@@ -430,7 +434,11 @@ FAR void OrderConsumeThew(U8 person,U8 order)
     U8 *ptr;
     
     ptr = ResLoadToCon(IFACE_CONID,ConsumeThew,g_CBnkPtr);
-    g_Persons[person].Thew -= ptr[order];
+    if (g_engineConfig.fixOverFlow16) {
+        ADD16(g_Persons[person].Thew, -ptr[order]);
+    } else {
+        g_Persons[person].Thew -= ptr[order];
+    }
 }
 
 /******************************************************************************

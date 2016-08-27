@@ -204,14 +204,20 @@ typedef struct City				/*城市属性(30 Bytes)*/
 
 
 typedef struct {
-    U8 fixCityOffset;
     U8 enableToolAttackRange;
-    U8 fixThewOverFlow;
-    U8 fixFoodOverFlow;
-    U8 fixArmOverFlow;
-    U8 fixFightMoveOutRange;
+    U8 fixCityOffset;    //纠正城市偏移
+    U8 fixThewOverFlow;  //体力溢出bug
+    U8 fixFoodOverFlow;  //出征刷粮草
+    U8 fixOverFlow16; //多处16位溢出
+    U8 fixTransportOverFlow; //输送溢出
+    U8 fixPowerOverFlow; //智力武力超过255，兵力减少。
+    U8 fixFightMoveOutRange; //战场瞬移
 } EngineConfig;
 
 extern EngineConfig g_engineConfig;
+
+U16 add_16(U16 dst, int n);
+
+#define ADD16(d, n) d = add_16(d, n)
 
 #endif

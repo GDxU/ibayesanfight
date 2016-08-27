@@ -134,7 +134,11 @@ FAR U8 BattleMake(U8 city)
                         if (0xff != odis)
                         {
                             ShowConstStrMsg(STR_ARMOUT);
-                            g_Cities[city].Food -= order.Food;
+                            if (g_engineConfig.fixOverFlow16) {
+                                ADD16(g_Cities[city].Food, -order.Food);
+                            } else {
+                                g_Cities[city].Food -= order.Food;
+                            }
                             OrderConsumeMoney(city,BATTLE);
                             order.OrderId = BATTLE;
                             order.City = city;
@@ -502,7 +506,11 @@ FAR U8 FightResultDeal(U8 city,U8 result)
         KingOverDeal(cking);
     }
 
-    cptr->Food = g_FgtParam.MProvender + g_FgtParam.EProvender;
+    if (g_engineConfig.fixOverFlow16) {
+        cptr->Food = add_16(g_FgtParam.MProvender, g_FgtParam.EProvender);
+    } else {
+        cptr->Food = g_FgtParam.MProvender + g_FgtParam.EProvender;
+    }
 
     return(0);
 }

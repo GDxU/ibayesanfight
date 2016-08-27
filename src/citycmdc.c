@@ -123,9 +123,15 @@ FAR U8 ExchangeMake(U8 city)
                     exc = GetFood(1,cptr->Money / 5);
                     if (0xffff != exc)
                     {
-                        cptr->Food += exc;
-                        exc *= 5;
-                        cptr->Money -= exc;
+                        if (g_engineConfig.fixOverFlow16) {
+                            ADD16(cptr->Food, exc);
+                            exc *= 5;
+                            ADD16(cptr->Money, -exc);
+                        } else {
+                            cptr->Food += exc;
+                            exc *= 5;
+                            cptr->Money -= exc;
+                        }
                     }
                 }
             }
@@ -137,9 +143,15 @@ FAR U8 ExchangeMake(U8 city)
                     exc = GetFood(1,cptr->Food);
                     if (0xffff != exc)
                     {
-                        cptr->Food -= exc;
-                        exc *= 2;
-                        cptr->Money += exc;
+                        if (g_engineConfig.fixOverFlow16) {
+                            ADD16(cptr->Food, -exc);
+                            exc *= 2;
+                            ADD16(cptr->Money, exc);
+                        } else {
+                            cptr->Food -= exc;
+                            exc *= 2;
+                            cptr->Money += exc;
+                        }
                         if (cptr->Money > 30000)
                             cptr->Money = 30000;
                     }
@@ -348,9 +360,15 @@ FAR U8 TransportationMake(U8 city)
                 {
                     OrderConsumeThew(p,TRANSPORTATION);
 
-                    g_Cities[city].Food -= order.Food;
-                    g_Cities[city].Money -= order.Money;
-                    g_Cities[city].MothballArms -= order.Arms;
+                    if (g_engineConfig.fixOverFlow16) {
+                        ADD16(g_Cities[city].Food, -order.Food);
+                        ADD16(g_Cities[city].Money, -order.Money);
+                        ADD16(g_Cities[city].MothballArms, -order.Arms);
+                    } else {
+                        g_Cities[city].Food -= order.Food;
+                        g_Cities[city].Money -= order.Money;
+                        g_Cities[city].MothballArms -= order.Arms;
+                    }
 
                     ResLoadToMem(STRING_CONST,P_SAY_STR31,str);
                     ShowGReport(p,str);
@@ -1003,12 +1021,12 @@ FAR U8 ConscriptionMake(U8 city)
                 arms = GetArmy(10,arms);
                 if (0xffff != arms)
                 {
-                    g_Cities[city].MothballArms += arms;
+                    ADD16(g_Cities[city].MothballArms, arms);
                     OrderConsumeThew(p,CONSCRIPTION);
                     /*添加消耗金钱（固定数目）代码*/
                     /*OrderConsumeMoney(city,CONSCRIPTION);*/
                     armsm = arms / 10;
-                    g_Cities[city].Money -= armsm;
+                    ADD16(g_Cities[city].Money, -armsm);
                     order.OrderId = CONSCRIPTION;
                     order.Person = p;
                     order.City = city;
