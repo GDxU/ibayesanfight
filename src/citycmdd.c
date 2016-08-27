@@ -200,7 +200,7 @@ FAR U8 BattleDrv(OrderType *Order)
     do
     {
         ShowAttackNote(pb - 1,o);
-        if (ob == (g_PlayerKing + 1))
+        if (!g_autoPlay && ob == (g_PlayerKing + 1))
         {
             if (pb == (g_PlayerKing + 1))
             {
@@ -237,7 +237,7 @@ FAR U8 BattleDrv(OrderType *Order)
             gam_memcpy(&ptr[10],fpptr,10);
             GamFight();
         }
-        else if (pb == (g_PlayerKing + 1))
+        else if (!g_autoPlay && pb == (g_PlayerKing + 1))
         {
             if (!ob)
             {

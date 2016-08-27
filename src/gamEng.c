@@ -728,3 +728,5 @@ void GamLoadEngineConfig(void) {
     FgtLoadConsts();   /* 初始化战斗参数 */
     
 }
+
+int g_autoPlay = 1;

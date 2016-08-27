@@ -142,7 +142,7 @@ void ComputerTactic(void)
         b = cptr->Belong;
         if (!(b))
             continue;
-        if (b == (g_PlayerKing + 1))
+        if (!g_autoPlay && (b == (g_PlayerKing + 1)))
             continue;
 
         cptr->AvoidCalamity += 1;
@@ -718,6 +718,7 @@ FAR U8 GameDevDrv(void)
             SetCitySatrap();
         }
 
+        if (!g_autoPlay)
         /*玩家策略*/
         do
         {
@@ -1296,6 +1297,12 @@ void ShowTacticNote(void)
     str = SHARE_MEM + 200;
     astr = SHARE_MEM + 250;
     kc = GetEnemyKing(g_PlayerKing,kq);
+
+    if (g_autoPlay) {
+        kq[kc] = g_PlayerKing;
+        kc += 1;
+    }
+
     for (i = 0;i < kc;i ++)
     {
         GetPersonName(kq[i],str);

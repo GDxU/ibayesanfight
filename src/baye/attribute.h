@@ -209,5 +209,6 @@ typedef struct {
 } EngineConfig;
 
 extern EngineConfig g_engineConfig;
+extern int g_autoPlay;
 
 #endif
