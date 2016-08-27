@@ -55,6 +55,13 @@ FAR U8 BattleMake(U8 city)
         return(1);
     }
 
+    if (g_engineConfig.fixFoodOverFlow && g_Cities[city].Food == 0)
+    {
+        /*粮草不足*/
+        GamMsgBox((const U8*)"\xc1\xb8\xb2\xdd\xb2\xbb\xd7\xe3", 2);
+        return(1);
+    }
+
     xs = g_CityPos.setx;
     ys = g_CityPos.sety;
 

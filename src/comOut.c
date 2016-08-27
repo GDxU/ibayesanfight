@@ -42,7 +42,7 @@ void	GetExcHZMCode(U16 Hz,U8 *hzmCode);
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-FAR void GamMsgBox(U8 *buf,U8 delay)
+FAR void GamMsgBox(const U8 *buf,U8 delay)
 {
     U8	h,s;
     U8	slen;
