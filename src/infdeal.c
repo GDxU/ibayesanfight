@@ -54,8 +54,8 @@ FAR U8 CitiesUpDataDate(void)
 
         RevenueMoney();
     }
-    j = g_Cities[CITY_MAX - 1].PersonQueue + g_Cities[CITY_MAX - 1].Persons;
-    for (i = 0;i < j;i ++)
+
+    for (i = 0;i < PERSON_MAX;i ++)
     {
         g_Persons[i].Thew += THREW_RENEW;
         if (g_Persons[i].Thew > 100)
