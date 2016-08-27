@@ -451,7 +451,16 @@ U8 FgtGenMove(U8 idx)
         }
         x = g_FoucsX - g_PathSX + g_PUseSX;
         y = g_FoucsY - g_PathSY + g_PUseSY;
-        if(x > FGT_MRG || y > FGT_MRG || g_FightPath[y * FGT_MRG + x] > MOV_RSTD)
+
+        U8 cannotMoveTo;
+
+        if (g_engineConfig.fixFightMoveOutRange) {
+            cannotMoveTo = x >= FGT_MRG || y >= FGT_MRG || g_FightPath[y * FGT_MRG + x] > MOV_RSTD;
+        } else {
+            cannotMoveTo = x > FGT_MRG || y > FGT_MRG || g_FightPath[y * FGT_MRG + x] > MOV_RSTD;
+        }
+
+        if(cannotMoveTo)
             FgtStrShowV(STA_SX+74,STA_SY+2,buf);
         else
             break;
