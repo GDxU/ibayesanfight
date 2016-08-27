@@ -206,6 +206,10 @@ typedef struct City				/*城市属性(30 Bytes)*/
 typedef struct {
     U8 fixCityOffset;
     U8 enableToolAttackRange;
+    U8 fixThewOverFlow;
+    U8 fixFoodOverFlow;
+    U8 fixArmOverFlow;
+    U8 fixFightMoveOutRange;
 } EngineConfig;
 
 extern EngineConfig g_engineConfig;

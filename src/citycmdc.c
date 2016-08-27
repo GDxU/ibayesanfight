@@ -458,8 +458,11 @@ FAR U8 MoveMake(U8 city)
                 odis = SearchRoad(city,xs,ys,ocity,g_CityPos.setx,g_CityPos.sety);
                 if (0xff != odis)
                 {
-                    OrderConsumeThew(p,TRANSPORTATION);
-
+                    if (g_engineConfig.fixThewOverFlow) {
+                        OrderConsumeThew(p, MOVE);
+                    } else {
+                        OrderConsumeThew(p, TRANSPORTATION);
+                    }
 
                     ResLoadToMem(STRING_CONST,P_SAY_STR31,str);
                     ShowGReport(p,str);

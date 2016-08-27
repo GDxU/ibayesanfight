@@ -720,7 +720,7 @@ void GamSetDataDir(const U8*dataDir_)
 
 
 EngineConfig g_engineConfig = {
-    0, 0
+    0
 };
 
 void GamLoadEngineConfig(void) {
