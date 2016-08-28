@@ -210,7 +210,6 @@ typedef struct {
     U8 fixFoodOverFlow;  //出征刷粮草
     U8 fixOverFlow16; //多处16位溢出
     U8 fixTransportOverFlow; //输送溢出
-    U8 fixPowerOverFlow; //智力武力超过255，兵力减少。
     U8 fixFightMoveOutRange; //战场瞬移
 } EngineConfig;
 
