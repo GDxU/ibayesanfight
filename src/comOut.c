@@ -30,7 +30,7 @@ U32	CountHZMAddrOff(U16 Hz);
 void	GamResumeSet(U16 bakBnk);
 void	GamAscii(U8 x,U8 y,U8 asc);
 void	GamChinese(U8 x,U8 y,U16 Hz);
-void	GamStrShow(U8 x,U8 y,U8 *buf);
+void	GamStrShow(U8 x,U8 y,const U8 *buf);
 void	GetExcHZMCode(U16 Hz,U8 *hzmCode);
 
 /***********************************************************************
@@ -217,7 +217,7 @@ FAR void GamPicShowExV(U8 x,U8 y,U8 wid,U8 hgt,U8 idx,U8 *pic,U8 *vscr)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-FAR void GamStrShowS(U8 x,U8 y,U8 *str)
+FAR void GamStrShowS(U8 x,U8 y,const U8 *str)
 {
     U16 bakBnk;
 
@@ -274,7 +274,7 @@ void GamResumeSet(U16 bakBnk)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-void GamStrShow(U8 x,U8 y,U8 *buf)
+void GamStrShow(U8 x,U8 y,const U8 *buf)
 {
     U8	i,wid;
     U16	hzCode;
