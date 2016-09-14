@@ -343,6 +343,14 @@ void ShowFightNoteFace(U8 idx)
     GamPicShowExS(WK_SX + (WK_EX - 84 - WK_SX) / 2,WK_SY + (WK_EY - 84 - WK_SY) / 2 + 2,84,64,idx,pic);
 }
 
+/******************************************************************************
+ * 函数名:needMoney
+ * 说  明:指定命令需要消耗的金钱
+ *
+ * 入口参数：order -- 指定命令
+ *
+ * 出口参数：金钱
+ ******************************************************************************/
 static U16 needMoney(U8 order) {
 
     U8 *ptr = ResLoadToCon(IFACE_CONID,ConsumeMoney,g_CBnkPtr);
