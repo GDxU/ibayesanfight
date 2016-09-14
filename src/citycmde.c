@@ -343,6 +343,17 @@ void ShowFightNoteFace(U8 idx)
     GamPicShowExS(WK_SX + (WK_EX - 84 - WK_SX) / 2,WK_SY + (WK_EY - 84 - WK_SY) / 2 + 2,84,64,idx,pic);
 }
 
+static U16 needMoney(U8 order) {
+
+    U8 *ptr = ResLoadToCon(IFACE_CONID,ConsumeMoney,g_CBnkPtr);
+
+    if (g_engineConfig.exConsumeMoney) {
+        return *(U16*)&ptr[order*2];
+    } else {
+        return ptr[order];
+    }
+}
+
 /******************************************************************************
  * 函数名:IsMoney
  * 说  明:判断指定城市是否有足够的金钱执行指定命令
@@ -358,10 +369,7 @@ void ShowFightNoteFace(U8 idx)
  ******************************************************************************/
 FAR U8 IsMoney(U8 city,U8 order)
 {
-    U8 *ptr;
-
-    ptr = ResLoadToCon(IFACE_CONID,ConsumeMoney,g_CBnkPtr);
-    if (g_Cities[city].Money >= ptr[order])
+    if (g_Cities[city].Money >= needMoney(order))
         return(1);
     else
         return(0);
@@ -382,13 +390,12 @@ FAR U8 IsMoney(U8 city,U8 order)
  ******************************************************************************/
 FAR void OrderConsumeMoney(U8 city,U8 order)
 {
-    U8 *ptr;
+    U16 consume = needMoney(order);
 
-    ptr = ResLoadToCon(IFACE_CONID,ConsumeMoney,g_CBnkPtr);
     if (g_engineConfig.fixOverFlow16) {
-        ADD16(g_Cities[city].Money, -ptr[order]);
+        ADD16(g_Cities[city].Money, -consume);
     } else {
-        g_Cities[city].Money -= ptr[order];
+        g_Cities[city].Money -= consume;
     }
 }
 
