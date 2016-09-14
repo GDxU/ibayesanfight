@@ -626,9 +626,8 @@ U8 CanvassDrv(OrderType *Order)
     do
     {
         rade = g_Persons[p].IQ - g_Persons[o].IQ;
-        rade += 50;
         randint = gam_rand() % 100;
-        if (randint > rade)
+        if ((randint + 100) > (rade + 100))
             break;
 
         randint = gam_rand() % 100;
