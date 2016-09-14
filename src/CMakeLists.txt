@@ -1,6 +1,12 @@
 cmake_minimum_required(VERSION 2.4)
 
-add_executable(baye.js 
+project(baye)
+
+INCLUDE(CheckIncludeFiles)
+CHECK_INCLUDE_FILES ( malloc.h HAVE_MALLOC_H )
+
+# set(CMAKE_VERBOSE_MAKEFILE on)
+set (bayelib_SRCS
 FgtCount.c
 FgtPkAi.c
 Fight.c
@@ -30,13 +36,21 @@ varma.c
 platform/js/fsys.c
 platform/js/sem.c
 platform/js/timer.c
-platform/js/main.c
 platform/common/bios.c
 platform/common/gui.c
 platform/common/sys.c
 )
 
+add_library(bayeliba ${bayelib_SRCS})
+
+add_executable(baye.js 
+platform/js/main.c
+)
+
+target_link_libraries(baye.js bayeliba)
+
 target_include_directories(baye.js PRIVATE . ./platform/common)
+target_include_directories(bayeliba PRIVATE . ./platform/common)
 
 set (CMAKE_C_FLAGS
     "-s EMTERPRETIFY=1\
