@@ -133,8 +133,8 @@ void ComputerTactic(void)
     U8 b;
     CityType *cptr;
 
-    ResItemGet(IFACE_CONID,KingTacticOddsIH,TacticOddsIH);
-    ResItemGet(IFACE_CONID,KingTacticOddsD,TacticOddsD);
+    ResItemGetN(IFACE_CONID,KingTacticOddsIH,TacticOddsIH, sizeof(TacticOddsIH));
+    ResItemGetN(IFACE_CONID,KingTacticOddsD,TacticOddsD, sizeof(TacticOddsD));
     for (i = 0;i < CITY_MAX;i ++)
     {
         cptr = &g_Cities[i];
@@ -1081,8 +1081,8 @@ void LoadPeriod(U8 period)
     ptr = ResLoadToCon(GENERAL_RESID,period,g_CBnkPtr);
     loadPersons(g_Persons, ptr, length);
     
-    ResItemGet(GENERAL_QUEUE, period, g_PersonsQueue);
-    ResItemGet(GOODS_QUEUE, period, g_GoodsQueue);
+    ResItemGetN(GENERAL_QUEUE, period, g_PersonsQueue, PERSON_MAX);
+    ResItemGetN(GOODS_QUEUE, period, g_GoodsQueue, GOODS_MAX);
     
     gam_memset(FIGHTERS_IDX,0,FIGHT_ORDER_MAX);
     gam_memset((U8 *)ORDERQUEUE,0xff,(U16)ORDER_MAX * sizeof(OrderType));

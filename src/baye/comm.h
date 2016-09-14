@@ -111,4 +111,8 @@ FAR void GamSetAltLibPath(const U8* datPath);
 FAR void GamSetDataDir(const U8*dataDir);
 
 
+#ifndef min
+#define min(a, b) (a > b) ? b : a
+#endif
+
 #endif	/* _COMM_H */
