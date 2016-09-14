@@ -208,9 +208,10 @@ typedef struct {
     U8 fixCityOffset;    //纠正城市偏移
     U8 fixThewOverFlow;  //体力溢出bug
     U8 fixFoodOverFlow;  //出征刷粮草
-    U8 fixOverFlow16; //多处16位溢出
-    U8 fixTransportOverFlow; //输送溢出
+    U8 fixOverFlow16;    //多处16位溢出
+    U8 fixConsumeMoney;  //招降收费
     U8 fixFightMoveOutRange; //战场瞬移
+    U8 exConsumeMoney;   //扩展金钱消耗
 } EngineConfig;
 
 extern EngineConfig g_engineConfig;

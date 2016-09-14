@@ -868,6 +868,13 @@ FAR U8 SurrenderMake(U8 city)
     U8 pp,p;
     OrderType order;
 
+    if (g_engineConfig.fixConsumeMoney && !IsMoney(city, SURRENDER))
+    {
+        /*金钱不足*/
+        ShowConstStrMsg(NOTE_STR8);
+        return(1);
+    }
+
     pqptr = SHARE_MEM;
 
     pcount = GetCityPersons(city,pqptr);
@@ -912,7 +919,10 @@ FAR U8 SurrenderMake(U8 city)
                     }
                     
                     OrderConsumeThew(p,SURRENDER);
-                    
+                    if (g_engineConfig.fixConsumeMoney) {
+                        OrderConsumeMoney(p,SURRENDER);
+                    }
+
                     order.OrderId = SURRENDER;
                     order.Person = p;
                     order.City = city;
