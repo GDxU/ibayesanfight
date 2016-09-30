@@ -662,11 +662,11 @@ FAR void FgtGetCmdRng(U8 type,U8 param,U8 idx)
     g_FgtAtkRng[2] = (U8)(g_GenPos[idx].y - (rngb >> 1));
 
     if (g_engineConfig.enableScript) {
-        convert(g_FgtAtkRng+3, rngb, TOOL_ATT_RANGEUNIT);
-        rngb = TOOL_ATT_RANGEUNIT;
-        g_FgtAtkRng[0] = rngb;
-        g_FgtAtkRng[1] = (U8)(g_GenPos[idx].x - (rngb >> 1));
-        g_FgtAtkRng[2] = (U8)(g_GenPos[idx].y - (rngb >> 1));
+//        convert(g_FgtAtkRng+3, rngb, TOOL_ATT_RANGEUNIT);
+//        rngb = TOOL_ATT_RANGEUNIT;
+//        g_FgtAtkRng[0] = rngb;
+//        g_FgtAtkRng[1] = (U8)(g_GenPos[idx].x - (rngb >> 1));
+//        g_FgtAtkRng[2] = (U8)(g_GenPos[idx].y - (rngb >> 1));
         AdvancedCmdRng(type, param, idx);
     }
 }
@@ -998,7 +998,14 @@ static void AdvancedCmdRng(U8 type, U8 param, U8 idx) {
 
     object_bind_u8(context, "skill", &param, 0);
 
+    U8 rngb = g_FgtAtkRng[0];
+
+    object_bind_u8(context, "rangeSize", &rngb, 1);
+
     call_script("calcAttackRange", context);
     object_release(context);
 
+    g_FgtAtkRng[0] = rngb;
+    g_FgtAtkRng[1] = (U8)(g_GenPos[idx].x - (rngb >> 1));
+    g_FgtAtkRng[2] = (U8)(g_GenPos[idx].y - (rngb >> 1));
 }
