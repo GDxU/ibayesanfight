@@ -137,7 +137,7 @@ U8 SearchDrv(OrderType *Order)
     ShowMapClear();
     pqptr = SHARE_MEM;
     str = SHARE_MEM;
-    astr = SHARE_MEM + 40;
+    astr = SHARE_MEM + 400;
     pss = gam_rand() % 4;
     person = Order->Person;
     pb = g_Persons[person].Belong;
@@ -423,7 +423,7 @@ U8 SurrenderDrv(OrderType *Order)
         }
         else
         {
-            str = SHARE_MEM + 300;
+            str = SHARE_MEM + 3000;
             ResLoadToMem(STRING_CONST,P_SAY_STR1 + (gam_rand() % 3),str);
             ShowMapClear();
             ShowGReport(ob,str);
@@ -848,8 +848,8 @@ U8 InduceDrv(OrderType *Order)
         wf = 1;
     }while (0);
 
-    str = SHARE_MEM + 300;
-    astr = SHARE_MEM + 340;
+    str = SHARE_MEM + 3000;
+    astr = SHARE_MEM + 3400;
     if (pb == g_PlayerKing + 1)
     {
         if (wf)
@@ -971,7 +971,7 @@ U8 DepredateDrv(OrderType *Order)
     if (g_Persons[Order->Person].Belong == g_PlayerKing + 1)
     {
         str = SHARE_MEM;
-        astr = SHARE_MEM + 100;
+        astr = SHARE_MEM + 1000;
         ResLoadToMem(STRING_CONST,P_SAY_STR28,str);
         gam_itoa(valm,astr,10);
         gam_strcat(str,astr);

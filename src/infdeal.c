@@ -832,8 +832,8 @@ FAR void ReportCalamity(U8 city)
     p = g_Cities[city].SatrapId;
     if (p)
     {
-        rstr = SHARE_MEM + 300;
-        astr = SHARE_MEM + 340;
+        rstr = SHARE_MEM + 3000;
+        astr = SHARE_MEM + 3400;
         
         GetCityName(city,rstr);
         ResLoadToMem(STRING_CONST,STR_RP1,astr);

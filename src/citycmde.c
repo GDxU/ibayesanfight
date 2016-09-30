@@ -92,7 +92,7 @@ FAR U8 ConfiscateMake(U8 city)
                     /*添加没收成功代码*/
                     if (p != g_PlayerKing)
                     {
-                        str = SHARE_MEM + 300;
+                        str = SHARE_MEM + 3000;
                         ResLoadToMem(STRING_CONST,P_SAY_STR7 + (gam_rand() % 3),str);
                         ShowMapClear();
                         ShowGReport(p,str);
@@ -165,7 +165,7 @@ FAR U8 DepredateMake(U8 city)
             }
             OrderConsumeThew(p,CONSCRIPTION);
 
-            str = SHARE_MEM + 300;
+            str = SHARE_MEM + 3000;
             ResLoadToMem(STRING_CONST,P_SAY_STR27,str);
             ShowGReport(p,str);
 
@@ -203,8 +203,8 @@ FAR void ShowAttackNote(U8 ap,U8 city)
 
     ShowFightNoteFace(0);
 
-    str = SHARE_MEM + 300;
-    buf = SHARE_MEM + 340;
+    str = SHARE_MEM + 3000;
+    buf = SHARE_MEM + 3400;
     if (ap == g_PlayerKing)
     {
         ResLoadToMem(STRING_CONST,STR_OURS,str);
@@ -241,8 +241,8 @@ FAR void ShowFightNote(U8 ap,U8 bc)
 
     ShowFightNoteFace(1);
 
-    str = SHARE_MEM + 300;
-    buf = SHARE_MEM + 340;
+    str = SHARE_MEM + 3000;
+    buf = SHARE_MEM + 3400;
     GetPersonName(ap,str);
     ResLoadToMem(STRING_CONST,STR_FIGHT_NOTE1,buf);
     gam_strcat(str,buf);
@@ -273,8 +273,8 @@ FAR void ShowFightWinNote(U8 wp)
 
     ShowFightNoteFace(2);
 
-    str = SHARE_MEM + 300;
-    buf = SHARE_MEM + 340;
+    str = SHARE_MEM + 3000;
+    buf = SHARE_MEM + 3400;
 
     if (wp == g_PlayerKing)
     {
@@ -309,8 +309,8 @@ FAR void ShowFightLossNote(void)
 
     ShowFightNoteFace(3);
 
-    str = SHARE_MEM + 300;
-    buf = SHARE_MEM + 340;
+    str = SHARE_MEM + 3000;
+    buf = SHARE_MEM + 3400;
 
     ResLoadToMem(STRING_CONST,STR_OURS,str);
 
