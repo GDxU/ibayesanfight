@@ -994,6 +994,10 @@ static void AdvancedCmdRng(U8 type, U8 param, U8 idx) {
 
     object_bind_bin(context, "range", g_FgtAtkRng + 3, TOOL_ATT_RANGE, 1);
 
+    object_bind_u8(context, "type", &type, 0);
+
+    object_bind_u8(context, "skill", &param, 0);
+
     call_script("calcAttackRange", context);
     object_release(context);
 
