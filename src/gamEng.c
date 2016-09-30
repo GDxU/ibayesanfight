@@ -724,7 +724,7 @@ EngineConfig g_engineConfig = {
 };
 
 void GamLoadEngineConfig(void) {
-    ResItemGet(IFACE_CONID, dEngineConfig, (U8*)&g_engineConfig);
+    ResItemGetN(IFACE_CONID, dEngineConfig, (U8*)&g_engineConfig, sizeof(g_engineConfig));
     FgtLoadConsts();   /* 初始化战斗参数 */
     
 }

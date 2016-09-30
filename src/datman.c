@@ -45,7 +45,11 @@ FAR U16 ResGetItemLen(U16 ResId,U8 idx)
     return GetResItem(addr,idx,&reshead,&rIdx);
 }
 
-FAR U8 ResItemGet(U16 ResId,U8 idx,U8 *ptr)
+FAR U8 ResItemGet(U16 ResId,U8 idx,U8 *ptr) {
+    return ResItemGetN(ResId, idx, ptr, (U32)-1);
+}
+
+FAR U8 ResItemGetN(U16 ResId,U8 idx,U8 *ptr, U32 bufsize)
 {
     U16	plen;
     U32	addr;
@@ -61,8 +65,9 @@ FAR U8 ResItemGet(U16 ResId,U8 idx,U8 *ptr)
     if (plen == 0) {
         return 2;
     }
+
     gam_fseek(g_LibFp,addr,SEEK_SET);
-    gam_fread(ptr,1,plen,g_LibFp);
+    gam_fread(ptr, 1, min(plen, bufsize) ,g_LibFp);
     if(reshead.ResKey)
         ExpDataWithKey(ptr,reshead.ResKey,plen);
     return 0;
