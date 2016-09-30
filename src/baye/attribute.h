@@ -213,7 +213,7 @@ typedef struct {
     U8 fixFightMoveOutRange; //修复战场瞬移
     U8 enable16bitConsumeMoney;   //启用扩展金钱消耗(16位)
     U8 enableScript;              //启用脚本
-    U8 enableAdvancedAttackRange; //启用高级攻击范围计算
+    U8 reserved;
 } EngineConfig;
 
 extern EngineConfig g_engineConfig;

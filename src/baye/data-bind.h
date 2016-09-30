@@ -22,6 +22,7 @@ typedef struct Object Object;
 typedef struct Field Field;
 
 Object* object_new(U16 maxFields);
+EMSCRIPTEN_KEEPALIVE
 Object* object_new_slave(Object* master, U16 maxFields);
 void object_release(Object* obj);
 

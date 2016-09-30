@@ -131,7 +131,7 @@ void object_bind_game_env(Object* o)
     object_bind_u8(o, "period", &g_PIdx, 0);
 }
 
-Object* create_game_env(void) {
+Object* get_game_env(void) {
     Object* env = object_new(8);
     object_bind_game_env(env);
     return env;

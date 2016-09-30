@@ -15,6 +15,9 @@ void script_init(void)
 {
     U8* script = ResLoadStringWithId(ENGINE_SCRIPT);
     EM_ASM_INT({
+        if (window.baye == undefined) {
+            window.baye = {};
+        }
         var script = UTF8ToString($0);
         eval(script);
     }, script);
