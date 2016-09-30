@@ -41,6 +41,7 @@ void FgtLoadToMem3(U8 idx,U8 *buf);
 void FgtViewForce(U8 pForce,U8 pSIdx);
 U8 TransIdxToGen3(U8 idx);
 U8 FgtStatGen(U8 flag);
+static void AdvancedCmdRng(U8 type,U8 param,U8 idx);
 
 /***********************************************************************
  * 说明:     获取计算机控制方的战斗命令
@@ -633,6 +634,10 @@ FAR void FgtGetCmdRng(U8 type,U8 param,U8 idx)
     g_FgtAtkRng[0] = rngb;
     g_FgtAtkRng[1] = (U8)(g_GenPos[idx].x - (rngb >> 1));
     g_FgtAtkRng[2] = (U8)(g_GenPos[idx].y - (rngb >> 1));
+
+    if (g_engineConfig.enableAdvancedAttackRange) {
+        AdvancedCmdRng(type, param, idx);
+    }
 }
 /***********************************************************************
  * 说明:     获取要驱动的将领序号
@@ -936,3 +941,6 @@ U8 TransIdxToGen3(U8 idx)
     return (U8)(g_FgtParam.GenArray[idx] - 1);
 }
 
+static void AdvancedCmdRng(U8 type, U8 param, U8 idx) {
+
+}
