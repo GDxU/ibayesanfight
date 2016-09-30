@@ -211,7 +211,7 @@ typedef struct {
     U8 fixOverFlow16;    //修复多处16位溢出
     U8 fixConsumeMoney;  //启用招降收费
     U8 fixFightMoveOutRange; //修复战场瞬移
-    U8 exConsumeMoney;   //启用扩展金钱消耗(16位)
+    U8 enable16bitConsumeMoney;   //启用扩展金钱消耗(16位)
 } EngineConfig;
 
 extern EngineConfig g_engineConfig;

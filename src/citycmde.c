@@ -355,8 +355,8 @@ static U16 needMoney(U8 order) {
 
     U8 *ptr = ResLoadToCon(IFACE_CONID,ConsumeMoney,g_CBnkPtr);
 
-    if (g_engineConfig.exConsumeMoney) {
-        return *(U16*)&ptr[order*2];
+    if (g_engineConfig.enable16bitConsumeMoney) {
+        return ((U16*)ptr)[order];
     } else {
         return ptr[order];
     }
