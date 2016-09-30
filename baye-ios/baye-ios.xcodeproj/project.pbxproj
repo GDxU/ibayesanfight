@@ -7,12 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		141D693E1D8BB20E000F772D /* res-msgpack.c in Sources */ = {isa = PBXBuildFile; fileRef = 141D693C1D8BB20E000F772D /* res-msgpack.c */; };
-		141D693F1D8BB20E000F772D /* res-msgpack.c in Sources */ = {isa = PBXBuildFile; fileRef = 141D693C1D8BB20E000F772D /* res-msgpack.c */; };
 		141D69461D8CD137000F772D /* data-bind.c in Sources */ = {isa = PBXBuildFile; fileRef = 141D69451D8CD137000F772D /* data-bind.c */; };
 		141D69471D8CD137000F772D /* data-bind.c in Sources */ = {isa = PBXBuildFile; fileRef = 141D69451D8CD137000F772D /* data-bind.c */; };
 		141D694B1D8CD1E9000F772D /* bind-objects.c in Sources */ = {isa = PBXBuildFile; fileRef = 141D69491D8CD1E9000F772D /* bind-objects.c */; };
 		141D694C1D8CD1E9000F772D /* bind-objects.c in Sources */ = {isa = PBXBuildFile; fileRef = 141D69491D8CD1E9000F772D /* bind-objects.c */; };
+		141D69541D9EABA6000F772D /* dummy-script.c in Sources */ = {isa = PBXBuildFile; fileRef = 141D69531D9EABA6000F772D /* dummy-script.c */; };
+		141D69551D9EABA6000F772D /* dummy-script.c in Sources */ = {isa = PBXBuildFile; fileRef = 141D69531D9EABA6000F772D /* dummy-script.c */; };
 		142D1CE61D22A3BA00CA443B /* bios.c in Sources */ = {isa = PBXBuildFile; fileRef = 142D1CE41D22A3BA00CA443B /* bios.c */; };
 		142D1CE71D22A3BA00CA443B /* sys.c in Sources */ = {isa = PBXBuildFile; fileRef = 142D1CE51D22A3BA00CA443B /* sys.c */; };
 		142D1CEE1D22B82800CA443B /* gui.c in Sources */ = {isa = PBXBuildFile; fileRef = 142D1CED1D22B82800CA443B /* gui.c */; };
@@ -93,14 +93,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		141D693C1D8BB20E000F772D /* res-msgpack.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "res-msgpack.c"; sourceTree = "<group>"; };
-		141D693D1D8BB20E000F772D /* res-msgpack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "res-msgpack.h"; sourceTree = "<group>"; };
 		141D69451D8CD137000F772D /* data-bind.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "data-bind.c"; sourceTree = "<group>"; };
 		141D69481D8CD17F000F772D /* data-bind.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "data-bind.h"; sourceTree = "<group>"; };
 		141D69491D8CD1E9000F772D /* bind-objects.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "bind-objects.c"; sourceTree = "<group>"; };
 		141D694D1D8CD20D000F772D /* bind-objects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "bind-objects.h"; sourceTree = "<group>"; };
 		141D694E1D8D3191000F772D /* script.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = script.c; sourceTree = "<group>"; };
 		141D69521D8D3260000F772D /* script.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = script.h; sourceTree = "<group>"; };
+		141D69531D9EABA6000F772D /* dummy-script.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "dummy-script.c"; sourceTree = "<group>"; };
 		142D1C191D21897600CA443B /* itoa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = itoa.h; sourceTree = "<group>"; };
 		142D1C1B1D21899000CA443B /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		142D1CE41D22A3BA00CA443B /* bios.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bios.c; sourceTree = "<group>"; };
@@ -313,8 +312,6 @@
 				1444A9661B7B6F1F0085EC83 /* comOut.c */,
 				1444A9671B7B6F1F0085EC83 /* data */,
 				1444A96A1B7B6F1F0085EC83 /* datman.c */,
-				141D693C1D8BB20E000F772D /* res-msgpack.c */,
-				141D693D1D8BB20E000F772D /* res-msgpack.h */,
 				141D69451D8CD137000F772D /* data-bind.c */,
 				1444A96B1B7B6F1F0085EC83 /* debug.c */,
 				1444A96C1B7B6F1F0085EC83 /* FgtCount.c */,
@@ -416,6 +413,7 @@
 				1444A9AA1B7B79D10085EC83 /* fsys.c */,
 				1437473C1B7CBC2300939571 /* sem.m */,
 				143747B71B7E7AFB00939571 /* timer.m */,
+				141D69531D9EABA6000F772D /* dummy-script.c */,
 			);
 			path = ios;
 			sourceTree = "<group>";
@@ -563,7 +561,6 @@
 				1437478E1B7E68C300939571 /* cityedit.c in Sources */,
 				1437478F1B7E68C300939571 /* comIn.c in Sources */,
 				143747901B7E68C300939571 /* comOut.c in Sources */,
-				141D693E1D8BB20E000F772D /* res-msgpack.c in Sources */,
 				14585C751D26C04F00DCE3BA /* main.m in Sources */,
 				143747931B7E68C300939571 /* datman.c in Sources */,
 				143747941B7E68C300939571 /* debug.c in Sources */,
@@ -575,6 +572,7 @@
 				142D1CEE1D22B82800CA443B /* gui.c in Sources */,
 				143747A91B7E68C300939571 /* infdeal.c in Sources */,
 				143747AB1B7E68C300939571 /* paccount.c in Sources */,
+				141D69541D9EABA6000F772D /* dummy-script.c in Sources */,
 				143747AF1B7E68C300939571 /* PublicFun.c in Sources */,
 				143747B01B7E68C300939571 /* showface.c in Sources */,
 				143747B11B7E68C300939571 /* Size.c in Sources */,
@@ -596,7 +594,6 @@
 				14585C771D26CA8A00DCE3BA /* bios.c in Sources */,
 				14585C761D26CA8700DCE3BA /* gui.c in Sources */,
 				148718911B7FB87D00AC88EB /* fsys.c in Sources */,
-				141D693F1D8BB20E000F772D /* res-msgpack.c in Sources */,
 				148718931B7FB87D00AC88EB /* sem.m in Sources */,
 				148718971B7FB87D00AC88EB /* timer.m in Sources */,
 				148718AD1B7FB87D00AC88EB /* citycmd.c in Sources */,
@@ -627,6 +624,7 @@
 				148718D41B7FB87D00AC88EB /* tactic.c in Sources */,
 				148718D51B7FB87D00AC88EB /* varma.c in Sources */,
 				148718D61B7FB87D00AC88EB /* itoa.c in Sources */,
+				141D69551D9EABA6000F772D /* dummy-script.c in Sources */,
 				148718901B7FB47600AC88EB /* GamLCDView.m in Sources */,
 				148718731B7FB0C000AC88EB /* ViewController.m in Sources */,
 				148718701B7FB0C000AC88EB /* AppDelegate.m in Sources */,
