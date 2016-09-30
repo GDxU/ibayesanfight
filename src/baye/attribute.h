@@ -1,7 +1,7 @@
 #ifndef ATTRIBUT_H
 #define ATTRIBUT_H
 
-#define PERSON_MAX		200	/*最大武将数*/
+#define PERSON_MAX		250	/*最大武将数*/
 #define CITY_MAX		38	/*最大城市数*/
 #define GOODS_MAX		200	/*最大道具数*/
 #define PERSON_DEATH_AGE	90	/*武将寿命*/

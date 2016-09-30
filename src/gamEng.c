@@ -600,6 +600,7 @@ bool GamLoadRcd(U8 idx)
 
     U16 goodsQueueLen = GOODS_MAX;
     U16 orderQueueLen = ORDER_MAX;
+    U16 personQueueLen = PERSON_MAX;
 
     if (verFlag & 0x80) {
         version = verFlag;
@@ -619,6 +620,10 @@ bool GamLoadRcd(U8 idx)
         orderQueueLen = 100;
     }
 
+    if (version < 0x82) {
+        personQueueLen = 200;
+    }
+
     gam_fread((U8 *)&g_PlayerKing,1,1,fp);
     gam_fread((U8 *)&g_YearDate,2,1,fp);
     gam_fread((U8 *)&g_LookEnemy,1,1,fp);
@@ -626,8 +631,8 @@ bool GamLoadRcd(U8 idx)
     gam_fread((U8 *)&g_MoveSpeed,1,1,fp);
     gam_fread((U8 *)&g_MonthDate,1,1,fp);
     gam_fread((U8 *)&g_CityPos,sizeof(CitySetType),1,fp);
-    gam_fread((U8 *)g_Persons,sizeof(PersonType),PERSON_MAX,fp);
-    gam_fread((U8 *)g_PersonsQueue,1,PERSON_MAX,fp);
+    gam_fread((U8 *)g_Persons,sizeof(PersonType),personQueueLen,fp);
+    gam_fread((U8 *)g_PersonsQueue,1,personQueueLen,fp);
     gam_fread((U8 *)g_GoodsQueue,1,goodsQueueLen,fp);
     gam_fclose(fp);
     
@@ -678,7 +683,7 @@ bool GamSaveRcd(U8 idx)
         return false;
     }
     
-    U8 verFlag = 0x81;
+    U8 verFlag = 0x82;
     gam_fwrite((U8 *)&verFlag,1,1,fp);
     gam_fwrite((U8 *)&g_PIdx,1,1,fp);
     gam_fwrite((U8 *)&g_PlayerKing,1,1,fp);
