@@ -19,6 +19,7 @@
 #undef	FightSub
 #define	FightSub
 #include "baye/enghead.h"
+#include "baye/data-bind.h"
 #define		IN_FILE	1	/* 当前文件位置 */
 
 /*本体函数声明*/
@@ -360,10 +361,30 @@ U8 FgtAtkAction(U8 aIdx)
     U8	sFrm,eFrm;
     U16	hurt,speId;
 
-    hurt = CountAtkHurt();
-    speId = CountPlusSub(g_GenAtt[1].arms,hurt);
-    dead = (hurt != speId);			/* dead = true 被攻击将领被击溃 */
-    hurt = speId;
+    if (g_engineConfig.enableScript) {
+        U16 old = *g_GenAtt[1].arms;
+
+        Object* context = object_new(4);
+        Object* self = object_new(16);
+        Object* target = object_new(16);
+        Object* city = object_new(16);
+
+        object_bind_object(context, "self", self, 0);
+        object_bind_object(context, "target", target, 0);
+        object_bind_object(context, "city", city, 0);
+        object_bind_u8(context, "weather", &g_FgtWeather, 1);
+
+        object_release(context);
+
+        hurt = old - *g_GenAtt[1].arms;
+        dead = g_GenAtt[1].arms == 0;
+
+    } else {
+        hurt = CountAtkHurt();
+        speId = CountPlusSub(g_GenAtt[1].arms,hurt);
+        dead = (hurt != speId);			/* dead = true 被攻击将领被击溃 */
+        hurt = speId;
+    }
     /* 动画播放 */
     if(g_LookMovie)
     {

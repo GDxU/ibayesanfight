@@ -132,6 +132,8 @@
 #define TACTIC_ICON		75		/* 战略图 */
 #define	FIGHT_NOTE_ICON		76		/* 兵戎提示图 */
 
+#define	ENGINE_SCRIPT		77		/* 脚本 */
+
 /* 菜单ICON */
 #define	MAIN_ICON1		100		/* 主菜单icon1 */
 #define	MAIN_ICON2		101		/* 主菜单icon2 */

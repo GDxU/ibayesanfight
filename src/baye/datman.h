@@ -27,5 +27,6 @@ FAR U8 *ResLoadToCon(U16 ResId,U8 idx,U8 *cbnk);
 FAR U8 ResLoadToMem(U16 ResId,U8 idx,U8 *ptr);
 FAR U8 ResItemGet(U16 ResId,U8 idx,U8 *ptr);
 FAR U8 ResItemGetN(U16 ResId,U8 idx,U8 *ptr, U32 bufsize);
+FAR U8 *ResLoadStringWithId(U16 ResId);
 
 #endif	/* _RESOURCE_H */

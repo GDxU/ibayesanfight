@@ -33,9 +33,13 @@ showface.c
 strcnt.c
 tactic.c
 varma.c
+res-msgpack.c
+data-bind.c
+bind-objects.c
 platform/js/fsys.c
 platform/js/sem.c
 platform/js/timer.c
+platform/js/script.c
 platform/common/bios.c
 platform/common/gui.c
 platform/common/sys.c
@@ -47,10 +51,11 @@ add_executable(baye.js
 platform/js/main.c
 )
 
-target_link_libraries(baye.js bayeliba)
+target_link_libraries(baye.js bayeliba msgpackc-static)
 
 target_include_directories(baye.js PRIVATE . ./platform/common)
 target_include_directories(bayeliba PRIVATE . ./platform/common)
+target_include_directories(bayeliba PRIVATE ${msgpack_SOURCE_DIR}/include)
 
 set (CMAKE_C_FLAGS
     "-s EMTERPRETIFY=1\

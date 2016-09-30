@@ -21,6 +21,7 @@
 #include "baye/enghead.h"
 #define		IN_FILE	1	/* 当前文件位置 */
 
+
 /*本体函数声明*/
 /*------------------------------------------*/
 U8 TransIdxToGen(U8 idx);
@@ -227,6 +228,7 @@ static U16 calcAt(I8 mModu, U16 at) {
         return at - (at * (U32)mModu / 100);
     }
 }
+
 
 FAR void BuiltAtkAttr(U8 idx,U8 pIdx)
 {
@@ -761,9 +763,9 @@ void FgtUnfurlTree(U8 idx,U8 *buf,U8 *len)
 }
 
 FAR void FgtLoadConsts(void) {
-    ResItemGet(IFACE_CONID, dFgtIntMove, FgtIntMove);
-    ResItemGet(IFACE_CONID, dSubduModu, (U8*)SubduModu);
-    ResItemGet(IFACE_CONID, dAtkModulus, (U8*)AtkModulus);
-    ResItemGet(IFACE_CONID, dDfModulus, (U8*)DfModulus);
-    ResItemGet(IFACE_CONID, dTerrDfModu, (U8*)TerrDfModu);
+    ResItemGetN(IFACE_CONID, dFgtIntMove, FgtIntMove, sizeof(FgtIntMove));
+    ResItemGetN(IFACE_CONID, dSubduModu, (U8*)SubduModu, sizeof(SubduModu));
+    ResItemGetN(IFACE_CONID, dAtkModulus, (U8*)AtkModulus, sizeof(AtkModulus));
+    ResItemGetN(IFACE_CONID, dDfModulus, (U8*)DfModulus, sizeof(DfModulus));
+    ResItemGetN(IFACE_CONID, dTerrDfModu, (U8*)TerrDfModu, sizeof(TerrDfModu));
 }

@@ -91,7 +91,6 @@ FAR void GamBaYeEng(void)
         /* 获取游戏选项 */
         if(!GamMainChose())
             break;
-
         GameDevDrv();	 	/* 游戏引擎入口程序 */
     } while (1);
 
@@ -121,7 +120,7 @@ U8 GamVarInit(void)
     g_FightPath = gam_malloc(FGT_MRG*FGT_MRG + 25);		/* 250 */
     if (NULL == g_FightPath)
         return 1;
-    g_FgtAtkRng = gam_malloc(TOOL_ATT_RANGE + 5);		/* 86 */
+    g_FgtAtkRng = gam_malloc(MAX_ATT_RANGE + 5);		/* 86 */
     if (NULL == g_FgtAtkRng)
         return 1;
 
@@ -726,7 +725,6 @@ EngineConfig g_engineConfig = {
 void GamLoadEngineConfig(void) {
     ResItemGetN(IFACE_CONID, dEngineConfig, (U8*)&g_engineConfig, sizeof(g_engineConfig));
     FgtLoadConsts();   /* 初始化战斗参数 */
-    
 }
 
 U16 add_16(U16 dst, int n)

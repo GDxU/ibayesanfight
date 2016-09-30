@@ -160,6 +160,8 @@
 #define	ATT_RANGEUNIT		5
 #define	ATT_RANGE		ATT_RANGEUNIT*ATT_RANGEUNIT
 
+#define	MAX_ATT_RANGEUNIT TOOL_ATT_RANGEUNIT
+#define	MAX_ATT_RANGE	MAX_ATT_RANGEUNIT*MAX_ATT_RANGEUNIT
 /*------------------------
   技能相关定义
 ------------------------*/

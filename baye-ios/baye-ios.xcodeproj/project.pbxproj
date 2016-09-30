@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		141D693E1D8BB20E000F772D /* res-msgpack.c in Sources */ = {isa = PBXBuildFile; fileRef = 141D693C1D8BB20E000F772D /* res-msgpack.c */; };
+		141D693F1D8BB20E000F772D /* res-msgpack.c in Sources */ = {isa = PBXBuildFile; fileRef = 141D693C1D8BB20E000F772D /* res-msgpack.c */; };
+		141D69461D8CD137000F772D /* data-bind.c in Sources */ = {isa = PBXBuildFile; fileRef = 141D69451D8CD137000F772D /* data-bind.c */; };
+		141D69471D8CD137000F772D /* data-bind.c in Sources */ = {isa = PBXBuildFile; fileRef = 141D69451D8CD137000F772D /* data-bind.c */; };
+		141D694B1D8CD1E9000F772D /* bind-objects.c in Sources */ = {isa = PBXBuildFile; fileRef = 141D69491D8CD1E9000F772D /* bind-objects.c */; };
+		141D694C1D8CD1E9000F772D /* bind-objects.c in Sources */ = {isa = PBXBuildFile; fileRef = 141D69491D8CD1E9000F772D /* bind-objects.c */; };
 		142D1CE61D22A3BA00CA443B /* bios.c in Sources */ = {isa = PBXBuildFile; fileRef = 142D1CE41D22A3BA00CA443B /* bios.c */; };
 		142D1CE71D22A3BA00CA443B /* sys.c in Sources */ = {isa = PBXBuildFile; fileRef = 142D1CE51D22A3BA00CA443B /* sys.c */; };
 		142D1CEE1D22B82800CA443B /* gui.c in Sources */ = {isa = PBXBuildFile; fileRef = 142D1CED1D22B82800CA443B /* gui.c */; };
@@ -87,6 +93,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		141D693C1D8BB20E000F772D /* res-msgpack.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "res-msgpack.c"; sourceTree = "<group>"; };
+		141D693D1D8BB20E000F772D /* res-msgpack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "res-msgpack.h"; sourceTree = "<group>"; };
+		141D69451D8CD137000F772D /* data-bind.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "data-bind.c"; sourceTree = "<group>"; };
+		141D69481D8CD17F000F772D /* data-bind.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "data-bind.h"; sourceTree = "<group>"; };
+		141D69491D8CD1E9000F772D /* bind-objects.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "bind-objects.c"; sourceTree = "<group>"; };
+		141D694D1D8CD20D000F772D /* bind-objects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "bind-objects.h"; sourceTree = "<group>"; };
+		141D694E1D8D3191000F772D /* script.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = script.c; sourceTree = "<group>"; };
+		141D69521D8D3260000F772D /* script.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = script.h; sourceTree = "<group>"; };
 		142D1C191D21897600CA443B /* itoa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = itoa.h; sourceTree = "<group>"; };
 		142D1C1B1D21899000CA443B /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		142D1CE41D22A3BA00CA443B /* bios.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bios.c; sourceTree = "<group>"; };
@@ -229,6 +243,7 @@
 				142D1CE91D22A3CC00CA443B /* fsys.c */,
 				142D1CEC1D22A3CC00CA443B /* timer.c */,
 				142D1CF41D23459100CA443B /* main.c */,
+				141D694E1D8D3191000F772D /* script.c */,
 			);
 			path = js;
 			sourceTree = "<group>";
@@ -298,8 +313,12 @@
 				1444A9661B7B6F1F0085EC83 /* comOut.c */,
 				1444A9671B7B6F1F0085EC83 /* data */,
 				1444A96A1B7B6F1F0085EC83 /* datman.c */,
+				141D693C1D8BB20E000F772D /* res-msgpack.c */,
+				141D693D1D8BB20E000F772D /* res-msgpack.h */,
+				141D69451D8CD137000F772D /* data-bind.c */,
 				1444A96B1B7B6F1F0085EC83 /* debug.c */,
 				1444A96C1B7B6F1F0085EC83 /* FgtCount.c */,
+				141D69491D8CD1E9000F772D /* bind-objects.c */,
 				1444A96D1B7B6F1F0085EC83 /* FgtPkAi.c */,
 				1444A96E1B7B6F1F0085EC83 /* Fight.c */,
 				1444A96F1B7B6F1F0085EC83 /* FightSub.c */,
@@ -324,6 +343,9 @@
 		1444A94A1B7B6F1F0085EC83 /* baye */ = {
 			isa = PBXGroup;
 			children = (
+				141D69521D8D3260000F772D /* script.h */,
+				141D694D1D8CD20D000F772D /* bind-objects.h */,
+				141D69481D8CD17F000F772D /* data-bind.h */,
 				142D1C191D21897600CA443B /* itoa.h */,
 				1444A94B1B7B6F1F0085EC83 /* attribute.h */,
 				1444A94C1B7B6F1F0085EC83 /* comm.h */,
@@ -531,14 +553,17 @@
 				143747701B7E68C300939571 /* sem.m in Sources */,
 				143747BA1B7E808700939571 /* timer.m in Sources */,
 				148718631B7F821B00AC88EB /* LCDView.m in Sources */,
+				141D69461D8CD137000F772D /* data-bind.c in Sources */,
 				143747891B7E68C300939571 /* citycmd.c in Sources */,
 				1437478A1B7E68C300939571 /* citycmdb.c in Sources */,
 				1437478B1B7E68C300939571 /* citycmdc.c in Sources */,
 				1437478C1B7E68C300939571 /* citycmdd.c in Sources */,
 				1437478D1B7E68C300939571 /* citycmde.c in Sources */,
+				141D694B1D8CD1E9000F772D /* bind-objects.c in Sources */,
 				1437478E1B7E68C300939571 /* cityedit.c in Sources */,
 				1437478F1B7E68C300939571 /* comIn.c in Sources */,
 				143747901B7E68C300939571 /* comOut.c in Sources */,
+				141D693E1D8BB20E000F772D /* res-msgpack.c in Sources */,
 				14585C751D26C04F00DCE3BA /* main.m in Sources */,
 				143747931B7E68C300939571 /* datman.c in Sources */,
 				143747941B7E68C300939571 /* debug.c in Sources */,
@@ -571,6 +596,7 @@
 				14585C771D26CA8A00DCE3BA /* bios.c in Sources */,
 				14585C761D26CA8700DCE3BA /* gui.c in Sources */,
 				148718911B7FB87D00AC88EB /* fsys.c in Sources */,
+				141D693F1D8BB20E000F772D /* res-msgpack.c in Sources */,
 				148718931B7FB87D00AC88EB /* sem.m in Sources */,
 				148718971B7FB87D00AC88EB /* timer.m in Sources */,
 				148718AD1B7FB87D00AC88EB /* citycmd.c in Sources */,
@@ -580,9 +606,11 @@
 				148718B11B7FB87D00AC88EB /* citycmde.c in Sources */,
 				148718B21B7FB87D00AC88EB /* cityedit.c in Sources */,
 				14E568F21B8494C800CAE666 /* GamTouchPadView.m in Sources */,
+				141D69471D8CD137000F772D /* data-bind.c in Sources */,
 				14585C781D26CA8D00DCE3BA /* sys.c in Sources */,
 				148718B31B7FB87D00AC88EB /* comIn.c in Sources */,
 				148718B41B7FB87D00AC88EB /* comOut.c in Sources */,
+				141D694C1D8CD1E9000F772D /* bind-objects.c in Sources */,
 				148718B71B7FB87D00AC88EB /* datman.c in Sources */,
 				148718B81B7FB87D00AC88EB /* debug.c in Sources */,
 				148718B91B7FB87D00AC88EB /* FgtCount.c in Sources */,
@@ -670,6 +698,7 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"${PROJECT_DIR}/../src",
+					"${PROJECT_DIR}/../submodules/msgpack-c/include",
 				);
 				INFOPLIST_FILE = Baye/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
@@ -717,6 +746,7 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"${PROJECT_DIR}/../src",
+					"${PROJECT_DIR}/../submodules/msgpack-c/include",
 				);
 				INFOPLIST_FILE = Baye/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
