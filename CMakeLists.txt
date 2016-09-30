@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.10)
 
 add_subdirectory(src)
-add_subdirectory(submodules)
+#add_subdirectory(submodules)
 

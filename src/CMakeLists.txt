@@ -2,10 +2,6 @@ cmake_minimum_required(VERSION 2.4)
 
 project(baye)
 
-INCLUDE(CheckIncludeFiles)
-CHECK_INCLUDE_FILES ( malloc.h HAVE_MALLOC_H )
-
-# set(CMAKE_VERBOSE_MAKEFILE on)
 set (bayelib_SRCS
 FgtCount.c
 FgtPkAi.c
@@ -33,7 +29,6 @@ showface.c
 strcnt.c
 tactic.c
 varma.c
-res-msgpack.c
 data-bind.c
 bind-objects.c
 platform/js/fsys.c
@@ -51,11 +46,12 @@ add_executable(baye.js
 platform/js/main.c
 )
 
-target_link_libraries(baye.js bayeliba msgpackc-static)
+#target_link_libraries(baye.js bayeliba msgpackc-static)
+target_link_libraries(baye.js bayeliba)
 
 target_include_directories(baye.js PRIVATE . ./platform/common)
 target_include_directories(bayeliba PRIVATE . ./platform/common)
-target_include_directories(bayeliba PRIVATE ${msgpack_SOURCE_DIR}/include)
+#target_include_directories(bayeliba PRIVATE ${msgpack_SOURCE_DIR}/include)
 
 set (CMAKE_C_FLAGS
     "-s EMTERPRETIFY=1\
