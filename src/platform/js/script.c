@@ -14,6 +14,9 @@
 void script_init(void)
 {
     U8* script = ResLoadStringWithId(ENGINE_SCRIPT);
+    if (script == NULL) {
+        return;
+    }
     EM_ASM_INT({
         if (window.baye == undefined) {
             window.baye = {};
