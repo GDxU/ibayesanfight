@@ -379,7 +379,7 @@ FAR U8 SearchRoad(U8 sc,U8 xs,U8 ys,U8 ob,U8 xo,U8 yo)
     U8 ccount0,ccount1;
     U8 i,j,d;
 
-    cq = SHARE_MEM + 200;
+    cq = SHARE_MEM + 2000;
     ccount0 = GetRoundSelfCity(sc,cq);
     if (!ccount0)
         return(0xff);
@@ -1130,8 +1130,8 @@ U8 ShowCityMap(CitySetType *pos,U8 scrollflag)
     cicon += sizeof(PictureHeadType);
     GamMPicShowV(WK_SX + CITYMAP_TIL_W * sw + (CITYMAP_TIL_W - CITY_ICON_W) / 2,WK_SY + CITYMAP_TIL_H * sh + CITY_ICON_H,CITY_ICON_W,CITY_ICON_H,cicon,g_VisScr);
 
-    str = SHARE_MEM + 300;
-    astr = SHARE_MEM + 340;
+    str = SHARE_MEM + 3000;
+    astr = SHARE_MEM + 3400;
     gam_clrvscr(WK_SX + CITYMAP_TIL_W * SHOWMAP_WS,WK_SY,WK_EX,WK_EY,g_VisScr);
     cicon = ResLoadToCon(GEN_HEADPIC1 + g_PIdx,1,g_CBnkPtr);
     GamPicShowExV(WK_SX + CITYMAP_TIL_W * SHOWMAP_WS + ((WK_EX - (WK_SX + CITYMAP_TIL_W * SHOWMAP_WS) - 24) / 2),WK_SY + 4,24,24,g_PlayerKing,cicon,g_VisScr);

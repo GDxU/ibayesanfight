@@ -110,6 +110,9 @@ FAR void GamSetResourcePath(const U8* datPath, const U8*fontPath);
 FAR void GamSetAltLibPath(const U8* datPath);
 FAR void GamSetDataDir(const U8*dataDir);
 
+#ifndef min
+#define min(a, b) (a > b) ? b : a
+#endif
 
 #ifndef min
 #define min(a, b) (a > b) ? b : a

@@ -19,6 +19,7 @@
 #undef	FightSub
 #define	FightSub
 #include "baye/enghead.h"
+#include "baye/data-bind.h"
 #define		IN_FILE	1	/* 当前文件位置 */
 
 /*本体函数声明*/
@@ -364,6 +365,7 @@ U8 FgtAtkAction(U8 aIdx)
     speId = CountPlusSub(g_GenAtt[1].arms,hurt);
     dead = (hurt != speId);			/* dead = true 被攻击将领被击溃 */
     hurt = speId;
+
     /* 动画播放 */
     if(g_LookMovie)
     {

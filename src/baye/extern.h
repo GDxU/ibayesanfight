@@ -12,6 +12,9 @@
   ------------------------*/
 #include "../data/pstring.h"		/*程序字符串常量定义头文件*/
 #include "../data/pconst.h"		/*程序数据常量定义头文件*/
+#include "baye/fsys.h"
+#include "baye/order.h"
+#include "baye/paccount.h"
 
 /*------------------------
   变量的引用

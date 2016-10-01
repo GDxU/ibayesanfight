@@ -65,8 +65,8 @@ FAR U8 PlcMovie(U16 speid,U8 startfrm,U8 endfrm,U8 keyflag,U8 x,U8 y)
     picmax = *(srsptr+3);
     srsptr+=6;
     dat = (U8 **) SHARE_MEM;
-    spem = (U8 *) (SHARE_MEM + 200);
-    spec = (U8 *) (SHARE_MEM + 200 + 100);
+    spem = (U8 *) (SHARE_MEM + 2000);
+    spec = (U8 *) (SHARE_MEM + 2000 + 1000);
     spe = (SPEUNIT *) srsptr;
 
     lenspe = count;

@@ -19,6 +19,8 @@
 #undef	FgtPkAi
 #define	FgtPkAi
 #include "baye/enghead.h"
+#include "baye/bind-objects.h"
+#include "baye/script.h"
 #define		IN_FILE	1	/* 当前文件位置 */
 
 /*本体函数声明*/
@@ -41,6 +43,7 @@ void FgtLoadToMem3(U8 idx,U8 *buf);
 void FgtViewForce(U8 pForce,U8 pSIdx);
 U8 TransIdxToGen3(U8 idx);
 U8 FgtStatGen(U8 flag);
+static void AdvancedCmdRng(U8 type,U8 param,U8 idx);
 
 /***********************************************************************
  * 说明:     获取计算机控制方的战斗命令
@@ -578,6 +581,30 @@ static U8 bits_to_bytes(U8* dst, U8* src, U16 w, U16 h, U8 orMode) {
     return 0;
 }
 
+static void convert(U8*data, U8 from, U8 to) {
+    if (from == to) {
+        return;
+    }
+
+    for (U8 row=to-1;; row--) {
+        for (U8 col=to-1;; col--) {
+            U16 new, oldrow, oldcol;
+            new = row * to + col;
+
+            oldrow = row - (to - from) / 2;
+            oldcol = col - (to - from) / 2;
+
+            if (oldrow >= from || oldcol >= from) {
+                data[new] = 0;
+            } else {
+                data[new] = data[oldrow*from + oldcol];
+            }
+            if (col == 0) break;
+        }
+        if (row == 0) break;
+    }
+}
+
 /***********************************************************************
  * 说明:     获取命令的攻击范围
  * 输入参数: type-命令类型	param-命令参数	idx-命令执行者
@@ -633,6 +660,15 @@ FAR void FgtGetCmdRng(U8 type,U8 param,U8 idx)
     g_FgtAtkRng[0] = rngb;
     g_FgtAtkRng[1] = (U8)(g_GenPos[idx].x - (rngb >> 1));
     g_FgtAtkRng[2] = (U8)(g_GenPos[idx].y - (rngb >> 1));
+
+    if (g_engineConfig.enableScript) {
+//        convert(g_FgtAtkRng+3, rngb, TOOL_ATT_RANGEUNIT);
+//        rngb = TOOL_ATT_RANGEUNIT;
+//        g_FgtAtkRng[0] = rngb;
+//        g_FgtAtkRng[1] = (U8)(g_GenPos[idx].x - (rngb >> 1));
+//        g_FgtAtkRng[2] = (U8)(g_GenPos[idx].y - (rngb >> 1));
+        AdvancedCmdRng(type, param, idx);
+    }
 }
 /***********************************************************************
  * 说明:     获取要驱动的将领序号
@@ -936,3 +972,40 @@ U8 TransIdxToGen3(U8 idx)
     return (U8)(g_FgtParam.GenArray[idx] - 1);
 }
 
+static void AdvancedCmdRng(U8 type, U8 param, U8 idx) {
+    /*
+     人物属性
+     人物
+     */
+    BuiltAtkAttr(0, idx);
+
+    Object* context = object_new(8);
+
+    Object* attack = object_new(32);
+    object_bind_JLATT(attack, &g_GenAtt[0]);
+    object_bind_object(context, "attack", attack, 0);
+
+    U8 ter = FgtGetTerrain(g_GenPos[idx].x, g_GenPos[idx].y);
+    object_bind_u8(context, "ter", &ter, 0);
+
+    Object* person = object_new(32);
+    object_bind_person(person, &g_Persons[g_FgtParam.GenArray[idx] - 1]);
+    object_bind_object(context, "person", person, 1);
+
+    object_bind_bin(context, "range", g_FgtAtkRng + 3, TOOL_ATT_RANGE, 1);
+
+    object_bind_u8(context, "type", &type, 0);
+
+    object_bind_u8(context, "skill", &param, 0);
+
+    U8 rngb = g_FgtAtkRng[0];
+
+    object_bind_u8(context, "rangeSize", &rngb, 1);
+
+    call_script("calcAttackRange", context);
+    object_release(context);
+
+    g_FgtAtkRng[0] = rngb;
+    g_FgtAtkRng[1] = (U8)(g_GenPos[idx].x - (rngb >> 1));
+    g_FgtAtkRng[2] = (U8)(g_GenPos[idx].y - (rngb >> 1));
+}

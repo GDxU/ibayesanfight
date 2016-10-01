@@ -1018,14 +1018,6 @@ U8* loadPersonRes(PersonResType*person, U8*raw)
     raw += sizeof(person->AppearCityId);
     return raw;
 }
-U8* loadPersonRess(PersonResType*person, U8*raw)
-{
-    int i;
-    for (i = 0; i < PERSON_MAX; i++) {
-        raw = loadPersonRes(person+i, raw);
-    }
-    return raw;
-}
 
 U8* loadPerson(PersonType*person, U8*raw)
 {
@@ -1293,8 +1285,8 @@ void ShowTacticNote(void)
     
     ShowMapClear();
     kq = SHARE_MEM;
-    str = SHARE_MEM + 200;
-    astr = SHARE_MEM + 250;
+    str = SHARE_MEM + 2000;
+    astr = SHARE_MEM + 2500;
     kc = GetEnemyKing(g_PlayerKing,kq);
     for (i = 0;i < kc;i ++)
     {

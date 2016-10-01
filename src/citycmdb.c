@@ -534,8 +534,8 @@ void ShowDMsg(U8 city,U8 person,U8 upval,U8 flag)
 {
     U8 *str,*astr;
 
-    str = SHARE_MEM + 300;
-    astr = SHARE_MEM + 350;
+    str = SHARE_MEM + 3000;
+    astr = SHARE_MEM + 3500;
 
     switch (flag)
     {
@@ -638,7 +638,7 @@ FAR U8 SearchMake(U8 city)
                 {
                     psay += P_SAY_STR21;
                 }
-                str = SHARE_MEM + 300;
+                str = SHARE_MEM + 3000;
                 ResLoadToMem(STRING_CONST,psay,str);
                 ShowGReport(p,str);
 
@@ -992,7 +992,7 @@ FAR U8 KillMake(U8 city)
             U16 index = AddGoods(city,gptr[1] - 1);
             SetGoodsByIndex(index-1);
         }
-        str = SHARE_MEM + 300;
+        str = SHARE_MEM + 3000;
         ResLoadToMem(STRING_CONST,P_SAY_STR4 + (gam_rand() % 3),str);
         ShowMapClear();
         ShowGReport(pqptr[pcode],str);
@@ -1071,7 +1071,7 @@ FAR U8 LargessMake(U8 city)
     U8 *eq;
     U8 g,gi;
     
-    gqptr = SHARE_MEM + 200;
+    gqptr = SHARE_MEM;
     gcount = GetCityPGoods(city,gqptr);
     if (gcount)
     {
@@ -1083,7 +1083,7 @@ FAR U8 LargessMake(U8 city)
         
         do
         {
-            pqptr = SHARE_MEM;
+            pqptr = SHARE_MEM + 2000;
             pcount = GetCityPersons(city,pqptr);
             if (!pcount)
             {
@@ -1127,7 +1127,7 @@ FAR U8 LargessMake(U8 city)
                 DelGoods(city,g);
                 if (p != g_PlayerKing)
                 {
-                    str = SHARE_MEM + 300;
+                    str = SHARE_MEM + 4000;
                     ResLoadToMem(STRING_CONST,P_SAY_STR10 + (gam_rand() % 3),str);
                     ShowMapClear();
                     ShowGReport(p,str);

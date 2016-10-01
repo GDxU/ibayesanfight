@@ -273,7 +273,7 @@ FAR U8 TransportationMake(U8 city)
     U8 xs,ys;
     OrderType order;
 
-    str = SHARE_MEM + 300;
+    str = SHARE_MEM + 3000;
     pqptr = SHARE_MEM;
 
     pcount = 0;
@@ -330,7 +330,7 @@ FAR U8 TransportationMake(U8 city)
             xs = g_CityPos.setx;
             ys = g_CityPos.sety;
 
-            str = SHARE_MEM + 300;
+            str = SHARE_MEM + 3000;
             ResLoadToMem(STRING_CONST,STR_OBJ,str);
             ShowMapClear();
             ShowGReport(p,str);
@@ -419,7 +419,7 @@ FAR U8 MoveMake(U8 city)
     U8 xs,ys;
     OrderType order;
 
-    str = SHARE_MEM + 300;
+    str = SHARE_MEM + 3000;
     pqptr = SHARE_MEM;
 
     pcount = 0;
@@ -450,7 +450,7 @@ FAR U8 MoveMake(U8 city)
         {
             xs = g_CityPos.setx;
             ys = g_CityPos.sety;
-            str = SHARE_MEM + 300;
+            str = SHARE_MEM + 3000;
             ResLoadToMem(STRING_CONST,STR_OBJ,str);
             ShowMapClear();
             ShowGReport(p,str);
@@ -912,7 +912,7 @@ FAR U8 ReconnoitreMake(U8 city)
         else if (1 == pcount)	/*选择目标城池*/
         {
             
-            str = SHARE_MEM + 300;
+            str = SHARE_MEM + 3000;
             ResLoadToMem(STRING_CONST,STR_OBJ,str);
             ShowMapClear();
             ShowGReport(p,str);

@@ -476,7 +476,7 @@ FAR U8 FightResultDeal(U8 city,U8 result)
                 if (cavps)
                 {
                     str = SHARE_MEM;
-                    astr = SHARE_MEM + 40;
+                    astr = SHARE_MEM + 400;
                     if (cavps > 1)
                     {
                         cavps = 2;
@@ -539,8 +539,8 @@ U8 TheLoserDeal(U8 city,U8 *lqueue)
     PersonType *pptr;
 
     cking = 0xff;
-    str = SHARE_MEM + 300;
-    astr = SHARE_MEM + 340;
+    str = SHARE_MEM + 3000;
+    astr = SHARE_MEM + 3400;
     for (i = 0;i < 10;i ++)
     {
         if (lqueue[i])
@@ -789,8 +789,8 @@ void KingDeadNote(U8 king)
     U8 *str,*sbuf;
 
 
-    str = SHARE_MEM + 300;
-    sbuf = SHARE_MEM + 340;
+    str = SHARE_MEM + 3000;
+    sbuf = SHARE_MEM + 3400;
     ResLoadToMem(STRING_CONST,STR_KING,str);
     GetPersonName(king,sbuf);
     gam_strcat(str,sbuf);
@@ -816,8 +816,8 @@ FAR void NewKingNote(U8 king)
 {
     U8 *str,*sbuf;
     
-    str = SHARE_MEM + 300;
-    sbuf = SHARE_MEM + 340;
+    str = SHARE_MEM + 3000;
+    sbuf = SHARE_MEM + 3400;
     GetPersonName(king,str);
     ResLoadToMem(STRING_CONST,STR_BEKING,sbuf);
     gam_strcat(str,sbuf);
@@ -841,8 +841,8 @@ FAR void BeNewKingNote(U8 king)
 {
     U8 *str,*sbuf;
     
-    str = SHARE_MEM + 300;
-    sbuf = SHARE_MEM + 340;
+    str = SHARE_MEM + 3000;
+    sbuf = SHARE_MEM + 3400;
     GetPersonName(king,str);
     ResLoadToMem(STRING_CONST,STR_BEKINGED,sbuf);
     gam_strcat(str,sbuf);
@@ -866,8 +866,8 @@ FAR void WeightOverNote(U8 king)
 {
     U8 *str,*sbuf;
     
-    str = SHARE_MEM + 300;
-    sbuf = SHARE_MEM + 340;
+    str = SHARE_MEM + 3000;
+    sbuf = SHARE_MEM + 3400;
     GetPersonName(king,str);
     ResLoadToMem(STRING_CONST,STR_OVER,sbuf);
     gam_strcat(str,sbuf);
@@ -891,7 +891,7 @@ FAR void WonPersonNoet(U8 person)
 {
     U8 *str;
     
-    str = SHARE_MEM + 300;
+    str = SHARE_MEM + 3000;
     ResLoadToMem(STRING_CONST,STR_WONP,str);
     ShowGReport(person,str);
 }

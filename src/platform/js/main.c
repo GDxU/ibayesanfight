@@ -8,9 +8,13 @@
 
 #include	"inc/dictsys.h"
 #include	"baye/comm.h"
+#include	"baye/bind-objects.h"
+#include	"baye/data-bind.h"
+#include	"baye/script.h"
 
 #include <emscripten.h>
 
+FAR U8 GamConInit(void);
 FAR void GamBaYeEng(void);
 
 void GamSetLcdFlushCallback(void(*lcd_fluch_cb)(char*buffer));
@@ -37,6 +41,8 @@ int main(int argc, char*argv[])
     GamSetAltLibPath((U8*)"/data/dat.lib");
     GamSetDataDir((U8*)"/data/");
     GamSetLcdFlushCallback(_lcd_flush_cb);
+    GamConInit();
+    script_init();
     GamBaYeEng();
 
     EM_ASM({
@@ -44,4 +50,3 @@ int main(int argc, char*argv[])
     });
     return 0;
 }
-

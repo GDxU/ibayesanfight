@@ -27,6 +27,7 @@
 static const U8* fontFilePath = (U8*)GAM_FONT_FNAME;
 static const U8* datFilePath = (U8*)GAM_LIB_FNAME;
 static const U8* altDatFilePath = NULL;
+static U8 initialized = 0;
 
 /***********************************************************************
  * 说明:     初始化游戏引擎所在的机型环境
@@ -39,6 +40,10 @@ static const U8* altDatFilePath = NULL;
  ***********************************************************************/
 FAR U8 GamConInit(void)
 {
+    if (initialized) {
+        return 0;
+    }
+    initialized = 1;
     /*系统环境初始化*/
     GuiInit();						/*Gui OS 初始化，使用前一定要调用 */
     FlashInit();						/*初始化flash文件系统变量*/

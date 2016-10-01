@@ -37,7 +37,7 @@ static void _shm_init()
 
     _VS_PTR = malloc(WK_BLEN);
     _BVS_PTR = malloc(WK_BLEN);
-    _SHARE_MEM = malloc(10240);
+    _SHARE_MEM = malloc(20240);
     _FIGHTERS_IDX = malloc(30);
     _FIGHTERS = malloc(300);
     _ORDERQUEUE = malloc(sizeof(OrderType) * ORDER_MAX);

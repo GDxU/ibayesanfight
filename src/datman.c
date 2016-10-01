@@ -153,6 +153,15 @@ FAR U8 *ResLoadToCon(U16 ResId,U8 idx,U8 *cbnk)
     return ptr;
 }
 
+FAR U8 *ResLoadStringWithId(U16 ResId)
+{
+    U32 addr = GetResStartAddr(ResId);
+    if(addr==0)
+        return (U8 *) NULL;
+
+    return g_CBnkPtr + addr + sizeof(RCHEAD);
+}
+
 /***********************************************************************
  * 说明:     将被加密的数据解密
  * 输入参数: id-资源id
