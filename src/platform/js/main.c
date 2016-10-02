@@ -34,6 +34,17 @@ void sendKey(int key)
     GuiPushMsg(&msg);
 }
 
+EMSCRIPTEN_KEEPALIVE
+void sendTouchEvent(int event, int x, int y)
+{
+    MsgType msg;
+    msg.type = VM_TOUCH;
+    msg.param = event;
+    msg.param2.i16.p0 = x;
+    msg.param2.i16.p1 = y;
+    GuiPushMsg(&msg);
+}
+
 int main(int argc, char*argv[])
 {
     emscripten_sleep(1);

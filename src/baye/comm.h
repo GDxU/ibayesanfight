@@ -1,6 +1,8 @@
 #ifndef	_COMM_H
 #define	_COMM_H
 
+#include "inc/dictsys.h"
+
 #define BOOL U8
 /*======================================
   引擎程序相对于环境独立性
@@ -34,10 +36,7 @@ extern U8 *_ORDERQUEUE;        /* 命令队列(12*100=1200个字节) */
 /*------------------------
   消息结构定义
   ------------------------*/
-typedef	struct{
-	U8	type;					/* 消息类型 */
-	U16	param;					/* 消息的值 */
-}GMType;
+typedef	MsgType GMType;
 
 /*------------------------
   消息类型定义
@@ -52,7 +51,8 @@ typedef	struct{
 #define		VM_COM			0x07		/* 串口接收到数据 */
 #define		VM_POWER		0x08		/* 电源 */
 #define		VM_ALERT		0x09		/* 闹钟到 ，行程到 */
-#define		VM_COMMAND		0x0a		/* 界面相关 */	
+#define		VM_COMMAND		0x0a		/* 界面相关 */
+#define		VM_TOUCH		0x10		/* 触控事件 */
 
 /*------------------------
   转换后的扩展键  ---  功能键
@@ -75,6 +75,11 @@ typedef	struct{
 #define		VK_SHIFT			0x34			/* shift */
 #define		VK_SYM				0x35			/*  符号 */
 
+/* 触控消息 */
+#define		VT_TOUCH_DOWN			0x00
+#define		VT_TOUCH_UP             0x01
+#define		VT_TOUCH_MOVE			0x02
+
 /*------------------------
   其它结构体定义
   ------------------------*/
@@ -92,6 +97,7 @@ typedef	struct {
 FAR	U8	GamConInit(void);						/* 游戏系统环境初始化，根据不同环境调用不同的初始化函数 */
 FAR	void	GamConRst(void);						/* 游戏系统环境恢复，根据不同环境调用不同的恢复函数 */
 FAR	void	GamGetMsg(GMType *pMsg);					/* 封装系统的输入，并将其转换成游戏的消息机制 */
+FAR void    GamGetLastMsg(GMType *pMsg);
 FAR	U8	GamDelay(U16 dly, BOOL keyflag);					/* 1%秒延时 */
 FAR	void	GamMsgBox(const U8 *buf,U8 delay);					/* 信息框 */
 FAR	void	GamShowFrame(U8 *vscr);						/* 将虚拟屏幕show到屏幕上 */

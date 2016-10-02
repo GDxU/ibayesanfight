@@ -29,6 +29,8 @@ static const U8* datFilePath = (U8*)GAM_LIB_FNAME;
 static const U8* altDatFilePath = NULL;
 static U8 initialized = 0;
 
+static GMType	lastMsg = {0};
+
 /***********************************************************************
  * 说明:     初始化游戏引擎所在的机型环境
  * 输入参数: 无
@@ -134,6 +136,7 @@ FAR void GamGetMsg(GMType *pMsg)
         if(!GuiTranslateMsg((PtrMsg)pMsg))	continue;
         break;
     }
+    lastMsg = *pMsg;
 }
 /***********************************************************************
  * 说明:     延时程序
@@ -186,4 +189,10 @@ FAR void GamSetResourcePath(const U8* datPath, const U8*fontPath)
 FAR void GamSetAltLibPath(const U8* datPath)
 {
     altDatFilePath = (U8*)strdup((char*)datPath);
+}
+
+FAR void GamGetLastMsg(GMType *pMsg)
+{
+    *pMsg = lastMsg;
+    printf("last message:%d\n", pMsg->param);
 }

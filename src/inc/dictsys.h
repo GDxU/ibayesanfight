@@ -43,9 +43,13 @@
 *******************************************************************************************/
 
 typedef		char                    I8;
+typedef short __attribute__((aligned(1))) I16;
+typedef int __attribute__((aligned(1))) I32;
+
 typedef		unsigned	char		U8;
 typedef unsigned short __attribute__((aligned(1))) U16;
 typedef unsigned int __attribute__((aligned(1))) U32;
+
 
 #define		TRUE		1
 #define		true		1
@@ -86,17 +90,25 @@ typedef unsigned int __attribute__((aligned(1))) U32;
 *						消息定义
 *******************************************************************************************/
 
+typedef union MsgParam {
+    U32 u32;
+    I32 i32;
+    struct {
+        U16 p0;
+        U16 p1;
+    } u16;
+    struct {
+        I16 p0;
+        I16 p1;
+    } i16;
+} MsgParam;
+
 typedef		struct	tagMsgType
 {
 	U8		type;
 	U16		param;
+	MsgParam param2;
 }MsgType,*PtrMsg;
-typedef		struct	tagMsgByteType
-{
-	U8		type;
-	U8		prmLow;
-	U8		prmHi;
-}MsgByteType,*PtrMsgByte;
 
 #define		WM_DUMMY		0x00		/* 无效消息 */
 #define		WM_KEY			0x01		/* 按键值，只有行列信息 */

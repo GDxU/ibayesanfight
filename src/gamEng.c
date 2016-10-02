@@ -241,6 +241,19 @@ bool GamMainChose(void)
         }
     }
 }
+
+// TODO:示例代码, 需整理
+typedef struct {
+    I16 left;
+    I16 top;
+    I16 right;
+    I16 bottom;
+} Rect;
+
+U8 isPointInRect(I16 x, I16 y, Rect r) {
+    return (r.left <= x && x <= r.right) && (r.top <= y && y <= r.bottom);
+}
+
 /***********************************************************************
  * 说明:     驱动游戏主菜单，并获取相应的选择
  * 输入参数: 无
@@ -264,8 +277,7 @@ U8 GamPicMenu(U16 picID,U16 speID)
             GamGetMsg(&pMsg);
         }
         else {
-            pMsg.type = VM_CHAR_FUN;
-            pMsg.param = key;
+            GamGetLastMsg(&pMsg);
         }
         if(VM_CHAR_FUN == pMsg.type)
         {
@@ -286,6 +298,34 @@ U8 GamPicMenu(U16 picID,U16 speID)
             }
             mIdx = mIdx % 4;
             PlcRPicShow(picID,1,WK_SX,WK_SY,false);
+        }
+        else if (VM_TOUCH == pMsg.type) {
+            // 触控示例
+            if (pMsg.param == VT_TOUCH_UP) {
+
+                I16 x = pMsg.param2.i16.p0;
+                I16 y = pMsg.param2.i16.p1;
+
+                Rect buttonRects[] = {
+                    {6, 45, 73, 63}, //新君登基
+                    {83, 45, 151, 63}, //重返沙场
+                    {6, 70, 73, 88}, //制作群组
+                    {83, 71, 151, 88}, //解甲归田
+                };
+
+                for (U8 i = 0; i < 4; i++) {
+                    if (isPointInRect(x, y, buttonRects[i])) {
+                        // 已经选中则进入， 否则选中
+                        if (i == mIdx) {
+                            return mIdx;
+                        } else {
+                            mIdx = i;
+                            PlcRPicShow(picID,1,WK_SX,WK_SY,false);
+                            break;
+                        }
+                    }
+                }
+            }
         }
     }
 }
