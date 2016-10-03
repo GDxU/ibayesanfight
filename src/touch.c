@@ -36,5 +36,30 @@ I16 touchListViewItemIndexAtPoint(I16 x, I16 y, Rect listRect, U16 itemStart, U1
     return index < itemCount ? index : -1;
 }
 
+I8 touchUpdate(Touch *touch, MsgType msg)
+{
+    if (msg.type != VM_TOUCH) {
+        return -1;
+    }
 
+    touch->currentX = msg.param2.i16.p0;
+    touch->currentY = msg.param2.i16.p1;
 
+    switch (msg.param) {
+        case VT_TOUCH_DOWN:
+            touch->startX = touch->currentX;
+            touch->startY = touch->currentY;
+            touch->touched = 1;
+            touch->moved = 0;
+            break;
+        case VT_TOUCH_UP:
+            touch->touched = 0;
+            break;
+        case VT_TOUCH_MOVE:
+            touch->moved = 1;
+            break;
+        default:
+            break;
+    }
+    return 0;
+}
