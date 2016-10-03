@@ -191,6 +191,11 @@ FAR void GamSetAltLibPath(const U8* datPath)
     altDatFilePath = (U8*)strdup((char*)datPath);
 }
 
+FAR void GamClearLastMsg(void)
+{
+    lastMsg.type = 0;
+}
+
 FAR void GamGetLastMsg(GMType *pMsg)
 {
     *pMsg = lastMsg;
