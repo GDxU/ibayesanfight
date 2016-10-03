@@ -42,9 +42,9 @@
 *						系统数据类型定义
 *******************************************************************************************/
 
-typedef		char                    I8;
-typedef short __attribute__((aligned(1))) I16;
-typedef int __attribute__((aligned(1))) I32;
+typedef	signed char                    I8;
+typedef signed short __attribute__((aligned(1))) I16;
+typedef signed int __attribute__((aligned(1))) I32;
 
 typedef		unsigned	char		U8;
 typedef unsigned short __attribute__((aligned(1))) U16;

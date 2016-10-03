@@ -581,6 +581,7 @@ static U8 bits_to_bytes(U8* dst, U8* src, U16 w, U16 h, U8 orMode) {
     return 0;
 }
 
+#if 0
 static void convert(U8*data, U8 from, U8 to) {
     if (from == to) {
         return;
@@ -604,6 +605,7 @@ static void convert(U8*data, U8 from, U8 to) {
         if (row == 0) break;
     }
 }
+#endif
 
 /***********************************************************************
  * 说明:     获取命令的攻击范围

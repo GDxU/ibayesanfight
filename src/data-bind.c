@@ -22,7 +22,7 @@ typedef enum ValueType {
 } ValueType;
 
 typedef struct Field {
-    I8 name[SIZEOF_FIELD_NAME];
+    char name[SIZEOF_FIELD_NAME];
     ValueType type;
     void *valuePtr;
     U32 valueSize;
@@ -74,7 +74,7 @@ void object_release(Object* obj) {
 }
 
 // ---------- BIND -----------
-void object_bind_field2(Object*context, const I8*name, void*ptr, U32 valueSize, U8 writeable, ValueType type)
+void object_bind_field2(Object*context, const char*name, void*ptr, U32 valueSize, U8 writeable, ValueType type)
 {
     if (context->fieldCount == context->maxFields) {
         printf("Bind field failed, max reached.\n");
@@ -94,37 +94,37 @@ void object_bind_field2(Object*context, const I8*name, void*ptr, U32 valueSize, 
     field->writeable = writeable;
 }
 
-void object_bind_field(Object*context, const I8*name, void*ptr, U8 writeable, ValueType type)
+void object_bind_field(Object*context, const char*name, void*ptr, U8 writeable, ValueType type)
 {
     object_bind_field2(context, name, ptr, 0, writeable, type);
 }
 
-void object_bind_u8(Object*context, const I8*name, U8*ptr, U8 writeable)
+void object_bind_u8(Object*context, const char*name, U8*ptr, U8 writeable)
 {
     object_bind_field(context, name, ptr, writeable, ValueTypeU8);
 }
 
-void object_bind_u16(Object*context, const I8*name, U16*ptr, U8 writeable)
+void object_bind_u16(Object*context, const char*name, U16*ptr, U8 writeable)
 {
     object_bind_field(context, name, ptr, writeable, ValueTypeU16);
 }
 
-void object_bind_u32(Object*context, const I8*name, U32*ptr, U8 writeable)
+void object_bind_u32(Object*context, const char*name, U32*ptr, U8 writeable)
 {
     object_bind_field(context, name, ptr, writeable, ValueTypeU32);
 }
 
-void object_bind_str(Object*context, const I8*name, U8*ptr, U8 writeable)
+void object_bind_str(Object*context, const char*name, U8*ptr, U8 writeable)
 {
     object_bind_field(context, name, ptr, writeable, ValueTypeString);
 }
 
-void object_bind_bin(Object*context, const I8*name, U8*ptr, U32 len, U8 writeable)
+void object_bind_bin(Object*context, const char*name, U8*ptr, U32 len, U8 writeable)
 {
     object_bind_field2(context, name, ptr, len, writeable, ValueTypeBinary);
 }
 
-void object_bind_object(Object*context, const I8*name, Object*ptr, U8 writeable)
+void object_bind_object(Object*context, const char*name, Object*ptr, U8 writeable)
 {
     object_bind_field(context, name, ptr, writeable, ValueTypeObject);
 }
@@ -135,7 +135,7 @@ U16 object_get_field_count(Object*context)
     return context->fieldCount;
 }
 
-Field* object_get_field(Object*context, const I8*name)
+Field* object_get_field(Object*context, const char*name)
 {
     for (int i = 0; i < context->fieldCount; i++) {
         if (strcmp(name, context->fields[i].name) == 0) {

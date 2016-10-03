@@ -10,4 +10,4 @@
 #include "script.h"
 
 void script_init(void) {}
-int call_script(I8* name, Object* context) { return -1; }
+int call_script(const char* name, Object* context) { return -1; }

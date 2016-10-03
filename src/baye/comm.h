@@ -3,7 +3,9 @@
 
 #include "inc/dictsys.h"
 
-#define BOOL U8
+#ifndef BOOL
+#define BOOL I8
+#endif
 /*======================================
   引擎程序相对于环境独立性
 ======================================*/
