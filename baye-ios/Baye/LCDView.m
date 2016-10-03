@@ -10,6 +10,8 @@
 #import "LCDView.h"
 
 #include "consdef.h"
+#include "baye-wrapper-mac.h"
+#include "baye/comm.h"
 
 #define SCR_W SCR_WID
 #define SCR_H SCR_HGT
@@ -33,7 +35,6 @@
     }
     int ind = 0;
     int x, y;
-    float ratio = 2.5;
     NSColor *color;
     
     for (y = 0; y < SCR_H; y++) {
@@ -47,9 +48,41 @@
             else {
                 color = [NSColor whiteColor];
             }
-            [color drawSwatchInRect:NSMakeRect(x*ratio, (SCR_HGT-1-y)*ratio, ratio, ratio)];
+            CGFloat vw = self.frame.size.width;
+            CGFloat vh = self.frame.size.height;
+
+            CGFloat pw = vw / SCR_W;
+            CGFloat ph = vh / SCR_H;
+            CGFloat px = x * vw / SCR_W;
+            CGFloat py = (SCR_H - 1 - y) * vh / SCR_H;
+
+            [color drawSwatchInRect:NSMakeRect(px, py, pw, ph)];
         }
     }
+}
+
+- (NSPoint)pointInLCD:(NSEvent *)theEvent
+{
+    NSPoint pv = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    return NSMakePoint(pv.x / self.frame.size.width * SCR_W, (self.frame.size.height - pv.y) / self.frame.size.height * SCR_H);
+}
+
+- (void)mouseDown:(NSEvent *)theEvent
+{
+    NSPoint p = [self pointInLCD:theEvent];
+    bayeTouchSendTouchEvent(VT_TOUCH_DOWN, p.x, p.y);
+}
+
+- (void)mouseDragged:(NSEvent *)theEvent
+{
+    NSPoint p = [self pointInLCD:theEvent];
+    bayeTouchSendTouchEvent(VT_TOUCH_MOVE, p.x, p.y);
+}
+
+- (void)mouseUp:(NSEvent *)theEvent
+{
+    NSPoint p = [self pointInLCD:theEvent];
+    bayeTouchSendTouchEvent(VT_TOUCH_UP, p.x, p.y);
 }
 
 @end

@@ -15,6 +15,7 @@
 		141D69551D9EABA6000F772D /* dummy-script.c in Sources */ = {isa = PBXBuildFile; fileRef = 141D69531D9EABA6000F772D /* dummy-script.c */; };
 		141D69581DA250D6000F772D /* touch.c in Sources */ = {isa = PBXBuildFile; fileRef = 141D69561DA250D6000F772D /* touch.c */; };
 		141D69591DA250D6000F772D /* touch.c in Sources */ = {isa = PBXBuildFile; fileRef = 141D69561DA250D6000F772D /* touch.c */; };
+		141D695C1DA25C9A000F772D /* baye-wrapper-mac.c in Sources */ = {isa = PBXBuildFile; fileRef = 141D695A1DA25C9A000F772D /* baye-wrapper-mac.c */; };
 		142D1CE61D22A3BA00CA443B /* bios.c in Sources */ = {isa = PBXBuildFile; fileRef = 142D1CE41D22A3BA00CA443B /* bios.c */; };
 		142D1CE71D22A3BA00CA443B /* sys.c in Sources */ = {isa = PBXBuildFile; fileRef = 142D1CE51D22A3BA00CA443B /* sys.c */; };
 		142D1CEE1D22B82800CA443B /* gui.c in Sources */ = {isa = PBXBuildFile; fileRef = 142D1CED1D22B82800CA443B /* gui.c */; };
@@ -104,6 +105,8 @@
 		141D69531D9EABA6000F772D /* dummy-script.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "dummy-script.c"; sourceTree = "<group>"; };
 		141D69561DA250D6000F772D /* touch.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = touch.c; sourceTree = "<group>"; };
 		141D69571DA250D6000F772D /* touch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = touch.h; sourceTree = "<group>"; };
+		141D695A1DA25C9A000F772D /* baye-wrapper-mac.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "baye-wrapper-mac.c"; sourceTree = "<group>"; };
+		141D695B1DA25C9A000F772D /* baye-wrapper-mac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "baye-wrapper-mac.h"; sourceTree = "<group>"; };
 		142D1C191D21897600CA443B /* itoa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = itoa.h; sourceTree = "<group>"; };
 		142D1C1B1D21899000CA443B /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		142D1CE41D22A3BA00CA443B /* bios.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bios.c; sourceTree = "<group>"; };
@@ -263,6 +266,8 @@
 				143747571B7E67C900939571 /* Images.xcassets */,
 				143747591B7E67C900939571 /* Main.storyboard */,
 				1437474D1B7E67C900939571 /* Supporting Files */,
+				141D695A1DA25C9A000F772D /* baye-wrapper-mac.c */,
+				141D695B1DA25C9A000F772D /* baye-wrapper-mac.h */,
 			);
 			name = "Baye-Mac";
 			path = Baye;
@@ -580,6 +585,7 @@
 				143747A91B7E68C300939571 /* infdeal.c in Sources */,
 				143747AB1B7E68C300939571 /* paccount.c in Sources */,
 				141D69541D9EABA6000F772D /* dummy-script.c in Sources */,
+				141D695C1DA25C9A000F772D /* baye-wrapper-mac.c in Sources */,
 				143747AF1B7E68C300939571 /* PublicFun.c in Sources */,
 				143747B01B7E68C300939571 /* showface.c in Sources */,
 				143747B11B7E68C300939571 /* Size.c in Sources */,
