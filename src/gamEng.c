@@ -19,6 +19,8 @@
 #undef	GamEng
 #define	GamEng
 #include "baye/enghead.h"
+#include "touch.h"
+
 #define		IN_FILE	1	/* 当前文件位置 */
 
 static const U8*dataDir;
@@ -257,11 +259,6 @@ bool GamMainChose(void)
     }
 }
 
-// TODO:示例代码, 需整理
-U8 isPointInRect(I16 x, I16 y, Rect r) {
-    return (r.left <= x && x <= r.right) && (r.top <= y && y <= r.bottom);
-}
-
 /***********************************************************************
  * 说明:     驱动游戏主菜单，并获取相应的选择
  * 输入参数: 无
@@ -314,7 +311,7 @@ U8 GamPicMenu(U16 picID,U16 speID, const Rect *buttonsRect, U8 buttonsCount)
                 I16 y = pMsg.param2.i16.p1;
 
                 for (U8 i = 0; i < buttonsCount; i++) {
-                    if (isPointInRect(x, y, buttonsRect[i])) {
+                    if (touchIsPointInRect(x, y, buttonsRect[i])) {
                         // 已经选中则进入， 否则选中
                         if (i == mIdx) {
                             return mIdx;

@@ -13,6 +13,8 @@
 		141D694C1D8CD1E9000F772D /* bind-objects.c in Sources */ = {isa = PBXBuildFile; fileRef = 141D69491D8CD1E9000F772D /* bind-objects.c */; };
 		141D69541D9EABA6000F772D /* dummy-script.c in Sources */ = {isa = PBXBuildFile; fileRef = 141D69531D9EABA6000F772D /* dummy-script.c */; };
 		141D69551D9EABA6000F772D /* dummy-script.c in Sources */ = {isa = PBXBuildFile; fileRef = 141D69531D9EABA6000F772D /* dummy-script.c */; };
+		141D69581DA250D6000F772D /* touch.c in Sources */ = {isa = PBXBuildFile; fileRef = 141D69561DA250D6000F772D /* touch.c */; };
+		141D69591DA250D6000F772D /* touch.c in Sources */ = {isa = PBXBuildFile; fileRef = 141D69561DA250D6000F772D /* touch.c */; };
 		142D1CE61D22A3BA00CA443B /* bios.c in Sources */ = {isa = PBXBuildFile; fileRef = 142D1CE41D22A3BA00CA443B /* bios.c */; };
 		142D1CE71D22A3BA00CA443B /* sys.c in Sources */ = {isa = PBXBuildFile; fileRef = 142D1CE51D22A3BA00CA443B /* sys.c */; };
 		142D1CEE1D22B82800CA443B /* gui.c in Sources */ = {isa = PBXBuildFile; fileRef = 142D1CED1D22B82800CA443B /* gui.c */; };
@@ -100,6 +102,8 @@
 		141D694E1D8D3191000F772D /* script.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = script.c; sourceTree = "<group>"; };
 		141D69521D8D3260000F772D /* script.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = script.h; sourceTree = "<group>"; };
 		141D69531D9EABA6000F772D /* dummy-script.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "dummy-script.c"; sourceTree = "<group>"; };
+		141D69561DA250D6000F772D /* touch.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = touch.c; sourceTree = "<group>"; };
+		141D69571DA250D6000F772D /* touch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = touch.h; sourceTree = "<group>"; };
 		142D1C191D21897600CA443B /* itoa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = itoa.h; sourceTree = "<group>"; };
 		142D1C1B1D21899000CA443B /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		142D1CE41D22A3BA00CA443B /* bios.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bios.c; sourceTree = "<group>"; };
@@ -332,6 +336,8 @@
 				1444A98B1B7B6F1F0085EC83 /* tactic.c */,
 				1444A98C1B7B6F1F0085EC83 /* varma.c */,
 				1444A9B01B7BA09C0085EC83 /* itoa.c */,
+				141D69561DA250D6000F772D /* touch.c */,
+				141D69571DA250D6000F772D /* touch.h */,
 			);
 			name = src;
 			path = ../src;
@@ -570,6 +576,7 @@
 				143747981B7E68C300939571 /* FightSub.c in Sources */,
 				1437479A1B7E68C300939571 /* gamEng.c in Sources */,
 				142D1CEE1D22B82800CA443B /* gui.c in Sources */,
+				141D69581DA250D6000F772D /* touch.c in Sources */,
 				143747A91B7E68C300939571 /* infdeal.c in Sources */,
 				143747AB1B7E68C300939571 /* paccount.c in Sources */,
 				141D69541D9EABA6000F772D /* dummy-script.c in Sources */,
@@ -621,6 +628,7 @@
 				148718D11B7FB87D00AC88EB /* showface.c in Sources */,
 				148718D21B7FB87D00AC88EB /* Size.c in Sources */,
 				148718D31B7FB87D00AC88EB /* strcnt.c in Sources */,
+				141D69591DA250D6000F772D /* touch.c in Sources */,
 				148718D41B7FB87D00AC88EB /* tactic.c in Sources */,
 				148718D51B7FB87D00AC88EB /* varma.c in Sources */,
 				148718D61B7FB87D00AC88EB /* itoa.c in Sources */,
