@@ -11,6 +11,7 @@
 #include	"baye/bind-objects.h"
 #include	"baye/data-bind.h"
 #include	"baye/script.h"
+#include    "touch.h"
 
 #include <emscripten.h>
 

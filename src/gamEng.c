@@ -358,6 +358,11 @@ U8 GamGetKing(U8 num)
     bool	rflag;
     GMType	pMsg;
 
+    U8 touchMoved = 1;
+    I16 touchStartY = 0;
+    I16 touchStartTop = 0;
+    U8 itemHeight = HZ_HGT;
+
     gam_clslcd();
     /* 获取君主的名字到g_FightPath中（只取前6个字节） */
     for(pIdx = 0;pIdx < num;pIdx += 1)
@@ -373,7 +378,13 @@ U8 GamGetKing(U8 num)
     ResLoadToMem(IFACE_STRID,dChoseKing,tbuf);
     GamStrShowS(KING_TX,KING_TY,tbuf);
     PlcRPicShow(CITY_PIC,1,CITY_SX,CITY_SY,true);
-    gam_rect(KING_SX - 3,KING_SY - 3,KING_EX + 2, (WK_EY - 6 - (KING_SY)) / HZ_HGT * HZ_HGT + KING_SY + 2);
+
+    U16 itemsPerPage = (WK_EY - 6 - (KING_SY)) / itemHeight;
+
+    Rect listRect = {
+        KING_SX - 3, KING_SY, KING_EX + 2, KING_SY + itemHeight * itemsPerPage
+    };
+    gam_rect(listRect.left, listRect.top - 3, listRect.right, listRect.bottom + 2);
 
     /* 选择要扮演的君主 */
     pos = ResLoadToCon(IFACE_CONID,dCityPos,g_CBnkPtr);
@@ -381,20 +392,27 @@ U8 GamGetKing(U8 num)
     pIdx = 0;
     rflag = false;
     GamShowKing(pTop);
-    ry = (pIdx - pTop) * HZ_HGT + KING_SY;
-    gam_revlcd(KING_SX,ry,KING_EX,ry + HZ_HGT);
+    ry = (pIdx - pTop) * itemHeight + KING_SY;
+    gam_revlcd(KING_SX,ry,KING_EX,ry + itemHeight);
     cycnt = GetKingCitys(g_FgtAtkRng[pIdx],tbuf); 		/* 获取治下城市队列 */
     while(1)
     {
         GamGetMsg(&pMsg);
         if(VM_CHAR_FUN == pMsg.type)
         {
-            gam_revlcd(KING_SX,ry,KING_EX,ry + HZ_HGT);
-            if(rflag)
-            {
-                GamRevCity(cycnt,tbuf,pos);
-                rflag = false;
+#define CLEAR_SEL() \
+            if (ry >= KING_SY && ry + itemHeight <= KING_SY + itemHeight*itemsPerPage) {\
+                gam_revlcd(KING_SX,ry,KING_EX,ry + itemHeight);\
+            }\
+            \
+            if(rflag)\
+            {\
+                GamRevCity(cycnt,tbuf,pos);\
+                rflag = false;\
             }
+
+            CLEAR_SEL();
+
             switch(pMsg.param)
             {
                 case VK_UP:
@@ -409,7 +427,7 @@ U8 GamGetKing(U8 num)
                     if(pIdx < num - 1)
                     {
                         pIdx += 1;
-                        if(pIdx - pTop > ((WK_EY - 6 - (KING_SY)) / HZ_HGT) - 1)
+                        if(pIdx - pTop > itemsPerPage - 1)
                             pTop += 1;
                     }
                     break;
@@ -418,10 +436,62 @@ U8 GamGetKing(U8 num)
                 case VK_ENTER:
                     return g_FgtAtkRng[pIdx];
             }
-            GamShowKing(pTop);
-            ry = (pIdx - pTop) * HZ_HGT + KING_SY;
-            gam_revlcd(KING_SX,ry,KING_EX,ry + HZ_HGT);
+#define UPDATE_UI() \
+            GamShowKing(pTop);\
+            ry = (pIdx - pTop) * itemHeight + KING_SY;\
+            if (ry >= KING_SY && ry + itemHeight <= KING_SY + itemHeight*itemsPerPage) {\
+                gam_revlcd(KING_SX,ry,KING_EX,ry + itemHeight);\
+            }\
             cycnt = GetKingCitys(g_FgtAtkRng[pIdx],tbuf);	/* 获取治下城市队列 */
+
+            UPDATE_UI();
+        }
+        else if (VM_TOUCH == pMsg.type) {
+            I16 x = pMsg.param2.i16.p0, y = pMsg.param2.i16.p1;
+            switch (pMsg.param) {
+                case VT_TOUCH_UP:
+                {
+                    if (touchMoved) break;
+
+                    I16 index = touchListViewItemIndexAtPoint(x, y, listRect, pTop, num, itemHeight);
+                    printf("touch up on index: %d\n", index);
+                    if (index == pIdx) {
+                        return g_FgtAtkRng[pIdx];
+                    }
+                    if (index >= 0) {
+                        CLEAR_SEL();
+                        pIdx = index;
+                        UPDATE_UI();
+                    }
+                    break;
+                }
+                case VT_TOUCH_DOWN:
+                    touchMoved = 0;
+                    touchStartY = y;
+                    touchStartTop = pTop;
+                    break;
+                case VT_TOUCH_MOVE:
+                {
+                    touchMoved = 1;
+
+                    I16 distanceY = y - touchStartY;
+                    I8 deltaItems = distanceY / itemHeight;
+                    I16 top = touchStartTop - deltaItems;
+                    if (top >= num - itemsPerPage) {
+                        top = num - itemsPerPage;
+                    }
+                    if (top < 0) {
+                        top = 0;
+                    }
+                    if (top != pTop) {
+                        pTop = top;
+                        UPDATE_UI();
+                    }
+                    break;
+                }
+                default:
+                    break;
+            }
         }
         else
         {

@@ -31,6 +31,7 @@ tactic.c
 varma.c
 data-bind.c
 bind-objects.c
+touch.c
 platform/js/fsys.c
 platform/js/sem.c
 platform/js/timer.c

@@ -38,7 +38,7 @@
 #define	KING_TX			WK_SX + 72
 #define	KING_TY			WK_SY + 4
 #define	KING_SX			WK_SX+16	/* 君主显示坐标 */
-#define	KING_EX			KING_SX+36	/* 君主显示坐标 */
+#define	KING_EX			KING_SX+35	/* 君主显示坐标 */
 #define	KING_SY			WK_SY+13	/* 君主显示坐标 */
 #define	CITY_SX			WK_SX+60	/* 城市缩略图显示坐标 */
 #define	CITY_SY			WK_SY+20	/* 城市缩略图显示坐标 */
