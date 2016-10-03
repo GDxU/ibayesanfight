@@ -37,6 +37,7 @@ void sendKey(int key)
 EMSCRIPTEN_KEEPALIVE
 void sendTouchEvent(int event, int x, int y)
 {
+    printf("touch event:%d x:%d y:%d\n", event, x, y);
     MsgType msg;
     msg.type = VM_TOUCH;
     msg.param = event;

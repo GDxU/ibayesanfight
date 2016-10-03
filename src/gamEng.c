@@ -44,7 +44,7 @@ void GamShowErrInf(U8 idx);
 U8 GamGetKing(U8 num);
 void GamShowKing(U8 pTop);
 void GamRevCity(U8 cycnt,U8 *tbuf,U8 *pos);
-U8 GamPicMenu(U16 picID,U16 speID);
+U8 GamPicMenu(U16 picID,U16 speID, const Rect *buttonsRect, U8 buttonsCount);
 void GamRcdIFace(U8 count);
 bool GamSaveRcd(U8 idx);
 bool GamLoadRcd(U8 idx);
@@ -173,13 +173,27 @@ bool GamMainChose(void)
     U8	idx;
     U8	i,c;
 
+    Rect mainMenuButtonRects[] = {
+        {6, 45, 73, 63}, //新君登基
+        {83, 45, 151, 63}, //重返沙场
+        {6, 70, 73, 88}, //制作群组
+        {83, 71, 151, 88}, //解甲归田
+    };
+
+    Rect periodMenuButtonRects[] = {
+        {0, 24, 78, 56}, //董卓弄权
+        {0, 62, 78, 93}, //曹操崛起
+        {81, 24, 158, 56}, //赤壁之战
+        {81, 62, 158, 93}, //三国鼎立
+    };
+
     while(1)
     {
-        U8 choice = GamPicMenu(MAIN_PIC,MAIN_ICON1);
+        U8 choice = GamPicMenu(MAIN_PIC,MAIN_ICON1, mainMenuButtonRects, 4);
         switch(choice)
         {
             case 0:		/* 新君登基 */
-                idx = GamPicMenu(YEAR_PIC,YEAR_ICON1);
+                idx = GamPicMenu(YEAR_PIC,YEAR_ICON1, periodMenuButtonRects, 4);
                 if(idx == MNU_EXIT)
                     break;
                 idx = GetPeriodKings(idx + 1,g_FgtAtkRng); 	/* 设置历史时期，并获取君主队列 */
@@ -243,13 +257,6 @@ bool GamMainChose(void)
 }
 
 // TODO:示例代码, 需整理
-typedef struct {
-    I16 left;
-    I16 top;
-    I16 right;
-    I16 bottom;
-} Rect;
-
 U8 isPointInRect(I16 x, I16 y, Rect r) {
     return (r.left <= x && x <= r.right) && (r.top <= y && y <= r.bottom);
 }
@@ -263,7 +270,7 @@ U8 isPointInRect(I16 x, I16 y, Rect r) {
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-U8 GamPicMenu(U16 picID,U16 speID)
+U8 GamPicMenu(U16 picID,U16 speID, const Rect *buttonsRect, U8 buttonsCount)
 {
     U8	mIdx;
     GMType	pMsg;
@@ -306,15 +313,8 @@ U8 GamPicMenu(U16 picID,U16 speID)
                 I16 x = pMsg.param2.i16.p0;
                 I16 y = pMsg.param2.i16.p1;
 
-                Rect buttonRects[] = {
-                    {6, 45, 73, 63}, //新君登基
-                    {83, 45, 151, 63}, //重返沙场
-                    {6, 70, 73, 88}, //制作群组
-                    {83, 71, 151, 88}, //解甲归田
-                };
-
-                for (U8 i = 0; i < 4; i++) {
-                    if (isPointInRect(x, y, buttonRects[i])) {
+                for (U8 i = 0; i < buttonsCount; i++) {
+                    if (isPointInRect(x, y, buttonsRect[i])) {
                         // 已经选中则进入， 否则选中
                         if (i == mIdx) {
                             return mIdx;
