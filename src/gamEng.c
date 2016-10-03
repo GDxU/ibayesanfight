@@ -189,6 +189,7 @@ bool GamMainChose(void)
 
     while(1)
     {
+        GamClearLastMsg();
         U8 choice = GamPicMenu(MAIN_PIC,MAIN_ICON1, mainMenuButtonRects, 4);
         switch(choice)
         {
