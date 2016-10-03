@@ -308,8 +308,7 @@ U8 GamPicMenu(U16 picID,U16 speID, const Rect *buttonsRect, U8 buttonsCount)
             PlcRPicShow(picID,1,WK_SX,WK_SY,false);
         }
         else if (VM_TOUCH == pMsg.type) {
-            // 触控示例
-            if (pMsg.param == VT_TOUCH_UP) {
+            if (pMsg.param == VT_TOUCH_DOWN) {
 
                 I16 x = pMsg.param2.i16.p0;
                 I16 y = pMsg.param2.i16.p1;

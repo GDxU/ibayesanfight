@@ -76,9 +76,9 @@ typedef	MsgType GMType;
 #define		VK_SYM				0x35			/*  符号 */
 
 /* 触控消息 */
-#define		VT_TOUCH_DOWN			0x00
-#define		VT_TOUCH_UP             0x01
-#define		VT_TOUCH_MOVE			0x02
+#define		VT_TOUCH_DOWN			0x01
+#define		VT_TOUCH_UP             0x02
+#define		VT_TOUCH_MOVE			0x03
 
 /*------------------------
   其它结构体定义
