@@ -207,6 +207,15 @@ typedef		struct	tagRect
 	U8		width;					/* 宽 */
 }RectType,*PtrRect;
 
+typedef struct {
+    I16 left;
+    I16 top;
+    I16 right;
+    I16 bottom;
+} Rect;
+
+
+
 typedef	struct	tagRandEnv
 {
 	U32 next 	;

@@ -76,9 +76,9 @@ typedef	MsgType GMType;
 #define		VK_SYM				0x35			/*  符号 */
 
 /* 触控消息 */
-#define		VT_TOUCH_DOWN			0x00
-#define		VT_TOUCH_UP             0x01
-#define		VT_TOUCH_MOVE			0x02
+#define		VT_TOUCH_DOWN			0x01
+#define		VT_TOUCH_UP             0x02
+#define		VT_TOUCH_MOVE			0x03
 
 /*------------------------
   其它结构体定义
@@ -98,6 +98,7 @@ FAR	U8	GamConInit(void);						/* 游戏系统环境初始化，根据不同环�
 FAR	void	GamConRst(void);						/* 游戏系统环境恢复，根据不同环境调用不同的恢复函数 */
 FAR	void	GamGetMsg(GMType *pMsg);					/* 封装系统的输入，并将其转换成游戏的消息机制 */
 FAR void    GamGetLastMsg(GMType *pMsg);
+FAR void    GamClearLastMsg(void);
 FAR	U8	GamDelay(U16 dly, BOOL keyflag);					/* 1%秒延时 */
 FAR	void	GamMsgBox(const U8 *buf,U8 delay);					/* 信息框 */
 FAR	void	GamShowFrame(U8 *vscr);						/* 将虚拟屏幕show到屏幕上 */
