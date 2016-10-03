@@ -21,6 +21,7 @@
 #undef	CITYEDIT_C
 #define	CITYEDIT_C
 #include "baye/enghead.h"
+#include "touch.h"
 
 /*U8 GetCityOutPersons(U8 city,U8 *pqueue);
  U8 GetCityPersons(U8 city,U8 *pqueue);
@@ -910,6 +911,15 @@ FAR U8 GetCitySet(CitySetType *pos)
     U8 city = '\0';
     U8 *dptr;
     GMType Msg;
+    Touch touch = {0};
+    Rect mapRect = {
+        .left = WK_SX,
+        .top = WK_SY,
+        .right = WK_SX + CITYMAP_TIL_W * SHOWMAP_WS,
+        .bottom = WK_SY + CITYMAP_TIL_H * SHOWMAP_HS,
+    };
+    U8 xWhenTouchDown = 0;
+    U8 yWhenTouchDown = 0;
 
     showflag = 1;
     scrollflag = 0;
@@ -938,7 +948,7 @@ FAR U8 GetCitySet(CitySetType *pos)
                 case VK_UP:
                     if (pos->sety)
                     {
-                        scrollflag = 1;
+                        //scrollflag = 1;
                         pos->sety -= 1;
                         if (pos->sety < pos->y)
                         {
@@ -951,7 +961,7 @@ FAR U8 GetCitySet(CitySetType *pos)
                 case VK_LEFT:
                     if (pos->setx)
                     {
-                        scrollflag = 2;
+                        //scrollflag = 2;
                         pos->setx -= 1;
                         if (pos->setx < pos->x)
                         {
@@ -964,7 +974,7 @@ FAR U8 GetCitySet(CitySetType *pos)
                 case VK_DOWN:
                     if (pos->sety < CITYMAP_H - 1)
                     {
-                        scrollflag = 3;
+                        //scrollflag = 3;
                         pos->sety += 1;
                         if (pos->sety >= pos->y + SHOWMAP_HS)
                         {
@@ -977,7 +987,7 @@ FAR U8 GetCitySet(CitySetType *pos)
                 case VK_RIGHT:
                     if (pos->setx < CITYMAP_W - 1)
                     {
-                        scrollflag = 4;
+                        //scrollflag = 4;
                         pos->setx += 1;
                         if (pos->setx >= pos->x + SHOWMAP_WS)
                         {
@@ -1003,6 +1013,73 @@ FAR U8 GetCitySet(CitySetType *pos)
                     tpicflag = 1;
                     break;
             }
+        } else if (VM_TOUCH == Msg.type) {
+            if (tpicflag)
+            {
+                if (VT_TOUCH_UP == Msg.param) {
+                    // 退出地图
+                    tpicflag = 0;
+                    showflag = 1;
+                }
+                touchUpdate(&touch, Msg);
+                continue;
+            }
+            switch (Msg.param) {
+                case VT_TOUCH_DOWN:
+                    xWhenTouchDown = pos->x;
+                    yWhenTouchDown = pos->y;
+                    break;
+                case VT_TOUCH_UP:
+                {
+                    if (!touch.touched || touch.moved) break;
+
+                    if (touchIsPointInRect(touch.currentX, touch.currentY, mapRect)) {
+                        I16 px = touch.currentX - mapRect.left;
+                        I16 py = touch.currentY - mapRect.top;
+                        I16 row = py / CITYMAP_TIL_H;
+                        I16 col = px / CITYMAP_TIL_W;
+
+                        U8 setx = pos->x + col;
+                        U8 sety = pos->y + row;
+
+                        if (setx == pos->setx && sety == pos->sety) {
+                            if (city) {
+                                return city - 1;
+                            }
+                        } else {
+                            pos->setx = setx;
+                            pos->sety = sety;
+                            showflag = 1;
+                        }
+                    }
+
+                    break;
+                }
+                case VT_TOUCH_MOVE:
+                {
+                    I16 dx = Msg.param2.i16.p0 - touch.startX;
+                    I16 dy = Msg.param2.i16.p1 - touch.startY;
+                    I16 rows = dy / CITYMAP_TIL_H;
+                    I16 cols = dx / CITYMAP_TIL_W;
+                    
+                    I16 x = xWhenTouchDown - cols;
+                    I16 y = yWhenTouchDown - rows;
+
+                    x = limitValueInRange(x, 0, CITYMAP_W - SHOWMAP_WS);
+                    y = limitValueInRange(y, 0, CITYMAP_H - SHOWMAP_HS);
+
+                    if (x != pos->x || y != pos->y) {
+                        pos->x = x;
+                        pos->y = y;
+                        showflag = 1;
+                    }
+
+                    break;
+                }
+                default:
+                    break;
+            }
+            touchUpdate(&touch, Msg);
         }
     }
     return(0xff);
@@ -1125,10 +1202,13 @@ U8 ShowCityMap(CitySetType *pos,U8 scrollflag)
             GamPicShowExV(WK_SX + CITYMAP_TIL_W * w + (CITYMAP_TIL_W - CITY_ICON_W) / 2,WK_SY + CITYMAP_TIL_H * h + (CITYMAP_TIL_H - CITY_ICON_H) / 2,CITY_ICON_W,CITY_ICON_H,c,cicon,g_VisScr);
         }
     }
-    /*显示指针图标*/
-    cicon = ResLoadToCon(CITY_POS_ICON,1,g_CBnkPtr);
-    cicon += sizeof(PictureHeadType);
-    GamMPicShowV(WK_SX + CITYMAP_TIL_W * sw + (CITYMAP_TIL_W - CITY_ICON_W) / 2,WK_SY + CITYMAP_TIL_H * sh + CITY_ICON_H,CITY_ICON_W,CITY_ICON_H,cicon,g_VisScr);
+
+    if (pos->setx >= pos->x && pos->sety >= pos->y && pos->setx < pos->x + SHOWMAP_WS && pos->sety < pos->y + SHOWMAP_HS) {
+        /*显示指针图标*/
+        cicon = ResLoadToCon(CITY_POS_ICON,1,g_CBnkPtr);
+        cicon += sizeof(PictureHeadType);
+        GamMPicShowV(WK_SX + CITYMAP_TIL_W * sw + (CITYMAP_TIL_W - CITY_ICON_W) / 2,WK_SY + CITYMAP_TIL_H * sh + CITY_ICON_H,CITY_ICON_W,CITY_ICON_H,cicon,g_VisScr);
+    }
 
     str = SHARE_MEM + 3000;
     astr = SHARE_MEM + 3400;

@@ -19,6 +19,7 @@
 #undef	PublicFun
 #define	PublicFun
 #include "baye/enghead.h"
+#include "touch.h"
 #define		IN_FILE	1	/* 当前文件位置 */
 
 /*本体函数声明*/
@@ -227,9 +228,11 @@ FAR U8 PlcSplMenu(RECT *pRect,U8 pIdx,U8 *buf)
     pSIdx = 0;
     if(pICnt < pItm)
         pSIdx = pIdx;
+
+    Rect menuRect = {c_Sx - 3,c_Sy - 3,c_Ex + 2,c_Ey + 2};
     /* 初始化界面 */
     gam_clrlcd(c_Sx - 3,c_Sy - 3,c_Ex + 2,c_Ey + 2);
-    gam_rect(c_Sx - 3,c_Sy - 3,c_Ex + 2,c_Ey + 2);
+    gam_rect(menuRect.left, menuRect.top, menuRect.right, menuRect.bottom);
     if(pItm > pICnt)
     {
         gam_clrlcd(c_Ex + 2,c_Sy - 3,c_Ex + 6,c_Ey + 2);
@@ -265,8 +268,26 @@ FAR U8 PlcSplMenu(RECT *pRect,U8 pIdx,U8 *buf)
 
         tflag = false;
         GamGetMsg(&pMsg);
+
+        if (VM_TOUCH == pMsg.type)
+        {
+            // TODO:
+            if (!touchIsPointInRect(pMsg.param2.i16.p0, pMsg.param2.i16.p1, menuRect))
+            {
+                pIdx = MNU_EXIT;
+                c_ReFlag = true;
+                c_Sx = WK_SX;
+                c_Sy = WK_SY;
+                c_Ex = WK_EX;
+                c_Ey = WK_EY;
+                return pIdx;
+            }
+            continue;
+        }
+
         if(VM_CHAR_FUN != pMsg.type)
             continue;
+
         gam_revlcd(c_Sx,sy,c_Ex,sy + ASC_HGT);
         switch(pMsg.param)
         {

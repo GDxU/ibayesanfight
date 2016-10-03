@@ -358,9 +358,7 @@ U8 GamGetKing(U8 num)
     bool	rflag;
     GMType	pMsg;
 
-    Touch touch = {
-        .moved = 1,
-    };
+    Touch touch = {0};
 
     I16 touchStartTop = 0;
     U8 itemHeight = HZ_HGT;
@@ -453,7 +451,7 @@ U8 GamGetKing(U8 num)
             switch (pMsg.param) {
                 case VT_TOUCH_UP:
                 {
-                    if (touch.moved) break;
+                    if (!touch.touched || touch.moved) break;
 
                     I16 index = touchListViewItemIndexAtPoint(x, y, listRect, pTop, num, itemHeight);
                     printf("touch up on index: %d\n", index);
@@ -472,6 +470,8 @@ U8 GamGetKing(U8 num)
                     break;
                 case VT_TOUCH_MOVE:
                 {
+                    if (!touch.touched) break;
+                    
                     I16 distanceY = y - touch.startY;
                     I8 deltaItems = distanceY / itemHeight;
                     I16 top = touchStartTop - deltaItems;
