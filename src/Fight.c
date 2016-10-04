@@ -628,9 +628,11 @@ U8 FgtGetFoucs(void (*chkcondition)(bool*flag))
                             if (toFocusX == g_FoucsX && toFocusY == g_FoucsY) {
                                 return 0;
                             }
+                            FgtMapUnitShow(g_FoucsX,g_FoucsY,0);
                             g_FoucsX = toFocusX;
                             g_FoucsY = toFocusY;
                             tflag = false;
+                            g_AutoUpdateMapXY = true; // 避免画面整体刷新
                             (*chkcondition)(&tflag);
                         }
                         break;
