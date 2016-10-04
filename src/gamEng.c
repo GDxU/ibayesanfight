@@ -578,12 +578,22 @@ FAR U8 GamRecordMan(U8 flag)
     bool	pflag;
     GMType	pMsg;
     U8 count = flag ? 4 : 3;
+    Touch touch = {0};
+    U8 itemHeight = 14;
 
     GamRcdIFace(count);
     idx = 0;
     ry = WK_SY + 33;
     U8 right = WK_SX + 31 + 95;
     gam_revlcd(WK_SX + 31,ry, right, ry + HZ_HGT);
+
+    Rect menuRect = {
+        .left = WK_SX + 31,
+        .top = ry,
+        .right = right,
+        .bottom = ry + itemHeight*count,
+    };
+
     while(1)
     {
         GamGetMsg(&pMsg);
@@ -613,6 +623,34 @@ FAR U8 GamRecordMan(U8 flag)
             idx = idx % count;
             ry = idx * 14 + WK_SY + 33;
             gam_revlcd(WK_SX + 31,ry, right,ry + HZ_HGT);
+        } else if (VM_TOUCH == pMsg.type) {
+            touchUpdate(&touch, pMsg);
+            if (VT_TOUCH_UP == pMsg.param) {
+                if (touch.completed && !touch.moved) {
+                    if (touchIsPointInRect(touch.startX, touch.startY, menuRect)) {
+                        I16 index = touchListViewItemIndexAtPoint(touch.startX, touch.startY, menuRect, 0, 0, 0, count, itemHeight);
+                        if (index >= 0) {
+                            if (index == idx) {
+                                if(flag)
+                                    pflag = GamLoadRcd(idx);
+                                else
+                                    pflag = GamSaveRcd(idx);
+                                if(pflag)
+                                    return idx;
+                                GamRcdIFace(count);
+                            } else {
+                                gam_revlcd(WK_SX + 31,ry,right,ry + HZ_HGT);
+                                idx = index;
+                            }
+                            idx = idx % count;
+                            ry = idx * 14 + WK_SY + 33;
+                            gam_revlcd(WK_SX + 31,ry, right,ry + HZ_HGT);
+                        }
+                    } else {
+                        return MNU_EXIT;
+                    }
+                }
+            }
         }
     }
 }
