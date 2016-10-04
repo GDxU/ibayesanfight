@@ -51,4 +51,8 @@ void touchSendTouchEvent(U16 event, I16 x, I16 y);
 I8 touchUpdate(Touch *touch, MsgType msg);
 I32 limitValueInRange(I32 value, I32 min, I32 max);
 
+Rect MakeRect(I16 x, I16 y, I16 w, I16 h);
+
+void touchDrawButton(Rect rect, const char*title);
+
 #endif /* touch_h */

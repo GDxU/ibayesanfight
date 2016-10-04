@@ -7,6 +7,7 @@
 //
 
 #include "touch.h"
+#include "baye/compa.h"
 
 void touchSendTouchEvent(U16 event, I16 x, I16 y)
 {
@@ -101,4 +102,20 @@ Point touchListViewCalcTopLeftForMove(Touch *touch_,
         result.y = limitValueInRange(y, 0, yMax);
     }
     return result;
+}
+
+Rect MakeRect(I16 x, I16 y, I16 w, I16 h)
+{
+    return (Rect){
+        x, y, x + w, y + h
+    };
+}
+
+void touchDrawButton(Rect rect, const char*title)
+{
+#define gam_rect2(r) gam_rect(r.left, r.top, r.right, r.bottom)
+#define gam_clr_rect2(r) gam_clrlcd(r.left, r.top, r.right, r.bottom)
+    gam_clr_rect2(rect);
+    gam_rect2(rect);
+    GamStrShowS(rect.left+2, rect.top+1, (const U8*)title);
 }
