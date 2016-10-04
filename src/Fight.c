@@ -540,8 +540,8 @@ U8 FgtGetFoucs(void (*chkcondition)(bool*flag))
     U8 btnH = 16;
 
     Rect backButton = MakeRect(0, btnTop, 32, btnH);
-    Rect infoButton = MakeRect(backButton.right, btnTop, 28, btnH);
-    Rect searchButton = MakeRect(infoButton.right, btnTop, SCR_WID - infoButton.right, btnH);
+    Rect searchButton = MakeRect(backButton.right, btnTop, 28, btnH);
+    Rect infoButton = MakeRect(searchButton.right, btnTop, SCR_WID - searchButton.right, btnH);
     Rect mapRect = MakeRect(0, 0, SCR_WID, btnTop);
 
     flag = false;
