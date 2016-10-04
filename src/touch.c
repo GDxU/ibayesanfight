@@ -58,6 +58,9 @@ I8 touchUpdate(Touch *touch, MsgType msg)
         case VT_TOUCH_MOVE:
             touch->moved = 1;
             break;
+        case VT_TOUCH_CANCEL:
+            touch->touched = 0;
+            break;
         default:
             break;
     }
