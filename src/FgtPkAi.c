@@ -887,7 +887,7 @@ FAR void FgtShowView(void)
                             goto tagProcessMessage;
                         } else if (dy > THRESHOLD) {
                             msg.type = VM_CHAR_FUN;
-                            msg.param = up ? VK_UP : VK_DOWN;
+                            msg.param = up ? VK_DOWN : VK_UP;
                             goto tagProcessMessage;
                         }
                     } else {
