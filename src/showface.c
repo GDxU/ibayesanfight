@@ -325,6 +325,11 @@ FAR U8 ShowGoodsControl(U8 *goods,U8 gcount,U8 x0,U8 y0,U8 x1,U8 y1)
                 case VT_TOUCH_DOWN:
                     topWhenTouchDown = top;
                     leftWhenTouchDown = spc;
+                    I16 index = touchListViewItemIndexAtPoint(touch.currentX, touch.currentY, menuRect, 1+ASC_HGT, 1, top, gcount, ASC_HGT);
+                    if (index >= 0 && set != index) {
+                        set = index;
+                        showflag = 1;
+                    }
                     break;
                 case VT_TOUCH_UP:
                 {
@@ -334,12 +339,7 @@ FAR U8 ShowGoodsControl(U8 *goods,U8 gcount,U8 x0,U8 y0,U8 x1,U8 y1)
                     {
                         return 0xff;
                     }
-                    if (set == index) {
-                        return index;
-                    }
-                    set = index;
-                    showflag = 1;
-                    break;
+                    return index;
                 }
                 case VT_TOUCH_MOVE:
                 {
@@ -800,6 +800,11 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 x0,U8 y0,U8 x1,U8 y1)
                 case VT_TOUCH_DOWN:
                     topWhenTouchDown = top;
                     leftWhenTouchDown = spc;
+                    I16 index = touchListViewItemIndexAtPoint(touch.currentX, touch.currentY, menuRect, 1+ASC_HGT, 1, top, pcount, ASC_HGT);
+                    if (index >= 0 && set != index) {
+                        set = index;
+                        showflag = 1;
+                    }
                     break;
                 case VT_TOUCH_UP:
                 {
@@ -809,12 +814,7 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 x0,U8 y0,U8 x1,U8 y1)
                     {
                         return 0xff;
                     }
-                    if (set == index) {
-                        return index;
-                    }
-                    set = index;
-                    showflag = 1;
-                    break;
+                    return index;
                 }
                 case VT_TOUCH_MOVE:
                 {

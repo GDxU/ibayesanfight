@@ -279,22 +279,22 @@ FAR U8 PlcSplMenu(RECT *pRect,U8 pIdx,U8 *buf)
                 case VT_TOUCH_DOWN:
                 {
                     touchStartIndex = pSIdx;
+                    I16 index = touchListViewItemIndexAtPoint(touch.currentX, touch.currentY, menuRect, 3, 3, pSIdx, pItm, itemHeight);
+                    if (index >= 0 && index != pIdx) {
+                        pIdx = index;
+                        tflag = 1;
+                        cflag = 1;
+                        break;
+                    }
                     break;
                 }
                 case VT_TOUCH_UP:
                 {
                     if (touch.completed && !touch.moved) {
-                        if (!touchIsPointInRect(touch.currentX, touch.currentY, menuRect))
+                        I16 index = touchListViewItemIndexAtPoint(touch.currentX, touch.currentY, menuRect, 3, 3, pSIdx, pItm, itemHeight);
+                        if (index < 0)
                         {
                             pIdx = MNU_EXIT;
-                        } else {
-                            I16 index = touchListViewItemIndexAtPoint(touch.currentX, touch.currentY, menuRect, 3, 3, pSIdx, pItm, itemHeight);
-                            if (index != pIdx) {
-                                pIdx = index;
-                                tflag = 1;
-                                cflag = 1;
-                                break;
-                            }
                         }
                         c_ReFlag = true;
                         c_Sx = WK_SX;
