@@ -475,12 +475,7 @@ U8 GamGetKing(U8 num)
                     I16 distanceY = y - touch.startY;
                     I8 deltaItems = distanceY / itemHeight;
                     I16 top = touchStartTop - deltaItems;
-                    if (top >= num - itemsPerPage) {
-                        top = num - itemsPerPage;
-                    }
-                    if (top < 0) {
-                        top = 0;
-                    }
+                    top = limitValueInRange(top, 0, num-itemsPerPage);
                     if (top != pTop) {
                         pTop = top;
                         UPDATE_UI();
