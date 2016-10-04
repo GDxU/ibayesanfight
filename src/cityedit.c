@@ -1058,21 +1058,17 @@ FAR U8 GetCitySet(CitySetType *pos)
                 case VT_TOUCH_MOVE:
                 {
                     if (!touch.touched) break;
+                    Point p = touchListViewCalcTopLeftForMove(&touch,
+                                                              xWhenTouchDown,
+                                                              CITYMAP_W - SHOWMAP_WS,
+                                                              CITYMAP_TIL_W,
+                                                              yWhenTouchDown,
+                                                              CITYMAP_H - SHOWMAP_HS,
+                                                              CITYMAP_TIL_W);
 
-                    I16 dx = Msg.param2.i16.p0 - touch.startX;
-                    I16 dy = Msg.param2.i16.p1 - touch.startY;
-                    I16 rows = dy / CITYMAP_TIL_H;
-                    I16 cols = dx / CITYMAP_TIL_W;
-                    
-                    I16 x = xWhenTouchDown - cols;
-                    I16 y = yWhenTouchDown - rows;
-
-                    x = limitValueInRange(x, 0, CITYMAP_W - SHOWMAP_WS);
-                    y = limitValueInRange(y, 0, CITYMAP_H - SHOWMAP_HS);
-
-                    if (x != pos->x || y != pos->y) {
-                        pos->x = x;
-                        pos->y = y;
+                    if (p.x != pos->x || p.y != pos->y) {
+                        pos->x = p.x;
+                        pos->y = p.y;
                         showflag = 1;
                     }
 
