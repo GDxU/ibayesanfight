@@ -133,6 +133,9 @@ FAR U8 ExchangeMake(U8 city)
                             cptr->Money -= exc;
                         }
                     }
+                    else {
+                        continue;
+                    }
                 }
             }
             else if (1 == pcount)
@@ -154,6 +157,9 @@ FAR U8 ExchangeMake(U8 city)
                         }
                         if (cptr->Money > 30000)
                             cptr->Money = 30000;
+                    }
+                    else {
+                        continue;
                     }
                 }
             }
