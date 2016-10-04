@@ -1162,8 +1162,10 @@ U8 ShowCityMap(CitySetType *pos)
         }
     }
 
+    Rect displayRect = MakeRect(pos->x, pos->y, SHOWMAP_WS, SHOWMAP_HS);
+    U8 cursorIsInView = touchIsPointInRect(pos->setx, pos->sety, displayRect);
 
-    if (pos->setx >= pos->x && pos->sety >= pos->y && pos->setx < pos->x + SHOWMAP_WS && pos->sety < pos->y + SHOWMAP_HS) {
+    if (cursorIsInView) {
         /*显示指针图标*/
         cicon = ResLoadToCon(CITY_POS_ICON,1,g_CBnkPtr);
         cicon += sizeof(PictureHeadType);
@@ -1193,7 +1195,7 @@ U8 ShowCityMap(CitySetType *pos)
     ResLoadToMem(STRING_CONST,DATE_TIME_STR3,astr);
     gam_strcat(str,astr);
     GamStrShowV(WK_SX + CITYMAP_TIL_W * SHOWMAP_WS + 1,WK_EY - HZ_HGT - ASC_HGT - 1,str,g_VisScr);
-    if (citymap[sh][sw])
+    if (cursorIsInView && citymap[sh][sw])
     {
         GetCityName(citymap[sh][sw] - 1,astr);
         GamStrShowV(WK_SX + CITYMAP_TIL_W * SHOWMAP_WS + 2,WK_EY - HZ_HGT - 1,astr,g_VisScr);
@@ -1203,7 +1205,7 @@ U8 ShowCityMap(CitySetType *pos)
      gam_rect(WK_SX + CITYMAP_TIL_W * SHOWMAP_WS,WK_SY,WK_EX,WK_EY);*/
     ShowMapClear();
     
-    return(citymap[sh][sw]);
+    return cursorIsInView ? (citymap[sh][sw]) : 0;
 }
 
 /******************************************************************************
