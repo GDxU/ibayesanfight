@@ -53,7 +53,7 @@ target_link_libraries(baye.js bayeliba)
 target_include_directories(baye.js PRIVATE . ./platform/common)
 target_include_directories(bayeliba PRIVATE . ./platform/common)
 #target_include_directories(bayeliba PRIVATE ${msgpack_SOURCE_DIR}/include)
-
+# -s EMTERPRETIFY_ADVISE=1
 set (CMAKE_C_FLAGS
     "-s EMTERPRETIFY=1\
  -s EMTERPRETIFY_ASYNC=1 \
