@@ -58,7 +58,9 @@ I8 touchUpdate(Touch *touch, MsgType msg)
             touch->touched = 0;
             break;
         case VT_TOUCH_MOVE:
-            touch->moved = 1;
+            if (abs(touch->currentX - touch->startX) > 2 || abs(touch->currentY - touch->startY) > 2) {
+                touch->moved = 1;
+            }
             break;
         case VT_TOUCH_CANCEL:
             touch->touched = 0;
