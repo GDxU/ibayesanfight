@@ -21,6 +21,7 @@ typedef struct {
 } Rect;
 
 typedef struct {
+    U8 completed;
     U8 touched;
     U8 moved;
     I16 startX;

@@ -21,6 +21,7 @@
 #include "baye/enghead.h"
 #include "baye/bind-objects.h"
 #include "baye/script.h"
+#include "touch.h"
 #define		IN_FILE	1	/* 当前文件位置 */
 
 /*本体函数声明*/
@@ -808,6 +809,7 @@ FAR void FgtShowView(void)
     U8	sx,sy,idx,pcolor;
     U8	key,tbuf[20];
     JLPOS	*pos;
+    Touch touch;
 
     gam_clslcd();
     sx = (SCR_WID / 2 - g_MapWid) / 2 + WK_SX;
@@ -843,26 +845,56 @@ FAR void FgtShowView(void)
         key = GamDelay(50,true);
         if(!key)
             continue;
-        switch(key)
-        {
-            case VK_ENTER:
-            case VK_EXIT:
-                return;
-            case VK_LEFT:
-            case VK_RIGHT:
-                pForce = !pForce;
-                pSIdx = 0;
-                break;
-            case VK_UP:
-                if(pSIdx)
-                    pSIdx -= pPcnt;
-                break;
-            case VK_DOWN:
-                if(FgtStatGen(pForce) < pPcnt)
+        MsgType msg;
+        GamGetLastMsg(&msg);
+    tagProcessMessage:
+        if (VM_CHAR_FUN == msg.type) {
+            switch(msg.param)
+            {
+                case VK_ENTER:
+                case VK_EXIT:
+                    return;
+                case VK_LEFT:
+                case VK_RIGHT:
+                    pForce = !pForce;
+                    pSIdx = 0;
                     break;
-                if(pSIdx < FgtStatGen(pForce) - pPcnt)
-                    pSIdx += pPcnt;
-                break;
+                case VK_UP:
+                    if(pSIdx)
+                        pSIdx -= pPcnt;
+                    break;
+                case VK_DOWN:
+                    if(FgtStatGen(pForce) < pPcnt)
+                        break;
+                    if(pSIdx < FgtStatGen(pForce) - pPcnt)
+                        pSIdx += pPcnt;
+                    break;
+            }
+        } else if (VM_TOUCH == msg.type) {
+            touchUpdate(&touch, msg);
+            if (msg.param == VT_TOUCH_UP) {
+                if (touch.completed) {
+                    if (touch.moved) {
+                        I16 dx = touch.currentX - touch.startX;
+                        I16 dy = touch.currentY - touch.startY;
+                        U8 up = dy < 0;
+#define THRESHOLD 20
+                        dx = abs(dx);
+                        dy = abs(dy);
+                        if (dx > THRESHOLD) {
+                            msg.type = VM_CHAR_FUN;
+                            msg.param = VK_LEFT;
+                            goto tagProcessMessage;
+                        } else if (dy > THRESHOLD) {
+                            msg.type = VM_CHAR_FUN;
+                            msg.param = up ? VK_UP : VK_DOWN;
+                            goto tagProcessMessage;
+                        }
+                    } else {
+                        return;
+                    }
+                }
+            }
         }
         FgtViewForce(pForce,pSIdx);
     }
