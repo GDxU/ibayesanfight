@@ -912,12 +912,18 @@ FAR U8 GetCitySet(CitySetType *pos)
     U8 *dptr;
     GMType Msg;
     Touch touch = {0};
+
     Rect mapRect = {
         .left = WK_SX,
         .top = WK_SY,
         .right = WK_SX + CITYMAP_TIL_W * SHOWMAP_WS,
         .bottom = WK_SY + CITYMAP_TIL_H * SHOWMAP_HS,
     };
+
+    // 头像的rect
+    Rect exitButton = MakeRect(WK_SX + CITYMAP_TIL_W * SHOWMAP_WS + ((WK_EX - (WK_SX + CITYMAP_TIL_W * SHOWMAP_WS) - 24) / 2), WK_SY + 4, 24, 24);
+    Rect searchButton = MakeRect(exitButton.left, exitButton.bottom+2, 24, 24);
+
     U8 xWhenTouchDown = 0;
     U8 yWhenTouchDown = 0;
 
@@ -935,6 +941,7 @@ FAR U8 GetCitySet(CitySetType *pos)
         }
 
         GamGetMsg(&Msg);
+    tagHandleMsg:
         if (VM_CHAR_FUN == Msg.type)
         {
             if (tpicflag)
@@ -1051,8 +1058,15 @@ FAR U8 GetCitySet(CitySetType *pos)
                             pos->sety = sety;
                             showflag = 1;
                         }
+                    } else if (touchIsPointInRect(touch.currentX, touch.currentY, exitButton)) {
+                        Msg.type = VM_CHAR_FUN;
+                        Msg.param = VK_EXIT;
+                        goto tagHandleMsg;
+                    } else if (touchIsPointInRect(touch.currentX, touch.currentY, searchButton)) {
+                        Msg.type = VM_CHAR_FUN;
+                        Msg.param = VK_SEARCH;
+                        goto tagHandleMsg;
                     }
-
                     break;
                 }
                 case VT_TOUCH_MOVE:
