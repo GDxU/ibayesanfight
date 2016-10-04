@@ -17,7 +17,7 @@ CITYEDIT_C U8 GetEnemyPersons(U8 king,U8 *pqueue);
 CITYEDIT_C U8 GetEnemySatraps(U8 king,U8 *squeue);
 CITYEDIT_C U8 GetEnemyKing(U8 king,U8 *kqueue);
 CITYEDIT_C U8 GetCitySet(CitySetType *pos);
-CITYEDIT_C U8 ShowCityMap(CitySetType *pos,U8 scrollflag);
+CITYEDIT_C U8 ShowCityMap(CitySetType *pos);
 CITYEDIT_C void ShowMapClear(void);
 CITYEDIT_C U8 GetRoundEnemyCity(U8 city,U8 *cqueue);
 CITYEDIT_C U8 GetKingPersons(U8 king,U8 *pqueue);

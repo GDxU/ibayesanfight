@@ -907,7 +907,7 @@ FAR U8 GetKingPersons(U8 king,U8 *pqueue)
  ******************************************************************************/
 FAR U8 GetCitySet(CitySetType *pos)
 {
-    U8 showflag,scrollflag,tpicflag;
+    U8 showflag,tpicflag;
     U8 city = '\0';
     U8 *dptr;
     GMType Msg;
@@ -928,16 +928,14 @@ FAR U8 GetCitySet(CitySetType *pos)
     U8 yWhenTouchDown = 0;
 
     showflag = 1;
-    scrollflag = 0;
     tpicflag = 0;
     gam_clrvscr(WK_SX,WK_SY,WK_EX,WK_EY,g_VisScr);
     while (1)
     {
         if (showflag && !tpicflag)
         {
-            city = ShowCityMap(pos,scrollflag);
+            city = ShowCityMap(pos);
             showflag = 0;
-            scrollflag = 0;
         }
 
         GamGetMsg(&Msg);
@@ -955,12 +953,10 @@ FAR U8 GetCitySet(CitySetType *pos)
                 case VK_UP:
                     if (pos->sety)
                     {
-                        //scrollflag = 1;
                         pos->sety -= 1;
                         if (pos->sety < pos->y)
                         {
                             pos->y = pos->sety;
-                            scrollflag = 0;
                         }
                         showflag = 1;
                     }
@@ -968,12 +964,10 @@ FAR U8 GetCitySet(CitySetType *pos)
                 case VK_LEFT:
                     if (pos->setx)
                     {
-                        //scrollflag = 2;
                         pos->setx -= 1;
                         if (pos->setx < pos->x)
                         {
                             pos->x = pos->setx;
-                            scrollflag = 0;
                         }
                         showflag = 1;
                     }
@@ -981,12 +975,10 @@ FAR U8 GetCitySet(CitySetType *pos)
                 case VK_DOWN:
                     if (pos->sety < CITYMAP_H - 1)
                     {
-                        //scrollflag = 3;
                         pos->sety += 1;
                         if (pos->sety >= pos->y + SHOWMAP_HS)
                         {
                             pos->y = pos->sety - SHOWMAP_HS + 1;
-                            scrollflag = 0;
                         }
                         showflag = 1;
                     }
@@ -994,12 +986,10 @@ FAR U8 GetCitySet(CitySetType *pos)
                 case VK_RIGHT:
                     if (pos->setx < CITYMAP_W - 1)
                     {
-                        //scrollflag = 4;
                         pos->setx += 1;
                         if (pos->setx >= pos->x + SHOWMAP_WS)
                         {
                             pos->x = pos->setx - SHOWMAP_WS + 1;
-                            scrollflag = 0;
                         }
                         showflag = 1;
                     }
@@ -1110,7 +1100,7 @@ FAR U8 GetCitySet(CitySetType *pos)
  *		陈泽伟		2005-6-23 10:48	基本功能完成
  ******************************************************************************/
 
-U8 ShowCityMap(CitySetType *pos,U8 scrollflag)
+U8 ShowCityMap(CitySetType *pos)
 {
     U8 *str,*astr;
     U8 h,w,sw,sh,c;
@@ -1134,7 +1124,6 @@ U8 ShowCityMap(CitySetType *pos,U8 scrollflag)
 
     pdptr = ResLoadToCon(CITYMAP_TILE,1,g_CBnkPtr);
     pdptr += sizeof(PictureHeadType);
-    if (!scrollflag)
     {
         for (h = 0;h < SHOWMAP_HS;h ++)
         {
@@ -1172,47 +1161,7 @@ U8 ShowCityMap(CitySetType *pos,U8 scrollflag)
             }
         }
     }
-    else
-    {
-        h = sh;
-        w = sw;
-        switch (scrollflag)
-        {
-            case 1:
-                h = sh + 1;
-                break;
-            case 2:
-                w = sw + 1;
-                break;
-            case 3:
-                h = sh - 1;
-                break;
-            case 4:
-                w = sw - 1;
-                break;
-        }
 
-        count = (CITYMAP_TIL_W + 7) / 8 * CITYMAP_TIL_H * ((U16) (pos->y + h) * CITYMAP_W + pos->x + w);
-        GamPicShowV(WK_SX + CITYMAP_TIL_W * w,WK_SY + CITYMAP_TIL_H * h,CITYMAP_TIL_W,CITYMAP_TIL_H,pdptr + count,g_VisScr);
-
-        if (citymap[h][w])
-        {
-            if (g_Cities[citymap[h][w] - 1].Belong == (g_PlayerKing + 1))
-            {
-                c = 8;
-            }
-            else if (g_Cities[citymap[h][w] - 1].Belong)
-            {
-                c = 7;
-            }
-            else
-            {
-                c = 0;
-            }
-            cicon = ResLoadToCon(CITY_ICON,1,g_CBnkPtr);
-            GamPicShowExV(WK_SX + CITYMAP_TIL_W * w + (CITYMAP_TIL_W - CITY_ICON_W) / 2,WK_SY + CITYMAP_TIL_H * h + (CITYMAP_TIL_H - CITY_ICON_H) / 2,CITY_ICON_W,CITY_ICON_H,c,cicon,g_VisScr);
-        }
-    }
 
     if (pos->setx >= pos->x && pos->sety >= pos->y && pos->setx < pos->x + SHOWMAP_WS && pos->sety < pos->y + SHOWMAP_HS) {
         /*显示指针图标*/
