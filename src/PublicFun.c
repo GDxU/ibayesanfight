@@ -214,6 +214,9 @@ FAR U8 PlcSplMenu(RECT *pRect,U8 pIdx,U8 *buf)
     U16	poff;	/* 数据偏移 */
     float	tcot;
     GMType	pMsg;	/* 消息 */
+    Touch touch = {0};
+    U8 touchStartIndex = 0;
+    U8 itemHeight = ASC_HGT;
 
     /* 初始化显示范围 */
     c_ReFlag = false;
@@ -223,7 +226,7 @@ FAR U8 PlcSplMenu(RECT *pRect,U8 pIdx,U8 *buf)
     c_Ey = pRect->ey;
     /* 计算参数 */
     pLen = (c_Ex - c_Sx) / ASC_WID;
-    pICnt = (c_Ey - c_Sy) / ASC_HGT;
+    pICnt = (c_Ey - c_Sy) / itemHeight;
     pItm = gam_strlen(buf) / pLen;
     pSIdx = 0;
     if(pICnt < pItm)
@@ -245,8 +248,8 @@ FAR U8 PlcSplMenu(RECT *pRect,U8 pIdx,U8 *buf)
     poff *= pLen;
     GamStrShowS(c_Sx,c_Sy,buf + poff);
     /* 初始化光标 */
-    sy = c_Sy + (pIdx - pSIdx) * ASC_HGT;
-    gam_revlcd(c_Sx,sy,c_Ex,sy + ASC_HGT);
+    sy = c_Sy + (pIdx - pSIdx) * itemHeight;
+    gam_revlcd(c_Sx,sy,c_Ex,sy + itemHeight);
     ty = c_Sy;
     cflag = true;
     while(1)
@@ -271,24 +274,62 @@ FAR U8 PlcSplMenu(RECT *pRect,U8 pIdx,U8 *buf)
 
         if (VM_TOUCH == pMsg.type)
         {
-            // TODO:
-            if (!touchIsPointInRect(pMsg.param2.i16.p0, pMsg.param2.i16.p1, menuRect))
-            {
-                pIdx = MNU_EXIT;
-                c_ReFlag = true;
-                c_Sx = WK_SX;
-                c_Sy = WK_SY;
-                c_Ex = WK_EX;
-                c_Ey = WK_EY;
-                return pIdx;
+            I16 x = pMsg.param2.i16.p0;
+            I16 y = pMsg.param2.i16.p1;
+
+            switch (pMsg.param) {
+                case VT_TOUCH_DOWN:
+                {
+                    touchStartIndex = pSIdx;
+                    break;
+                }
+                case VT_TOUCH_UP:
+                {
+                    if (touch.touched && !touch.moved) {
+                        if (!touchIsPointInRect(x, y, menuRect))
+                        {
+                            pIdx = MNU_EXIT;
+                        } else {
+                            I16 index = touchListViewItemIndexAtPoint(x, y, menuRect, 3, 3, pSIdx, pItm, itemHeight);
+                            if (index != pIdx) {
+                                pIdx = index;
+                                tflag = 1;
+                                cflag = 1;
+                                break;
+                            }
+                        }
+                        c_ReFlag = true;
+                        c_Sx = WK_SX;
+                        c_Sy = WK_SY;
+                        c_Ex = WK_EX;
+                        c_Ey = WK_EY;
+                        return pIdx;
+                    }
+                    break;
+                }
+                case VT_TOUCH_MOVE:
+                {
+                    I16 dy = y - touch.startY;
+                    I16 dItems = dy / itemHeight;
+                    I16 startIndex = touchStartIndex - dItems;
+                    startIndex = limitValueInRange(startIndex, 0, pItm-pICnt);
+                    if (startIndex != pSIdx) {
+                        pSIdx = startIndex;
+                        poff = pSIdx*pLen;
+                        tflag = true;
+                    }
+                    break;
+                }
+                default:
+                    break;
             }
-            continue;
+            touchUpdate(&touch, pMsg);
+            goto UPDATE_UI;
         }
 
         if(VM_CHAR_FUN != pMsg.type)
             continue;
 
-        gam_revlcd(c_Sx,sy,c_Ex,sy + ASC_HGT);
         switch(pMsg.param)
         {
             case VK_UP:
@@ -345,10 +386,15 @@ FAR U8 PlcSplMenu(RECT *pRect,U8 pIdx,U8 *buf)
                 c_Ey = WK_EY;
                 return pIdx;
         }
-        if(tflag)
+UPDATE_UI:
+        if(tflag || cflag) {
+            gam_clrlcd(c_Sx, c_Sy, c_Ex, c_Ey);
             GamStrShowS(c_Sx,c_Sy,buf + poff);
-        sy = c_Sy + (pIdx - pSIdx) * ASC_HGT;
-        gam_revlcd(c_Sx,sy,c_Ex,sy + ASC_HGT);
+            if (pIdx >= pSIdx && pIdx < pSIdx + pICnt) {
+                sy = c_Sy + (pIdx - pSIdx) * ASC_HGT;
+                gam_revlcd(c_Sx,sy,c_Ex,sy + ASC_HGT);
+            }
+        }
     }
 }
 /***********************************************************************

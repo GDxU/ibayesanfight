@@ -26,12 +26,12 @@ U8 touchIsPointInRect(I16 x, I16 y, Rect r)
 }
 
 ///获取触摸点在list内的item序号。
-I16 touchListViewItemIndexAtPoint(I16 x, I16 y, Rect listRect, U16 itemStart, U16 itemCount, U16 itemHeight)
+I16 touchListViewItemIndexAtPoint(I16 x, I16 y, Rect listRect, I16 topPadding, I16 bottomPadding, U16 itemStart, U16 itemCount, U16 itemHeight)
 {
     if (!touchIsPointInRect(x, y, listRect)) {
         return -2;
     }
-    U16 yOffset = y - listRect.top;
+    U16 yOffset = y - listRect.top - topPadding;
     U16 index = itemStart + yOffset / itemHeight;
     return index < itemCount ? index : -1;
 }

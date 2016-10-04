@@ -453,7 +453,7 @@ U8 GamGetKing(U8 num)
                 {
                     if (!touch.touched || touch.moved) break;
 
-                    I16 index = touchListViewItemIndexAtPoint(x, y, listRect, pTop, num, itemHeight);
+                    I16 index = touchListViewItemIndexAtPoint(x, y, listRect, 2, 2, pTop, num, itemHeight);
                     printf("touch up on index: %d\n", index);
                     if (index == pIdx) {
                         return g_FgtAtkRng[pIdx];
