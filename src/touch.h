@@ -30,8 +30,22 @@ typedef struct {
     I16 currentY;
 } Touch;
 
+typedef struct {
+    I16 x;
+    I16 y;
+} Point;
+
 U8 touchIsPointInRect(I16 x, I16 y, Rect r);
 I16 touchListViewItemIndexAtPoint(I16 x, I16 y, Rect listRect, I16 topPadding, I16 bottomPadding, U16 itemStart, U16 itemCount, U16 itemHeight);
+
+Point touchListViewCalcTopLeftForMove(Touch *touch_,
+                                      U16 leftWhenTouchDown,
+                                      U16 xMax,
+                                      U16 itemWitdh,
+                                      U16 topWhenTouchDown,
+                                      U16 yMax,
+                                      U16 itemHeight
+                                      );
 
 void touchSendTouchEvent(U16 event, I16 x, I16 y);
 I8 touchUpdate(Touch *touch, MsgType msg);

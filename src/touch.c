@@ -75,3 +75,30 @@ I32 limitValueInRange(I32 value, I32 min, I32 max)
     if (value > max) value = max;
     return value;
 }
+
+Point touchListViewCalcTopLeftForMove(Touch *touch_,
+                                      U16 leftWhenTouchDown,
+                                      U16 xMax,
+                                      U16 itemWitdh,
+                                      U16 topWhenTouchDown,
+                                      U16 yMax,
+                                      U16 itemHeight
+                                      )
+{
+#define touch (*touch_)
+    Point result = {leftWhenTouchDown, topWhenTouchDown};
+
+    if (itemWitdh) {
+        I16 dx = touch.currentX - touch.startX;
+        I16 cols = dx / itemWitdh;
+        I16 x = leftWhenTouchDown - cols;
+        result.x = limitValueInRange(x, 0, xMax);
+    }
+    if (itemHeight) {
+        I16 dy = touch.currentY - touch.startY;
+        I16 rows = dy / itemHeight;
+        I16 y = topWhenTouchDown - rows;
+        result.y = limitValueInRange(y, 0, yMax);
+    }
+    return result;
+}
