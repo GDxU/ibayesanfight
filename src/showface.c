@@ -21,6 +21,7 @@
 #undef	SHOWFACE_C
 #define	SHOWFACE_C
 #include "baye/enghead.h"
+#include "touch.h"
 
 /*void GetCityProStr(U8 city,U8 pro,U8 *str);
  void GetPersonProStr(U8 person,U8 pro,U8 *str);
@@ -182,7 +183,7 @@ U8 ShowGoodsProStr(U8 pro,U8 x,U8 y,U8 wid)
     }
 
     ResItemGet(IFACE_CONID,GOODS_PRO_WID,ptr);
-    for (i = pro;i < 5;i ++)
+    for (i = pro;i < GOODS_PROP_COUNT;i ++)
     {
         if (AddItem(ASC_WID * ptr[i] + 1,ASC_HGT,&positem,&sx,&sy))
         {
@@ -218,6 +219,9 @@ FAR U8 ShowGoodsControl(U8 *goods,U8 gcount,U8 x0,U8 y0,U8 x1,U8 y1)
     U8 spc,spcv[6];
     U8 wid;
     GMType Msg;
+    Touch touch;
+    U8 topWhenTouchDown = 0;
+    U8 leftWhenTouchDown = 0;
 
     if (!gcount)
         return(0xff);
@@ -231,6 +235,14 @@ FAR U8 ShowGoodsControl(U8 *goods,U8 gcount,U8 x0,U8 y0,U8 x1,U8 y1)
         count = gcount;
     }
     y1 = y0 + count * ASC_HGT + ASC_HGT;
+
+    Rect menuRect = {
+        .left = x0,
+        .top = y0,
+        .right = x0 + ASC_WID * 10 - 1,
+        .bottom = y1
+    };
+
     gam_rect(x0,y0,x1,y1 + 1);
     x0 += 1;
     y0 += 1;
@@ -254,7 +266,9 @@ FAR U8 ShowGoodsControl(U8 *goods,U8 gcount,U8 x0,U8 y0,U8 x1,U8 y1)
 
                 ShowGoodsPro(goods[top + i],spcv[spc],x0,y0 + ASC_HGT * i + ASC_HGT,wid);
             }
-            gam_revlcd(x0,y0 + (set - top + 1) * ASC_HGT,x0 + ASC_WID * 10 - 1,y0 + (set - top + 1) * ASC_HGT + ASC_HGT - 1);
+            if (set >= top && set < top + count) {
+                gam_revlcd(x0,y0 + (set - top + 1) * ASC_HGT,x0 + ASC_WID * 10 - 1,y0 + (set - top + 1) * ASC_HGT + ASC_HGT - 1);
+            }
             showflag = 0;
         }
 
@@ -267,33 +281,23 @@ FAR U8 ShowGoodsControl(U8 *goods,U8 gcount,U8 x0,U8 y0,U8 x1,U8 y1)
                 case VK_UP:
                     if (set)
                     {
-                        gam_revlcd(x0,y0 + (set - top + 1) * ASC_HGT,x0 + ASC_WID * 10 - 1,y0 + (set - top + 1) * ASC_HGT + ASC_HGT - 1);
                         set -= 1;
                         if (set < top)
                         {
                             top = set;
-                            showflag = 1;
                         }
-                        else
-                        {
-                            gam_revlcd(x0,y0 + (set - top + 1) * ASC_HGT,x0 + ASC_WID * 10 - 1,y0 + (set - top + 1) * ASC_HGT + ASC_HGT - 1);
-                        }
+                        showflag = 1;
                     }
                     break;
                 case VK_DOWN:
                     if (set < gcount - 1)
                     {
-                        gam_revlcd(x0,y0 + (set - top + 1) * ASC_HGT,x0 + ASC_WID * 10 - 1,y0 + (set - top + 1) * ASC_HGT + ASC_HGT - 1);
                         set += 1;
                         if (set >= top + count)
                         {
                             top = set + 1 - count;
-                            showflag = 1;
                         }
-                        else
-                        {
-                            gam_revlcd(x0,y0 + (set - top + 1) * ASC_HGT,x0 + ASC_WID * 10 - 1,y0 + (set - top + 1) * ASC_HGT + ASC_HGT - 1);
-                        }
+                        showflag = 1;
                     }
                     break;
                 case VK_LEFT:
@@ -314,6 +318,45 @@ FAR U8 ShowGoodsControl(U8 *goods,U8 gcount,U8 x0,U8 y0,U8 x1,U8 y1)
                     return(set);
                 case VK_EXIT:
                     return(0xff);
+            }
+        } else if (VM_TOUCH == Msg.type) {
+            touchUpdate(&touch, Msg);
+            switch (Msg.param) {
+                case VT_TOUCH_DOWN:
+                    topWhenTouchDown = top;
+                    leftWhenTouchDown = spc;
+                    break;
+                case VT_TOUCH_UP:
+                {
+                    if (!touch.completed || touch.moved) break;
+                    I16 index = touchListViewItemIndexAtPoint(touch.currentX, touch.currentY, menuRect, 1+ASC_HGT, 1, top, gcount, ASC_HGT);
+                    if (index < 0)
+                    {
+                        return 0xff;
+                    }
+                    if (set == index) {
+                        return index;
+                    }
+                    set = index;
+                    showflag = 1;
+                    break;
+                }
+                case VT_TOUCH_MOVE:
+                {
+                    if (!touch.touched) break;
+                    // FIXME: 横向最大值计算问题
+
+                    Point p = touchListViewCalcTopLeftForMove(&touch, leftWhenTouchDown, GOODS_PROP_COUNT-1, 30, topWhenTouchDown, gcount - count, ASC_HGT);
+
+                    if (spc != p.x || top != p.y) {
+                        top = p.y;
+                        spc = p.x;
+                        showflag = 1;
+                    }
+                    break;
+                }
+                default:
+                    break;
             }
         }
     }
@@ -587,7 +630,7 @@ U8 ShowPersonProStr(U8 pro,U8 x,U8 y,U8 wid)
     }
 
     ResItemGet(IFACE_CONID,PERSON_PRO_WID,ptr);
-    for (i = pro;i < 13;i ++)
+    for (i = pro;i < PERSON_PROP_COUNT;i ++)
     {
         if (AddItem(ASC_WID * ptr[i] + 1,ASC_HGT,&positem,&sx,&sy))
         {

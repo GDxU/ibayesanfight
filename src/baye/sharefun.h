@@ -114,6 +114,9 @@ CITYCMDE_C U8 IsManual(U8 person,U8 order);
 CITYCMDE_C void OrderConsumeThew(U8 person,U8 order);
 CITYCMDE_C U8 GetWeekCity(U8 count,U8 *cqueue);
 
+#define GOODS_PROP_COUNT 5
+#define PERSON_PROP_COUNT 13
+
 SHOWFACE_C void ShowGoodsPro(U8 goods,U8 pro,U8 x,U8 y,U8 wid);
 SHOWFACE_C void GetGoodsProStr(U8 goods,U8 pro,U8 *str);
 SHOWFACE_C U8 ShowGoodsProStr(U8 pro,U8 x,U8 y,U8 wid);
