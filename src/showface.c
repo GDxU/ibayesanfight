@@ -1010,6 +1010,7 @@ FAR U8 ShowCityPro(U8 city)
     U8 showflag,showtop,i;
     U8 str[30];
     GMType Msg;
+    Touch touch = {0};
     
     showtop = 0;
     showflag = 1;
@@ -1030,7 +1031,7 @@ FAR U8 ShowCityPro(U8 city)
         }
         
         GamGetMsg(&Msg);
-        
+    tagHandleMsg:
         if (VM_CHAR_FUN == Msg.type)
         {
             switch (Msg.param)
@@ -1055,6 +1056,25 @@ FAR U8 ShowCityPro(U8 city)
                     return(1);
                 case VK_EXIT:
                     return(0);
+            }
+        } else if (VM_TOUCH == Msg.type) {
+            touchUpdate(&touch, Msg);
+
+            if (Msg.param == VT_TOUCH_UP) {
+                if (!touch.completed) continue;
+
+                if (touch.moved) {
+                    I16 dy = touch.currentY - touch.startY;
+                    U8 up = dy < 0;
+                    dy = abs(dy);
+                    if (dy > 30) {
+                        Msg.type = VM_CHAR_FUN;
+                        Msg.param = up ? VK_DOWN : VK_UP;
+                        goto tagHandleMsg;
+                    }
+                } else {
+                    return 0;
+                }
             }
         }
     }
