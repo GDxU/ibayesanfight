@@ -272,6 +272,7 @@ U8 GamPicMenu(U16 picID,U16 speID, const Rect *buttonsRect, U8 buttonsCount)
 {
     U8	mIdx;
     GMType	pMsg;
+    Touch touch = {0};
 
     mIdx = 0;
     PlcRPicShow(picID,1,WK_SX,WK_SY,false);
@@ -305,13 +306,14 @@ U8 GamPicMenu(U16 picID,U16 speID, const Rect *buttonsRect, U8 buttonsCount)
             PlcRPicShow(picID,1,WK_SX,WK_SY,false);
         }
         else if (VM_TOUCH == pMsg.type) {
-            if (pMsg.param == VT_TOUCH_DOWN) {
+            touchUpdate(&touch, pMsg);
 
-                I16 x = pMsg.param2.i16.p0;
-                I16 y = pMsg.param2.i16.p1;
+            if (pMsg.param == VT_TOUCH_UP) {
+
+                if (!touch.completed || touch.moved) continue;
 
                 for (U8 i = 0; i < buttonsCount; i++) {
-                    if (touchIsPointInRect(x, y, buttonsRect[i])) {
+                    if (touchIsPointInRect(touch.currentX, touch.currentY, buttonsRect[i])) {
                         // 已经选中则进入， 否则选中
                         if (i == mIdx) {
                             return mIdx;
