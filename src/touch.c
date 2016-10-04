@@ -23,7 +23,7 @@ void touchSendTouchEvent(U16 event, I16 x, I16 y)
 ///判断一个点是否在矩形框内
 U8 touchIsPointInRect(I16 x, I16 y, Rect r)
 {
-    return (r.left <= x && x <= r.right) && (r.top <= y && y <= r.bottom);
+    return (r.left <= x && x < r.right) && (r.top <= y && y < r.bottom);
 }
 
 ///获取触摸点在list内的item序号。

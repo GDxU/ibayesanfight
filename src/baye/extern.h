@@ -62,6 +62,7 @@ extern U8	g_CityX,g_CityY;	/* 城市坐标 */
 extern FGTJK	g_FgtParam;		/* 战斗模块接口参数 */
 extern JLPOS	g_GenPos[FGTA_MAX];	/* 将领地图位置及基本属性 */
 extern JLATT	g_GenAtt[2];		/* 攻击状态下的两个将领属性 */
+extern U8  g_AutoUpdateMapXY; /* touch功能使用 */
 
 /*变量定义*/
 /*------------------------------------------*/
