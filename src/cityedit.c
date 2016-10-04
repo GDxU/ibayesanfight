@@ -1014,6 +1014,7 @@ FAR U8 GetCitySet(CitySetType *pos)
                     break;
             }
         } else if (VM_TOUCH == Msg.type) {
+            touchUpdate(&touch, Msg);
             if (tpicflag)
             {
                 if (VT_TOUCH_UP == Msg.param) {
@@ -1021,7 +1022,6 @@ FAR U8 GetCitySet(CitySetType *pos)
                     tpicflag = 0;
                     showflag = 1;
                 }
-                touchUpdate(&touch, Msg);
                 continue;
             }
             switch (Msg.param) {
@@ -1031,7 +1031,7 @@ FAR U8 GetCitySet(CitySetType *pos)
                     break;
                 case VT_TOUCH_UP:
                 {
-                    if (!touch.touched || touch.moved) break;
+                    if (!touch.completed || touch.moved) break;
 
                     if (touchIsPointInRect(touch.currentX, touch.currentY, mapRect)) {
                         I16 px = touch.currentX - mapRect.left;
@@ -1057,6 +1057,8 @@ FAR U8 GetCitySet(CitySetType *pos)
                 }
                 case VT_TOUCH_MOVE:
                 {
+                    if (!touch.touched) break;
+
                     I16 dx = Msg.param2.i16.p0 - touch.startX;
                     I16 dy = Msg.param2.i16.p1 - touch.startY;
                     I16 rows = dy / CITYMAP_TIL_H;
@@ -1079,7 +1081,6 @@ FAR U8 GetCitySet(CitySetType *pos)
                 default:
                     break;
             }
-            touchUpdate(&touch, Msg);
         }
     }
     return(0xff);

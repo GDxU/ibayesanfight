@@ -274,9 +274,7 @@ FAR U8 PlcSplMenu(RECT *pRect,U8 pIdx,U8 *buf)
 
         if (VM_TOUCH == pMsg.type)
         {
-            I16 x = pMsg.param2.i16.p0;
-            I16 y = pMsg.param2.i16.p1;
-
+            touchUpdate(&touch, pMsg);
             switch (pMsg.param) {
                 case VT_TOUCH_DOWN:
                 {
@@ -285,12 +283,12 @@ FAR U8 PlcSplMenu(RECT *pRect,U8 pIdx,U8 *buf)
                 }
                 case VT_TOUCH_UP:
                 {
-                    if (touch.touched && !touch.moved) {
-                        if (!touchIsPointInRect(x, y, menuRect))
+                    if (touch.completed && !touch.moved) {
+                        if (!touchIsPointInRect(touch.currentX, touch.currentY, menuRect))
                         {
                             pIdx = MNU_EXIT;
                         } else {
-                            I16 index = touchListViewItemIndexAtPoint(x, y, menuRect, 3, 3, pSIdx, pItm, itemHeight);
+                            I16 index = touchListViewItemIndexAtPoint(touch.currentX, touch.currentY, menuRect, 3, 3, pSIdx, pItm, itemHeight);
                             if (index != pIdx) {
                                 pIdx = index;
                                 tflag = 1;
@@ -309,7 +307,7 @@ FAR U8 PlcSplMenu(RECT *pRect,U8 pIdx,U8 *buf)
                 }
                 case VT_TOUCH_MOVE:
                 {
-                    I16 dy = y - touch.startY;
+                    I16 dy = touch.currentY - touch.startY;
                     I16 dItems = dy / itemHeight;
                     I16 startIndex = touchStartIndex - dItems;
                     startIndex = limitValueInRange(startIndex, 0, pItm-pICnt);
@@ -323,7 +321,6 @@ FAR U8 PlcSplMenu(RECT *pRect,U8 pIdx,U8 *buf)
                 default:
                     break;
             }
-            touchUpdate(&touch, pMsg);
             goto UPDATE_UI;
         }
 

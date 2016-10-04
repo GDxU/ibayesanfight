@@ -447,13 +447,13 @@ U8 GamGetKing(U8 num)
             UPDATE_UI();
         }
         else if (VM_TOUCH == pMsg.type) {
-            I16 x = pMsg.param2.i16.p0, y = pMsg.param2.i16.p1;
+            touchUpdate(&touch, pMsg);
             switch (pMsg.param) {
                 case VT_TOUCH_UP:
                 {
-                    if (!touch.touched || touch.moved) break;
+                    if (!touch.completed || touch.moved) break;
 
-                    I16 index = touchListViewItemIndexAtPoint(x, y, listRect, 2, 2, pTop, num, itemHeight);
+                    I16 index = touchListViewItemIndexAtPoint(touch.currentX, touch.currentY, listRect, 2, 2, pTop, num, itemHeight);
                     printf("touch up on index: %d\n", index);
                     if (index == pIdx) {
                         return g_FgtAtkRng[pIdx];
@@ -472,7 +472,7 @@ U8 GamGetKing(U8 num)
                 {
                     if (!touch.touched) break;
                     
-                    I16 distanceY = y - touch.startY;
+                    I16 distanceY = touch.currentY - touch.startY;
                     I8 deltaItems = distanceY / itemHeight;
                     I16 top = touchStartTop - deltaItems;
                     top = limitValueInRange(top, 0, num-itemsPerPage);
@@ -485,7 +485,6 @@ U8 GamGetKing(U8 num)
                 default:
                     break;
             }
-            touchUpdate(&touch, pMsg);
         }
         else
         {
