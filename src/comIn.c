@@ -199,5 +199,4 @@ FAR void GamClearLastMsg(void)
 FAR void GamGetLastMsg(GMType *pMsg)
 {
     *pMsg = lastMsg;
-    printf("last message:%d\n", pMsg->param);
 }

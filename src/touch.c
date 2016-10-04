@@ -11,7 +11,6 @@
 
 void touchSendTouchEvent(U16 event, I16 x, I16 y)
 {
-    printf("touch event:%d x:%d y:%d\n", event, x, y);
     MsgType msg;
     msg.type = VM_TOUCH;
     msg.param = event;
