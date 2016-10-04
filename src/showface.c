@@ -345,8 +345,9 @@ FAR U8 ShowGoodsControl(U8 *goods,U8 gcount,U8 x0,U8 y0,U8 x1,U8 y1)
                 {
                     if (!touch.touched) break;
                     // FIXME: 横向最大值计算问题
+                    U8 zMax = 2;
 
-                    Point p = touchListViewCalcTopLeftForMove(&touch, leftWhenTouchDown, GOODS_PROP_COUNT-1, 30, topWhenTouchDown, gcount - count, ASC_HGT);
+                    Point p = touchListViewCalcTopLeftForMove(&touch, leftWhenTouchDown, zMax, 30, topWhenTouchDown, gcount - count, ASC_HGT);
 
                     if (spc != p.x || top != p.y) {
                         top = p.y;
@@ -666,6 +667,9 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 x0,U8 y0,U8 x1,U8 y1)
     U8 spc,spcv[7];
     U8 wid;
     GMType Msg;
+    Touch touch;
+    U8 topWhenTouchDown = 0;
+    U8 leftWhenTouchDown = 0;
 
     if (!pcount)
         return(0xff);
@@ -680,6 +684,14 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 x0,U8 y0,U8 x1,U8 y1)
     }
     y1 = y0 + count * ASC_HGT + ASC_HGT;
     gam_rect(x0,y0,x1,y1 + 1);
+
+    Rect menuRect = {
+        .left = x0,
+        .top = y0,
+        .right = x0 + ASC_WID * 10 - 1,
+        .bottom = y1
+    };
+
     x0 += 1;
     y0 += 1;
     x1 -= 1;
@@ -702,7 +714,9 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 x0,U8 y0,U8 x1,U8 y1)
 
                 ShowPersonPro(person[top + i],spcv[spc],x0,y0 + ASC_HGT * i + ASC_HGT,wid);
             }
-            gam_revlcd(x0,y0 + (set - top + 1) * ASC_HGT,x0 + ASC_WID * 8 - 1,y0 + (set - top + 1) * ASC_HGT + ASC_HGT - 1);
+            if (set >= top && set < top + count) {
+                gam_revlcd(x0,y0 + (set - top + 1) * ASC_HGT,x0 + ASC_WID * 8 - 1,y0 + (set - top + 1) * ASC_HGT + ASC_HGT - 1);
+            }
             showflag = 0;
         }
 
@@ -727,17 +741,12 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 x0,U8 y0,U8 x1,U8 y1)
                 case VK_UP:
                     if (set)
                     {
-                        gam_revlcd(x0,y0 + (set - top + 1) * ASC_HGT,x0 + ASC_WID * 8 - 1,y0 + (set - top + 1) * ASC_HGT + ASC_HGT - 1);
                         set -= 1;
                         if (set < top)
                         {
                             top = set;
-                            showflag = 1;
                         }
-                        else
-                        {
-                            gam_revlcd(x0,y0 + (set - top + 1) * ASC_HGT,x0 + ASC_WID * 8 - 1,y0 + (set - top + 1) * ASC_HGT + ASC_HGT - 1);
-                        }
+                        showflag = 1;
                     }
                     break;
                 case VK_HELP:
@@ -758,17 +767,12 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 x0,U8 y0,U8 x1,U8 y1)
                 case VK_DOWN:
                     if (set < pcount - 1)
                     {
-                        gam_revlcd(x0,y0 + (set - top + 1) * ASC_HGT,x0 + ASC_WID * 8 - 1,y0 + (set - top + 1) * ASC_HGT + ASC_HGT - 1);
                         set += 1;
                         if (set >= top + count)
                         {
                             top = set + 1 - count;
-                            showflag = 1;
                         }
-                        else
-                        {
-                            gam_revlcd(x0,y0 + (set - top + 1) * ASC_HGT,x0 + ASC_WID * 8 - 1,y0 + (set - top + 1) * ASC_HGT + ASC_HGT - 1);
-                        }
+                        showflag = 1;
                     }
                     break;
                 case VK_LEFT:
@@ -789,6 +793,47 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 x0,U8 y0,U8 x1,U8 y1)
                     return(set);
                 case VK_EXIT:
                     return(0xff);
+            }
+        } else if (VM_TOUCH == Msg.type) {
+            touchUpdate(&touch, Msg);
+            switch (Msg.param) {
+                case VT_TOUCH_DOWN:
+                    topWhenTouchDown = top;
+                    leftWhenTouchDown = spc;
+                    break;
+                case VT_TOUCH_UP:
+                {
+                    if (!touch.completed || touch.moved) break;
+                    I16 index = touchListViewItemIndexAtPoint(touch.currentX, touch.currentY, menuRect, 1+ASC_HGT, 1, top, pcount, ASC_HGT);
+                    if (index < 0)
+                    {
+                        return 0xff;
+                    }
+                    if (set == index) {
+                        return index;
+                    }
+                    set = index;
+                    showflag = 1;
+                    break;
+                }
+                case VT_TOUCH_MOVE:
+                {
+                    if (!touch.touched) break;
+
+                    // FIXME: 横向最大值计算问题
+                    U8 xMax = 5;
+
+                    Point p = touchListViewCalcTopLeftForMove(&touch, leftWhenTouchDown, xMax, 30, topWhenTouchDown, pcount - count, ASC_HGT);
+
+                    if (spc != p.x || top != p.y) {
+                        top = p.y;
+                        spc = p.x;
+                        showflag = 1;
+                    }
+                    break;
+                }
+                default:
+                    break;
             }
         }
     }
