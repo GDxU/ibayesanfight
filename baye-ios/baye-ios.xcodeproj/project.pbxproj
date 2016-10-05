@@ -107,6 +107,7 @@
 		141D69571DA250D6000F772D /* touch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = touch.h; sourceTree = "<group>"; };
 		141D695A1DA25C9A000F772D /* baye-wrapper-mac.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "baye-wrapper-mac.c"; sourceTree = "<group>"; };
 		141D695B1DA25C9A000F772D /* baye-wrapper-mac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "baye-wrapper-mac.h"; sourceTree = "<group>"; };
+		141D695D1DA548B7000F772D /* version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
 		142D1C191D21897600CA443B /* itoa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = itoa.h; sourceTree = "<group>"; };
 		142D1C1B1D21899000CA443B /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		142D1CE41D22A3BA00CA443B /* bios.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = bios.c; sourceTree = "<group>"; };
@@ -351,6 +352,7 @@
 		1444A94A1B7B6F1F0085EC83 /* baye */ = {
 			isa = PBXGroup;
 			children = (
+				141D695D1DA548B7000F772D /* version.h */,
 				141D69521D8D3260000F772D /* script.h */,
 				141D694D1D8CD20D000F772D /* bind-objects.h */,
 				141D69481D8CD17F000F772D /* data-bind.h */,
