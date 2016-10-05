@@ -125,7 +125,7 @@ SHOWFACE_C void GetPersonName(U8 person,U8 *str);
 SHOWFACE_C void ShowPersonPro(U8 person,U8 pro,U8 x,U8 y,U8 wid);
 SHOWFACE_C void GetPersonProStr(U8 person,U8 pro,U8 *str);
 SHOWFACE_C U8 ShowPersonProStr(U8 pro,U8 x,U8 y,U8 wid);
-SHOWFACE_C U8 ShowPersonControl(U8 *person,U8 pcount,U8 x0,U8 y0,U8 x1,U8 y1);
+SHOWFACE_C U8 ShowPersonControl(U8 *person,U8 pcount,U8 initSelected,U8 x0,U8 y0,U8 x1,U8 y1);
 SHOWFACE_C void ShowDateTime(void);
 SHOWFACE_C void GetGoodsName(U8 goods,U8 *str);
 /*SHOWFACE_C U8 MenuComm(MenuType *menu);*/

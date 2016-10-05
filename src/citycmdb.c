@@ -382,7 +382,7 @@ FAR U8 AssartMake(U8 city)
         do
         {
             ShowMapClear();
-            pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
             if (0xff != pcode)
             {
                 p = pqptr[pcode];
@@ -477,7 +477,7 @@ FAR U8 AccractbusinessMake(U8 city)
         do
         {
             ShowMapClear();
-            pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
             if (0xff != pcode)
             {
                 p = pqptr[pcode];
@@ -616,7 +616,7 @@ FAR U8 SearchMake(U8 city)
         do
         {
             ShowMapClear();
-            pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
             if (0xff != pcode)
             {
                 p = pqptr[pcode];
@@ -714,7 +714,7 @@ FAR U8 FatherMake(U8 city)
         do
         {
             ShowMapClear();
-            pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
             if (0xff != pcode)
             {
                 p = pqptr[pcode];
@@ -802,7 +802,7 @@ FAR U8 InspectionMake(U8 city)
         do
         {
             ShowMapClear();
-            pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
             if (0xff != pcode)
             {
                 p = pqptr[pcode];
@@ -894,7 +894,7 @@ FAR U8 SurrenderMake(U8 city)
         }
 
         ShowMapClear();
-        pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+        pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
         if (0xff != pcode)
         {
             pp = pqptr[pcode];
@@ -908,7 +908,7 @@ FAR U8 SurrenderMake(U8 city)
             do
             {
                 ShowMapClear();
-                pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+                pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
                 if (0xff != pcode)
                 {
                     p = pqptr[pcode];
@@ -977,7 +977,7 @@ FAR U8 KillMake(U8 city)
         /*提示城中无俘虏*/
         ShowConstStrMsg(STR_NOCAPTIVES);
     }
-    pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+    pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
     if (0xff != pcode)
     {
         /*添加处斩提示代码*/
@@ -1032,7 +1032,7 @@ FAR U8 BanishMake(U8 city)
         ShowConstStrMsg(STR_NOPERSON);
         return(1);
     }
-    pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+    pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
     if (0xff != pcode)
     {	
         p = pqptr[pcode];
@@ -1092,7 +1092,7 @@ FAR U8 LargessMake(U8 city)
                     ShowConstStrMsg(STR_NOPERSON);
                     break;
                 }
-                pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+                pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
                 if (0xff != pcode)
                 {
                     g = gqptr[gcode];

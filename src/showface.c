@@ -652,7 +652,7 @@ U8 ShowPersonProStr(U8 pro,U8 x,U8 y,U8 wid)
  * 函数名:ShowPersonControl
  * 说  明:显示、选择武将
  *
- * 入口参数：person -- 武将队列，pcount -- 武将总数，x0 y0 x1 y1 -- 显示范围
+ * 入口参数：person -- 武将队列，pcount -- 武将总数, initSelected --初始选中序号，x0 y0 x1 y1 -- 显示范围
  *
  * 出口参数：0xff -- 退出，其他值 -- 选中武将序号
  *
@@ -661,7 +661,7 @@ U8 ShowPersonProStr(U8 pro,U8 x,U8 y,U8 wid)
  *		----		----			-----------
  *		陈泽伟		2005/5/18 11:26AM	基本功能完成
  ******************************************************************************/
-FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 x0,U8 y0,U8 x1,U8 y1)
+FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 initSelected,U8 x0,U8 y0,U8 x1,U8 y1)
 {
     U8 i,showflag,count,top,set;
     U8 spc,spcv[7];
@@ -696,8 +696,10 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 x0,U8 y0,U8 x1,U8 y1)
     y0 += 1;
     x1 -= 1;
 
-    top = 0;
-    set = 0;
+    top = initSelected;
+    top = limitValueInRange(top, 0, pcount-count);
+    set = initSelected;
+    set = limitValueInRange(set, 0, pcount-1);
     spc = 0;
     spcv[0] = 0;
     showflag = 1;

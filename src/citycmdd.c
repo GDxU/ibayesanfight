@@ -78,7 +78,7 @@ FAR U8 BattleMake(U8 city)
     {
         /*gam_clrlcd(WK_SX,WK_SY,WK_EX,WK_EY);*/
         ShowMapClear();
-        pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+        pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
         if (0xff != pcode)
         {
             fpptr[i] = pqptr[pcode] + 1;
@@ -234,7 +234,7 @@ FAR U8 BattleDrv(OrderType *Order)
                 pcount = GetCityPersons(o,pqptr);
                 /*gam_clrlcd(WK_SX,WK_SY,WK_EX,WK_EY);*/
                 ShowMapClear();
-                pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+                pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
                 if (0xff != pcode)
                 {
                     ptr[i] = pqptr[pcode] + 1;
@@ -730,7 +730,7 @@ FAR void KingOverDeal(U8 king)
                 ShowConstStrMsg(STR_MAKENEWKING);
                 do
                 {
-                    pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+                    pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
                 } while (0xff == pcode);
                 g_PlayerKing = pqptr[pcode];
             }

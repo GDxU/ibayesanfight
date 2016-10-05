@@ -32,7 +32,7 @@
  FAR U8 GetEnemySatraps(U8 king,U8 *squeue);
  FAR U8 GetEnemyKing(U8 king,U8 *kqueue);
  FAR U8 MenuComm(MenuType *menu);
- FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 x0,U8 y0,U8 x1,U8 y1);
+ FAR U8 ShowPersonControl(U8 *person,U8 pcount,0,U8 x0,U8 y0,U8 x1,U8 y1);
  FAR U16 GetFood(U16 min,U16 max);
  FAR U16 GetMoney(U16 min,U16 max);
  FAR U16 GetArmy(U16 min,U16 max);
@@ -75,7 +75,7 @@ FAR U8 ExchangeMake(U8 city)
             ShowConstStrMsg(STR_NOPERSON);
             break;
         }
-        pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+        pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
 
         if (0xff != pcode)
         {
@@ -192,7 +192,7 @@ FAR U8 TreatMake(U8 city)
     U8 *str;
     U8 *pqptr;
     U8 pcount;
-    U8 pcode;
+    U8 pcode = 0;
     U8 p;
     PersonType *pptr;
 
@@ -220,7 +220,7 @@ FAR U8 TreatMake(U8 city)
             /*ShowConstStrMsg(STR_NOPERSON);*/
             return(1);
         }
-        pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+        pcode = ShowPersonControl(pqptr,pcount,pcode,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
         if (0xff != pcode)
         {
             p = pqptr[pcode];
@@ -287,7 +287,7 @@ FAR U8 TransportationMake(U8 city)
                 ShowConstStrMsg(STR_NOPERSON);
                 break;
             }
-            pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
             if (0xff == pcode)
                 break;
 
@@ -433,7 +433,7 @@ FAR U8 MoveMake(U8 city)
                 ShowConstStrMsg(STR_NOPERSON);
                 break;
             }
-            pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
             if (0xff == pcode)
                 break;
             p = pqptr[pcode];
@@ -544,7 +544,7 @@ FAR U8 AlienateMake(U8 city)
             ShowConstStrMsg(STR_NOPERSON);
             break;
         }
-        pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+        pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
         if (0xff != pcode)
         {
             if (!IsManual(pqptr[pcode],ALIENATE))
@@ -555,7 +555,7 @@ FAR U8 AlienateMake(U8 city)
 
             pp = pqptr[pcode];
             pcount = GetEnemyPersons(g_PlayerKing,pqptr);
-            pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
             if (0xff != pcode)
             {
                 OrderConsumeThew(pqptr[pcode],ALIENATE);
@@ -619,7 +619,7 @@ FAR U8 CanvassMake(U8 city)
             ShowConstStrMsg(STR_NOPERSON);
             break;
         }
-        pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+        pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
         if (0xff != pcode)
         {
             pp = pqptr[pcode];
@@ -631,7 +631,7 @@ FAR U8 CanvassMake(U8 city)
 
             pcount = GetEnemyPersons(g_PlayerKing,pqptr);
             ShowMapClear();
-            pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
             if (0xff != pcode)
             {
                 OrderConsumeThew(pp,CANVASS);
@@ -696,7 +696,7 @@ FAR U8 CounterespiongeMake(U8 city)
             break;
         }
         ShowMapClear();
-        pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+        pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
         if (0xff != pcode)
         {
             pp = pqptr[pcode];
@@ -714,7 +714,7 @@ FAR U8 CounterespiongeMake(U8 city)
                 break;
             }
             ShowMapClear();
-            pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
             if (0xff != pcode)
             {
                 OrderConsumeThew(pp,COUNTERESPIONAGE);
@@ -795,7 +795,7 @@ FAR U8 InduceMake(U8 city)
             ShowConstStrMsg(STR_NOPERSON);
             break;
         }
-        pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+        pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
         if (0xff != pcode)
         {
             pp = pqptr[pcode];
@@ -806,7 +806,7 @@ FAR U8 InduceMake(U8 city)
             }
 
             pcount = GetEnemyKing(g_PlayerKing,pqptr);
-            pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
             if (0xff != pcode)
             {
                 OrderConsumeThew(pp,INDUCE);
@@ -896,7 +896,7 @@ FAR U8 ReconnoitreMake(U8 city)
                 ShowConstStrMsg(STR_NOPERSON);
                 break;
             }
-            pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
             if (0xff == pcode)
                 break;
             p = pqptr[pcode];
@@ -1001,7 +1001,7 @@ FAR U8 ConscriptionMake(U8 city)
         do
         {
             ShowMapClear();
-            pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
             if (0xff != pcode)
             {
                 p = pqptr[pcode];
@@ -1093,7 +1093,7 @@ FAR U8 DistributeMake(U8 city)
             }
             /*gam_clrlcd(WK_SX,WK_SY,WK_EX,WK_EY);*/
             ShowMapClear();
-            pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            pcode = ShowPersonControl(pqptr,pcount,pcode,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
             if (0xff == pcode)
                 break;
             

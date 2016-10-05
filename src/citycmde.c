@@ -41,7 +41,7 @@ FAR U8 ConfiscateMake(U8 city)
     U8 *pqptr;
     U8 *str;
     U8 pcount;
-    U8 pcode;
+    U8 pcode = 0;
     U8 p,g,c;
     U8 gq[3],*gptr;
 
@@ -56,7 +56,7 @@ FAR U8 ConfiscateMake(U8 city)
         }
         /*gam_clrlcd(WK_SX,WK_SY,WK_EX,WK_EY);*/
         ShowMapClear();
-        pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+        pcode = ShowPersonControl(pqptr,pcount,pcode,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
         if (0xff != pcode)
         {
             p = pqptr[pcode];
@@ -154,7 +154,7 @@ FAR U8 DepredateMake(U8 city)
             ShowConstStrMsg(STR_NOPERSON);
             break;
         }
-        pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+        pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
         if (0xff != pcode)
         {
             p = pqptr[pcode];
