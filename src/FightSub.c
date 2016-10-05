@@ -162,8 +162,7 @@ FAR void FgtShowHlp()
         c_Ey = HLP_EY - 4;
         GamStrShowS(c_Sx,c_Sy,pbuf);
     }
-    GamDelay(0,true);
-    GamDelay(0,true);
+    GamDelay(0, 2);
     gam_free(pbuf);
 }
 /***********************************************************************
