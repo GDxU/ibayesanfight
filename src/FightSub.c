@@ -638,7 +638,7 @@ FAR U8 FgtMainMenu(void)
 {
     U8	*var = NULL;
     U8	tmp,idx,mbuf[42];
-    RECT	pRect,pRect2;
+    RECT	pRect,pRect2, pRectSubMenu;
 
     idx = WK_SY + 8 + HZ_HGT * 5;
     pRect.sx = WK_SX + 8;
@@ -655,14 +655,25 @@ FAR U8 FgtMainMenu(void)
     pRect2.sy = tmp - HZ_HGT;
     pRect2.ey = tmp + HZ_HGT;
 
+    pRectSubMenu.sx = pRect.ex;
+    pRectSubMenu.sy = pRect.sy + HZ_HGT;
+    pRectSubMenu.ex = pRectSubMenu.sx + HZ_WID*4;
+    pRectSubMenu.ey = pRectSubMenu.sy + HZ_HGT;
+    const char* backStr = "\xc8\xab\xbe\xfc\xb3\xb7\xcd\xcb"; //全军撤退
+
     idx = 0;
     while(1)
     {
         FgtLoadToMem2(dFgtSysMnu,mbuf);
+    tagMenu:
         idx = PlcSplMenu(&pRect,idx,mbuf);
         switch(idx)
         {
             case 1:
+                if (PlcSplMenu(&pRectSubMenu, 0, (U8*)backStr) == MNU_EXIT) {
+                    GamShowFrame(g_VisScr);
+                    goto tagMenu;
+                }
                 g_FgtOver = FGT_LOSE;
             case 0:
                 GamShowFrame(g_VisScr);
