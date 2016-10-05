@@ -610,7 +610,7 @@ FAR void ShowGReport(U8 person,U8 *str)
 
     ShowPersonHead(WK_SX + 8,WK_EY - 4 - 44 - 4 + 4,person);
     PlcStrShowS(&big,&small,str);
-    GamDelay(300,true);
+    GamDelay(300, 2);
 }
 
 /******************************************************************************

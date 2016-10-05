@@ -341,7 +341,7 @@ void GamMakerInf(void)
 {
     gam_memset(g_VisScr,0,WK_BLEN);
     GamMovie(MAKER_SPE);
-    GamDelay(5000,true);
+    GamDelay(5000, 2);
 }
 /***********************************************************************
  * 说明:     获取玩家要扮演的君主ID

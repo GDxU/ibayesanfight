@@ -69,7 +69,7 @@ FAR void GamMsgBox(const U8 *buf,U8 delay)
     GamStrShowS(c_Sx,c_Sy,buf);
     if(delay == 0)
         return;
-    GamDelay(delay*100,true);
+    GamDelay(delay*100, 2);
 }
 /***********************************************************************
  * 说明:     显示虚拟屏幕到屏幕

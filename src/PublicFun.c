@@ -440,7 +440,7 @@ FAR void PlcGraMsgBox(U8 *buf,U8 delay,U8 line)
     }
     GamPicShowS(x,y,w,h,ptr + sizeof(PictureHeadType));
     GamStrShowS(x + 10,y + 6,buf);
-    GamDelay(delay * 100,true);
+    GamDelay(delay * 100, 2);
 }
 /***********************************************************************
  * 说明:     获取一个255以内的平方根(整数)
