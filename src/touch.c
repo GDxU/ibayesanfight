@@ -22,7 +22,7 @@ void touchSendTouchEvent(U16 event, I16 x, I16 y)
 ///判断一个点是否在矩形框内
 U8 touchIsPointInRect(I16 x, I16 y, Rect r)
 {
-    return (r.left <= x && x < r.right) && (r.top <= y && y < r.bottom);
+    return (r.left <= x && x <= r.right) && (r.top <= y && y <= r.bottom);
 }
 
 ///获取触摸点在list内的item序号。
@@ -108,7 +108,7 @@ Point touchListViewCalcTopLeftForMove(Touch *touch_,
 Rect MakeRect(I16 x, I16 y, I16 w, I16 h)
 {
     return (Rect){
-        x, y, x + w, y + h
+        x, y, x + w - 1, y + h - 1
     };
 }
 
