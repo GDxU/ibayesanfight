@@ -1140,7 +1140,7 @@ U8 FunctionMenu(void)
      return(0);
      }*/
     
-    RECT pRect;
+    RECT pRect, pRectSubMenu;
     U8 mstr[30];
     ResLoadToMem(STRING_CONST,MENU_FUNCSTR,mstr);
     pRect.sx = WK_SX + WK_EX / 3;
@@ -1151,8 +1151,16 @@ U8 FunctionMenu(void)
 #else
     pRect.ey = WK_SY + 10 + ((WK_EY - (WK_SY + 10)) / ASC_HGT) * ASC_HGT;
 #endif
-    
-    switch (PlcSplMenu(&pRect,0,mstr))
+
+    pRectSubMenu.sx = pRect.sx;
+    pRectSubMenu.sy = pRect.ey + HZ_HGT;
+    pRectSubMenu.ex = pRectSubMenu.sx + HZ_WID*4;
+    pRectSubMenu.ey = pRectSubMenu.sy + HZ_HGT;
+    const char* exitStr = "\xc8\xb7\xb6\xa8\xcd\xcb\xb3\xf6"; //确定退出
+    U8 choosing = 0;
+
+    while (1)
+    switch ((choosing = PlcSplMenu(&pRect,choosing,mstr)))
     {
         case 0:
             return(1);
@@ -1160,6 +1168,10 @@ U8 FunctionMenu(void)
             GamRecordMan(0);
             return(0);
         case 2:
+            if (PlcSplMenu(&pRectSubMenu, 0, (U8*)exitStr) == MNU_EXIT) {
+                ShowMapClear();
+                continue;
+            }
             return(2);
         case 0xff:
             return(0);
