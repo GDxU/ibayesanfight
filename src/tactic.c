@@ -1206,7 +1206,7 @@ FAR U16 NumOperate(U16 min,U16 max)
     touchDrawButton(maxButton, "\xd7\xee\xb4\xf3");
     touchDrawButton(cancelButton, "\xc8\xa1\xcf\xfb");
 
-    donum = min;
+    donum = max;
     num = 1;
     showflag = 1;
     
@@ -1299,7 +1299,7 @@ FAR U16 NumOperate(U16 min,U16 max)
                         return 0xffff;
                     }
                     if (touchIsPointInRect(x, y, maxButton)) {
-                        donum = max;
+                        donum = donum == max ? min : max;
                         showflag = 1;
                         break;
                     }
