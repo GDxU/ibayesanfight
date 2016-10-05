@@ -628,7 +628,10 @@ U8 FgtGetFoucs(void (*chkcondition)(bool*flag))
                             if (toFocusX == g_FoucsX && toFocusY == g_FoucsY) {
                                 return 0;
                             }
-                            FgtMapUnitShow(g_FoucsX,g_FoucsY,0);
+                            Rect scrRect = MakeRect(g_MapSX, g_MapSY, SCR_MAPWID, SCR_MAPHGT);
+                            if (touchIsPointInRect(g_FoucsX, g_FoucsY, scrRect)) {
+                                FgtMapUnitShow(g_FoucsX,g_FoucsY,0);
+                            }
                             g_FoucsX = toFocusX;
                             g_FoucsY = toFocusY;
                             tflag = false;
