@@ -1070,6 +1070,8 @@ FAR U8 LargessMake(U8 city)
     U8 p;
     U8 *eq;
     U8 g,gi;
+
+    while (1) {
     
     gqptr = SHARE_MEM;
     gcount = GetCityPGoods(city,gqptr);
@@ -1148,6 +1150,8 @@ FAR U8 LargessMake(U8 city)
     {
         /*提示城中无道具*/
         ShowConstStrMsg(STR_CNOGOODS);
+        break;
+    }
     }
     return(1);
 }
