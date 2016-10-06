@@ -168,7 +168,12 @@ FAR U8 GamDelay(U16 dly, BOOL keyflag)
             else
             {
                 if(keyflag == true) break;
-                if(keyflag == 2 && pMsg.type == VM_TOUCH && pMsg.param == VT_TOUCH_UP) break;
+                if(keyflag == 2) {
+                    if (VM_CHAR_FUN == pMsg.type)
+                        break;
+                    if (pMsg.type == VM_TOUCH && pMsg.param == VT_TOUCH_UP)
+                        break;
+                }
             }
             pMsg.param = 0;
         }
