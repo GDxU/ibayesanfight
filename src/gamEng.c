@@ -46,7 +46,7 @@ void GamShowErrInf(U8 idx);
 U8 GamGetKing(U8 num);
 void GamShowKing(U8 pTop);
 void GamRevCity(U8 cycnt,U8 *tbuf,U8 *pos);
-U8 GamPicMenu(U16 picID,U16 speID, const Rect *buttonsRect, U8 buttonsCount);
+U8 GamPicMenu(U16 picID,U16 speID, const Rect *buttonsRect, U8 buttonsCount, U8 exitOnOther);
 void GamRcdIFace(U8 count);
 bool GamSaveRcd(U8 idx);
 bool GamLoadRcd(U8 idx);
@@ -192,11 +192,11 @@ bool GamMainChose(void)
     while(1)
     {
         GamClearLastMsg();
-        U8 choice = GamPicMenu(MAIN_PIC,MAIN_ICON1, mainMenuButtonRects, 4);
+        U8 choice = GamPicMenu(MAIN_PIC,MAIN_ICON1, mainMenuButtonRects, 4, false);
         switch(choice)
         {
             case 0:		/* 新君登基 */
-                idx = GamPicMenu(YEAR_PIC,YEAR_ICON1, periodMenuButtonRects, 4);
+                idx = GamPicMenu(YEAR_PIC,YEAR_ICON1, periodMenuButtonRects, 4, true);
                 if(idx == MNU_EXIT)
                     break;
                 idx = GetPeriodKings(idx + 1,g_FgtAtkRng); 	/* 设置历史时期，并获取君主队列 */
@@ -268,7 +268,7 @@ bool GamMainChose(void)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-U8 GamPicMenu(U16 picID,U16 speID, const Rect *buttonsRect, U8 buttonsCount)
+U8 GamPicMenu(U16 picID,U16 speID, const Rect *buttonsRect, U8 buttonsCount, U8 exitOnOther)
 {
     U8	mIdx;
     GMType	pMsg;
@@ -317,6 +317,7 @@ U8 GamPicMenu(U16 picID,U16 speID, const Rect *buttonsRect, U8 buttonsCount)
                         return mIdx;
                     }
                 }
+                if (exitOnOther) return MNU_EXIT;
             }
         }
     }
