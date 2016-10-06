@@ -73,8 +73,8 @@ I8 touchUpdate(Touch *touch, MsgType msg)
 
 I32 limitValueInRange(I32 value, I32 min, I32 max)
 {
-    if (value < min) value = min;
     if (value > max) value = max;
+    if (value < min) value = min;
     return value;
 }
 
