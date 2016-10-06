@@ -382,6 +382,9 @@ U8 GamGetKing(U8 num)
     };
     gam_rect(listRect.left, listRect.top - 3, listRect.right, listRect.bottom + 2);
 
+    Rect exitRect = MakeRect(SCR_WID-28, 0, 27, HZ_HGT + 3);
+    touchDrawButton(exitRect, "\xb7\xb5\xbb\xd8"); //返回
+
     /* 选择要扮演的君主 */
     pos = ResLoadToCon(IFACE_CONID,dCityPos,g_CBnkPtr);
     pTop = 0;
@@ -450,13 +453,15 @@ U8 GamGetKing(U8 num)
                     if (!touch.completed || touch.moved) break;
 
                     I16 index = touchListViewItemIndexAtPoint(touch.currentX, touch.currentY, listRect, 2, 2, pTop, num, itemHeight);
-                    if (index == pIdx) {
-                        return g_FgtAtkRng[pIdx];
-                    }
                     if (index >= 0) {
+                        if (index == pIdx) {
+                            return g_FgtAtkRng[pIdx];
+                        }
                         CLEAR_SEL();
                         pIdx = index;
                         UPDATE_UI();
+                    } else if (touchIsPointInRect(touch.currentX, touch.currentY, exitRect)) {
+                        return MNU_EXIT;
                     }
                     break;
                 }
