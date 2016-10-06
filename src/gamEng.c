@@ -314,7 +314,7 @@ U8 GamPicMenu(U16 picID,U16 speID, const Rect *buttonsRect, U8 buttonsCount, U8 
 
                 for (U8 i = 0; i < buttonsCount; i++) {
                     if (touchIsPointInRect(touch.currentX, touch.currentY, buttonsRect[i])) {
-                        return mIdx;
+                        return i;
                     }
                 }
                 if (exitOnOther) return MNU_EXIT;
