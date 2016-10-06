@@ -314,14 +314,7 @@ U8 GamPicMenu(U16 picID,U16 speID, const Rect *buttonsRect, U8 buttonsCount)
 
                 for (U8 i = 0; i < buttonsCount; i++) {
                     if (touchIsPointInRect(touch.currentX, touch.currentY, buttonsRect[i])) {
-                        // 已经选中则进入， 否则选中
-                        if (i == mIdx) {
-                            return mIdx;
-                        } else {
-                            mIdx = i;
-                            PlcRPicShow(picID,1,WK_SX,WK_SY,false);
-                            break;
-                        }
+                        return mIdx;
                     }
                 }
             }
