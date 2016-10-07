@@ -20,6 +20,7 @@
 #include "baye/stdsys.h"
 #include "baye/comm.h"
 #include "baye/enghead.h"
+#include "touch.h"
 
 /* 当前所在文件 */
 #define		IN_FILE		21
@@ -69,7 +70,7 @@ FAR void GamMsgBox(const U8 *buf,U8 delay)
     GamStrShowS(c_Sx,c_Sy,buf);
     if(delay == 0)
         return;
-    GamDelay(delay*100,true);
+    GamDelay(delay*100, 2);
 }
 /***********************************************************************
  * 说明:     显示虚拟屏幕到屏幕
@@ -466,6 +467,7 @@ FAR	void	GamePictureDummy(U8 sX,U8 sY,U8 eX,U8 eY,U8* pic,U8* scr,U8 flag)
     int hgt = eY - sY + 1;
     int x, y, X, Y;
     int scrPerLine = SCR_LINE;
+    Rect scrRect = MakeRect(0, 0, SCR_WID, SCR_HGT);
 
     {
         int picPerLine = (wid + 7) / 8;
@@ -473,6 +475,9 @@ FAR	void	GamePictureDummy(U8 sX,U8 sY,U8 eX,U8 eY,U8* pic,U8* scr,U8 flag)
             Y = sY + y;
             for (x = 0; x < wid; x++) {
                 X = sX + x;
+                if (!touchIsPointInRect(X, Y, scrRect)) {
+                    continue;
+                }
                 unsigned char pixel, pixel1;
                 int ind = scrPerLine * Y + X/8;
 

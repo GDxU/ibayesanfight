@@ -68,6 +68,8 @@ FGTJK	g_FgtParam;		/* 战斗模块接口参数 */
 JLPOS	g_GenPos[FGTA_MAX];	/* 将领地图位置及基本属性 */
 JLATT	g_GenAtt[2];		/* 攻击状态下的两个将领属性 */
 
+U8  g_AutoUpdateMapXY;
+
 /*变量定义*/
 /*------------------------------------------*/
 U8 g_PlayerKing;		/*玩家君主*/

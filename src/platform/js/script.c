@@ -26,7 +26,7 @@ void script_init(void)
     }, script);
 }
 
-int call_script(I8* name, Object* context)
+int call_script(const char* name, Object* context)
 {
     return EM_ASM_INT({
         var name = UTF8ToString($0);

@@ -81,6 +81,7 @@ typedef	MsgType GMType;
 #define		VT_TOUCH_DOWN			0x01
 #define		VT_TOUCH_UP             0x02
 #define		VT_TOUCH_MOVE			0x03
+#define		VT_TOUCH_CANCEL			0x04
 
 /*------------------------
   其它结构体定义

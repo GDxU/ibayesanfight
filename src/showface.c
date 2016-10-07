@@ -21,6 +21,7 @@
 #undef	SHOWFACE_C
 #define	SHOWFACE_C
 #include "baye/enghead.h"
+#include "touch.h"
 
 /*void GetCityProStr(U8 city,U8 pro,U8 *str);
  void GetPersonProStr(U8 person,U8 pro,U8 *str);
@@ -182,7 +183,7 @@ U8 ShowGoodsProStr(U8 pro,U8 x,U8 y,U8 wid)
     }
 
     ResItemGet(IFACE_CONID,GOODS_PRO_WID,ptr);
-    for (i = pro;i < 5;i ++)
+    for (i = pro;i < GOODS_PROP_COUNT;i ++)
     {
         if (AddItem(ASC_WID * ptr[i] + 1,ASC_HGT,&positem,&sx,&sy))
         {
@@ -218,6 +219,9 @@ FAR U8 ShowGoodsControl(U8 *goods,U8 gcount,U8 x0,U8 y0,U8 x1,U8 y1)
     U8 spc,spcv[6];
     U8 wid;
     GMType Msg;
+    Touch touch;
+    U8 topWhenTouchDown = 0;
+    U8 leftWhenTouchDown = 0;
 
     if (!gcount)
         return(0xff);
@@ -231,6 +235,14 @@ FAR U8 ShowGoodsControl(U8 *goods,U8 gcount,U8 x0,U8 y0,U8 x1,U8 y1)
         count = gcount;
     }
     y1 = y0 + count * ASC_HGT + ASC_HGT;
+
+    Rect menuRect = {
+        .left = x0,
+        .top = y0,
+        .right = x0 + ASC_WID * 10 - 1,
+        .bottom = y1
+    };
+
     gam_rect(x0,y0,x1,y1 + 1);
     x0 += 1;
     y0 += 1;
@@ -254,7 +266,9 @@ FAR U8 ShowGoodsControl(U8 *goods,U8 gcount,U8 x0,U8 y0,U8 x1,U8 y1)
 
                 ShowGoodsPro(goods[top + i],spcv[spc],x0,y0 + ASC_HGT * i + ASC_HGT,wid);
             }
-            gam_revlcd(x0,y0 + (set - top + 1) * ASC_HGT,x0 + ASC_WID * 10 - 1,y0 + (set - top + 1) * ASC_HGT + ASC_HGT - 1);
+            if (set >= top && set < top + count) {
+                gam_revlcd(x0,y0 + (set - top + 1) * ASC_HGT,x0 + ASC_WID * 10 - 1,y0 + (set - top + 1) * ASC_HGT + ASC_HGT - 1);
+            }
             showflag = 0;
         }
 
@@ -267,33 +281,23 @@ FAR U8 ShowGoodsControl(U8 *goods,U8 gcount,U8 x0,U8 y0,U8 x1,U8 y1)
                 case VK_UP:
                     if (set)
                     {
-                        gam_revlcd(x0,y0 + (set - top + 1) * ASC_HGT,x0 + ASC_WID * 10 - 1,y0 + (set - top + 1) * ASC_HGT + ASC_HGT - 1);
                         set -= 1;
                         if (set < top)
                         {
                             top = set;
-                            showflag = 1;
                         }
-                        else
-                        {
-                            gam_revlcd(x0,y0 + (set - top + 1) * ASC_HGT,x0 + ASC_WID * 10 - 1,y0 + (set - top + 1) * ASC_HGT + ASC_HGT - 1);
-                        }
+                        showflag = 1;
                     }
                     break;
                 case VK_DOWN:
                     if (set < gcount - 1)
                     {
-                        gam_revlcd(x0,y0 + (set - top + 1) * ASC_HGT,x0 + ASC_WID * 10 - 1,y0 + (set - top + 1) * ASC_HGT + ASC_HGT - 1);
                         set += 1;
                         if (set >= top + count)
                         {
                             top = set + 1 - count;
-                            showflag = 1;
                         }
-                        else
-                        {
-                            gam_revlcd(x0,y0 + (set - top + 1) * ASC_HGT,x0 + ASC_WID * 10 - 1,y0 + (set - top + 1) * ASC_HGT + ASC_HGT - 1);
-                        }
+                        showflag = 1;
                     }
                     break;
                 case VK_LEFT:
@@ -304,7 +308,7 @@ FAR U8 ShowGoodsControl(U8 *goods,U8 gcount,U8 x0,U8 y0,U8 x1,U8 y1)
                     }
                     break;
                 case VK_RIGHT:
-                    if (spcv[spc + 1] < 5)
+                    if (spcv[spc + 1] < GOODS_PROP_COUNT)
                     {
                         spc += 1;
                         showflag = 1;
@@ -314,6 +318,51 @@ FAR U8 ShowGoodsControl(U8 *goods,U8 gcount,U8 x0,U8 y0,U8 x1,U8 y1)
                     return(set);
                 case VK_EXIT:
                     return(0xff);
+            }
+        } else if (VM_TOUCH == Msg.type) {
+            touchUpdate(&touch, Msg);
+            switch (Msg.param) {
+                case VT_TOUCH_DOWN:
+                    topWhenTouchDown = top;
+                    leftWhenTouchDown = spc;
+                    I16 index = touchListViewItemIndexAtPoint(touch.currentX, touch.currentY, menuRect, 1+ASC_HGT, 1, top, gcount, ASC_HGT);
+                    if (index >= 0 && set != index) {
+                        set = index;
+                        showflag = 1;
+                    }
+                    break;
+                case VT_TOUCH_UP:
+                {
+                    if (!touch.completed || touch.moved) break;
+                    I16 index = touchListViewItemIndexAtPoint(touch.currentX, touch.currentY, menuRect, 1+ASC_HGT, 1, top, gcount, ASC_HGT);
+                    if (index < 0)
+                    {
+                        return 0xff;
+                    }
+                    return index;
+                }
+                case VT_TOUCH_MOVE:
+                {
+                    if (!touch.touched) break;
+                    U8 zMax = 2;
+
+                    Point p = touchListViewCalcTopLeftForMove(&touch, leftWhenTouchDown, zMax, 30, topWhenTouchDown, gcount - count, ASC_HGT);
+
+                    if (spc != p.x || top != p.y) {
+                        top = p.y;
+                        if (p.x > spc) {
+                            if (spcv[spc + 1] < GOODS_PROP_COUNT) {
+                                spc = spc + 1;
+                            }
+                        } else {
+                            spc = p.x;
+                        }
+                        showflag = 1;
+                    }
+                    break;
+                }
+                default:
+                    break;
             }
         }
     }
@@ -587,7 +636,7 @@ U8 ShowPersonProStr(U8 pro,U8 x,U8 y,U8 wid)
     }
 
     ResItemGet(IFACE_CONID,PERSON_PRO_WID,ptr);
-    for (i = pro;i < 13;i ++)
+    for (i = pro;i < PERSON_PROP_COUNT;i ++)
     {
         if (AddItem(ASC_WID * ptr[i] + 1,ASC_HGT,&positem,&sx,&sy))
         {
@@ -608,7 +657,7 @@ U8 ShowPersonProStr(U8 pro,U8 x,U8 y,U8 wid)
  * 函数名:ShowPersonControl
  * 说  明:显示、选择武将
  *
- * 入口参数：person -- 武将队列，pcount -- 武将总数，x0 y0 x1 y1 -- 显示范围
+ * 入口参数：person -- 武将队列，pcount -- 武将总数, initSelected --初始选中序号，x0 y0 x1 y1 -- 显示范围
  *
  * 出口参数：0xff -- 退出，其他值 -- 选中武将序号
  *
@@ -617,12 +666,15 @@ U8 ShowPersonProStr(U8 pro,U8 x,U8 y,U8 wid)
  *		----		----			-----------
  *		陈泽伟		2005/5/18 11:26AM	基本功能完成
  ******************************************************************************/
-FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 x0,U8 y0,U8 x1,U8 y1)
+FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 initSelected,U8 x0,U8 y0,U8 x1,U8 y1)
 {
     U8 i,showflag,count,top,set;
     U8 spc,spcv[7];
     U8 wid;
     GMType Msg;
+    Touch touch;
+    U8 topWhenTouchDown = 0;
+    U8 leftWhenTouchDown = 0;
 
     if (!pcount)
         return(0xff);
@@ -637,12 +689,22 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 x0,U8 y0,U8 x1,U8 y1)
     }
     y1 = y0 + count * ASC_HGT + ASC_HGT;
     gam_rect(x0,y0,x1,y1 + 1);
+
+    Rect menuRect = {
+        .left = x0,
+        .top = y0,
+        .right = x0 + ASC_WID * 10 - 1,
+        .bottom = y1
+    };
+
     x0 += 1;
     y0 += 1;
     x1 -= 1;
 
-    top = 0;
-    set = 0;
+    top = initSelected;
+    top = limitValueInRange(top, 0, pcount-count);
+    set = initSelected;
+    set = limitValueInRange(set, 0, pcount-1);
     spc = 0;
     spcv[0] = 0;
     showflag = 1;
@@ -659,7 +721,9 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 x0,U8 y0,U8 x1,U8 y1)
 
                 ShowPersonPro(person[top + i],spcv[spc],x0,y0 + ASC_HGT * i + ASC_HGT,wid);
             }
-            gam_revlcd(x0,y0 + (set - top + 1) * ASC_HGT,x0 + ASC_WID * 8 - 1,y0 + (set - top + 1) * ASC_HGT + ASC_HGT - 1);
+            if (set >= top && set < top + count) {
+                gam_revlcd(x0,y0 + (set - top + 1) * ASC_HGT,x0 + ASC_WID * 8 - 1,y0 + (set - top + 1) * ASC_HGT + ASC_HGT - 1);
+            }
             showflag = 0;
         }
 
@@ -684,17 +748,12 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 x0,U8 y0,U8 x1,U8 y1)
                 case VK_UP:
                     if (set)
                     {
-                        gam_revlcd(x0,y0 + (set - top + 1) * ASC_HGT,x0 + ASC_WID * 8 - 1,y0 + (set - top + 1) * ASC_HGT + ASC_HGT - 1);
                         set -= 1;
                         if (set < top)
                         {
                             top = set;
-                            showflag = 1;
                         }
-                        else
-                        {
-                            gam_revlcd(x0,y0 + (set - top + 1) * ASC_HGT,x0 + ASC_WID * 8 - 1,y0 + (set - top + 1) * ASC_HGT + ASC_HGT - 1);
-                        }
+                        showflag = 1;
                     }
                     break;
                 case VK_HELP:
@@ -715,17 +774,12 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 x0,U8 y0,U8 x1,U8 y1)
                 case VK_DOWN:
                     if (set < pcount - 1)
                     {
-                        gam_revlcd(x0,y0 + (set - top + 1) * ASC_HGT,x0 + ASC_WID * 8 - 1,y0 + (set - top + 1) * ASC_HGT + ASC_HGT - 1);
                         set += 1;
                         if (set >= top + count)
                         {
                             top = set + 1 - count;
-                            showflag = 1;
                         }
-                        else
-                        {
-                            gam_revlcd(x0,y0 + (set - top + 1) * ASC_HGT,x0 + ASC_WID * 8 - 1,y0 + (set - top + 1) * ASC_HGT + ASC_HGT - 1);
-                        }
+                        showflag = 1;
                     }
                     break;
                 case VK_LEFT:
@@ -736,7 +790,7 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 x0,U8 y0,U8 x1,U8 y1)
                     }
                     break;
                 case VK_RIGHT:
-                    if (spcv[spc + 1] < 13)
+                    if (spcv[spc + 1] < PERSON_PROP_COUNT)
                     {
                         spc += 1;
                         showflag = 1;
@@ -746,6 +800,53 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 x0,U8 y0,U8 x1,U8 y1)
                     return(set);
                 case VK_EXIT:
                     return(0xff);
+            }
+        } else if (VM_TOUCH == Msg.type) {
+            touchUpdate(&touch, Msg);
+            switch (Msg.param) {
+                case VT_TOUCH_DOWN:
+                    topWhenTouchDown = top;
+                    leftWhenTouchDown = spc;
+                    I16 index = touchListViewItemIndexAtPoint(touch.currentX, touch.currentY, menuRect, 1+ASC_HGT, 1, top, pcount, ASC_HGT);
+                    if (index >= 0 && set != index) {
+                        set = index;
+                        showflag = 1;
+                    }
+                    break;
+                case VT_TOUCH_UP:
+                {
+                    if (!touch.completed || touch.moved) break;
+                    I16 index = touchListViewItemIndexAtPoint(touch.currentX, touch.currentY, menuRect, 1+ASC_HGT, 1, top, pcount, ASC_HGT);
+                    if (index < 0)
+                    {
+                        return 0xff;
+                    }
+                    return index;
+                }
+                case VT_TOUCH_MOVE:
+                {
+                    if (!touch.touched) break;
+
+                    // FIXME: 横向最大值计算问题
+                    U8 xMax = 5;
+
+                    Point p = touchListViewCalcTopLeftForMove(&touch, leftWhenTouchDown, xMax, 30, topWhenTouchDown, pcount - count, ASC_HGT);
+
+                    if (spc != p.x || top != p.y) {
+                        top = p.y;
+                        if (p.x > spc) {
+                            if (spcv[spc + 1] < PERSON_PROP_COUNT) {
+                                spc = spc + 1;
+                            }
+                        } else {
+                            spc = p.x;
+                        }
+                        showflag = 1;
+                    }
+                    break;
+                }
+                default:
+                    break;
             }
         }
     }
@@ -922,6 +1023,7 @@ FAR U8 ShowCityPro(U8 city)
     U8 showflag,showtop,i;
     U8 str[30];
     GMType Msg;
+    Touch touch = {0};
     
     showtop = 0;
     showflag = 1;
@@ -942,7 +1044,7 @@ FAR U8 ShowCityPro(U8 city)
         }
         
         GamGetMsg(&Msg);
-        
+    tagHandleMsg:
         if (VM_CHAR_FUN == Msg.type)
         {
             switch (Msg.param)
@@ -968,104 +1070,27 @@ FAR U8 ShowCityPro(U8 city)
                 case VK_EXIT:
                     return(0);
             }
+        } else if (VM_TOUCH == Msg.type) {
+            touchUpdate(&touch, Msg);
+
+            if (Msg.param == VT_TOUCH_UP) {
+                if (!touch.completed) continue;
+
+                if (touch.moved) {
+                    I16 dy = touch.currentY - touch.startY;
+                    U8 up = dy < 0;
+                    dy = abs(dy);
+                    if (dy > 30) {
+                        Msg.type = VM_CHAR_FUN;
+                        Msg.param = up ? VK_DOWN : VK_UP;
+                        goto tagHandleMsg;
+                    }
+                } else {
+                    return 0;
+                }
+            }
         }
     }
     
     return(0);
 }
-
-
-/******************************************************************************
- * 函数名:MenuComm
- * 说  明:菜单程序
- *
- * 入口参数：menu -- 菜单结构
- *
- * 出口参数：0xff -- 退出，其他值 -- 选中项
- *
- * 修改历史:
- *		姓名		日期			说明
- *		----		----			-----------
- *		陈泽伟		2005-6-13 9:41	基本功能完成
- ******************************************************************************/
-/*FAR U8 MenuComm(MenuType *menu)
- {
-	U8 scount,i;
-	U8 showflag;
-	GMType Msg;
-	
-	
-	showflag = 1;
-	scount = (menu->ey - menu->sy + 1) / ASC_HGT;
-	if (scount > menu->count)
-	{
- scount = menu->count;
-	}
-	gam_rect(menu->sx - 1,menu->sy - 1,menu->ex + 1,menu->sy + scount * ASC_HGT - 1 + 1);
-	while (1)
-	{
- if (showflag)
- {
- gam_clrlcd(menu->sx,menu->sy,menu->ex,menu->sy + scount * ASC_HGT - 1);
- for (i = 0;i < scount;i ++)
- {
- GamStrShowS(menu->sx,menu->sy + i * ASC_HGT,menu->menustr[i + menu->top]);
- }
- gam_revlcd(menu->sx,menu->sy + (menu->set - menu->top) * ASC_HGT,menu->ex,menu->sy + (menu->set - menu->top) * ASC_HGT + ASC_HGT - 1);
- showflag = 0;
- }
- 
- GamGetMsg(&Msg);
- 
- if (VM_CHAR_FUN == Msg.type)
- {
- switch (Msg.param)
- {
- case VK_UP:
- case VK_LEFT:
- 
- if (!menu->set)
- {
- menu->set = menu->count - 1;
- if (scount < menu->count)
- {
- menu->top = menu->set - scount + 1;
- }
- }
- else
- {
- if (menu->top == menu->set)
- {
- menu->top -= 1;
- }
- menu->set -= 1;
- }
- showflag = 1;
- break;
- case VK_DOWN:
- case VK_RIGHT:
- 
- if (menu->set >= menu->count - 1)
- {
- menu->set = 0;
- menu->top = 0;
- }
- else
- {
- menu->set += 1;
- if (menu->set - menu->top >= scount)
- {
- menu->top += 1;
- }
- }
- showflag = 1;
- break;
- case VK_ENTER:
- return(menu->set);
- case VK_EXIT:
- return(0xff);
- }
- }
-	}
-	return(0xff);
- }*/

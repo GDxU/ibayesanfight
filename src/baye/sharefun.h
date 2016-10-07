@@ -17,7 +17,7 @@ CITYEDIT_C U8 GetEnemyPersons(U8 king,U8 *pqueue);
 CITYEDIT_C U8 GetEnemySatraps(U8 king,U8 *squeue);
 CITYEDIT_C U8 GetEnemyKing(U8 king,U8 *kqueue);
 CITYEDIT_C U8 GetCitySet(CitySetType *pos);
-CITYEDIT_C U8 ShowCityMap(CitySetType *pos,U8 scrollflag);
+CITYEDIT_C U8 ShowCityMap(CitySetType *pos);
 CITYEDIT_C void ShowMapClear(void);
 CITYEDIT_C U8 GetRoundEnemyCity(U8 city,U8 *cqueue);
 CITYEDIT_C U8 GetKingPersons(U8 king,U8 *pqueue);
@@ -114,6 +114,9 @@ CITYCMDE_C U8 IsManual(U8 person,U8 order);
 CITYCMDE_C void OrderConsumeThew(U8 person,U8 order);
 CITYCMDE_C U8 GetWeekCity(U8 count,U8 *cqueue);
 
+#define GOODS_PROP_COUNT 5
+#define PERSON_PROP_COUNT 13
+
 SHOWFACE_C void ShowGoodsPro(U8 goods,U8 pro,U8 x,U8 y,U8 wid);
 SHOWFACE_C void GetGoodsProStr(U8 goods,U8 pro,U8 *str);
 SHOWFACE_C U8 ShowGoodsProStr(U8 pro,U8 x,U8 y,U8 wid);
@@ -122,7 +125,7 @@ SHOWFACE_C void GetPersonName(U8 person,U8 *str);
 SHOWFACE_C void ShowPersonPro(U8 person,U8 pro,U8 x,U8 y,U8 wid);
 SHOWFACE_C void GetPersonProStr(U8 person,U8 pro,U8 *str);
 SHOWFACE_C U8 ShowPersonProStr(U8 pro,U8 x,U8 y,U8 wid);
-SHOWFACE_C U8 ShowPersonControl(U8 *person,U8 pcount,U8 x0,U8 y0,U8 x1,U8 y1);
+SHOWFACE_C U8 ShowPersonControl(U8 *person,U8 pcount,U8 initSelected,U8 x0,U8 y0,U8 x1,U8 y1);
 SHOWFACE_C void ShowDateTime(void);
 SHOWFACE_C void GetGoodsName(U8 goods,U8 *str);
 /*SHOWFACE_C U8 MenuComm(MenuType *menu);*/
@@ -168,6 +171,8 @@ INFDEAL_C void ShowConstStrMsg(U8 idx);
 /*INFDEAL_C void ShowAttackMsg(U8 fs,U8 co);*/
 INFDEAL_C void ShowPersonHead(U8 x,U8 y,U8 id);
 INFDEAL_C void ShowGReport(U8 person,U8 *str);
+FAR void ShowDialog(U8 commander, U8 reporter,U8 *str);
+FAR void ShowDialogRandom(U8 commander, U8 reporter, U8 **str, U8 count);
 INFDEAL_C void SetGoods(U8 goods);
 INFDEAL_C void SetGoodsByIndex(U8 goods);
 INFDEAL_C U8 GetCityPGoods(U8 city,U8 *gqueue);

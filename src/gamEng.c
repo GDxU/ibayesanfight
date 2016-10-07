@@ -46,7 +46,7 @@ void GamShowErrInf(U8 idx);
 U8 GamGetKing(U8 num);
 void GamShowKing(U8 pTop);
 void GamRevCity(U8 cycnt,U8 *tbuf,U8 *pos);
-U8 GamPicMenu(U16 picID,U16 speID, const Rect *buttonsRect, U8 buttonsCount);
+U8 GamPicMenu(U16 picID,U16 speID, const Rect *buttonsRect, U8 buttonsCount, U8 exitOnOther);
 void GamRcdIFace(U8 count);
 bool GamSaveRcd(U8 idx);
 bool GamLoadRcd(U8 idx);
@@ -192,11 +192,11 @@ bool GamMainChose(void)
     while(1)
     {
         GamClearLastMsg();
-        U8 choice = GamPicMenu(MAIN_PIC,MAIN_ICON1, mainMenuButtonRects, 4);
+        U8 choice = GamPicMenu(MAIN_PIC,MAIN_ICON1, mainMenuButtonRects, 4, false);
         switch(choice)
         {
             case 0:		/* 新君登基 */
-                idx = GamPicMenu(YEAR_PIC,YEAR_ICON1, periodMenuButtonRects, 4);
+                idx = GamPicMenu(YEAR_PIC,YEAR_ICON1, periodMenuButtonRects, 4, true);
                 if(idx == MNU_EXIT)
                     break;
                 idx = GetPeriodKings(idx + 1,g_FgtAtkRng); 	/* 设置历史时期，并获取君主队列 */
@@ -268,10 +268,11 @@ bool GamMainChose(void)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-U8 GamPicMenu(U16 picID,U16 speID, const Rect *buttonsRect, U8 buttonsCount)
+U8 GamPicMenu(U16 picID,U16 speID, const Rect *buttonsRect, U8 buttonsCount, U8 exitOnOther)
 {
     U8	mIdx;
     GMType	pMsg;
+    Touch touch = {0};
 
     mIdx = 0;
     PlcRPicShow(picID,1,WK_SX,WK_SY,false);
@@ -305,23 +306,18 @@ U8 GamPicMenu(U16 picID,U16 speID, const Rect *buttonsRect, U8 buttonsCount)
             PlcRPicShow(picID,1,WK_SX,WK_SY,false);
         }
         else if (VM_TOUCH == pMsg.type) {
-            if (pMsg.param == VT_TOUCH_DOWN) {
+            touchUpdate(&touch, pMsg);
 
-                I16 x = pMsg.param2.i16.p0;
-                I16 y = pMsg.param2.i16.p1;
+            if (pMsg.param == VT_TOUCH_UP) {
+
+                if (!touch.completed || touch.moved) continue;
 
                 for (U8 i = 0; i < buttonsCount; i++) {
-                    if (touchIsPointInRect(x, y, buttonsRect[i])) {
-                        // 已经选中则进入， 否则选中
-                        if (i == mIdx) {
-                            return mIdx;
-                        } else {
-                            mIdx = i;
-                            PlcRPicShow(picID,1,WK_SX,WK_SY,false);
-                            break;
-                        }
+                    if (touchIsPointInRect(touch.currentX, touch.currentY, buttonsRect[i])) {
+                        return i;
                     }
                 }
+                if (exitOnOther) return MNU_EXIT;
             }
         }
     }
@@ -339,7 +335,7 @@ void GamMakerInf(void)
 {
     gam_memset(g_VisScr,0,WK_BLEN);
     GamMovie(MAKER_SPE);
-    GamDelay(5000,true);
+    GamDelay(5000, 2);
 }
 /***********************************************************************
  * 说明:     获取玩家要扮演的君主ID
@@ -358,6 +354,11 @@ U8 GamGetKing(U8 num)
     bool	rflag;
     GMType	pMsg;
 
+    Touch touch = {0};
+
+    I16 touchStartTop = 0;
+    U8 itemHeight = HZ_HGT;
+
     gam_clslcd();
     /* 获取君主的名字到g_FightPath中（只取前6个字节） */
     for(pIdx = 0;pIdx < num;pIdx += 1)
@@ -368,12 +369,23 @@ U8 GamGetKing(U8 num)
         if(pSLen < pTop + 6)
             gam_memset(g_FightPath + pSLen,' ',pTop + 6 - pSLen);
     }
+    g_FightPath[pIdx*6] = 0;
+
     /* 获取城市坐标指针 */
     gam_rect(WK_SX,WK_SY,WK_EX,WK_EY);
     ResLoadToMem(IFACE_STRID,dChoseKing,tbuf);
     GamStrShowS(KING_TX,KING_TY,tbuf);
     PlcRPicShow(CITY_PIC,1,CITY_SX,CITY_SY,true);
-    gam_rect(KING_SX - 3,KING_SY - 3,KING_EX + 2, (WK_EY - 6 - (KING_SY)) / HZ_HGT * HZ_HGT + KING_SY + 2);
+
+    U16 itemsPerPage = (WK_EY - 6 - (KING_SY)) / itemHeight;
+
+    Rect listRect = {
+        KING_SX - 3, KING_SY, KING_EX + 2, KING_SY + itemHeight * itemsPerPage
+    };
+    gam_rect(listRect.left, listRect.top - 3, listRect.right, listRect.bottom + 2);
+
+    Rect exitRect = MakeRect(SCR_WID-28, 0, 27, HZ_HGT + 3);
+    touchDrawButton(exitRect, "\xb7\xb5\xbb\xd8"); //返回
 
     /* 选择要扮演的君主 */
     pos = ResLoadToCon(IFACE_CONID,dCityPos,g_CBnkPtr);
@@ -381,20 +393,27 @@ U8 GamGetKing(U8 num)
     pIdx = 0;
     rflag = false;
     GamShowKing(pTop);
-    ry = (pIdx - pTop) * HZ_HGT + KING_SY;
-    gam_revlcd(KING_SX,ry,KING_EX,ry + HZ_HGT);
+    ry = (pIdx - pTop) * itemHeight + KING_SY;
+    gam_revlcd(KING_SX,ry,KING_EX,ry + itemHeight);
     cycnt = GetKingCitys(g_FgtAtkRng[pIdx],tbuf); 		/* 获取治下城市队列 */
     while(1)
     {
         GamGetMsg(&pMsg);
         if(VM_CHAR_FUN == pMsg.type)
         {
-            gam_revlcd(KING_SX,ry,KING_EX,ry + HZ_HGT);
-            if(rflag)
-            {
-                GamRevCity(cycnt,tbuf,pos);
-                rflag = false;
+#define CLEAR_SEL() \
+            if (ry >= KING_SY && ry + itemHeight <= KING_SY + itemHeight*itemsPerPage) {\
+                gam_revlcd(KING_SX,ry,KING_EX,ry + itemHeight);\
+            }\
+            \
+            if(rflag)\
+            {\
+                GamRevCity(cycnt,tbuf,pos);\
+                rflag = false;\
             }
+
+            CLEAR_SEL();
+
             switch(pMsg.param)
             {
                 case VK_UP:
@@ -409,7 +428,7 @@ U8 GamGetKing(U8 num)
                     if(pIdx < num - 1)
                     {
                         pIdx += 1;
-                        if(pIdx - pTop > ((WK_EY - 6 - (KING_SY)) / HZ_HGT) - 1)
+                        if(pIdx - pTop > itemsPerPage - 1)
                             pTop += 1;
                     }
                     break;
@@ -418,10 +437,56 @@ U8 GamGetKing(U8 num)
                 case VK_ENTER:
                     return g_FgtAtkRng[pIdx];
             }
-            GamShowKing(pTop);
-            ry = (pIdx - pTop) * HZ_HGT + KING_SY;
-            gam_revlcd(KING_SX,ry,KING_EX,ry + HZ_HGT);
+#define UPDATE_UI() \
+            GamShowKing(pTop);\
+            ry = (pIdx - pTop) * itemHeight + KING_SY;\
+            if (ry >= KING_SY && ry + itemHeight <= KING_SY + itemHeight*itemsPerPage) {\
+                gam_revlcd(KING_SX,ry,KING_EX,ry + itemHeight);\
+            }\
             cycnt = GetKingCitys(g_FgtAtkRng[pIdx],tbuf);	/* 获取治下城市队列 */
+
+            UPDATE_UI();
+        }
+        else if (VM_TOUCH == pMsg.type) {
+            touchUpdate(&touch, pMsg);
+            switch (pMsg.param) {
+                case VT_TOUCH_UP:
+                {
+                    if (!touch.completed || touch.moved) break;
+
+                    I16 index = touchListViewItemIndexAtPoint(touch.currentX, touch.currentY, listRect, 2, 2, pTop, num, itemHeight);
+                    if (index >= 0) {
+                        if (index == pIdx) {
+                            return g_FgtAtkRng[pIdx];
+                        }
+                        CLEAR_SEL();
+                        pIdx = index;
+                        UPDATE_UI();
+                    } else if (touchIsPointInRect(touch.currentX, touch.currentY, exitRect)) {
+                        return MNU_EXIT;
+                    }
+                    break;
+                }
+                case VT_TOUCH_DOWN:
+                    touchStartTop = pTop;
+                    break;
+                case VT_TOUCH_MOVE:
+                {
+                    if (!touch.touched) break;
+                    
+                    I16 distanceY = touch.currentY - touch.startY;
+                    I8 deltaItems = distanceY / itemHeight;
+                    I16 top = touchStartTop - deltaItems;
+                    top = limitValueInRange(top, 0, num-itemsPerPage);
+                    if (top != pTop) {
+                        pTop = top;
+                        UPDATE_UI();
+                    }
+                    break;
+                }
+                default:
+                    break;
+            }
         }
         else
         {
@@ -515,12 +580,22 @@ FAR U8 GamRecordMan(U8 flag)
     bool	pflag;
     GMType	pMsg;
     U8 count = flag ? 4 : 3;
+    Touch touch = {0};
+    U8 itemHeight = 14;
 
     GamRcdIFace(count);
     idx = 0;
     ry = WK_SY + 33;
     U8 right = WK_SX + 31 + 95;
     gam_revlcd(WK_SX + 31,ry, right, ry + HZ_HGT);
+
+    Rect menuRect = {
+        .left = WK_SX + 31,
+        .top = ry,
+        .right = right,
+        .bottom = ry + itemHeight*count,
+    };
+
     while(1)
     {
         GamGetMsg(&pMsg);
@@ -550,6 +625,34 @@ FAR U8 GamRecordMan(U8 flag)
             idx = idx % count;
             ry = idx * 14 + WK_SY + 33;
             gam_revlcd(WK_SX + 31,ry, right,ry + HZ_HGT);
+        } else if (VM_TOUCH == pMsg.type) {
+            touchUpdate(&touch, pMsg);
+            if (VT_TOUCH_UP == pMsg.param) {
+                if (touch.completed && !touch.moved) {
+                    if (touchIsPointInRect(touch.startX, touch.startY, menuRect)) {
+                        I16 index = touchListViewItemIndexAtPoint(touch.startX, touch.startY, menuRect, 0, 0, 0, count, itemHeight);
+                        if (index >= 0) {
+                            if (index == idx) {
+                                if(flag)
+                                    pflag = GamLoadRcd(idx);
+                                else
+                                    pflag = GamSaveRcd(idx);
+                                if(pflag)
+                                    return idx;
+                                GamRcdIFace(count);
+                            } else {
+                                gam_revlcd(WK_SX + 31,ry,right,ry + HZ_HGT);
+                                idx = index;
+                            }
+                            idx = idx % count;
+                            ry = idx * 14 + WK_SY + 33;
+                            gam_revlcd(WK_SX + 31,ry, right,ry + HZ_HGT);
+                        }
+                    } else {
+                        return MNU_EXIT;
+                    }
+                }
+            }
         }
     }
 }

@@ -21,6 +21,7 @@
 #undef	TACTIC_C
 #define	TACTIC_C
 #include "baye/enghead.h"
+#include "touch.h"
 
 /*void ComputerTacticInterior(U8 city);
  void ComputerTacticDiplomatism(U8 city);
@@ -1139,19 +1140,27 @@ U8 FunctionMenu(void)
      return(0);
      }*/
     
-    RECT pRect;
+    RECT pRect, pRectSubMenu;
     U8 mstr[30];
     ResLoadToMem(STRING_CONST,MENU_FUNCSTR,mstr);
     pRect.sx = WK_SX + WK_EX / 3;
     pRect.ex = WK_SX + WK_EX / 3 + ASC_WID * 8;
     pRect.sy = WK_SY + 10;
-#if ((WK_EY - (WK_SY + 10)) > (ASC_HGT * 3 + 4))
-    pRect.ey = WK_SY + 10 + ASC_HGT * 3;
-#else
-    pRect.ey = WK_SY + 10 + ((WK_EY - (WK_SY + 10)) / ASC_HGT) * ASC_HGT;
-#endif
-    
-    switch (PlcSplMenu(&pRect,0,mstr))
+    if ((WK_EY - (WK_SY + 10)) > (ASC_HGT * 3 + 4)) {
+        pRect.ey = WK_SY + 10 + ASC_HGT * 3;
+    } else {
+        pRect.ey = WK_SY + 10 + ((WK_EY - (WK_SY + 10)) / ASC_HGT) * ASC_HGT;
+    }
+
+    pRectSubMenu.sx = pRect.sx;
+    pRectSubMenu.sy = pRect.ey + HZ_HGT;
+    pRectSubMenu.ex = pRectSubMenu.sx + HZ_WID*4;
+    pRectSubMenu.ey = pRectSubMenu.sy + HZ_HGT;
+    const char* exitStr = "\xc8\xb7\xb6\xa8\xcd\xcb\xb3\xf6"; //确定退出
+    U8 choosing = 0;
+
+    while (1)
+    switch ((choosing = PlcSplMenu(&pRect,choosing,mstr)))
     {
         case 0:
             return(1);
@@ -1159,6 +1168,10 @@ U8 FunctionMenu(void)
             GamRecordMan(0);
             return(0);
         case 2:
+            if (PlcSplMenu(&pRectSubMenu, 0, (U8*)exitStr) == MNU_EXIT) {
+                ShowMapClear();
+                continue;
+            }
             return(2);
         case 0xff:
             return(0);
@@ -1185,16 +1198,36 @@ FAR U16 NumOperate(U16 min,U16 max)
     U8 showflag,i,bit,maxbit;
     U16 donum,tnum,num;
     GMType Msg;
-    
-    donum = min;
+
+    Touch touch = {0};
+    U32 valueWhenTouchDown = 0;
+
+    U8 left = (WK_SX + WK_EX - WK_SX  - ASC_WID * 12) / 2;
+    U8 top = (WK_SY + WK_EY - WK_SY - ASC_HGT * 3) / 2 + ASC_HGT;
+
+    U8 btnTop = top + ASC_HGT*2 + 3;
+    U8 btnW = 30;
+    U8 btnH = ASC_HGT + 2;
+
+
+    Rect okButton = MakeRect(left - 10, btnTop, btnW, btnH);
+    Rect maxButton = MakeRect(okButton.right+2, btnTop, btnW, btnH);
+    Rect cancelButton = MakeRect(maxButton.right+2, btnTop, btnW, btnH);
+
+    touchDrawButton(okButton, "\xc8\xb7\xb6\xa8");
+    touchDrawButton(maxButton, "\xd7\xee\xb4\xf3");
+    touchDrawButton(cancelButton, "\xc8\xa1\xcf\xfb");
+
+    donum = max;
     num = 1;
     showflag = 1;
     
     ResLoadToMem(STRING_CONST,ATRR_STR63,str);
-    GamStrShowS((WK_SX + WK_EX - WK_SX  - ASC_WID * 12) / 2,(WK_SY + WK_EY - WK_SY - ASC_HGT * 3) / 2 + ASC_HGT,str);
+    GamStrShowS(left, top, str);
     ResLoadToMem(STRING_CONST,ATRR_STR64,str);
     gam_ltoa(max,&str[7],10);
-    GamStrShowS((WK_SX + WK_EX - WK_SX  - ASC_WID * 12) / 2,(WK_SY + WK_EY - WK_SY - ASC_HGT * 3) / 2 + ASC_HGT * 2,str);
+    GamStrShowS(left, top + ASC_HGT, str);
+
     maxbit = gam_strlen(&str[7]) - 1;
     bit = maxbit;
     while (1)
@@ -1259,6 +1292,53 @@ FAR U16 NumOperate(U16 min,U16 max)
                     break;
                 case VK_EXIT:
                     return(0xffff);
+            }
+        }
+        else if (VM_TOUCH == Msg.type) {
+            touchUpdate(&touch, Msg);
+            switch (Msg.param) {
+                case VT_TOUCH_DOWN:
+                    valueWhenTouchDown = donum;
+                    break;
+                case VT_TOUCH_UP:
+                {
+                    if (!touch.completed || touch.moved) break;
+                    I16 x = touch.currentX, y = touch.currentY;
+                    if (touchIsPointInRect(x, y, okButton)) {
+                        return donum;
+                    }
+                    if (touchIsPointInRect(x, y, cancelButton)) {
+                        return 0xffff;
+                    }
+                    if (touchIsPointInRect(x, y, maxButton)) {
+                        donum = donum == max ? min : max;
+                        showflag = 1;
+                        break;
+                    }
+
+                    break;
+                }
+                case VT_TOUCH_MOVE:
+                {
+                    I16 rng = max - min;
+                    // x越小，粗调，x越大，微调
+                    // 微调，每10px加1
+                    I16 dy = touch.currentY - touch.startY;
+
+                    I16 d0 = - dy * rng / SCR_HGT;
+                    I16 d1 = - dy / 10;
+                    I16 d = d1;
+                    if (abs(d0) > abs(d1)) {
+                        U16 factor = SCR_WID - limitValueInRange(touch.startX, 0, SCR_WID-1) - 1;
+                        if (factor < 15) factor = 0;
+                        U16 ratio = factor * 100 / SCR_WID;
+                        d = d1 + (d0 - d1) * (ratio) / 100;
+                    }
+
+                    donum = limitValueInRange(valueWhenTouchDown + d, min, max);
+                    showflag = 1;
+                    break;
+                }
             }
         }
     }

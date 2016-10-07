@@ -21,6 +21,7 @@
 #undef	CITYEDIT_C
 #define	CITYEDIT_C
 #include "baye/enghead.h"
+#include "touch.h"
 
 /*U8 GetCityOutPersons(U8 city,U8 *pqueue);
  U8 GetCityPersons(U8 city,U8 *pqueue);
@@ -906,25 +907,39 @@ FAR U8 GetKingPersons(U8 king,U8 *pqueue)
  ******************************************************************************/
 FAR U8 GetCitySet(CitySetType *pos)
 {
-    U8 showflag,scrollflag,tpicflag;
+    U8 showflag,tpicflag;
     U8 city = '\0';
     U8 *dptr;
     GMType Msg;
+    Touch touch = {0};
+
+    Rect mapRect = {
+        .left = WK_SX,
+        .top = WK_SY,
+        .right = WK_SX + CITYMAP_TIL_W * SHOWMAP_WS,
+        .bottom = WK_SY + CITYMAP_TIL_H * SHOWMAP_HS,
+    };
+
+    // 头像的rect
+    Rect exitButton = MakeRect(WK_SX + CITYMAP_TIL_W * SHOWMAP_WS + ((WK_EX - (WK_SX + CITYMAP_TIL_W * SHOWMAP_WS) - 24) / 2), WK_SY + 4, 24, 24);
+    Rect searchButton = MakeRect(exitButton.left, exitButton.bottom+2, 24, 24);
+
+    U8 xWhenTouchDown = 0;
+    U8 yWhenTouchDown = 0;
 
     showflag = 1;
-    scrollflag = 0;
     tpicflag = 0;
     gam_clrvscr(WK_SX,WK_SY,WK_EX,WK_EY,g_VisScr);
     while (1)
     {
         if (showflag && !tpicflag)
         {
-            city = ShowCityMap(pos,scrollflag);
+            city = ShowCityMap(pos);
             showflag = 0;
-            scrollflag = 0;
         }
 
         GamGetMsg(&Msg);
+    tagHandleMsg:
         if (VM_CHAR_FUN == Msg.type)
         {
             if (tpicflag)
@@ -938,12 +953,10 @@ FAR U8 GetCitySet(CitySetType *pos)
                 case VK_UP:
                     if (pos->sety)
                     {
-                        scrollflag = 1;
                         pos->sety -= 1;
                         if (pos->sety < pos->y)
                         {
                             pos->y = pos->sety;
-                            scrollflag = 0;
                         }
                         showflag = 1;
                     }
@@ -951,12 +964,10 @@ FAR U8 GetCitySet(CitySetType *pos)
                 case VK_LEFT:
                     if (pos->setx)
                     {
-                        scrollflag = 2;
                         pos->setx -= 1;
                         if (pos->setx < pos->x)
                         {
                             pos->x = pos->setx;
-                            scrollflag = 0;
                         }
                         showflag = 1;
                     }
@@ -964,12 +975,10 @@ FAR U8 GetCitySet(CitySetType *pos)
                 case VK_DOWN:
                     if (pos->sety < CITYMAP_H - 1)
                     {
-                        scrollflag = 3;
                         pos->sety += 1;
                         if (pos->sety >= pos->y + SHOWMAP_HS)
                         {
                             pos->y = pos->sety - SHOWMAP_HS + 1;
-                            scrollflag = 0;
                         }
                         showflag = 1;
                     }
@@ -977,12 +986,10 @@ FAR U8 GetCitySet(CitySetType *pos)
                 case VK_RIGHT:
                     if (pos->setx < CITYMAP_W - 1)
                     {
-                        scrollflag = 4;
                         pos->setx += 1;
                         if (pos->setx >= pos->x + SHOWMAP_WS)
                         {
                             pos->x = pos->setx - SHOWMAP_WS + 1;
-                            scrollflag = 0;
                         }
                         showflag = 1;
                     }
@@ -1001,6 +1008,77 @@ FAR U8 GetCitySet(CitySetType *pos)
                     dptr = ResLoadToCon(TACTIC_ICON,1,g_CBnkPtr);
                     GamPicShowExS(WK_SX + (WK_EX - WK_SX - 84) / 2,WK_SY + (WK_EY - WK_SY - 64) / 2,84,64,0,dptr);
                     tpicflag = 1;
+                    break;
+            }
+        } else if (VM_TOUCH == Msg.type) {
+            touchUpdate(&touch, Msg);
+            if (tpicflag)
+            {
+                if (VT_TOUCH_UP == Msg.param) {
+                    // 退出地图
+                    tpicflag = 0;
+                    showflag = 1;
+                }
+                continue;
+            }
+            switch (Msg.param) {
+                case VT_TOUCH_DOWN:
+                    xWhenTouchDown = pos->x;
+                    yWhenTouchDown = pos->y;
+                    break;
+                case VT_TOUCH_UP:
+                {
+                    if (!touch.completed || touch.moved) break;
+
+                    if (touchIsPointInRect(touch.currentX, touch.currentY, mapRect)) {
+                        I16 px = touch.currentX - mapRect.left;
+                        I16 py = touch.currentY - mapRect.top;
+                        I16 row = py / CITYMAP_TIL_H;
+                        I16 col = px / CITYMAP_TIL_W;
+
+                        U8 setx = pos->x + col;
+                        U8 sety = pos->y + row;
+
+                        if (setx == pos->setx && sety == pos->sety) {
+                            if (city) {
+                                return city - 1;
+                            }
+                        } else {
+                            pos->setx = setx;
+                            pos->sety = sety;
+                            showflag = 1;
+                        }
+                    } else if (touchIsPointInRect(touch.currentX, touch.currentY, exitButton)) {
+                        Msg.type = VM_CHAR_FUN;
+                        Msg.param = VK_EXIT;
+                        goto tagHandleMsg;
+                    } else if (touchIsPointInRect(touch.currentX, touch.currentY, searchButton)) {
+                        Msg.type = VM_CHAR_FUN;
+                        Msg.param = VK_SEARCH;
+                        goto tagHandleMsg;
+                    }
+                    break;
+                }
+                case VT_TOUCH_MOVE:
+                {
+                    if (!touch.touched) break;
+                    Point p = touchListViewCalcTopLeftForMove(&touch,
+                                                              xWhenTouchDown,
+                                                              CITYMAP_W - SHOWMAP_WS,
+                                                              CITYMAP_TIL_W,
+                                                              yWhenTouchDown,
+                                                              CITYMAP_H - SHOWMAP_HS,
+                                                              CITYMAP_TIL_W);
+
+                    if (p.x != pos->x || p.y != pos->y) {
+                        pos->x = p.x;
+                        pos->y = p.y;
+                        showflag = 1;
+                    }
+
+                    break;
+                }
+                default:
                     break;
             }
         }
@@ -1022,7 +1100,7 @@ FAR U8 GetCitySet(CitySetType *pos)
  *		陈泽伟		2005-6-23 10:48	基本功能完成
  ******************************************************************************/
 
-U8 ShowCityMap(CitySetType *pos,U8 scrollflag)
+U8 ShowCityMap(CitySetType *pos)
 {
     U8 *str,*astr;
     U8 h,w,sw,sh,c;
@@ -1046,7 +1124,6 @@ U8 ShowCityMap(CitySetType *pos,U8 scrollflag)
 
     pdptr = ResLoadToCon(CITYMAP_TILE,1,g_CBnkPtr);
     pdptr += sizeof(PictureHeadType);
-    if (!scrollflag)
     {
         for (h = 0;h < SHOWMAP_HS;h ++)
         {
@@ -1084,51 +1161,16 @@ U8 ShowCityMap(CitySetType *pos,U8 scrollflag)
             }
         }
     }
-    else
-    {
-        h = sh;
-        w = sw;
-        switch (scrollflag)
-        {
-            case 1:
-                h = sh + 1;
-                break;
-            case 2:
-                w = sw + 1;
-                break;
-            case 3:
-                h = sh - 1;
-                break;
-            case 4:
-                w = sw - 1;
-                break;
-        }
 
-        count = (CITYMAP_TIL_W + 7) / 8 * CITYMAP_TIL_H * ((U16) (pos->y + h) * CITYMAP_W + pos->x + w);
-        GamPicShowV(WK_SX + CITYMAP_TIL_W * w,WK_SY + CITYMAP_TIL_H * h,CITYMAP_TIL_W,CITYMAP_TIL_H,pdptr + count,g_VisScr);
+    Rect displayRect = MakeRect(pos->x, pos->y, SHOWMAP_WS, SHOWMAP_HS);
+    U8 cursorIsInView = touchIsPointInRect(pos->setx, pos->sety, displayRect);
 
-        if (citymap[h][w])
-        {
-            if (g_Cities[citymap[h][w] - 1].Belong == (g_PlayerKing + 1))
-            {
-                c = 8;
-            }
-            else if (g_Cities[citymap[h][w] - 1].Belong)
-            {
-                c = 7;
-            }
-            else
-            {
-                c = 0;
-            }
-            cicon = ResLoadToCon(CITY_ICON,1,g_CBnkPtr);
-            GamPicShowExV(WK_SX + CITYMAP_TIL_W * w + (CITYMAP_TIL_W - CITY_ICON_W) / 2,WK_SY + CITYMAP_TIL_H * h + (CITYMAP_TIL_H - CITY_ICON_H) / 2,CITY_ICON_W,CITY_ICON_H,c,cicon,g_VisScr);
-        }
+    if (cursorIsInView) {
+        /*显示指针图标*/
+        cicon = ResLoadToCon(CITY_POS_ICON,1,g_CBnkPtr);
+        cicon += sizeof(PictureHeadType);
+        GamMPicShowV(WK_SX + CITYMAP_TIL_W * sw + (CITYMAP_TIL_W - CITY_ICON_W) / 2,WK_SY + CITYMAP_TIL_H * sh + CITY_ICON_H,CITY_ICON_W,CITY_ICON_H,cicon,g_VisScr);
     }
-    /*显示指针图标*/
-    cicon = ResLoadToCon(CITY_POS_ICON,1,g_CBnkPtr);
-    cicon += sizeof(PictureHeadType);
-    GamMPicShowV(WK_SX + CITYMAP_TIL_W * sw + (CITYMAP_TIL_W - CITY_ICON_W) / 2,WK_SY + CITYMAP_TIL_H * sh + CITY_ICON_H,CITY_ICON_W,CITY_ICON_H,cicon,g_VisScr);
 
     str = SHARE_MEM + 3000;
     astr = SHARE_MEM + 3400;
@@ -1153,7 +1195,7 @@ U8 ShowCityMap(CitySetType *pos,U8 scrollflag)
     ResLoadToMem(STRING_CONST,DATE_TIME_STR3,astr);
     gam_strcat(str,astr);
     GamStrShowV(WK_SX + CITYMAP_TIL_W * SHOWMAP_WS + 1,WK_EY - HZ_HGT - ASC_HGT - 1,str,g_VisScr);
-    if (citymap[sh][sw])
+    if (cursorIsInView && citymap[sh][sw])
     {
         GetCityName(citymap[sh][sw] - 1,astr);
         GamStrShowV(WK_SX + CITYMAP_TIL_W * SHOWMAP_WS + 2,WK_EY - HZ_HGT - 1,astr,g_VisScr);
@@ -1163,7 +1205,7 @@ U8 ShowCityMap(CitySetType *pos,U8 scrollflag)
      gam_rect(WK_SX + CITYMAP_TIL_W * SHOWMAP_WS,WK_SY,WK_EX,WK_EY);*/
     ShowMapClear();
     
-    return(citymap[sh][sw]);
+    return cursorIsInView ? (citymap[sh][sw]) : 0;
 }
 
 /******************************************************************************

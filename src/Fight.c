@@ -19,6 +19,7 @@
 #undef	Fight
 #define	Fight
 #include "baye/enghead.h"
+#include "touch.h"
 #define		IN_FILE	1	/* 当前文件位置 */
 
 /*本体函数声明*/
@@ -531,6 +532,17 @@ U8 FgtGetFoucs(void (*chkcondition)(bool*flag))
 {
     bool	flag,tflag;
     GMType	pMsg;
+    Touch touch = {0};
+    U8 leftWhenTouchDown = 0;
+    U8 topWhenTouchDown = 0;
+
+    U8 btnTop = SCR_HGT - 16;
+    U8 btnH = 16;
+
+    Rect backButton = MakeRect(0, btnTop, 32, btnH);
+    Rect searchButton = MakeRect(backButton.right, btnTop, 28, btnH);
+    Rect infoButton = MakeRect(searchButton.right, btnTop, SCR_WID - searchButton.right, btnH);
+    Rect mapRect = MakeRect(0, 0, SCR_WID, btnTop);
 
     flag = false;
     while(1)
@@ -544,6 +556,7 @@ U8 FgtGetFoucs(void (*chkcondition)(bool*flag))
                 return 0xFF;
             FgtMapUnitShow(g_FoucsX,g_FoucsY,0);
         }
+    tagHandleMsg:
         switch(pMsg.type)
         {
             case VM_CHAR_FUN:
@@ -572,12 +585,79 @@ U8 FgtGetFoucs(void (*chkcondition)(bool*flag))
                     FgtShowView();
                     break;
             }
+                g_AutoUpdateMapXY = true;
                 tflag = false;
                 (*chkcondition)(&tflag);
                 break;
             case VM_TIMER:
                 flag = !flag;
                 break;
+            case VM_TOUCH:
+            {
+                touchUpdate(&touch, pMsg);
+                switch (pMsg.param) {
+                    case VT_TOUCH_DOWN:
+                        leftWhenTouchDown = g_MapSX;
+                        topWhenTouchDown = g_MapSY;
+                        break;
+                    case VT_TOUCH_UP:
+                    {
+                        if (!touch.completed || touch.moved) break;
+
+                        I16 x = touch.currentX, y = touch.currentY;
+
+                        if (touchIsPointInRect(x, y, backButton)) {
+                            return 0xFF;
+                        }
+                        if (touchIsPointInRect(x, y, infoButton)) {
+                            pMsg.type = VM_CHAR_FUN;
+                            pMsg.param = VK_HELP;
+                            goto tagHandleMsg;
+                        }
+                        if (touchIsPointInRect(x, y, searchButton)) {
+                            pMsg.type = VM_CHAR_FUN;
+                            pMsg.param = VK_SEARCH;
+                            goto tagHandleMsg;
+                        }
+
+                        if (touchIsPointInRect(x, y, mapRect)) {
+                            U8 col = x / 16;
+                            U8 row = y / 16;
+                            U8 toFocusX = g_MapSX + col;
+                            U8 toFocusY = g_MapSY + row;
+                            if (toFocusX == g_FoucsX && toFocusY == g_FoucsY) {
+                                return 0;
+                            }
+                            Rect scrRect = MakeRect(g_MapSX, g_MapSY, SCR_MAPWID, SCR_MAPHGT);
+                            if (touchIsPointInRect(g_FoucsX, g_FoucsY, scrRect)) {
+                                FgtMapUnitShow(g_FoucsX,g_FoucsY,0);
+                            }
+                            g_FoucsX = toFocusX;
+                            g_FoucsY = toFocusY;
+                            tflag = false;
+                            g_AutoUpdateMapXY = true; // 避免画面整体刷新
+                            (*chkcondition)(&tflag);
+                        }
+                        break;
+                    }
+                    case VT_TOUCH_MOVE:
+                        if (!touch.touched) break;
+                        Point p = touchListViewCalcTopLeftForMove(&touch,
+                                                                  leftWhenTouchDown, g_MapWid-SCR_MAPWID, 16,
+                                                                  topWhenTouchDown, g_MapHgt-SCR_MAPHGT, 16);
+                        if (p.x != g_MapSX || p.y != g_MapSY) {
+                            g_MapSX = p.x;
+                            g_MapSY = p.y;
+                            g_AutoUpdateMapXY = false;
+                            tflag = false;
+                            (*chkcondition)(&tflag);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            }
         }
         FgtShowGen(flag);
         tflag = true;
@@ -597,11 +677,13 @@ U8 FgtGetFoucs(void (*chkcondition)(bool*flag))
  ***********************************************************************/
 void FgtShowCursor(void)
 {
-    U8	x,y;
-
-    x = FgtGetScrX(g_FoucsX);
-    y = FgtGetScrY(g_FoucsY);
-    FgtRPicShowV(STEP_PIC,5,x,y);
+    Rect scrRect = MakeRect(g_MapSX, g_MapSY, SCR_MAPWID, SCR_MAPHGT);
+    if (touchIsPointInRect(g_FoucsX, g_FoucsY, scrRect)) {
+        U8	x,y;
+        x = FgtGetScrX(g_FoucsX);
+        y = FgtGetScrY(g_FoucsY);
+        FgtRPicShowV(STEP_PIC,5,x,y);
+    }
 }
 /***********************************************************************
  * 说明:     初始化战斗地图
@@ -867,16 +949,18 @@ void FgtDealBout(void)
  ***********************************************************************/
 void FgtRefrashMap(void)
 {
-    if (g_FoucsX < g_MapSX)
-        g_MapSX -= 1;
-    else if (g_FoucsY < g_MapSY)
-        g_MapSY -= 1;
-    else if (g_FoucsX >= g_MapSX + SCR_MAPWID)
-        g_MapSX += 1;
-    else if (g_FoucsY >= g_MapSY + SCR_MAPHGT)
-        g_MapSY += 1;
-    else
-        return;
+    if (g_AutoUpdateMapXY) {
+        if (g_FoucsX < g_MapSX)
+            g_MapSX -= 1;
+        else if (g_FoucsY < g_MapSY)
+            g_MapSY -= 1;
+        else if (g_FoucsX >= g_MapSX + SCR_MAPWID)
+            g_MapSX += 1;
+        else if (g_FoucsY >= g_MapSY + SCR_MAPHGT)
+            g_MapSY += 1;
+        else
+            return;
+    }
     FgtShowMap(g_MapSX,g_MapSY);
 }
 /***********************************************************************

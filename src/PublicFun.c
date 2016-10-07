@@ -19,6 +19,7 @@
 #undef	PublicFun
 #define	PublicFun
 #include "baye/enghead.h"
+#include "touch.h"
 #define		IN_FILE	1	/* 当前文件位置 */
 
 /*本体函数声明*/
@@ -213,6 +214,9 @@ FAR U8 PlcSplMenu(RECT *pRect,U8 pIdx,U8 *buf)
     U16	poff;	/* 数据偏移 */
     float	tcot;
     GMType	pMsg;	/* 消息 */
+    Touch touch = {0};
+    U8 touchStartIndex = 0;
+    U8 itemHeight = ASC_HGT;
 
     /* 初始化显示范围 */
     c_ReFlag = false;
@@ -222,14 +226,16 @@ FAR U8 PlcSplMenu(RECT *pRect,U8 pIdx,U8 *buf)
     c_Ey = pRect->ey;
     /* 计算参数 */
     pLen = (c_Ex - c_Sx) / ASC_WID;
-    pICnt = (c_Ey - c_Sy) / ASC_HGT;
+    pICnt = (c_Ey - c_Sy) / itemHeight;
     pItm = gam_strlen(buf) / pLen;
     pSIdx = 0;
     if(pICnt < pItm)
         pSIdx = pIdx;
+
+    Rect menuRect = {c_Sx - 3,c_Sy - 3,c_Ex + 2,c_Ey + 2};
     /* 初始化界面 */
     gam_clrlcd(c_Sx - 3,c_Sy - 3,c_Ex + 2,c_Ey + 2);
-    gam_rect(c_Sx - 3,c_Sy - 3,c_Ex + 2,c_Ey + 2);
+    gam_rect(menuRect.left, menuRect.top, menuRect.right, menuRect.bottom);
     if(pItm > pICnt)
     {
         gam_clrlcd(c_Ex + 2,c_Sy - 3,c_Ex + 6,c_Ey + 2);
@@ -242,8 +248,8 @@ FAR U8 PlcSplMenu(RECT *pRect,U8 pIdx,U8 *buf)
     poff *= pLen;
     GamStrShowS(c_Sx,c_Sy,buf + poff);
     /* 初始化光标 */
-    sy = c_Sy + (pIdx - pSIdx) * ASC_HGT;
-    gam_revlcd(c_Sx,sy,c_Ex,sy + ASC_HGT);
+    sy = c_Sy + (pIdx - pSIdx) * itemHeight;
+    gam_revlcd(c_Sx,sy,c_Ex,sy + itemHeight);
     ty = c_Sy;
     cflag = true;
     while(1)
@@ -265,9 +271,62 @@ FAR U8 PlcSplMenu(RECT *pRect,U8 pIdx,U8 *buf)
 
         tflag = false;
         GamGetMsg(&pMsg);
+
+        if (VM_TOUCH == pMsg.type)
+        {
+            touchUpdate(&touch, pMsg);
+            switch (pMsg.param) {
+                case VT_TOUCH_DOWN:
+                {
+                    touchStartIndex = pSIdx;
+                    I16 index = touchListViewItemIndexAtPoint(touch.currentX, touch.currentY, menuRect, 3, 3, pSIdx, pItm, itemHeight);
+                    if (index >= 0 && index != pIdx) {
+                        pIdx = index;
+                        tflag = 1;
+                        cflag = 1;
+                        break;
+                    }
+                    break;
+                }
+                case VT_TOUCH_UP:
+                {
+                    if (touch.completed && !touch.moved) {
+                        I16 index = touchListViewItemIndexAtPoint(touch.currentX, touch.currentY, menuRect, 3, 3, pSIdx, pItm, itemHeight);
+                        if (index < 0)
+                        {
+                            pIdx = MNU_EXIT;
+                        }
+                        c_ReFlag = true;
+                        c_Sx = WK_SX;
+                        c_Sy = WK_SY;
+                        c_Ex = WK_EX;
+                        c_Ey = WK_EY;
+                        return pIdx;
+                    }
+                    break;
+                }
+                case VT_TOUCH_MOVE:
+                {
+                    I16 dy = touch.currentY - touch.startY;
+                    I16 dItems = dy / itemHeight;
+                    I16 startIndex = touchStartIndex - dItems;
+                    startIndex = limitValueInRange(startIndex, 0, pItm-pICnt);
+                    if (startIndex != pSIdx) {
+                        pSIdx = startIndex;
+                        poff = pSIdx*pLen;
+                        tflag = true;
+                    }
+                    break;
+                }
+                default:
+                    break;
+            }
+            goto UPDATE_UI;
+        }
+
         if(VM_CHAR_FUN != pMsg.type)
             continue;
-        gam_revlcd(c_Sx,sy,c_Ex,sy + ASC_HGT);
+
         switch(pMsg.param)
         {
             case VK_UP:
@@ -324,10 +383,15 @@ FAR U8 PlcSplMenu(RECT *pRect,U8 pIdx,U8 *buf)
                 c_Ey = WK_EY;
                 return pIdx;
         }
-        if(tflag)
+UPDATE_UI:
+        if(tflag || cflag) {
+            gam_clrlcd(c_Sx, c_Sy, c_Ex, c_Ey);
             GamStrShowS(c_Sx,c_Sy,buf + poff);
-        sy = c_Sy + (pIdx - pSIdx) * ASC_HGT;
-        gam_revlcd(c_Sx,sy,c_Ex,sy + ASC_HGT);
+            if (pIdx >= pSIdx && pIdx < pSIdx + pICnt) {
+                sy = c_Sy + (pIdx - pSIdx) * ASC_HGT;
+                gam_revlcd(c_Sx,sy,c_Ex,sy + ASC_HGT);
+            }
+        }
     }
 }
 /***********************************************************************
@@ -376,7 +440,7 @@ FAR void PlcGraMsgBox(U8 *buf,U8 delay,U8 line)
     }
     GamPicShowS(x,y,w,h,ptr + sizeof(PictureHeadType));
     GamStrShowS(x + 10,y + 6,buf);
-    GamDelay(delay * 100,true);
+    GamDelay(delay * 100, 2);
 }
 /***********************************************************************
  * 说明:     获取一个255以内的平方根(整数)

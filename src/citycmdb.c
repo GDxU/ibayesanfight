@@ -92,11 +92,13 @@ U8 MainOrderMenu(void)
     pRect.sx = WK_SX + WK_EX / 3;
     pRect.ex = WK_SX + WK_EX / 3 + ASC_WID * 4;
     pRect.sy = WK_SY + 10;
-#if ((WK_EY - (WK_SY + 10)) > (ASC_HGT * 4 + 4))
-    pRect.ey = WK_SY + 10 + ASC_HGT * 4;
-#else
-    pRect.ey = WK_SY + 10 + ((WK_EY - (WK_SY + 10)) / ASC_HGT) * ASC_HGT;
-#endif
+    if ((WK_EY - (WK_SY + 10)) > (ASC_HGT * 4 + 4))
+    {
+        pRect.ey = WK_SY + 10 + ASC_HGT * 4;
+    }
+    else {
+        pRect.ey = WK_SY + 10 + ((WK_EY - (WK_SY + 10)) / ASC_HGT) * ASC_HGT;
+    }
     return(PlcSplMenu(&pRect,0,mstr));
 
 }
@@ -122,11 +124,13 @@ U8 InteriorOrderMenu(void)
     pRect.sx = WK_SX + WK_EX / 2;
     pRect.ex = WK_SX + WK_EX / 2 + ASC_WID * 4;
     pRect.sy = WK_SY + 10 + 4;
-#if ((WK_EY - (WK_SY + 10 + 4)) > (ASC_HGT * 14 + 4))
-    pRect.ey = WK_SY + 10 + ASC_HGT * 14;
-#else
-    pRect.ey = WK_SY + 10 + 4 + ((WK_EY - (WK_SY + 10 + 4)) / ASC_HGT) * ASC_HGT;
-#endif
+    if ((WK_EY - (WK_SY + 10 + 4)) > (ASC_HGT * 14 + 4))
+    {
+        pRect.ey = WK_SY + 10 + ASC_HGT * 14;
+    }
+    else {
+        pRect.ey = WK_SY + 10 + 4 + ((WK_EY - (WK_SY + 10 + 4)) / ASC_HGT) * ASC_HGT;
+    }
     return(PlcSplMenu(&pRect,0,mstr));
 
 }
@@ -153,11 +157,11 @@ U8 DiplomatismOrderMenu(void)
     pRect.sx = WK_SX + WK_EX / 2;
     pRect.ex = WK_SX + WK_EX / 2 + ASC_WID * 4;
     pRect.sy = WK_SY + 10 + 4;
-#if ((WK_EY - (WK_SY + 10 + 4)) > (ASC_HGT * 5 + 4))
-    pRect.ey = WK_SY + 10 + 4 + ASC_HGT * 5;
-#else
-    pRect.ey = WK_SY + 10 + 4 + ((WK_EY - (WK_SY + 10 + 4)) / ASC_HGT) * ASC_HGT;
-#endif
+    if ((WK_EY - (WK_SY + 10 + 4)) > (ASC_HGT * 5 + 4)) {
+        pRect.ey = WK_SY + 10 + 4 + ASC_HGT * 5;
+    } else {
+        pRect.ey = WK_SY + 10 + 4 + ((WK_EY - (WK_SY + 10 + 4)) / ASC_HGT) * ASC_HGT;
+    }
     return(PlcSplMenu(&pRect,0,mstr));
 
 }
@@ -185,11 +189,11 @@ U8 ArmamentOrderMenu(void)
     pRect.sx = WK_SX + WK_EX / 2;
     pRect.ex = WK_SX + WK_EX / 2 + ASC_WID * 4;
     pRect.sy = WK_SY + 10 + 4;
-#if ((WK_EY - (WK_SY + 10 + 4)) > (ASC_HGT * 5 + 4))
-    pRect.ey = WK_SY + 10 + 4 + ASC_HGT * 5;
-#else
-    pRect.ey = WK_SY + 10 + 4 + ((WK_EY - (WK_SY + 10 + 4)) / ASC_HGT) * ASC_HGT;
-#endif
+    if ((WK_EY - (WK_SY + 10 + 4)) > (ASC_HGT * 5 + 4)) {
+        pRect.ey = WK_SY + 10 + 4 + ASC_HGT * 5;
+    } else {
+        pRect.ey = WK_SY + 10 + 4 + ((WK_EY - (WK_SY + 10 + 4)) / ASC_HGT) * ASC_HGT;
+    }
     return(PlcSplMenu(&pRect,0,mstr));
 
 }
@@ -382,7 +386,7 @@ FAR U8 AssartMake(U8 city)
         do
         {
             ShowMapClear();
-            pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
             if (0xff != pcode)
             {
                 p = pqptr[pcode];
@@ -477,7 +481,7 @@ FAR U8 AccractbusinessMake(U8 city)
         do
         {
             ShowMapClear();
-            pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
             if (0xff != pcode)
             {
                 p = pqptr[pcode];
@@ -616,7 +620,7 @@ FAR U8 SearchMake(U8 city)
         do
         {
             ShowMapClear();
-            pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
             if (0xff != pcode)
             {
                 p = pqptr[pcode];
@@ -714,7 +718,7 @@ FAR U8 FatherMake(U8 city)
         do
         {
             ShowMapClear();
-            pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
             if (0xff != pcode)
             {
                 p = pqptr[pcode];
@@ -802,7 +806,7 @@ FAR U8 InspectionMake(U8 city)
         do
         {
             ShowMapClear();
-            pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
             if (0xff != pcode)
             {
                 p = pqptr[pcode];
@@ -894,7 +898,7 @@ FAR U8 SurrenderMake(U8 city)
         }
 
         ShowMapClear();
-        pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+        pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
         if (0xff != pcode)
         {
             pp = pqptr[pcode];
@@ -908,7 +912,7 @@ FAR U8 SurrenderMake(U8 city)
             do
             {
                 ShowMapClear();
-                pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+                pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
                 if (0xff != pcode)
                 {
                     p = pqptr[pcode];
@@ -977,7 +981,7 @@ FAR U8 KillMake(U8 city)
         /*提示城中无俘虏*/
         ShowConstStrMsg(STR_NOCAPTIVES);
     }
-    pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+    pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
     if (0xff != pcode)
     {
         /*添加处斩提示代码*/
@@ -1032,7 +1036,7 @@ FAR U8 BanishMake(U8 city)
         ShowConstStrMsg(STR_NOPERSON);
         return(1);
     }
-    pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+    pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
     if (0xff != pcode)
     {	
         p = pqptr[pcode];
@@ -1070,84 +1074,88 @@ FAR U8 LargessMake(U8 city)
     U8 p;
     U8 *eq;
     U8 g,gi;
-    
-    gqptr = SHARE_MEM;
-    gcount = GetCityPGoods(city,gqptr);
-    if (gcount)
-    {
-        gcode = ShowGoodsControl(gqptr,gcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-        if (0xff == gcode)
+
+    while (1) {
+
+        gqptr = SHARE_MEM;
+        gcount = GetCityPGoods(city,gqptr);
+        if (gcount)
         {
-            return(1);
-        }
-        
-        do
-        {
-            pqptr = SHARE_MEM + 2000;
-            pcount = GetCityPersons(city,pqptr);
-            if (!pcount)
+            gcode = ShowGoodsControl(gqptr,gcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            if (0xff == gcode)
             {
-                ShowConstStrMsg(STR_NOPERSON);
-                break;
+                return(1);
             }
-            pcode = ShowPersonControl(pqptr,pcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-            if (0xff != pcode)
+
+            do
             {
-                g = gqptr[gcode];
-                p = pqptr[pcode];
-                eq = g_Persons[p].Equip;
-                if (!(eq[0]))
+                pqptr = SHARE_MEM + 2000;
+                pcount = GetCityPersons(city,pqptr);
+                if (!pcount)
                 {
-                    gi = 0;
+                    ShowConstStrMsg(STR_NOPERSON);
+                    break;
                 }
-                else if (!(eq[1]))
+                pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+                if (0xff != pcode)
                 {
-                    gi = 1;
+                    g = gqptr[gcode];
+                    p = pqptr[pcode];
+                    eq = g_Persons[p].Equip;
+                    if (!(eq[0]))
+                    {
+                        gi = 0;
+                    }
+                    else if (!(eq[1]))
+                    {
+                        gi = 1;
+                    }
+                    else
+                    {
+                        /*提示该武将道具已满*/
+                        ShowConstStrMsg(STR_FULLGOODS);
+                        continue;
+                    }
+                    switch (AddGoodsPerson(g,p))
+                    {
+                        case 0:
+                            eq[gi] = g + 1;
+                            break;
+                        case 1:
+                            break;
+                        case 0xff:
+                            /*提示无法使用*/
+                            ShowConstStrMsg(STR_CANNOTUSE);
+                            continue;
+                            break;
+                    }
+                    /*添加赏赐成功代码*/
+                    DelGoods(city,g);
+                    if (p != g_PlayerKing)
+                    {
+                        str = SHARE_MEM + 4000;
+                        ResLoadToMem(STRING_CONST,P_SAY_STR10 + (gam_rand() % 3),str);
+                        ShowMapClear();
+                        ShowGReport(p,str);
+                        g_Persons[p].Devotion += 8;
+                        if (g_Persons[p].Devotion > 100)
+                            g_Persons[p].Devotion = 100;
+                    }
+                    break;
                 }
                 else
                 {
-                    /*提示该武将道具已满*/
-                    ShowConstStrMsg(STR_FULLGOODS);
-                    continue;
+                    break;
                 }
-                switch (AddGoodsPerson(g,p))
-                {
-                    case 0:
-                        eq[gi] = g + 1;
-                        break;
-                    case 1:
-                        break;
-                    case 0xff:
-                        /*提示无法使用*/
-                        ShowConstStrMsg(STR_CANNOTUSE);
-                        continue;
-                        break;
-                }
-                /*添加赏赐成功代码*/
-                DelGoods(city,g);
-                if (p != g_PlayerKing)
-                {
-                    str = SHARE_MEM + 4000;
-                    ResLoadToMem(STRING_CONST,P_SAY_STR10 + (gam_rand() % 3),str);
-                    ShowMapClear();
-                    ShowGReport(p,str);
-                    g_Persons[p].Devotion += 8;
-                    if (g_Persons[p].Devotion > 100)
-                        g_Persons[p].Devotion = 100;
-                }
-                break;
-            }
-            else
-            {
-                break;
-            }
-        }while (1);
-        
-    }
-    else
-    {
-        /*提示城中无道具*/
-        ShowConstStrMsg(STR_CNOGOODS);
+            }while (1);
+            
+        }
+        else
+        {
+            /*提示城中无道具*/
+            ShowConstStrMsg(STR_CNOGOODS);
+            break;
+        }
     }
     return(1);
 }
