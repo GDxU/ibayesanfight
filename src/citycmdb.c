@@ -92,11 +92,13 @@ U8 MainOrderMenu(void)
     pRect.sx = WK_SX + WK_EX / 3;
     pRect.ex = WK_SX + WK_EX / 3 + ASC_WID * 4;
     pRect.sy = WK_SY + 10;
-#if ((WK_EY - (WK_SY + 10)) > (ASC_HGT * 4 + 4))
-    pRect.ey = WK_SY + 10 + ASC_HGT * 4;
-#else
-    pRect.ey = WK_SY + 10 + ((WK_EY - (WK_SY + 10)) / ASC_HGT) * ASC_HGT;
-#endif
+    if ((WK_EY - (WK_SY + 10)) > (ASC_HGT * 4 + 4))
+    {
+        pRect.ey = WK_SY + 10 + ASC_HGT * 4;
+    }
+    else {
+        pRect.ey = WK_SY + 10 + ((WK_EY - (WK_SY + 10)) / ASC_HGT) * ASC_HGT;
+    }
     return(PlcSplMenu(&pRect,0,mstr));
 
 }
@@ -122,11 +124,13 @@ U8 InteriorOrderMenu(void)
     pRect.sx = WK_SX + WK_EX / 2;
     pRect.ex = WK_SX + WK_EX / 2 + ASC_WID * 4;
     pRect.sy = WK_SY + 10 + 4;
-#if ((WK_EY - (WK_SY + 10 + 4)) > (ASC_HGT * 14 + 4))
-    pRect.ey = WK_SY + 10 + ASC_HGT * 14;
-#else
-    pRect.ey = WK_SY + 10 + 4 + ((WK_EY - (WK_SY + 10 + 4)) / ASC_HGT) * ASC_HGT;
-#endif
+    if ((WK_EY - (WK_SY + 10 + 4)) > (ASC_HGT * 14 + 4))
+    {
+        pRect.ey = WK_SY + 10 + ASC_HGT * 14;
+    }
+    else {
+        pRect.ey = WK_SY + 10 + 4 + ((WK_EY - (WK_SY + 10 + 4)) / ASC_HGT) * ASC_HGT;
+    }
     return(PlcSplMenu(&pRect,0,mstr));
 
 }
@@ -153,11 +157,11 @@ U8 DiplomatismOrderMenu(void)
     pRect.sx = WK_SX + WK_EX / 2;
     pRect.ex = WK_SX + WK_EX / 2 + ASC_WID * 4;
     pRect.sy = WK_SY + 10 + 4;
-#if ((WK_EY - (WK_SY + 10 + 4)) > (ASC_HGT * 5 + 4))
-    pRect.ey = WK_SY + 10 + 4 + ASC_HGT * 5;
-#else
-    pRect.ey = WK_SY + 10 + 4 + ((WK_EY - (WK_SY + 10 + 4)) / ASC_HGT) * ASC_HGT;
-#endif
+    if ((WK_EY - (WK_SY + 10 + 4)) > (ASC_HGT * 5 + 4)) {
+        pRect.ey = WK_SY + 10 + 4 + ASC_HGT * 5;
+    } else {
+        pRect.ey = WK_SY + 10 + 4 + ((WK_EY - (WK_SY + 10 + 4)) / ASC_HGT) * ASC_HGT;
+    }
     return(PlcSplMenu(&pRect,0,mstr));
 
 }
@@ -185,11 +189,11 @@ U8 ArmamentOrderMenu(void)
     pRect.sx = WK_SX + WK_EX / 2;
     pRect.ex = WK_SX + WK_EX / 2 + ASC_WID * 4;
     pRect.sy = WK_SY + 10 + 4;
-#if ((WK_EY - (WK_SY + 10 + 4)) > (ASC_HGT * 5 + 4))
-    pRect.ey = WK_SY + 10 + 4 + ASC_HGT * 5;
-#else
-    pRect.ey = WK_SY + 10 + 4 + ((WK_EY - (WK_SY + 10 + 4)) / ASC_HGT) * ASC_HGT;
-#endif
+    if ((WK_EY - (WK_SY + 10 + 4)) > (ASC_HGT * 5 + 4)) {
+        pRect.ey = WK_SY + 10 + 4 + ASC_HGT * 5;
+    } else {
+        pRect.ey = WK_SY + 10 + 4 + ((WK_EY - (WK_SY + 10 + 4)) / ASC_HGT) * ASC_HGT;
+    }
     return(PlcSplMenu(&pRect,0,mstr));
 
 }

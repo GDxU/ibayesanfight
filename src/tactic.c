@@ -1146,11 +1146,11 @@ U8 FunctionMenu(void)
     pRect.sx = WK_SX + WK_EX / 3;
     pRect.ex = WK_SX + WK_EX / 3 + ASC_WID * 8;
     pRect.sy = WK_SY + 10;
-#if ((WK_EY - (WK_SY + 10)) > (ASC_HGT * 3 + 4))
-    pRect.ey = WK_SY + 10 + ASC_HGT * 3;
-#else
-    pRect.ey = WK_SY + 10 + ((WK_EY - (WK_SY + 10)) / ASC_HGT) * ASC_HGT;
-#endif
+    if ((WK_EY - (WK_SY + 10)) > (ASC_HGT * 3 + 4)) {
+        pRect.ey = WK_SY + 10 + ASC_HGT * 3;
+    } else {
+        pRect.ey = WK_SY + 10 + ((WK_EY - (WK_SY + 10)) / ASC_HGT) * ASC_HGT;
+    }
 
     pRectSubMenu.sx = pRect.sx;
     pRectSubMenu.sy = pRect.ey + HZ_HGT;

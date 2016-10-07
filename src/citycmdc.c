@@ -104,11 +104,11 @@ FAR U8 ExchangeMake(U8 city)
             pRect.sx = WK_SX + WK_EX / 2;
             pRect.ex = WK_SX + WK_EX / 2 + ASC_WID * 4;
             pRect.sy = WK_SY + 10 + 4;
-#if ((WK_EY - (WK_SY + 10 + 4)) > (ASC_HGT * 2 + 4))
-            pRect.ey = WK_SY + 10 + 4 + ASC_HGT * 2;
-#else
-            pRect.ey = WK_SY + 10 + 4 + ((WK_EY - (WK_SY + 10 + 4)) / ASC_HGT) * ASC_HGT;
-#endif
+            if ((WK_EY - (WK_SY + 10 + 4)) > (ASC_HGT * 2 + 4)) {
+                pRect.ey = WK_SY + 10 + 4 + ASC_HGT * 2;
+            } else {
+                pRect.ey = WK_SY + 10 + 4 + ((WK_EY - (WK_SY + 10 + 4)) / ASC_HGT) * ASC_HGT;
+            }
             pcount = PlcSplMenu(&pRect,0,mstr);
 
             if (0xff == pcount)
