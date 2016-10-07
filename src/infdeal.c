@@ -847,3 +847,16 @@ FAR void ReportCalamity(U8 city)
     }
 }
 
+FAR void ShowDialog(U8 commander, U8 reporter,U8 *str)
+{
+    U8 belong = g_Persons[commander].Belong;
+    if (belong && belong - 1 == g_PlayerKing) {
+        ShowGReport(reporter, str);
+    }
+}
+
+FAR void ShowDialogRandom(U8 commander, U8 reporter, U8 **str, U8 count)
+{
+    U8 rnd = gam_rand() % count;
+    ShowDialog(commander, reporter, str[rnd]);
+}
