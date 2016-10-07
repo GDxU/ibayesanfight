@@ -32,6 +32,7 @@ varma.c
 data-bind.c
 bind-objects.c
 touch.c
+config.c
 platform/js/fsys.c
 platform/js/sem.c
 platform/js/timer.c

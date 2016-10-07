@@ -8,5 +8,5 @@
 
 #include <baye/compa.h>
 
-U16 g_screenWidth = 16*10;
-U16 g_screenHeight = 16*6;
+U16 g_screenWidth = 16*13;
+U16 g_screenHeight = 16*8;
