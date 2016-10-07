@@ -558,7 +558,11 @@ FAR U8 AlienateMake(U8 city)
             pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
             if (0xff != pcode)
             {
-                OrderConsumeThew(pqptr[pcode],ALIENATE);
+                if (g_engineConfig.fixAlienateComsumeThew) {
+                    OrderConsumeThew(pp, ALIENATE);
+                } else {
+                    OrderConsumeThew(pqptr[pcode],ALIENATE);
+                }
 
                 OrderConsumeMoney(city,ALIENATE);
                 order.OrderId = ALIENATE;
