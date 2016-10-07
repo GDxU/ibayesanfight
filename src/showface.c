@@ -308,7 +308,7 @@ FAR U8 ShowGoodsControl(U8 *goods,U8 gcount,U8 x0,U8 y0,U8 x1,U8 y1)
                     }
                     break;
                 case VK_RIGHT:
-                    if (spcv[spc + 1] < 5)
+                    if (spcv[spc + 1] < GOODS_PROP_COUNT)
                     {
                         spc += 1;
                         showflag = 1;
@@ -344,14 +344,19 @@ FAR U8 ShowGoodsControl(U8 *goods,U8 gcount,U8 x0,U8 y0,U8 x1,U8 y1)
                 case VT_TOUCH_MOVE:
                 {
                     if (!touch.touched) break;
-                    // FIXME: 横向最大值计算问题
                     U8 zMax = 2;
 
                     Point p = touchListViewCalcTopLeftForMove(&touch, leftWhenTouchDown, zMax, 30, topWhenTouchDown, gcount - count, ASC_HGT);
 
                     if (spc != p.x || top != p.y) {
                         top = p.y;
-                        spc = p.x;
+                        if (p.x > spc) {
+                            if (spcv[spc + 1] < GOODS_PROP_COUNT) {
+                                spc = spc + 1;
+                            }
+                        } else {
+                            spc = p.x;
+                        }
                         showflag = 1;
                     }
                     break;
@@ -785,7 +790,7 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 initSelected,U8 x0,U8 y0,U8 x1,
                     }
                     break;
                 case VK_RIGHT:
-                    if (spcv[spc + 1] < 13)
+                    if (spcv[spc + 1] < PERSON_PROP_COUNT)
                     {
                         spc += 1;
                         showflag = 1;
@@ -829,7 +834,13 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 initSelected,U8 x0,U8 y0,U8 x1,
 
                     if (spc != p.x || top != p.y) {
                         top = p.y;
-                        spc = p.x;
+                        if (p.x > spc) {
+                            if (spcv[spc + 1] < PERSON_PROP_COUNT) {
+                                spc = spc + 1;
+                            }
+                        } else {
+                            spc = p.x;
+                        }
                         showflag = 1;
                     }
                     break;
