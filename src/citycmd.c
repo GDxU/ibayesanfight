@@ -553,6 +553,25 @@ U8 AlienateDrv(OrderType *Order)
     U8 randint;
     U8 rade;
     U8 ob;
+    static const char* sucessDialogs[] = {
+        /* 主多疑而不用，吾当如何处之！ */
+        "\xd6\xf7\xb6\xe0\xd2\xc9\xb6\xf8\xb2\xbb\xd3\xc3\xa3\xac\xce\xe1\xb5\xb1\xc8\xe7\xba\xce\xb4\xa6\xd6\xae\xa3\xa1",
+        /* 赏罚不明，何以服众！ */
+        "\xc9\xcd\xb7\xa3\xb2\xbb\xc3\xf7\xa3\xac\xba\xce\xd2\xd4\xb7\xfe\xd6\xda\xa3\xa1",
+        /* 优柔寡断，非明主之像！ */
+        "\xd3\xc5\xc8\xe1\xb9\xd1\xb6\xcf\xa3\xac\xb7\xc7\xc3\xf7\xd6\xf7\xd6\xae\xcf\xf1\xa3\xa1",
+        /* 鼠目寸光，岂为明主邪！ */
+        "\xca\xf3\xc4\xbf\xb4\xe7\xb9\xe2\xa3\xac\xc6\xf1\xce\xaa\xc3\xf7\xd6\xf7\xd0\xb0\xa3\xa1",
+    };
+
+    static const char* failDialogs[] = {
+        /* 天选之子，吾誓死守护！ */
+        "\xcc\xec\xd1\xa1\xd6\xae\xd7\xd3\xa3\xac\xce\xe1\xca\xc4\xcb\xc0\xca\xd8\xbb\xa4\xa3\xa1",
+        /* 鼠辈安敢行此卑鄙之事! */
+        "\xca\xf3\xb1\xb2\xb0\xb2\xb8\xd2\xd0\xd0\xb4\xcb\xb1\xb0\xb1\xc9\xd6\xae\xca\xc2!",
+        /* 疏不间亲，阁下自重！ */
+        "\xca\xe8\xb2\xbb\xbc\xe4\xc7\xd7\xa3\xac\xb8\xf3\xcf\xc2\xd7\xd4\xd6\xd8\xa3\xa1",
+    };
 
     ob = Order->Object;
 
@@ -590,13 +609,40 @@ U8 AlienateDrv(OrderType *Order)
         if (randint > rade)
             break;
 
+
         /*添加离间成功代码*/
         if (g_Persons[ob].Devotion > 4)
             g_Persons[ob].Devotion -= 4;
         else
             g_Persons[ob].Devotion = 0;
+        U8 devo = g_Persons[ob].Devotion;
+        U8 ind = 0;
+        if (devo > 80) {
+            ind = 0;
+        } else if (devo > 60) {
+            ind = 1;
+        } else if (devo > 40) {
+            ind = 2;
+        } else {
+            ind = 3;
+        }
+        ShowDialog(Order->Person, ob, (U8*)sucessDialogs[ind]);
+        goto tagRet;
     }while (0);
 
+    {
+        U8 devo = g_Persons[ob].Devotion;
+        U8 ind = 0;
+        if (devo > 80) {
+            ind = 0;
+        } else if (devo > 60) {
+            ind = 1;
+        } else {
+            ind = 2;
+        }
+        ShowDialog(Order->Person, ob, (U8*)failDialogs[ind]);
+    }
+tagRet:
     AddPerson(Order->City,Order->Person);
     return(1);
 }
@@ -664,10 +710,35 @@ U8 CanvassDrv(OrderType *Order)
         AddPerson(Order->City,o);
         g_Persons[o].Belong = g_Persons[p].Belong;
         g_Persons[o].Devotion = 40 + gam_rand() % 40;
-        if (g_Persons[p].Belong == g_PlayerKing + 1)
-            WonPersonNoet(o);
+        {
+            static const char* dialogs[] = {
+                /* 良禽择木而栖，贤臣择主而仕 */
+                "\xc1\xbc\xc7\xdd\xd4\xf1\xc4\xbe\xb6\xf8\xc6\xdc\xa3\xac\xcf\xcd\xb3\xbc\xd4\xf1\xd6\xf7\xb6\xf8\xca\xcb",
+                /* 伏处一方，唯待明主，其在君乎? */
+                "\xb7\xfc\xb4\xa6\xd2\xbb\xb7\xbd\xa3\xac\xce\xa8\xb4\xfd\xc3\xf7\xd6\xf7\xa3\xac\xc6\xe4\xd4\xda\xbe\xfd\xba\xf5?",
+                /* 闻君贤名久矣，愿为君牵马坠镫！ */
+                "\xce\xc5\xbe\xfd\xcf\xcd\xc3\xfb\xbe\xc3\xd2\xd3\xa3\xac\xd4\xb8\xce\xaa\xbe\xfd\xc7\xa3\xc2\xed\xd7\xb9\xef\xeb\xa3\xa1",
+                /* 固所愿也，不敢请尔! */
+                "\xb9\xcc\xcb\xf9\xd4\xb8\xd2\xb2\xa3\xac\xb2\xbb\xb8\xd2\xc7\xeb\xb6\xfb!",
+                /* 赴汤蹈火，在所不辞！ */
+                "\xb8\xb0\xcc\xc0\xb5\xb8\xbb\xf0\xa3\xac\xd4\xda\xcb\xf9\xb2\xbb\xb4\xc7\xa3\xa1",
+            };
+            ShowDialogRandom(Order->Person, o, (U8 **)dialogs, sizeof(dialogs)/sizeof(*dialogs));
+        }
+        goto ret;
     }while (0);
-
+    {
+        static const char* dialogs[] = {
+            /* 燕雀安知鸿鹄之志哉! */
+            "\xd1\xe0\xc8\xb8\xb0\xb2\xd6\xaa\xba\xe8\xf0\xc0\xd6\xae\xd6\xbe\xd4\xd5!",
+            /* 无能之辈，焉敢如此！ */
+            "\xce\xde\xc4\xdc\xd6\xae\xb1\xb2\xa3\xac\xd1\xc9\xb8\xd2\xc8\xe7\xb4\xcb\xa3\xa1",
+            /* 忠臣不仕二主！ */
+            "\xd6\xd2\xb3\xbc\xb2\xbb\xca\xcb\xb6\xfe\xd6\xf7\xa3\xa1",
+        };
+        ShowDialogRandom(Order->Person, o, (U8 **)dialogs, sizeof(dialogs)/sizeof(*dialogs));
+    }
+ret:
     AddPerson(Order->City,p);
     return(1);
 }
@@ -740,9 +811,28 @@ U8 CounterespiongeDrv(OrderType *Order)
         {
             g_Persons[pqptr[i]].Belong = o + 1;
         }
+        {
+            static const char* dialogs[] = {
+                /* 王侯将相，宁有种乎！ */
+                "\xcd\xf5\xba\xee\xbd\xab\xcf\xe0\xa3\xac\xc4\xfe\xd3\xd0\xd6\xd6\xba\xf5\xa3\xa1",
+                /* 揭竿而起，为民请命！ */
+                "\xbd\xd2\xb8\xcd\xb6\xf8\xc6\xf0\xa3\xac\xce\xaa\xc3\xf1\xc7\xeb\xc3\xfc\xa3\xa1",
+                /* 积粮聚兵，逐鹿天下！ */
+                "\xbb\xfd\xc1\xb8\xbe\xdb\xb1\xf8\xa3\xac\xd6\xf0\xc2\xb9\xcc\xec\xcf\xc2\xa3\xa1",
+            };
+            ShowDialogRandom(Order->Person, o, (U8 **)dialogs, sizeof(dialogs)/sizeof(*dialogs));
+        }
         BeNewKingNote(o);
     }while (0);
-
+    {
+        static const char* dialogs[] = {
+            /* 君臣相得，岂屑小所可趁也！ */
+            "\xbe\xfd\xb3\xbc\xcf\xe0\xb5\xc3\xa3\xac\xc6\xf1\xd0\xbc\xd0\xa1\xcb\xf9\xbf\xc9\xb3\xc3\xd2\xb2\xa3\xa1",
+            /* 赤胆忠心，誓佐明主定天下！ */
+            "\xb3\xe0\xb5\xa8\xd6\xd2\xd0\xc4\xa3\xac\xca\xc4\xd7\xf4\xc3\xf7\xd6\xf7\xb6\xa8\xcc\xec\xcf\xc2\xa3\xa1",
+        };
+        ShowDialogRandom(Order->Person, o, (U8 **)dialogs, sizeof(dialogs)/sizeof(*dialogs));
+    }
     AddPerson(Order->City,Order->Person);
     return(1);
 }

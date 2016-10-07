@@ -369,6 +369,8 @@ U8 GamGetKing(U8 num)
         if(pSLen < pTop + 6)
             gam_memset(g_FightPath + pSLen,' ',pTop + 6 - pSLen);
     }
+    g_FightPath[pIdx*6] = 0;
+
     /* 获取城市坐标指针 */
     gam_rect(WK_SX,WK_SY,WK_EX,WK_EY);
     ResLoadToMem(IFACE_STRID,dChoseKing,tbuf);
