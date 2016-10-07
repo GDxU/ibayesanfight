@@ -1018,7 +1018,7 @@ FAR U8 ConscriptionMake(U8 city)
                 }
                 arms = g_Cities[city].PeopleDevotion;
                 arms *= 20;
-                armsm = g_Cities[city].Money * 10;
+                armsm = min(g_Cities[city].Money * 10, 0xffff);
                 if (arms > armsm)
                 {
                     arms = armsm;
