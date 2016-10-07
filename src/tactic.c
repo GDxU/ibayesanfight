@@ -1321,14 +1321,21 @@ FAR U16 NumOperate(U16 min,U16 max)
                 case VT_TOUCH_MOVE:
                 {
                     I16 rng = max - min;
-
-                    I16 dx = touch.currentX - touch.startX;
+                    // x越大，粗调，x越小，微调
+                    // 微调，每10px加1
                     I16 dy = touch.currentY - touch.startY;
-                    I16 d0 = - dy * rng / SCR_HGT;
-                    I16 d1 = dx * rng / SCR_WID / 10;
 
-                    I16 d = valueWhenTouchDown + d0 + d1;
-                    donum = limitValueInRange(d, min, max);
+                    I16 d0 = - dy * rng / SCR_HGT;
+                    I16 d1 = - dy / 10;
+                    I16 d = d1;
+                    if (abs(d0) > abs(d1)) {
+                        U16 factor = limitValueInRange(touch.startX, 0, SCR_WID);
+                        if (factor < 15) factor = 0;
+                        U16 ratio = factor * 100 / SCR_WID;
+                        d = d1 + (d0 - d1) * (ratio) / 100;
+                    }
+
+                    donum = limitValueInRange(valueWhenTouchDown + d, min, max);
                     showflag = 1;
                     break;
                 }
