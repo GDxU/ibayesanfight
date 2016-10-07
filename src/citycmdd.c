@@ -41,7 +41,7 @@ FAR U8 BattleMake(U8 city)
     U8 *pqptr;
     U8 *str;
     U8 pcount;
-    U8 pcode;
+    U8 pcode = 0;
     U8 ocity;
     U8 odis;
     U8 xs,ys;
@@ -78,7 +78,10 @@ FAR U8 BattleMake(U8 city)
     {
         /*gam_clrlcd(WK_SX,WK_SY,WK_EX,WK_EY);*/
         ShowMapClear();
-        pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+        if (pcode >= pcount) {
+            pcode = pcount-1;
+        }
+        pcode = ShowPersonControl(pqptr,pcount,pcode,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
         if (0xff != pcode)
         {
             fpptr[i] = pqptr[pcode] + 1;
@@ -89,6 +92,7 @@ FAR U8 BattleMake(U8 city)
             break;
         }
         pcount = GetCityPersons(city,pqptr);
+        if (pcount == 0) break;
     }
     if (i)
     {
