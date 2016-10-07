@@ -816,7 +816,7 @@ FAR U8 InduceMake(U8 city)
                 OrderConsumeThew(pp,INDUCE);
 
                 OrderConsumeMoney(city,INDUCE);
-                order.OrderId = COUNTERESPIONAGE;
+                order.OrderId = INDUCE;
                 order.Person = pp;
                 order.City = city;
                 order.Object = pqptr[pcode];
