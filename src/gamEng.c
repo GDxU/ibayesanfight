@@ -867,6 +867,13 @@ EngineConfig g_engineConfig = {
     0
 };
 
+U8 g_engineDebug = 0;
+
+void GamSetDebug(U8 enabled)
+{
+    g_engineDebug = enabled;
+}
+
 void GamLoadEngineConfig(void) {
     ResItemGetN(IFACE_CONID, dEngineConfig, (U8*)&g_engineConfig, sizeof(g_engineConfig));
     FgtLoadConsts();   /* 初始化战斗参数 */

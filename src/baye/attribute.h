@@ -218,6 +218,10 @@ typedef struct {
 
 extern EngineConfig g_engineConfig;
 
+extern U8 g_engineDebug;
+
+void GamSetDebug(U8 enabled);
+
 U16 add_16(U16 dst, int n);
 
 #define ADD16(d, n) d = add_16(d, n)

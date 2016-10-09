@@ -41,6 +41,12 @@ void sendTouchEvent(int event, int x, int y)
     touchSendTouchEvent((U16)event, (I16)x, (I16)y);
 }
 
+EMSCRIPTEN_KEEPALIVE
+void bayeSetDebug(int debug)
+{
+    GamSetDebug(debug);
+}
+
 int main(int argc, char*argv[])
 {
     emscripten_sleep(1);
