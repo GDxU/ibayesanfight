@@ -47,9 +47,16 @@ void bayeSetDebug(int debug)
     GamSetDebug(debug);
 }
 
+EMSCRIPTEN_KEEPALIVE
+void setLCDSize(int width, int height)
+{
+    g_screenWidth = width;
+    g_screenHeight = height;
+}
+
 int main(int argc, char*argv[])
 {
-    emscripten_sleep(1);
+    emscripten_sleep(1); // give javascript chance to run init
     GamSetResourcePath((U8*)"/rom/dat.lib", (U8*)"/rom/font.bin");
     GamSetAltLibPath((U8*)"/data/dat.lib");
     GamSetDataDir((U8*)"/data/");

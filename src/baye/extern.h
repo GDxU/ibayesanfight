@@ -82,7 +82,7 @@ extern U8 g_FromSave;
 
 /*变量定义*/
 /*------------------------------------------*/
-extern U8 citymap[SHOWMAP_HS][SHOWMAP_WS];	/*当前显示城市地图*/
+extern U8 citymap[SHOWMAP_HS_MAX][SHOWMAP_WS_MAX];	/*当前显示城市地图*/
 extern U8 cavpdb,cavps;				/*战争俘虏临时变量*/
 
 #endif	/* _VAR_MAL_ */
