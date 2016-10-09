@@ -371,6 +371,10 @@ U8 SurrenderDrv(OrderType *Order)
             return(1);
         }
 
+        if (g_engineDebug) {
+            goto tagSuccess;
+        }
+
         rade = g_Persons[p].IQ - pptr->IQ;
         rade += 50;
         randint = gam_rand() % 100;
@@ -409,6 +413,7 @@ U8 SurrenderDrv(OrderType *Order)
         if (randint < rade)
             break;
 
+    tagSuccess:
         /*添加招降成功代码*/
         pptr->Belong = g_Persons[p].Belong;
         pptr->Devotion = 40 + gam_rand() % 40;

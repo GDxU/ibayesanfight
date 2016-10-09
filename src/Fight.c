@@ -161,6 +161,10 @@ void FgtDealMan(void)
         FgtSetFocus(pTer);			/* 敌人处理完后，将光标移回玩家主将 */
         break;
     }
+    if (g_engineDebug) {
+        g_FgtOver = FGT_WON;
+        return;
+    }
     while(!g_FgtOver)
     {
         idx = FgtGetControl();
