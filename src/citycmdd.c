@@ -92,7 +92,6 @@ FAR U8 BattleMake(U8 city)
             break;
         }
         pcount = GetCityPersons(city,pqptr);
-        if (pcount == 0) break;
     }
     if (i)
     {
