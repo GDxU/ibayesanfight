@@ -388,9 +388,10 @@ FAR U8 PersonUpDatadate(void)
         }
     }
 
+    U16 l = ResGetItemLen(GENERAL_CON, g_PIdx);
     pinf = ResLoadToCon(GENERAL_CON,g_PIdx,g_CBnkPtr);
 
-    for (p = 0,t = 0;p < PERSON_MAX;p ++,t += 3)
+    for (p = 0,t = 0;p < PERSON_MAX && t < l;p ++,t += 3)
     {
         if ((pinf[t] + PERSON_APPEAR_AGE) == g_YearDate)
         {
