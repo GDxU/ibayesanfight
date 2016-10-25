@@ -74,6 +74,9 @@ FAR U8 FgtDrvCmd(FGTCMD *pcmd)
             pos->x = g_BakUpX;
             pos->y = g_BakUpY;
             FgtSetFocus(idx);
+            if (g_engineConfig.fixFoodOverFlow) {
+                return 0;
+            }
         case CMD_REST:
             FgtResumeMp(idx);
             return 0;
