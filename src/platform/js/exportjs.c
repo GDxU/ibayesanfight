@@ -53,7 +53,7 @@ int bayeGetCurrentPeriod()
 EMSCRIPTEN_KEEPALIVE
 int bayeCityAddGoods(U8 city, U8 goods)
 {
-    return AddGoods(city, goods);
+    return AddGoodsEx(city, goods, 1);
 }
 
 EMSCRIPTEN_KEEPALIVE

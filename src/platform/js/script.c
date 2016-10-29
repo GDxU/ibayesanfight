@@ -13,17 +13,21 @@
 
 void script_init(void)
 {
-    U8* script = ResLoadStringWithId(ENGINE_SCRIPT);
-    if (script == NULL) {
-        return;
-    }
-    EM_ASM_INT({
+    EM_ASM({
         if (window.baye == undefined) {
-            window.baye = {};
+            window.baye = {
+                methods: {}
+            };
         }
-        var script = UTF8ToString($0);
-        eval(script);
-    }, script);
+    });
+
+    U8* script = ResLoadStringWithId(ENGINE_SCRIPT);
+    if (script) {
+        EM_ASM_INT({
+            var script = UTF8ToString($0);
+            eval(script);
+        }, script);
+    }
 }
 
 int call_script(const char* name, Object* context)

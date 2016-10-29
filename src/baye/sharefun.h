@@ -6,6 +6,7 @@
 CITYEDIT_C U8 AddPerson(U8 city,U8 person);
 CITYEDIT_C U8 DelPerson(U8 city,U8 person);
 CITYEDIT_C U8 AddGoods(U8 city,U8 goods);
+CITYEDIT_C U8 AddGoodsEx(U8 city, U8 goods, U8 found);
 CITYEDIT_C U8 DelGoods(U8 city,U8 goods);
 CITYEDIT_C U8 ClearOrderQueue(void);
 CITYEDIT_C U8 SearchRoad(U8 sc,U8 xs,U8 ys,U8 ob,U8 xo,U8 yo);

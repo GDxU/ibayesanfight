@@ -50,7 +50,6 @@ U8 GamPicMenu(U16 picID,U16 speID, const Rect *buttonsRect, U8 buttonsCount, U8 
 void GamRcdIFace(U8 count);
 bool GamSaveRcd(U8 idx);
 bool GamLoadRcd(U8 idx);
-void GamLoadEngineConfig(void);
 
 #define	DBG_MEM_AFTER	0
 #define	DBG_MEM_BEFURE	1
@@ -72,9 +71,6 @@ FAR void GamBaYeEng(void)
         GamShowErrInf(0);
         return;
     }
-
-    /* 从lib读取引擎参数 */
-    GamLoadEngineConfig();
 
     /* 显示游戏开始动画 */
     GamMovie(MAIN_SPE);

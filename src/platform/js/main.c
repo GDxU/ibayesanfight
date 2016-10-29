@@ -12,7 +12,7 @@
 #include	"baye/data-bind.h"
 #include	"baye/script.h"
 
-#include <emscripten.h>
+#include	"exportjs.c"
 
 FAR U8 GamConInit(void);
 FAR void GamBaYeEng(void);

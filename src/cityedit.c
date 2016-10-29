@@ -138,7 +138,11 @@ FAR U8 DelPerson(U8 city,U8 person)
  *		----		----			-----------
  *		陈泽伟		2005-6-3 14:50	基本功能完成
  ******************************************************************************/
-FAR U8 AddGoods(U8 city,U8 goods)
+FAR U8 AddGoods(U8 city,U8 goods) {
+    return AddGoodsEx(city, goods, 0);
+}
+
+FAR U8 AddGoodsEx(U8 city, U8 goods, U8 found)
 {
     U8 i;
     U8 qnum;
@@ -156,6 +160,9 @@ FAR U8 AddGoods(U8 city,U8 goods)
         g_GoodsQueue[i] = g_GoodsQueue[i - 1];
     }
 
+    if (found) {
+        goods |= 0x80;
+    }
     g_GoodsQueue[qnum] = goods;
     g_Cities[city].Tools += 1;
 
