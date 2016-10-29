@@ -11,7 +11,6 @@
 #include	"baye/bind-objects.h"
 #include	"baye/data-bind.h"
 #include	"baye/script.h"
-#include    "touch.h"
 
 #include <emscripten.h>
 
@@ -26,34 +25,6 @@ static void _lcd_flush_cb(char*buffer) {
     }, buffer);
 }
 
-EMSCRIPTEN_KEEPALIVE
-void sendKey(int key)
-{
-    MsgType msg;
-    msg.type = VM_CHAR_FUN;
-    msg.param = key;
-    GuiPushMsg(&msg);
-}
-
-EMSCRIPTEN_KEEPALIVE
-void sendTouchEvent(int event, int x, int y)
-{
-    touchSendTouchEvent((U16)event, (I16)x, (I16)y);
-}
-
-EMSCRIPTEN_KEEPALIVE
-void bayeSetDebug(int debug)
-{
-    GamSetDebug(debug);
-}
-
-EMSCRIPTEN_KEEPALIVE
-void setLCDSize(int width, int height)
-{
-    g_screenWidth = width;
-    g_screenHeight = height;
-}
-
 int main(int argc, char*argv[])
 {
     emscripten_sleep(1); // give javascript chance to run init
@@ -62,7 +33,9 @@ int main(int argc, char*argv[])
     GamSetDataDir((U8*)"/data/");
     GamSetLcdFlushCallback(_lcd_flush_cb);
     GamConInit();
-    script_init();
+    if (g_engineConfig.enableScript) {
+        script_init();
+    }
     GamBaYeEng();
 
     EM_ASM({

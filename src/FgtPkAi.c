@@ -1011,6 +1011,8 @@ static void AdvancedCmdRng(U8 type, U8 param, U8 idx) {
      人物属性
      人物
      */
+    if (!g_engineConfig.enableScript) return;
+
     BuiltAtkAttr(0, idx);
 
     Object* context = object_new(8);

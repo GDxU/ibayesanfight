@@ -1,6 +1,8 @@
 #ifndef	SHAREFUN_H
 #define	SHAREFUN_H
 
+#include "sources.h"
+
 CITYEDIT_C U8 AddPerson(U8 city,U8 person);
 CITYEDIT_C U8 DelPerson(U8 city,U8 person);
 CITYEDIT_C U8 AddGoods(U8 city,U8 goods);
