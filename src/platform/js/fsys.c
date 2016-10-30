@@ -231,7 +231,15 @@ static U8* getValue(const U8*key) {
 
     int value = EM_ASM_INT({
         var key = UTF8ToString($0);
-        var value = window.localStorage["baye/" + key];
+        var value = "";
+        var filename = "baye/" + key;
+
+        if (window.bayeLoadFileContent) {
+            value = window.bayeLoadFileContent(filename);
+        } else {
+            value = window.localStorage[filename];
+        }
+
         if (value) {
             var buffer = Module._malloc(value.length+1);
             Module.writeStringToMemory(value, buffer, false);
@@ -247,7 +255,13 @@ static void setValue(const U8*key, const U8*value) {
     EM_ASM_({
         var key = UTF8ToString($0);
         var value = UTF8ToString($1);
-        window.localStorage["baye/" + key] = value;
+        var filename = "baye/" + key;
+
+        if (window.bayeSaveFileContent) {
+            window.bayeSaveFileContent(filename, value);
+        } else {
+            window.localStorage[filename] = value;
+        }
     }, (int)key, (int)value);
 }
 
