@@ -21,7 +21,7 @@ void GamSetLcdFlushCallback(void(*lcd_fluch_cb)(char*buffer));
 
 static void _lcd_flush_cb(char*buffer) {
     EM_ASM_INT ({
-        lcdFlushBuffer($0);
+        bayeFlushLcdBuffer($0);
     }, buffer);
 }
 
@@ -39,7 +39,7 @@ int main(int argc, char*argv[])
     GamBaYeEng();
 
     EM_ASM({
-        goHome();
+        bayeExit();
     });
     return 0;
 }

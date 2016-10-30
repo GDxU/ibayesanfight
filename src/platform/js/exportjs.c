@@ -17,7 +17,7 @@
 #include    "touch.h"
 
 EMSCRIPTEN_KEEPALIVE
-void sendKey(int key)
+void bayeSendKey(int key)
 {
     MsgType msg;
     msg.type = VM_CHAR_FUN;
@@ -26,13 +26,13 @@ void sendKey(int key)
 }
 
 EMSCRIPTEN_KEEPALIVE
-void sendTouchEvent(int event, int x, int y)
+void bayeSendTouchEvent(int event, int x, int y)
 {
     touchSendTouchEvent((U16)event, (I16)x, (I16)y);
 }
 
 EMSCRIPTEN_KEEPALIVE
-void setLCDSize(int width, int height)
+void bayeSetLcdSize(int width, int height)
 {
     g_screenWidth = width;
     g_screenHeight = height;
