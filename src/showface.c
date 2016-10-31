@@ -142,6 +142,9 @@ void GetGoodsProStr(U8 goods,U8 pro,U8 *str)
             case 3:		/*极兵*/
                 idx = GOODS_ARM3;
                 break;
+            default:
+                idx = ATRR_STR11 + gptr->arm-4;
+                return;
         }
             ResLoadToMem(STRING_CONST,idx,str);
             break;

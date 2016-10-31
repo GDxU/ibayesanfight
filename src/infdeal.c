@@ -455,10 +455,12 @@ FAR U8 AddGoodsPerson(U8 goods,U8 person)
     GOODS *gptr;
 
     gptr = (GOODS *) ResLoadToCon(GOODS_RESID,1,g_CBnkPtr);
-    g_Persons[person].Force += gptr[goods].at;
-    g_Persons[person].IQ += gptr[goods].iq;
-    switch (gptr[goods].arm)
+    U8 arm = gptr[goods].arm;
+
+    switch (arm)
     {
+        case 0:
+            break;
         case 1:		/*水兵*/
             g_Persons[person].ArmsType = ARM_SHUIJUN;
             break;
@@ -476,7 +478,13 @@ FAR U8 AddGoodsPerson(U8 goods,U8 person)
                 break;
             }
             return(0xff);
+        default:
+            g_Persons[person].ArmsType = arm-4;
+            break;
     }
+
+    g_Persons[person].Force += gptr[goods].at;
+    g_Persons[person].IQ += gptr[goods].iq;
     return(gptr[goods].useflag);
 }
 
