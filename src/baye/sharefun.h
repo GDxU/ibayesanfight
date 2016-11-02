@@ -176,7 +176,7 @@ INFDEAL_C void ShowPersonHead(U8 x,U8 y,U8 id);
 INFDEAL_C void ShowGReport(U8 person,U8 *str);
 FAR void ShowDialog(U8 commander, U8 reporter,U8 *str);
 FAR void ShowDialogRandom(U8 commander, U8 reporter, U8 **str, U8 count);
-INFDEAL_C void SetGoods(U8 goods);
+INFDEAL_C void SetGoods(U8 city, U8 goods);
 INFDEAL_C void SetGoodsByIndex(U8 goods);
 INFDEAL_C U8 GetCityPGoods(U8 city,U8 *gqueue);
 INFDEAL_C U8 GetCityDispGoods(U8 city,U8 *gqueue);

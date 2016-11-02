@@ -635,13 +635,13 @@ FAR void ShowGReport(U8 person,U8 *str)
  *		----		----			-----------
  *		陈泽伟		2005-8-19 11:22	基本功能完成
  ******************************************************************************/
-FAR void SetGoods(U8 goods)
+FAR void SetGoods(U8 city, U8 goods)
 {
     U8 qc;
-    U8 i;
+    U8 i = g_Cities[city].ToolQueue;
 
-    qc = g_Cities[CITY_MAX - 1].ToolQueue + g_Cities[CITY_MAX - 1].Tools;
-    for (i = 0;i < qc;i ++)
+    qc = i + g_Cities[city].Tools;
+    for (;i < qc;i++)
     {
         if ((g_GoodsQueue[i] & 0x7f) == goods && !(g_GoodsQueue[i] & 0x80))
         {

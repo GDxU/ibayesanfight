@@ -241,7 +241,7 @@ U8 SearchDrv(OrderType *Order)
                                     ShowGReport(person,str);
                                     pss = 1;
                                 }
-                                SetGoods(p);
+                                SetGoods(Order->City, p);
                             }
                         }
                         break;
