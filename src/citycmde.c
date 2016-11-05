@@ -377,6 +377,8 @@ static U16 needMoney(U8 order) {
  ******************************************************************************/
 FAR U8 IsMoney(U8 city,U8 order)
 {
+    if (g_engineDebug) return 1;
+
     if (g_Cities[city].Money >= needMoney(order))
         return(1);
     else
@@ -423,6 +425,8 @@ FAR void OrderConsumeMoney(U8 city,U8 order)
 FAR U8 IsManual(U8 person,U8 order)
 {
     U8 *ptr;
+    
+    if (g_engineDebug) return 1;
 
     ptr = ResLoadToCon(IFACE_CONID,ConsumeThew,g_CBnkPtr);
     if (g_Persons[person].Thew >= ptr[order])

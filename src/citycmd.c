@@ -142,6 +142,9 @@ U8 SearchDrv(OrderType *Order)
     person = Order->Person;
     pb = g_Persons[person].Belong;
     iq = g_Persons[person].IQ;
+
+    if (g_engineDebug) pss = 1;
+
     switch (pss)
     {
         case 0:
@@ -149,6 +152,7 @@ U8 SearchDrv(OrderType *Order)
         case 1:
             pss = 0;
             rnd = gam_rand() % 150;
+            if (g_engineDebug) rnd = gam_rand() % 2;
             if (rnd < iq)
             {
                 switch (rnd % 2)
@@ -891,8 +895,9 @@ U8 InduceDrv(OrderType *Order)
     {
         if (o == g_PlayerKing)
             break;
-
         pb = g_Persons[p].Belong;
+        if (pb == g_PlayerKing + 1 && g_engineDebug)
+            goto suc;
         if (GetKingCitys(pb - 1,cqptr) < (GetKingCitys(g_Persons[o].Belong - 1,cqptr) * 2))
             break;
 
@@ -927,6 +932,7 @@ U8 InduceDrv(OrderType *Order)
         randint = gam_rand() % 100;
         if (randint > rade)
             break;
+    suc:
 
         /*添加劝降成功代码*/
         pqptr = SHARE_MEM + CITY_MAX;
