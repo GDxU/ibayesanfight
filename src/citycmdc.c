@@ -418,7 +418,7 @@ FAR U8 MoveMake(U8 city)
     U8 *pqptr;
     U8 *str;
     U8 pcount;
-    U8 pcode;
+    U8 pcode = 0;
     U8 p = '\0';
     U8 ocity;
     U8 odis;
@@ -428,84 +428,86 @@ FAR U8 MoveMake(U8 city)
     str = SHARE_MEM + 3000;
     pqptr = SHARE_MEM;
 
-    pcount = 0;
+    pcount = GetCityPersons(city,pqptr);
+    if (!pcount)
+    {// 没人
+        ShowConstStrMsg(STR_NOPERSON);
+        return 0;
+    }
+
     while (1)
-    {
-        if (0 == pcount)
+    {// 先选城池
+        xs = g_CityPos.setx;
+        ys = g_CityPos.sety;
+        str = SHARE_MEM + 3000;
+        ResLoadToMem(STRING_CONST,STR_OBJ,str);
+        ShowMapClear();
+        ShowGReport(p,str);
+        ocity = GetCitySet(&g_CityPos);
+        if (0xff == ocity)
+        {//取消
+            return 0;
+        }
+        else if (ocity != city)
         {
-            pcount = GetCityPersons(city,pqptr);
-            if (!pcount)
+            if (!g_Cities[ocity].Belong)
             {
-                ShowConstStrMsg(STR_NOPERSON);
-                break;
+                ShowConstStrMsg(NOTE_STR5);
             }
-            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-            if (0xff == pcode)
-                break;
-            p = pqptr[pcode];
-            if (!IsManual(p,MOVE))
+            else if (g_Cities[ocity].Belong != g_Cities[city].Belong)
             {
-                ShowConstStrMsg(NOTE_STR9);
-                pcount = 0;
+                /*提示敌方城池*/
+                ShowConstStrMsg(NOTE_STR3);
                 continue;
             }
 
-            pcount = 1;
+
+            odis = SearchRoad(city,xs,ys,ocity,g_CityPos.setx,g_CityPos.sety);
+            if (0xff != odis)
+            {
+                break;
+            }
+            else
+            {
+                /*提示无法到达*/
+                ShowConstStrMsg(NOTE_STR4);
+            }
         }
-        else if (1 == pcount)
+    }
+
+    while (1)
+    {
+        pcount = GetCityPersons(city,pqptr);
+        if (!pcount)
         {
-            xs = g_CityPos.setx;
-            ys = g_CityPos.sety;
-            str = SHARE_MEM + 3000;
-            ResLoadToMem(STRING_CONST,STR_OBJ,str);
-            ShowMapClear();
-            ShowGReport(p,str);
-            ocity = GetCitySet(&g_CityPos);
-            if (0xff == ocity)
-            {
-                pcount = 0;
-            }
-            else if (ocity != city)
-            {
-                if (!g_Cities[ocity].Belong)
-                {
-                    ShowConstStrMsg(NOTE_STR5);
-                }
-                else if (g_Cities[ocity].Belong != g_Cities[city].Belong)
-                {
-                    /*提示敌方城池*/
-                    ShowConstStrMsg(NOTE_STR3);
-                    continue;
-                }
+            return 1;
+        }
+        ShowMapClear();
+        pcode = ShowPersonControl(pqptr,pcount,pcode,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+        if (0xff == pcode)
+            break;
+        p = pqptr[pcode];
+        if (!IsManual(p,MOVE))
+        {
+            ShowConstStrMsg(NOTE_STR9);
+            pcount = 0;
+            continue;
+        }
+        if (g_engineConfig.fixThewOverFlow) {
+            OrderConsumeThew(p, MOVE);
+        } else {
+            OrderConsumeThew(p, TRANSPORTATION);
+        }
 
-
-                odis = SearchRoad(city,xs,ys,ocity,g_CityPos.setx,g_CityPos.sety);
-                if (0xff != odis)
-                {
-                    if (g_engineConfig.fixThewOverFlow) {
-                        OrderConsumeThew(p, MOVE);
-                    } else {
-                        OrderConsumeThew(p, TRANSPORTATION);
-                    }
-
-                    ResLoadToMem(STRING_CONST,P_SAY_STR31,str);
-                    ShowGReport(p,str);
-                    order.OrderId = MOVE;
-                    order.Person = p;
-                    order.City = city;
-                    order.Object = ocity;
-                    order.TimeCount = odis;
-                    if (AddOrderHead(&order)) {
-                        DelPerson(city,p);
-                    }
-                    break;
-                }
-                else
-                {
-                    /*提示无法到达*/
-                    ShowConstStrMsg(NOTE_STR4);
-                }
-            }
+        ResLoadToMem(STRING_CONST,P_SAY_STR31,str);
+        ShowGReport(p,str);
+        order.OrderId = MOVE;
+        order.Person = p;
+        order.City = city;
+        order.Object = ocity;
+        order.TimeCount = odis;
+        if (AddOrderHead(&order)) {
+            DelPerson(city,p);
         }
     }
 
