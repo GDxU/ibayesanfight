@@ -46,7 +46,6 @@
 FAR U8 AddPerson(U8 city,U8 person)
 {
     U8 i;
-    U8 qnum;
 
     if (city >= CITY_MAX)
         return(0);
@@ -54,20 +53,18 @@ FAR U8 AddPerson(U8 city,U8 person)
     if (person >= PERSON_MAX)
         return(0);
 
-    qnum  = g_Cities[city].PersonQueue + g_Cities[city].Persons;
-
-    for (i = PERSON_MAX - 1;i > qnum;i --)
+    for (i = PERSON_MAX - 1;i > g_Cities[city].PersonQueue;i --)
     {
         g_PersonsQueue[i] = g_PersonsQueue[i - 1];
     }
-
-    g_PersonsQueue[qnum] = person;
-    g_Cities[city].Persons += 1;
 
     for (i = city + 1;i < CITY_MAX;i ++)
     {
         g_Cities[i].PersonQueue += 1;
     }
+
+    g_PersonsQueue[g_Cities[city].PersonQueue] = person;
+    g_Cities[city].Persons += 1;
 
     return(1);
 }
