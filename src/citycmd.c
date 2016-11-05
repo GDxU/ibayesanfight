@@ -937,7 +937,7 @@ U8 InduceDrv(OrderType *Order)
             g_Cities[cqptr[i]].Belong = pb;
             for (j = 0;j < pcount;j ++)
             {
-                g_Persons[pqptr[i]].Belong = pb;
+                g_Persons[pqptr[j]].Belong = pb;
             }
         }
         wf = 1;
