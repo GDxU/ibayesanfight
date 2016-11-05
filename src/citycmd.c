@@ -940,6 +940,22 @@ U8 InduceDrv(OrderType *Order)
                 g_Persons[pqptr[j]].Belong = pb;
             }
         }
+
+        // 处理不在城中的人员
+        for (i = 0;i < PERSON_MAX;i ++)
+        {
+            U8 belong = g_Persons[i].Belong;
+            if (!belong) continue;
+
+            belong -= 1;
+            if (belong == o) {
+                if (belong == i) {
+                    g_Persons[i].Belong = pb;
+                } else {
+                    g_Persons[i].Belong = 0;
+                }
+            }
+        }
         wf = 1;
     }while (0);
 
