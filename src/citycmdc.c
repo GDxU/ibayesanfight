@@ -442,7 +442,7 @@ FAR U8 MoveMake(U8 city)
         str = SHARE_MEM + 3000;
         ResLoadToMem(STRING_CONST,STR_OBJ,str);
         ShowMapClear();
-        ShowGReport(p,str);
+        ShowGReport(g_PlayerKing,str);
         ocity = GetCitySet(&g_CityPos);
         if (0xff == ocity)
         {//取消
