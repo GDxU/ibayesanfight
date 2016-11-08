@@ -762,10 +762,13 @@ void FgtUnfurlTree(U8 idx,U8 *buf,U8 *len)
     *len = plen;
 }
 
+FAR void FgtLoadJNConsts(void);
+
 FAR void FgtLoadConsts(void) {
     ResItemGetN(IFACE_CONID, dFgtIntMove, FgtIntMove, sizeof(FgtIntMove));
     ResItemGetN(IFACE_CONID, dSubduModu, (U8*)SubduModu, sizeof(SubduModu));
     ResItemGetN(IFACE_CONID, dAtkModulus, (U8*)AtkModulus, sizeof(AtkModulus));
     ResItemGetN(IFACE_CONID, dDfModulus, (U8*)DfModulus, sizeof(DfModulus));
     ResItemGetN(IFACE_CONID, dTerrDfModu, (U8*)TerrDfModu, sizeof(TerrDfModu));
+    FgtLoadJNConsts();
 }

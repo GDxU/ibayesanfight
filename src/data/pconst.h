@@ -49,4 +49,13 @@ enum {
     dDfModulus,
     /*各地形防御系数*/
     dTerrDfModu,
+
+    kdJNSpeId,
+    /* 技能播放的起始和终止针 */
+    kdJNSpeSFrm,
+    kdJNSpeEFrm,
+    /* 技能播放的坐标 */
+    kdJNSpeSX,
+    /* 技能背景模式-1为有背景 0为没背景 */
+    kdJNMode,
 };

@@ -178,16 +178,27 @@ FAR void FgtShowHlp()
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
 /* 技能的特效id */
-const U16 dJNSpeId[JN_MAX] = {QIBING_SPE,QIBING_SPE,QIBING_SPE,QIBING_SPE,FIRE_SPE,WOOD_SPE,WOOD_SPE,BUBING_SPE,
+static U8 dJNSpeId[JN_MAX] = {QIBING_SPE,QIBING_SPE,QIBING_SPE,QIBING_SPE,FIRE_SPE,WOOD_SPE,WOOD_SPE,BUBING_SPE,
     JIANBING_SPE,JIANBING_SPE,FIRE_SPE,WATER_SPE,BUMP_SPE,FENG_SPE,FENG_SPE,LIUYAN_SPE,YUAN_SPE,FIRE_SPE,WATER_SPE,FENG_SPE,0,
     0,ZHEN_SPE,XJING_SPE,0,0,0,0,YUAN_SPE};
 /* 技能播放的起始和终止针 */
-const U8 dJNSpeSFrm[JN_MAX] = {11,11,11,11,0,0,0,10,9,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-const U8 dJNSpeEFrm[JN_MAX] = {21,21,21,21,7,7,0,20,17,17,7,7,14,7,7,7,7,7,7,7,0,0,7,7,0,0,0,0,7};
+static U8 dJNSpeSFrm[JN_MAX] = {11,11,11,11,0,0,0,10,9,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+static U8 dJNSpeEFrm[JN_MAX] = {21,21,21,21,7,7,0,20,17,17,7,7,14,7,7,7,7,7,7,7,0,0,7,7,0,0,0,0,7};
 /* 技能播放的坐标 */
-const U8 dJNSpeSX[JN_MAX] = {0,0,0,0,33,33,33,0,0,0,33,33,0,33,33,33,33,33,33,33,0,0,33,33,0,0,0,0,33};
+static U8 dJNSpeSX[JN_MAX] = {0,0,0,0,33,33,33,0,0,0,33,33,0,33,33,33,33,33,33,33,0,0,33,33,0,0,0,0,33};
 /* 技能背景模式-1为有背景 0为没背景 */
-const U8 dJNMode[JN_MAX] = {1,1,1,1,0,0,0,1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+static U8 dJNMode[JN_MAX] = {1,1,1,1,0,0,0,1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+
+void FgtInitArmsJNNum(void);
+FAR void FgtLoadJNConsts(void) {
+    ResItemGetN(IFACE_CONID, kdJNSpeId, dJNSpeId, sizeof(dJNSpeId));
+    ResItemGetN(IFACE_CONID, kdJNSpeSFrm, dJNSpeSFrm, sizeof(dJNSpeSFrm));
+    ResItemGetN(IFACE_CONID, kdJNSpeEFrm, dJNSpeEFrm, sizeof(dJNSpeEFrm));
+    ResItemGetN(IFACE_CONID, kdJNSpeSX, dJNSpeSX, sizeof(dJNSpeSX));
+    ResItemGetN(IFACE_CONID, kdJNMode, dJNMode, sizeof(dJNMode));
+    FgtInitArmsJNNum();
+}
+
 U8 FgtJNAction(FGTCMD *pcmd)
 {
     U8	param,sIdx,aIdx;

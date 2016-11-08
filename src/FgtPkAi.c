@@ -390,7 +390,18 @@ U8 FgtCanUse(U8 param,U8 idx)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-const U8 dArmsJNNum[]={3,4,3,3,4,9};
+U8 dArmsJNNum[]={3,4,3,3,4,9};
+void FgtInitArmsJNNum(void)
+{
+    U8* ptr = ResLoadToCon(IFACE_CONID, dFgtJNArray, g_CBnkPtr);
+    for (int i = 0; i < sizeof(dArmsJNNum); i++) {
+        U8 n = 0;
+        for(; n < SKILL_NMAX; n++) {
+            if (ptr[i*SKILL_NMAX+n] == 0) break;
+        }
+        dArmsJNNum[i] = n;
+    }
+}
 void FgtGetSklBuf(U8 id,U8 *buf)
 {
     U8	type,len;

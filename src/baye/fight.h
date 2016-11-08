@@ -21,7 +21,7 @@
 #define	FGT_LOSE		2		/* 战斗失败(前10个将) */
 #define	FGT_EXPMAX		100		/* 最大经验值 */
 #define	NO_MOV			1		/* 被定身时的移动力量 */
-#define	JN_MAX			29		/* 最大技能序号 */
+#define	JN_MAX			100		/* 最大技能序号 */
 #define	MNU_EXIT		0xFF		/* 菜单中跳出 */
 
 /*------------------------
