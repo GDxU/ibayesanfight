@@ -786,6 +786,14 @@ bool GamLoadRcd(U8 idx)
     gam_fread((U8 *)FIGHTERS,10,FIGHT_ORDER_MAX,fp);
     gam_fread((U8 *)ORDERQUEUE,sizeof(OrderType), orderQueueLen, fp);
     gam_fread((U8 *)g_Cities,sizeof(CityType),CITY_MAX,fp);
+
+    if (version >= 0x83) {
+        int seed = 0;
+        gam_fread((U8 *)&seed,sizeof(seed), 1, fp);
+        if (g_engineConfig.disableSL) {
+            gam_srand(seed);
+        }
+    }
     
     gam_fclose(fp);
     return true;	
@@ -819,7 +827,7 @@ bool GamSaveRcd(U8 idx)
         return false;
     }
     
-    U8 verFlag = 0x82;
+    U8 verFlag = 0x83;
     gam_fwrite((U8 *)&verFlag,1,1,fp);
     gam_fwrite((U8 *)&g_PIdx,1,1,fp);
     gam_fwrite((U8 *)&g_PlayerKing,1,1,fp);
@@ -848,6 +856,10 @@ bool GamSaveRcd(U8 idx)
     gam_fwrite((U8 *)FIGHTERS,10,FIGHT_ORDER_MAX,fp);
     gam_fwrite((U8 *)ORDERQUEUE,sizeof(OrderType),ORDER_MAX,fp);
     gam_fwrite((U8 *)g_Cities,sizeof(CityType),CITY_MAX,fp);
+    {
+        int seed = gam_seed();
+        gam_fwrite((U8 *)&seed,sizeof(seed), 1,fp);
+    }
     
     gam_fclose(fp);
     return true;	

@@ -209,3 +209,20 @@ FAR void GamGetLastMsg(GMType *pMsg)
 {
     *pMsg = lastMsg;
 }
+
+static unsigned int seed = 0;
+
+int gam_rand(void)
+{
+    return rand_r(&seed);
+}
+
+void gam_srand(unsigned int seed_)
+{
+    seed = seed_;
+}
+
+int gam_seed(void)
+{
+    return seed;
+}

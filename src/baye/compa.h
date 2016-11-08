@@ -10,8 +10,12 @@ typedef	char bool;
  通用函数的宏替换
  +++++++++++++++*/
 /* 随机函数 */
-#define	gam_srand(seed)		srand(seed)		/* 替换A系列系统中的随机初始化函数 */
-#define	gam_rand()		rand()			/* 替换A系列系统中的随机函数 */
+//#define	gam_srand(seed)		srand(seed)		/* 替换A系列系统中的随机初始化函数 */
+//#define	gam_rand()		_gam_rand()			/* 替换A系列系统中的随机函数 */
+int gam_rand(void);
+void gam_srand(unsigned int seed);
+int gam_seed(void);
+
 /* 内存函数 */
 #define	gam_memcpy(a,s,l)	memcpy(a,s,l)			/* 替换A系列系统中常驻的内存拷贝函数 */
 #define	gam_memset(buf,val,len)	memset(buf,val,len)			/* 替换A系列系统中的内存填充函数 */
