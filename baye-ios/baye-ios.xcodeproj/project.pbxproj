@@ -92,6 +92,8 @@
 		148718D61B7FB87D00AC88EB /* itoa.c in Sources */ = {isa = PBXBuildFile; fileRef = 1444A9B01B7BA09C0085EC83 /* itoa.c */; };
 		148718DB1B803BE100AC88EB /* dat.lib in Resources */ = {isa = PBXBuildFile; fileRef = 148718D91B803BE100AC88EB /* dat.lib */; };
 		148718DC1B803BE100AC88EB /* font.bin in Resources */ = {isa = PBXBuildFile; fileRef = 148718DA1B803BE100AC88EB /* font.bin */; };
+		14CEE7761DD2037300191612 /* sys-ios.c in Sources */ = {isa = PBXBuildFile; fileRef = 14CEE7751DD2037300191612 /* sys-ios.c */; };
+		14CEE7771DD2037300191612 /* sys-ios.c in Sources */ = {isa = PBXBuildFile; fileRef = 14CEE7751DD2037300191612 /* sys-ios.c */; };
 		14E568F21B8494C800CAE666 /* GamTouchPadView.m in Sources */ = {isa = PBXBuildFile; fileRef = 14E568F11B8494C800CAE666 /* GamTouchPadView.m */; };
 		14E568F31B84A10800CAE666 /* dat.lib in Resources */ = {isa = PBXBuildFile; fileRef = 148718D91B803BE100AC88EB /* dat.lib */; };
 		14E568F41B84A10800CAE666 /* font.bin in Resources */ = {isa = PBXBuildFile; fileRef = 148718DA1B803BE100AC88EB /* font.bin */; };
@@ -211,6 +213,8 @@
 		148718D81B801C8100AC88EB /* pconst.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pconst.c; sourceTree = "<group>"; };
 		148718D91B803BE100AC88EB /* dat.lib */ = {isa = PBXFileReference; lastKnownFileType = file; path = dat.lib; sourceTree = "<group>"; };
 		148718DA1B803BE100AC88EB /* font.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = font.bin; sourceTree = "<group>"; };
+		14CEE7751DD2037300191612 /* sys-ios.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "sys-ios.c"; sourceTree = "<group>"; };
+		14CEE7781DD203B500191612 /* sys-js.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "sys-js.c"; sourceTree = "<group>"; };
 		14E568F01B8494C800CAE666 /* GamTouchPadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GamTouchPadView.h; sourceTree = "<group>"; };
 		14E568F11B8494C800CAE666 /* GamTouchPadView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GamTouchPadView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -253,6 +257,7 @@
 				142D1CEC1D22A3CC00CA443B /* timer.c */,
 				142D1CF41D23459100CA443B /* main.c */,
 				141D694E1D8D3191000F772D /* script.c */,
+				14CEE7781DD203B500191612 /* sys-js.c */,
 			);
 			path = js;
 			sourceTree = "<group>";
@@ -429,6 +434,7 @@
 				1437473C1B7CBC2300939571 /* sem.m */,
 				143747B71B7E7AFB00939571 /* timer.m */,
 				141D69531D9EABA6000F772D /* dummy-script.c */,
+				14CEE7751DD2037300191612 /* sys-ios.c */,
 			);
 			path = ios;
 			sourceTree = "<group>";
@@ -595,6 +601,7 @@
 				143747B01B7E68C300939571 /* showface.c in Sources */,
 				143747B11B7E68C300939571 /* Size.c in Sources */,
 				143747B21B7E68C300939571 /* strcnt.c in Sources */,
+				14CEE7761DD2037300191612 /* sys-ios.c in Sources */,
 				142D1CE61D22A3BA00CA443B /* bios.c in Sources */,
 				143747B31B7E68C300939571 /* tactic.c in Sources */,
 				143747B41B7E68C300939571 /* varma.c in Sources */,
@@ -635,6 +642,7 @@
 				148718BE1B7FB87D00AC88EB /* gamEng.c in Sources */,
 				148718CD1B7FB87D00AC88EB /* infdeal.c in Sources */,
 				148718CE1B7FB87D00AC88EB /* paccount.c in Sources */,
+				14CEE7771DD2037300191612 /* sys-ios.c in Sources */,
 				148718D01B7FB87D00AC88EB /* PublicFun.c in Sources */,
 				148718D11B7FB87D00AC88EB /* showface.c in Sources */,
 				148718D21B7FB87D00AC88EB /* Size.c in Sources */,

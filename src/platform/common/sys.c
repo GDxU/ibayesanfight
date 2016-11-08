@@ -9,7 +9,6 @@
 #include <stdio.h>
 #include "baye/compa.h"
 #include "baye/comm.h"
-#include <sys/time.h>
 #include "timer.h"
 
 void gam_timer_init();
@@ -94,15 +93,6 @@ FAR U8 SysGetKey(void)
 FAR U8   SysGetKeySound(void)
 {
     return 0;
-}
-
-FAR U8 SysGetSecond(void)
-{
-#ifdef __EMSCRIPTEN__
-    return (U8)0;
-#else
-    return (U8)time(0);
-#endif
 }
 
 FAR	U8 SysGetTimer1Number(void)

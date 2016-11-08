@@ -37,6 +37,7 @@ platform/js/fsys.c
 platform/js/sem.c
 platform/js/timer.c
 platform/js/script.c
+platform/js/sys-js.c
 platform/common/bios.c
 platform/common/gui.c
 platform/common/sys.c
