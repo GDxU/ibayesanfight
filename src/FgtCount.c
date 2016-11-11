@@ -164,7 +164,7 @@ FAR void CountMoveP(U8 i)
     i = TransIdxToGen(i);
     per = &g_Persons[i];
 
-    arm = per->ArmsType;
+    arm = GetArmType(per);
     pos->move = FgtIntMove[arm];
     for(lp = 0; lp < 2; lp += 1)
     {	/* 累加马匹移动力 */
@@ -249,7 +249,7 @@ FAR void BuiltAtkAttr(U8 idx,U8 pIdx)
     pTer = FgtGetTerrain(g_GenPos[pIdx].x,g_GenPos[pIdx].y);
     pAtk->ter = pTer;
     pAtk->bile = 0;
-    pGen = pTyp->ArmsType;
+    pGen = GetArmType(pTyp);
     pAtk->armsType = pGen;
     pAtk->arms = &(pTyp->Arms);
     pAtk->exp = &(pTyp->Experience);
@@ -589,7 +589,7 @@ void FgtTransMove(U8 idx)
     U8	*mptr;
 
     /* 获取被操作的兵种 */
-    type = g_Persons[g_FgtParam.GenArray[idx] - 1].ArmsType;
+    type = GetArmType(&g_Persons[g_FgtParam.GenArray[idx] - 1]);
     mptr = ResLoadToCon(IFACE_CONID,dFgtLandR,g_CBnkPtr);
     mptr += type * FGT_TILMAX;
     /* 将地况转换成移动力消耗 */

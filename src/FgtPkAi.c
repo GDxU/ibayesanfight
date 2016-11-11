@@ -145,7 +145,7 @@ bool FgtJiNeng(FGTCMD *pcmd)
     if(ranv % 150 > per->IQ)
         return false;
     /* 兵力剩余越少，施展技能的可能性越高(玄兵除外) */
-    if(per->ArmsType != ARM_XUANBING)
+    if(GetArmType(per) != ARM_XUANBING)
     {
         arms = PlcArmsMax(id);
         arms += arms >> 1;		/* arms = max * 1.5 */
@@ -233,7 +233,7 @@ void FgtCmpMove(U8 idx)
 {
     U8	aimx,aimy,aidx;
     U8	x,y,ox,oy,pTer;
-    U8	type,min,delta;
+    U8	min,delta;
     U8	ax,ay,bx,by;
     bool	flag;
     U16	hurtmax,hurt;
@@ -246,7 +246,6 @@ void FgtCmpMove(U8 idx)
     /* 获取移动的目标点 */
     ox = g_GenPos[idx].x;
     oy = g_GenPos[idx].y;
-    type = g_Persons[TransIdxToGen3(idx)].ArmsType << 1;
     min = 0xFF;
     hurtmax = 0;
     ax = ox;
@@ -422,7 +421,7 @@ void FgtGetSklBuf(U8 id,U8 *buf)
         sklbuf += 1;
     }
     ptr = ResLoadToCon(IFACE_CONID,dFgtJNArray,g_CBnkPtr);
-    type = g_Persons[id].ArmsType;
+    type = GetArmType(&g_Persons[id]);
     len = ((float)dArmsJNNum[type] * g_Persons[id].Level / (MAX_LEVEL + 1)) + 1;
     ptr += type * SKILL_NMAX;
     gam_memcpy(sklbuf,ptr,len);
@@ -463,7 +462,7 @@ FAR U8 FgtJNChkAim(U8 param,U8 same,U8 aidx)
     U8	terrain,type;
     SKILLEF *skl;
 
-    type = g_Persons[g_FgtParam.GenArray[aidx] - 1].ArmsType;
+    type = GetArmType(&g_Persons[g_FgtParam.GenArray[aidx] - 1]);
     terrain = FgtGetGenTer(aidx);
     skl = (SKILLEF	*)FgtGetJNPtr(param);
     /* 检测目标兵种 */
@@ -636,7 +635,7 @@ FAR void FgtGetCmdRng(U8 type,U8 param,U8 idx)
     switch(type)
     {
         case CMD_ATK:{
-            U16 offset = ATT_RANGE * (U16)g_Persons[g_FgtParam.GenArray[idx] - 1].ArmsType;
+            U16 offset = ATT_RANGE * (U16)GetArmType(&g_Persons[g_FgtParam.GenArray[idx] - 1]);
             rngb = ATT_RANGEUNIT;
             ptr = ResLoadToCon(IFACE_CONID,dFgtAtRange,g_CBnkPtr) + offset;
 

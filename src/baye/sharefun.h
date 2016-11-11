@@ -184,4 +184,5 @@ INFDEAL_C U8 GetPersonsCount(U8 king);
 INFDEAL_C U8 GetDirect(U8 sc,U8 oc);
 INFDEAL_C void ReportCalamity(U8 city);
 
+U8 GetArmType(PersonType* p);
 #endif

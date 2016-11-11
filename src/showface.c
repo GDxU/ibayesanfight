@@ -562,29 +562,31 @@ void GetPersonProStr(U8 person,U8 pro,U8 *str)
             gam_itoa(g_Persons[person].Thew,str,10);
             break;
         case 8:		/*兵种*/
-            switch (g_Persons[person].ArmsType)
         {
-            case 0:
-                idx = ATRR_STR11;
-                break;
-            case 1:
-                idx = ATRR_STR12;
-                break;
-            case 2:
-                idx = ATRR_STR13;
-                break;
-            case 3:
-                idx = ATRR_STR14;
-                break;
-            case 4:
-                idx = ATRR_STR15;
-                break;
-            case 5:
-                idx = ATRR_STR16;
-                break;
-        }
+            switch (GetArmType(&g_Persons[person]))
+            {
+                case 0:
+                    idx = ATRR_STR11;
+                    break;
+                case 1:
+                    idx = ATRR_STR12;
+                    break;
+                case 2:
+                    idx = ATRR_STR13;
+                    break;
+                case 3:
+                    idx = ATRR_STR14;
+                    break;
+                case 4:
+                    idx = ATRR_STR15;
+                    break;
+                case 5:
+                    idx = ATRR_STR16;
+                    break;
+            }
             ResLoadToMem(STRING_CONST,idx,str);
             break;
+        }
         case 9:		/*兵力*/
             gam_itoa(g_Persons[person].Arms,str,10);
             break;

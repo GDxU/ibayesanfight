@@ -1380,3 +1380,34 @@ void ShowTacticNote(void)
     }
     ShowMapClear();
 }
+
+U8 GetArmType(PersonType* p)
+{
+    U8 armType = p->ArmsType;
+
+    for (int i = 0; i < 2; i++) {
+        U8 tid = p->Equip[i];
+        if (tid) {
+            GOODS *tool = (GOODS *)(ResLoadToCon(GOODS_RESID, 1, g_CBnkPtr) + (U16)(tid - 1) * sizeof(GOODS));
+            if (tool == NULL) continue;
+            switch (tool->arm)
+            {
+                case 0:		/*无*/
+                    break;
+                case 1:		/*水兵*/
+                    armType = ARM_SHUIJUN;
+                    break;
+                case 2:		/*玄兵*/
+                    armType = ARM_XUANBING;
+                    break;
+                case 3:		/*极兵*/
+                    armType = ARM_JIBING;
+                    break;
+                default:
+                    armType = tool->arm - 4;
+                    break;
+            }
+        }
+    }
+    return armType;
+}

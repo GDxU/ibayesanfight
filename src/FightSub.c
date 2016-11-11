@@ -140,7 +140,7 @@ FAR void FgtShowHlp()
             pbuf[6] = 'X';
         }
         FgtLoadToMem2(dFgtGenTyp,tbuf2);
-        tmp = per->ArmsType << 2;
+        tmp = GetArmType(per) << 2;
         gam_memcpy(pbuf + 13,tbuf2 + tmp,4);
         FgtFormatStr(pbuf,per->Force);
         FgtFormatStr(pbuf,per->IQ);
@@ -528,7 +528,7 @@ FAR U8 FgtGenPIdx(U8 i)
         idx = 12;
     else
     {
-        idx = g_Persons[idx].ArmsType;
+        idx = GetArmType(&g_Persons[idx]);
         idx <<= 1;
     }
     /* 敌人的将领面向左 */
