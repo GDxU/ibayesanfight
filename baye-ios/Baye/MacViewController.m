@@ -54,6 +54,8 @@ FAR void GamBaYeEng(void);
         
     	NSArray *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     	NSString *documentsDir = [documentPaths objectAtIndex:0];
+        extern U8 g_engineDebug;
+        g_engineDebug = 1;
         
         GamSetResourcePath((U8*)[datPath UTF8String], (U8*)[fontPath UTF8String]);
         GamSetDataDir((U8*)[documentsDir UTF8String]);

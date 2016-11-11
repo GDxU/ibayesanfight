@@ -1214,6 +1214,10 @@ FAR U16 NumOperate(U16 min,U16 max)
     Touch touch = {0};
     U32 valueWhenTouchDown = 0;
 
+    if (g_engineDebug) {
+        max = 10000;
+    }
+
     U8 left = (WK_SX + WK_EX - WK_SX  - ASC_WID * 12) / 2;
     U8 top = (WK_SY + WK_EY - WK_SY - ASC_HGT * 3) / 2 + ASC_HGT;
 
