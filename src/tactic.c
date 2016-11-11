@@ -136,6 +136,20 @@ void ComputerTactic(void)
 
     ResItemGetN(IFACE_CONID,KingTacticOddsIH,TacticOddsIH, sizeof(TacticOddsIH));
     ResItemGetN(IFACE_CONID,KingTacticOddsD,TacticOddsD, sizeof(TacticOddsD));
+
+    if (g_engineConfig.aiLevelUpSpeed) {
+        for (i = 0; i < PERSON_MAX; i++)
+        {
+            rnd = gam_rand() % 100;
+            if (rnd < g_engineConfig.aiLevelUpSpeed) {
+                if (g_Persons[i].Belong != g_PlayerKing+1)
+                {
+                    LevelUp(&g_Persons[i]);
+                }
+            }
+        }
+    }
+
     for (i = 0;i < CITY_MAX;i ++)
     {
         cptr = &g_Cities[i];
@@ -522,24 +536,10 @@ void ComputerTacticArmament(U8 city)
 
     if (g_engineConfig.aiLevelUpSpeed == 0 && !(g_MonthDate % 3))
     {
-#define LEVELUP() \
-        pptr->Level += 1; \
-        if (pptr->Level > MAX_LEVEL) {\
-            pptr->Level = MAX_LEVEL; \
-        }
-
-        LEVELUP();
+        LevelUp(pptr);
     }
     for (i = 0;i < pcount;i ++)
     {
-        pptr = &g_Persons[pqptr[i]];
-        if (g_engineConfig.aiLevelUpSpeed) {
-            rnd = gam_rand() % 100;
-            if (rnd < g_engineConfig.aiLevelUpSpeed) {
-                LEVELUP();
-                printf("");
-            }
-        }
         rnd = gam_rand() % 9;
         switch (rnd)
         {
@@ -1426,4 +1426,11 @@ U8 GetArmType(PersonType* p)
         }
     }
     return armType;
+}
+
+void LevelUp(PersonType*p)
+{
+    p->Level++;
+    if (p->Level > MAX_LEVEL)
+        p->Level = MAX_LEVEL;
 }

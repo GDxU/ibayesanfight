@@ -1256,9 +1256,7 @@ void FgtChkAtkEnd(void)
         {
             FgtSetFocus(i);
             per->Experience -= FGT_EXPMAX;
-            per->Level += 1;
-            if(per->Level > MAX_LEVEL)
-                per->Level = MAX_LEVEL;
+            LevelUp(per);
             FgtShowChgSpe(0,5,x,y);
             FgtLoadToMem(dFgtLevUp0 + idx,buf);
             ShowGReport(tmp,buf);
