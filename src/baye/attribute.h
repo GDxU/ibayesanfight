@@ -215,6 +215,7 @@ typedef struct {
     U8 enableScript;              //启用脚本
     U8 fixAlienateComsumeThew; //修复离间减小敌将体力问题
     U8 disableSL;              //禁SL
+    U8 aiLevelUpSpeed;         //AI升级速度 (0~100, 0使用原版默认策略)
 } EngineConfig;
 
 extern EngineConfig g_engineConfig;

@@ -517,16 +517,29 @@ void ComputerTacticArmament(U8 city)
     pcount = GetCityPersons(city,pqptr);
     if (!pcount)
         return;
+
     pptr = &g_Persons[pqptr[gam_rand() % pcount]];
 
-    if (!(g_MonthDate % 3))
+    if (g_engineConfig.aiLevelUpSpeed == 0 && !(g_MonthDate % 3))
     {
-        pptr->Level += 1;
-        if (pptr->Level > MAX_LEVEL)
-            pptr->Level = MAX_LEVEL;
+#define LEVELUP() \
+        pptr->Level += 1; \
+        if (pptr->Level > MAX_LEVEL) {\
+            pptr->Level = MAX_LEVEL; \
+        }
+
+        LEVELUP();
     }
     for (i = 0;i < pcount;i ++)
     {
+        pptr = &g_Persons[pqptr[i]];
+        if (g_engineConfig.aiLevelUpSpeed) {
+            rnd = gam_rand() % 100;
+            if (rnd < g_engineConfig.aiLevelUpSpeed) {
+                LEVELUP();
+                printf("");
+            }
+        }
         rnd = gam_rand() % 9;
         switch (rnd)
         {
@@ -539,7 +552,6 @@ void ComputerTacticArmament(U8 city)
             case 3:		/*征兵*/
             case 4:		/*分配*/
             case 5:		/*分配*/
-                pptr = &g_Persons[pqptr[i]];
                 armys = pptr->Level;
                 armys *= 10;
                 armys += pptr->Force + pptr->IQ;
