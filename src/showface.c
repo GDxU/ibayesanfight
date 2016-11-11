@@ -144,7 +144,7 @@ void GetGoodsProStr(U8 goods,U8 pro,U8 *str)
                 break;
             default:
                 idx = ATRR_STR11 + gptr->arm-4;
-                return;
+                break;
         }
             ResLoadToMem(STRING_CONST,idx,str);
             break;
