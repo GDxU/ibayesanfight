@@ -953,7 +953,7 @@ void FgtViewForce(U8 pForce,U8 pSIdx)
     for(i = 0;i < pPCnt;i += 1)
     {
         tmp = i + pSIdx;
-        if(tmp - pGIdx > FGT_PLAMAX)
+        if(tmp - pGIdx >= FGT_PLAMAX)
             break;
         tmp = g_FgtParam.GenArray[tmp];
         if(!tmp)
