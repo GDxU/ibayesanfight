@@ -13,8 +13,8 @@
 *	1.0    		2002.7.26   任新村      完成基本内容
 *******************************************************************************************/
 #include	"dictsys.h"
-#include 	"stdlib.h"
+#include 	"STDLIB.H"
 #include	"filetype.h"
 #include	"flash.h"
-#include	"mem.h"
-#include	"addr.h"
+#include	"MEM.H"
+#include	"ADDR.H"

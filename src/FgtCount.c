@@ -259,8 +259,23 @@ FAR void BuiltAtkAttr(U8 idx,U8 pIdx)
     mptr += pGen * TERRAIN_MAX;
     mModu = (I8)mptr[pTer];
 
-    U16 at = (U16)((U16)(pTyp->Force) * (pTyp->Level + 10) * AtkModulus[pGen]);
-    U16 df = (U16)((U16)(pTyp->IQ) * (pTyp->Level + 10) * DfModulus[pGen]);
+    U16 atRatio = pTyp->Force;
+    U16 dfRatio = pTyp->IQ;
+
+    if (g_engineConfig.enableCustomRatio) {
+        atRatio = 0;
+        atRatio += pTyp->IQ * g_engineConfig.ratioOfAttToIQ / 10;
+        atRatio += pTyp->Force * g_engineConfig.ratioOfAttToForce / 10;
+        atRatio += pTyp->Age * g_engineConfig.ratioOfAttToAge / 10;
+
+        dfRatio = 0;
+        dfRatio += pTyp->IQ * g_engineConfig.ratioOfDefenceToIQ / 10;
+        dfRatio += pTyp->Force * g_engineConfig.ratioOfDefenceToForce / 10;
+        dfRatio += pTyp->Age * g_engineConfig.ratioOfDefenceToAge / 10;
+    }
+    
+    U16 at = (U16)(atRatio * (pTyp->Level + 10) * AtkModulus[pGen]);
+    U16 df = (U16)(dfRatio * (pTyp->Level + 10) * DfModulus[pGen]);
 
     pAtk->at = calcAt(mModu, at);
     pAtk->df = calcAt(mModu, df);
@@ -279,11 +294,16 @@ FAR void CountProvUse(void)
 {
     U8	i;
     U16	arms,*armsp;
+    U8 ratio = 3;
+
+    if (g_engineConfig.ratioOfFoodToArmsPerDay) {
+        ratio = g_engineConfig.ratioOfFoodToArmsPerDay;
+    }
 
     for(i = 0;i < 2;i += 1)
     {
         arms = FgtAllArms(i);
-        arms = PlcExtract(arms) / 3;
+        arms = PlcExtract(arms) / ratio;
         if(i)
             armsp = &g_FgtParam.EProvender;
         else

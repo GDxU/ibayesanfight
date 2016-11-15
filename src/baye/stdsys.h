@@ -6,7 +6,7 @@
 ======================================*/
 #include "../inc/dictsys.h"
 #include "../inc/keytable.h"
-#include "../inc/stdlib.h"
+#include "../inc/STDLIB.H"
 #include "../inc/flash.h"
 
 #define	_EDICT_SERIES_A_		/* 声明为A系列电子词典 */

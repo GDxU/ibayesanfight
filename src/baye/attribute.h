@@ -215,7 +215,26 @@ typedef struct {
     U8 enableScript;              //启用脚本
     U8 fixAlienateComsumeThew; //修复离间减小敌将体力问题
     U8 disableSL;              //禁SL
-    U8 aiLevelUpSpeed;         //AI升级速度 (0~100, 0使用原版默认策略)
+    U8 aiLevelUpSpeed;            //AI升级速度 (0~100, 0使用原版默认策略)
+
+    U8 disableAgeGrow;         //禁用年龄增长
+    U8 enableCustomRatio;      //启用自定义参数计算, 下面两线之间的参数总开关
+    // ---------------------------
+    U16 ratioOfArmsToLevel;    //带兵量和等级的关系, 默认100  (X*R)
+    U8 ratioOfArmsToAge;      //带兵量和年龄的关系, 默认0  (X*R)
+    U8 ratioOfArmsToIQ;        //带兵量和智力的关系, 默认10  (X*R)
+    U8 ratioOfArmsToForce;     //带兵量和武力的关系, 默认10  (X*R)
+
+    U8 ratioOfAttToForce;      //武力对攻击的影响, 默认10  (X*R/10)
+    U8 ratioOfAttToIQ;          //智力对攻击的影响, 默认0  (X*R/10)
+    U8 ratioOfAttToAge;         //年龄对攻击的影响, 默认0  (X*R/10)
+
+    U8 ratioOfDefenceToForce; //武力对防御的影响, 默认0  (X*R/10)
+    U8 ratioOfDefenceToIQ;    //智力对防御的影响, 默认10  (X*R/10)
+    U8 ratioOfDefenceToAge;   //年龄对防御的影响, 默认0  (X*R/10)
+    // ---------------------------
+    U16 ratioOfFoodToArmsPerMouth; // 市政兵力和粮耗(默认50，越大粮耗越少)
+    U16 ratioOfFoodToArmsPerDay; //战场兵力和粮耗参数(默认3，越大粮耗越少)
 } EngineConfig;
 
 extern EngineConfig g_engineConfig;

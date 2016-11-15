@@ -105,7 +105,11 @@ FAR U8 CitiesUpDataDate(void)
                 df += as;
                 g_Persons[pqptr[j]].Arms = as;
             }
-            df /= 50;
+            if (g_engineConfig.ratioOfFoodToArmsPerMouth) {
+                df /= g_engineConfig.ratioOfFoodToArmsPerMouth;
+            } else {
+                df /= 50;
+            }
 
             food = &cptr->Food;
             if (*food > df)
@@ -380,7 +384,7 @@ FAR U8 PersonUpDatadate(void)
     U8 c,p;
     U16 t;
 
-    if (1 == g_MonthDate)
+    if (!g_engineConfig.disableAgeGrow && 1 == g_MonthDate)
     {
         for (p = 0;p < PERSON_MAX;p ++)
         {
@@ -409,7 +413,9 @@ FAR U8 PersonUpDatadate(void)
             if (!AddPerson(c,p))
                 return(0);
 
-            g_Persons[p].Age = PERSON_APPEAR_AGE;
+            if (!g_engineConfig.disableAgeGrow) {
+                g_Persons[p].Age = PERSON_APPEAR_AGE;
+            }
         }
     }
 
