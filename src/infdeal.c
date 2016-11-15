@@ -493,6 +493,9 @@ FAR U8 AddGoodsPerson(U8 goods,U8 person)
 
     g_Persons[person].Force += gptr[goods].at;
     g_Persons[person].IQ += gptr[goods].iq;
+    if (g_engineConfig.disableAgeGrow) {
+        g_Persons[person].Age += gptr[goods].iq;
+    }
     return(gptr[goods].useflag);
 }
 
@@ -516,6 +519,9 @@ FAR void DelGoodsPerson(U8 goods,U8 person)
     gptr = (GOODS *) ResLoadToCon(GOODS_RESID,1,g_CBnkPtr);
     g_Persons[person].Force -= gptr[goods].at;
     g_Persons[person].IQ -= gptr[goods].iq;
+    if (g_engineConfig.disableAgeGrow) {
+        g_Persons[person].Age -= gptr[goods].iq;
+    }
 }
 
 /******************************************************************************
