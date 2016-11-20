@@ -475,7 +475,7 @@ FAR U8 AddGoodsPerson(U8 goods,U8 person)
 
         Object* p = object_new(32);
         object_bind_person(p, &g_Persons[person]);
-        object_bind_u8(tool, "index", &person, 0);
+        object_bind_u8(p, "index", &person, 0);
         object_bind_object(context, "person", p, 0);
 
         U8 result = 0;
@@ -551,7 +551,7 @@ FAR U8 DelGoodsPerson(U8 goods,U8 person)
 
         Object* p = object_new(32);
         object_bind_person(p, &g_Persons[person]);
-        object_bind_u8(tool, "index", &person, 0);
+        object_bind_u8(p, "index", &person, 0);
         object_bind_object(context, "person", p, 0);
 
         U8 result = 1;
