@@ -21,6 +21,7 @@
 #include "baye/enghead.h"
 #include "baye/data-bind.h"
 #define		IN_FILE	1	/* 当前文件位置 */
+#include "baye/script.h"
 
 /*本体函数声明*/
 /*------------------------------------------*/
@@ -203,7 +204,7 @@ U8 FgtJNAction(FGTCMD *pcmd)
 {
     U8	param,sIdx,aIdx;
     U8	aim,bidx,buf[25];
-    U8	state,*ptr;
+    U8	state,*ptr,success = 0xff;
     U16	arms,prov,*provp,up;
     SKILLEF	*skl;
 
@@ -214,8 +215,18 @@ U8 FgtJNAction(FGTCMD *pcmd)
     g_GenPos[sIdx].mp -= skl->useMp;
 
     gam_memset(buf,' ',10);
-    state = gam_rand() % (g_GenAtt[1].canny + 20);
-    if(state > (g_GenAtt[0].canny >> 1))
+    if (g_engineConfig.enableScript) {
+        Object* context = object_new(8);
+        object_bind_u8(context, "skillId", &pcmd->param, 0);
+        object_bind_u8(context, "success", &success, 1);
+        call_script("showSkill", context);
+        object_release(context);
+    }
+    if (success == 0xff){
+        state = gam_rand() % (g_GenAtt[1].canny + 20);
+        success = state <= (g_GenAtt[0].canny >> 1);
+    }
+    if(!success)
     {	/* 施展计谋失败 */
         ResLoadToMem(SKL_NAMID,param,buf + 1);
         buf[5] = ' ';
