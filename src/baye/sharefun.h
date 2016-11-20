@@ -169,7 +169,7 @@ INFDEAL_C void HarvestryFood(void);
 INFDEAL_C U8 PersonUpDatadate(void);
 INFDEAL_C U8 GoodsUpDatadate(void);
 INFDEAL_C U8 AddGoodsPerson(U8 goods,U8 person);
-INFDEAL_C void DelGoodsPerson(U8 goods,U8 person);
+INFDEAL_C U8 DelGoodsPerson(U8 goods,U8 person);
 INFDEAL_C void ShowConstStrMsg(U8 idx);
 /*INFDEAL_C void ShowAttackMsg(U8 fs,U8 co);*/
 INFDEAL_C void ShowPersonHead(U8 x,U8 y,U8 id);

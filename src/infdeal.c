@@ -535,7 +535,7 @@ FAR U8 AddGoodsPerson(U8 goods,U8 person)
  *		----		----			-----------
  *		陈泽伟		2005/5/18 11:26AM	基本功能完成
  ******************************************************************************/
-FAR void DelGoodsPerson(U8 goods,U8 person)
+FAR U8 DelGoodsPerson(U8 goods,U8 person)
 {
     GOODS *gptr;
 
@@ -554,12 +554,20 @@ FAR void DelGoodsPerson(U8 goods,U8 person)
         object_bind_u8(tool, "index", &person, 0);
         object_bind_object(context, "person", p, 0);
 
-        call_script("confiscateTool", context);
+        U8 result = 1;
+        object_bind_u8(context, "result", &result, 1);
+
+        int rv = call_script("confiscateTool", context);
         object_release(context);
+
+        if (rv == 0 && result == 0) {
+            return 0;
+        }
     }
 
     g_Persons[person].Force -= gptr[goods].at;
     g_Persons[person].IQ -= gptr[goods].iq;
+    return 1;
 }
 
 /******************************************************************************
