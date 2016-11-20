@@ -11,7 +11,7 @@
 #define	MAP_HEAD_LEN		16		/* 地图数据头长 */
 #define	FGT_PLAMAX		10		/* 战斗时，每方最大将领个数 */
 #define	FGTA_MAX		FGT_PLAMAX*2	/* 战斗队列最大组员 */
-#define	MAX_LEVEL		20		/* 最大等级 */
+#define	MAX_LEVEL		g_engineConfig.maxLevel		/* 最大等级 */
 #define	CITY_TIL		3		/* 城池地图块 */
 #define	FGT_DF			0		/* 玩家方(前10个将)战斗模式——防御 */
 #define	FGT_AT			1		/* 玩家方(前10个将)战斗模式——进攻 */

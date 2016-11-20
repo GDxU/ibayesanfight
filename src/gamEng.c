@@ -872,7 +872,9 @@ void GamSetDataDir(const U8*dataDir_)
 
 
 EngineConfig g_engineConfig = {
-    0
+    .armsPerMoney = 10,
+    .armsPerDevotion = 20,
+    .maxLevel = 20,
 };
 
 U8 g_engineDebug = 0;

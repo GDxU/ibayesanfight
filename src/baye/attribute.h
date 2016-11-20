@@ -235,6 +235,9 @@ typedef struct {
     // ---------------------------
     U16 ratioOfFoodToArmsPerMouth; // 市政兵力和粮耗(默认50，越大粮耗越少)
     U16 ratioOfFoodToArmsPerDay; //战场兵力和粮耗参数(默认3，越大粮耗越少)
+    U8 armsPerDevotion;        //征兵量和民忠的关系(默认20)
+    U8 armsPerMoney;           //每个金钱能购买的士兵数(默认10)
+    U8 maxLevel; //最大等级
 } EngineConfig;
 
 extern EngineConfig g_engineConfig;

@@ -21,6 +21,8 @@
 #undef	INFDEAL_C
 #define	INFDEAL_C
 #include "baye/enghead.h"
+#include "baye/script.h"
+#include "baye/bind-objects.h"
 
 
 
@@ -463,6 +465,30 @@ FAR U8 AddGoodsPerson(U8 goods,U8 person)
     gptr = (GOODS *) ResLoadToCon(GOODS_RESID,1,g_CBnkPtr);
     U8 arm = gptr[goods].arm;
 
+    if (g_engineConfig.enableScript) {
+        Object* context = object_new(8);
+
+        Object* tool = object_new(32);
+        object_bind_tool(tool, &gptr[goods]);
+        object_bind_u8(tool, "index", &goods, 0);
+        object_bind_object(context, "tool", tool, 0);
+
+        Object* p = object_new(32);
+        object_bind_person(p, &g_Persons[person]);
+        object_bind_u8(tool, "index", &person, 0);
+        object_bind_object(context, "person", p, 0);
+
+        U8 result = 0;
+        object_bind_u8(context, "result", &result, 1);
+
+        int rv = call_script("giveTool", context);
+        object_release(context);
+
+        if (rv == 0 && result == 0) {
+            return 0xff;
+        }
+    }
+
     if (gptr[goods].useflag) {
         switch (arm)
         {
@@ -493,9 +519,6 @@ FAR U8 AddGoodsPerson(U8 goods,U8 person)
 
     g_Persons[person].Force += gptr[goods].at;
     g_Persons[person].IQ += gptr[goods].iq;
-    if (g_engineConfig.disableAgeGrow) {
-        g_Persons[person].Age += gptr[goods].iq;
-    }
     return(gptr[goods].useflag);
 }
 
@@ -517,11 +540,26 @@ FAR void DelGoodsPerson(U8 goods,U8 person)
     GOODS *gptr;
 
     gptr = (GOODS *) ResLoadToCon(GOODS_RESID,1,g_CBnkPtr);
+
+    if (g_engineConfig.enableScript) {
+        Object* context = object_new(8);
+
+        Object* tool = object_new(32);
+        object_bind_tool(tool, &gptr[goods]);
+        object_bind_u8(tool, "index", &goods, 0);
+        object_bind_object(context, "tool", tool, 0);
+
+        Object* p = object_new(32);
+        object_bind_person(p, &g_Persons[person]);
+        object_bind_u8(tool, "index", &person, 0);
+        object_bind_object(context, "person", p, 0);
+
+        call_script("confiscateTool", context);
+        object_release(context);
+    }
+
     g_Persons[person].Force -= gptr[goods].at;
     g_Persons[person].IQ -= gptr[goods].iq;
-    if (g_engineConfig.disableAgeGrow) {
-        g_Persons[person].Age -= gptr[goods].iq;
-    }
 }
 
 /******************************************************************************

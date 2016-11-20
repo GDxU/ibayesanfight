@@ -50,7 +50,6 @@ void object_bind_city(Object*o, CityType *city)
 
 void object_bind_person(Object*o, PersonType *person)
 {
-    object_bind_u8(o, "id", &person->Id, 0);
     object_bind_u8(o, "belong", &person->Belong, 1);
     object_bind_u8(o, "level", &person->Level, 1);
     object_bind_u8(o, "force", &person->Force, 1);

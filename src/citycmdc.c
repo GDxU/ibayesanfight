@@ -1023,14 +1023,14 @@ FAR U8 ConscriptionMake(U8 city)
                     continue;
                 }
                 arms = g_Cities[city].PeopleDevotion;
-                arms *= 20;
-                armsm = min(g_Cities[city].Money * 10, 0xffff);
+                arms *= g_engineConfig.armsPerDevotion;
+                armsm = min(g_Cities[city].Money * g_engineConfig.armsPerMoney, 0xfffe);
                 if (arms > armsm)
                 {
                     arms = armsm;
                 }
                 
-                arms = GetArmy(10,arms);
+                arms = GetArmy(0,arms);
                 if (0xffff != arms)
                 {
                     ADD16(g_Cities[city].MothballArms, arms);
