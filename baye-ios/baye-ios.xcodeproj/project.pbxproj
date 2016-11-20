@@ -92,6 +92,7 @@
 		148718D61B7FB87D00AC88EB /* itoa.c in Sources */ = {isa = PBXBuildFile; fileRef = 1444A9B01B7BA09C0085EC83 /* itoa.c */; };
 		148718DB1B803BE100AC88EB /* dat.lib in Resources */ = {isa = PBXBuildFile; fileRef = 148718D91B803BE100AC88EB /* dat.lib */; };
 		148718DC1B803BE100AC88EB /* font.bin in Resources */ = {isa = PBXBuildFile; fileRef = 148718DA1B803BE100AC88EB /* font.bin */; };
+		1494DE361DE19EBB004C2DE2 /* exportjs.c in Sources */ = {isa = PBXBuildFile; fileRef = 1494DE351DE19EBB004C2DE2 /* exportjs.c */; };
 		14CEE7761DD2037300191612 /* sys-ios.c in Sources */ = {isa = PBXBuildFile; fileRef = 14CEE7751DD2037300191612 /* sys-ios.c */; };
 		14CEE7771DD2037300191612 /* sys-ios.c in Sources */ = {isa = PBXBuildFile; fileRef = 14CEE7751DD2037300191612 /* sys-ios.c */; };
 		14E568F21B8494C800CAE666 /* GamTouchPadView.m in Sources */ = {isa = PBXBuildFile; fileRef = 14E568F11B8494C800CAE666 /* GamTouchPadView.m */; };
@@ -213,6 +214,7 @@
 		148718D81B801C8100AC88EB /* pconst.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pconst.c; sourceTree = "<group>"; };
 		148718D91B803BE100AC88EB /* dat.lib */ = {isa = PBXFileReference; lastKnownFileType = file; path = dat.lib; sourceTree = "<group>"; };
 		148718DA1B803BE100AC88EB /* font.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = font.bin; sourceTree = "<group>"; };
+		1494DE351DE19EBB004C2DE2 /* exportjs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = exportjs.c; sourceTree = "<group>"; };
 		14CEE7751DD2037300191612 /* sys-ios.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "sys-ios.c"; sourceTree = "<group>"; };
 		14CEE7781DD203B500191612 /* sys-js.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "sys-js.c"; sourceTree = "<group>"; };
 		14E568F01B8494C800CAE666 /* GamTouchPadView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GamTouchPadView.h; sourceTree = "<group>"; };
@@ -252,6 +254,7 @@
 		142D1CE81D22A3CC00CA443B /* js */ = {
 			isa = PBXGroup;
 			children = (
+				1494DE351DE19EBB004C2DE2 /* exportjs.c */,
 				142D1CF01D22B83200CA443B /* sem.c */,
 				142D1CE91D22A3CC00CA443B /* fsys.c */,
 				142D1CEC1D22A3CC00CA443B /* timer.c */,
@@ -588,6 +591,7 @@
 				143747941B7E68C300939571 /* debug.c in Sources */,
 				143747951B7E68C300939571 /* FgtCount.c in Sources */,
 				143747961B7E68C300939571 /* FgtPkAi.c in Sources */,
+				1494DE361DE19EBB004C2DE2 /* exportjs.c in Sources */,
 				143747971B7E68C300939571 /* Fight.c in Sources */,
 				143747981B7E68C300939571 /* FightSub.c in Sources */,
 				1437479A1B7E68C300939571 /* gamEng.c in Sources */,
