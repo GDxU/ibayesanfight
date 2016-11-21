@@ -47,18 +47,26 @@ FAR void GamBaYeEng(void);
 
     dispatch_async(self.queue, ^{
         NSLog(@"Starting game...");
-        NSString *datPath
-            = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"dat.lib"];
+        BOOL debug = YES;
         NSString *fontPath
             = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"font.bin"];
-        
-    	NSArray *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    	NSString *documentsDir = [documentPaths objectAtIndex:0];
+
+        if (debug) {
+            GamSetResourcePath((U8*)"/Users/loong/l/lab/baye/sav/dat.lib", (U8*)[fontPath UTF8String]);
+            GamSetDataDir((U8*)"/Users/loong/l/lab/baye/sav");
+        } else {
+            NSString *datPath
+            = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"dat.lib"];
+
+            NSArray *documentPaths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+            NSString *documentsDir = [documentPaths objectAtIndex:0];
+            GamSetResourcePath((U8*)[datPath UTF8String], (U8*)[fontPath UTF8String]);
+            GamSetDataDir((U8*)[documentsDir UTF8String]);
+        }
+
         extern U8 g_engineDebug;
         g_engineDebug = 1;
         
-        GamSetResourcePath((U8*)[datPath UTF8String], (U8*)[fontPath UTF8String]);
-        GamSetDataDir((U8*)[documentsDir UTF8String]);
         GamBaYeEng();
         exit(0);
     });
