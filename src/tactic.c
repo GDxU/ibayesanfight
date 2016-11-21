@@ -522,7 +522,7 @@ void ComputerTacticArmament(U8 city)
     U8 *pqptr,*cqptr,fp[10];
     U8 i,j,rnd;
     U8 pcount,fpcount,fcount,t;
-    U16 armys;
+    I32 armys;
     OrderType order;
     PersonType *pptr;
 
@@ -552,11 +552,18 @@ void ComputerTacticArmament(U8 city)
             case 3:		/*征兵*/
             case 4:		/*分配*/
             case 5:		/*分配*/
-                armys = pptr->Level;
-                armys *= 10;
-                armys += pptr->Force + pptr->IQ;
-                armys *= 10;
-                pptr->Arms = armys;
+                if (g_engineConfig.enableCustomRatio) {
+                    armys = pptr->Level * g_engineConfig.ratioOfArmsToLevel;
+                    armys += pptr->Force * g_engineConfig.ratioOfArmsToForce;
+                    armys += pptr->IQ * g_engineConfig.ratioOfArmsToIQ;
+                    armys += pptr->Age * g_engineConfig.ratioOfArmsToAge;
+                } else {
+                    armys = pptr->Level;
+                    armys *= 10;
+                    armys += pptr->Force + pptr->IQ;
+                    armys *= 10;
+                }
+                pptr->Arms = limitValueInRange(armys, 0, 0xffff);
                 /*g_Cities[city].MothballArms += ((U16) 20) * g_Cities[city].PeopleDevotion;*/
 
                 order.OrderId = CONSCRIPTION;

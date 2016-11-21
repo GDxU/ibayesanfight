@@ -1037,7 +1037,7 @@ FAR U8 ConscriptionMake(U8 city)
                     OrderConsumeThew(p,CONSCRIPTION);
                     /*添加消耗金钱（固定数目）代码*/
                     /*OrderConsumeMoney(city,CONSCRIPTION);*/
-                    armsm = arms / 10;
+                    armsm = arms / g_engineConfig.armsPerMoney;
                     ADD16(g_Cities[city].Money, -armsm);
                     order.OrderId = CONSCRIPTION;
                     order.Person = p;
@@ -1135,8 +1135,8 @@ FAR U8 DistributeMake(U8 city)
             if (armys > (g_Cities[city].MothballArms + g_Persons[p].Arms))
                 armys = g_Cities[city].MothballArms + g_Persons[p].Arms;
 
-            if (armys > 0xffff) {
-                armys = 0xffff;
+            if (armys > 0xfffe) {
+                armys = 0xfffe;
             }
 
             if (!armys)
