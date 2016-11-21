@@ -45,14 +45,14 @@ platform/common/sys.c
 
 add_library(bayeliba ${bayelib_SRCS})
 
-add_executable(baye.js 
+add_executable(baye
 platform/js/main.c
 )
 
-#target_link_libraries(baye.js bayeliba msgpackc-static)
-target_link_libraries(baye.js bayeliba)
+#target_link_libraries(baye bayeliba msgpackc-static)
+target_link_libraries(baye bayeliba)
 
-target_include_directories(baye.js PRIVATE . ./platform/common)
+target_include_directories(baye PRIVATE . ./platform/common)
 target_include_directories(bayeliba PRIVATE . ./platform/common)
 #target_include_directories(bayeliba PRIVATE ${msgpack_SOURCE_DIR}/include)
 # -s EMTERPRETIFY_ADVISE=1
