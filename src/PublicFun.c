@@ -442,6 +442,24 @@ FAR void PlcGraMsgBox(U8 *buf,U8 delay,U8 line)
     GamStrShowS(x + 10,y + 6,buf);
     GamDelay(delay * 100, 2);
 }
+
+U16 sqrt32(U32 a){
+    U32 rem = 0;
+    U32 root = 0;
+    U32 divisor = 0;
+    for(U8 i=0; i<16; i++){
+        root <<= 1;
+        rem = ((rem << 2) + (a >> 30));
+        a <<= 2;
+        divisor = (root<<1) + 1;
+        if(divisor <= rem){
+            rem -= divisor;
+            root++;
+        }
+    }
+    return (U16)(root);
+}
+
 /***********************************************************************
  * 说明:     获取一个255以内的平方根(整数)
  * 输入参数: num-返回值的平方
@@ -453,21 +471,7 @@ FAR void PlcGraMsgBox(U8 *buf,U8 delay,U8 line)
  ***********************************************************************/
 FAR U8 PlcExtract(U16 num)
 {
-    U8	gen,step;
-    U8	tcnt;
-
-    gen = 0;
-    step = 10;
-    while(1)
-    {
-        if(!step) break;
-        tcnt = gen + step;
-        if((U16)tcnt * tcnt < num)
-            gen = tcnt;
-        else
-            step -= 1;
-    }
-    return gen;
+    return sqrt32(num);
 }
 /***********************************************************************
  * 说明:     显示数字到虚拟屏幕
