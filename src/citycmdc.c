@@ -1116,28 +1116,11 @@ FAR U8 DistributeMake(U8 city)
         else if (1 == pcount)
         {
             p = pqptr[pcode];
-
-            if (g_engineConfig.enableCustomRatio) {
-                /*武将最大统率兵力*/
-                armys = 0;
-                armys += g_Persons[p].Level * g_engineConfig.ratioOfArmsToLevel;
-                armys += g_Persons[p].Age * g_engineConfig.ratioOfArmsToAge;
-                armys += g_Persons[p].Force * g_engineConfig.ratioOfArmsToForce;
-                armys += g_Persons[p].IQ * g_engineConfig.ratioOfArmsToIQ;
-            } else {
-                /*武将最大统率兵力*/
-                armys = g_Persons[p].Level;
-                armys *= 10;
-                armys += g_Persons[p].Force + g_Persons[p].IQ;
-                armys *= 10;
-            }
+            /*武将最大统率兵力*/
+            armys = PlcArmsMax(p);
             /*----------------*/
             if (armys > (g_Cities[city].MothballArms + g_Persons[p].Arms))
                 armys = g_Cities[city].MothballArms + g_Persons[p].Arms;
-
-            if (armys > 0xfffe) {
-                armys = 0xfffe;
-            }
 
             if (!armys)
             {

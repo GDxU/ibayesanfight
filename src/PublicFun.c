@@ -557,15 +557,26 @@ FAR void PlcRPicShow(U16 id,U8 idx,U8 x,U8 y,U8 flag)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-FAR U16 PlcArmsMax(U8 id)
+FAR U16 PlcArmsMax(U8 id) {
+    return PlcArmsMaxP(&g_Persons[id]);
+}
+
+FAR U16 PlcArmsMaxP(PersonType* p)
 {
-    U16	up;
-    PersonType	*per;
-    
-    per = &g_Persons[id];
-    up = (U16)(per->Force + per->IQ) * 10 + (U16)per->Level * 100;
-    
-    return (U16)up;
+    U32	armys = 0;
+    if (g_engineConfig.enableCustomRatio) {
+        armys += p->Level * g_engineConfig.ratioOfArmsToLevel;
+        armys += p->Age * g_engineConfig.ratioOfArmsToAge;
+        armys += p->Force * g_engineConfig.ratioOfArmsToForce;
+        armys += p->IQ * g_engineConfig.ratioOfArmsToIQ;
+        if (armys > 0xfffe)
+            armys = 0xfffe;
+    } else {
+        armys += p->Level * 100;
+        armys += p->Force * 10;
+        armys += p->IQ * 10;
+    }
+    return (U16)armys;
 }
 /***********************************************************************
  * 说明:     显示指定字符串到big内small外的区域中
