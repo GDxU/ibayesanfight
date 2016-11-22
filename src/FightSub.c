@@ -312,7 +312,7 @@ U8 FgtJNAction(FGTCMD *pcmd)
             FgtAtvShowNum(FGT_SPESX + 40,FGT_SPESY + 40,arms);
         }
         else
-            FgtShowSNum2('-',aIdx,arms);
+            FgtShowSNum2(aim ? '+' : '-',aIdx,arms);
         GamDelay(SHOW_DLYBASE * 5,false);
     }
     if(state != STATE_ZC)
