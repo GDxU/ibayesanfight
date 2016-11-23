@@ -252,7 +252,7 @@ FAR void ShowFightNote(U8 ap,U8 bc)
     ResLoadToMem(STRING_CONST,STR_FIGHT_NOTE2,buf);
     gam_strcat(str,buf);
     PlcMidShowStr(WK_SX + (WK_EX  - WK_SX) / 2,WK_SY + (WK_EY - 84 - WK_SY) / 2 + 2 + 64 + 2,str);
-    GamDelay(300,false);
+    GamDelay(300, g_engineConfig.responseNoteOfBettle);
 }
 
 /******************************************************************************
