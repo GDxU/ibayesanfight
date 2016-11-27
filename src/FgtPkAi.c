@@ -731,7 +731,7 @@ U8 FgtGetNearGen(void)
 void FgtGetAimPos(U8 *aimx,U8 *aimy)
 {
     /* 设定目标点坐标 */
-    if(FGT_AT == g_FgtParam.Mode)
+    if(FGT_AT == g_FgtParam.Mode && g_engineConfig.aiDefenceMode == 0)
     {
         *aimx = g_GenPos[g_MainGenIdx].x;
         *aimy = g_GenPos[g_MainGenIdx].y;
