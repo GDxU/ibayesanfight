@@ -293,10 +293,17 @@ void FgtCmpMove(U8 idx)
                     flag = true;
                 else
                 {
-                    if(FgtCntInterval(bx,by,ox,oy) > FgtCntInterval(ax,ay,ox,oy))
-                        flag = true;		/* 相同攻击伤害(不为0)时，动比静要好，并且要大动 */
-                    else
-                        flag = false;
+                    if (g_engineConfig.aiDefenceMode == 1) {
+                        if(FgtCntInterval(bx,by,g_CityX,g_CityY) < FgtCntInterval(ax,ay,g_CityX,g_CityY))
+                            flag = true;		/* 趋向于靠近城池 */
+                        else
+                            flag = false;
+                    } else {
+                        if(FgtCntInterval(bx,by,ox,oy) > FgtCntInterval(ax,ay,ox,oy))
+                            flag = true;		/* 相同攻击伤害(不为0)时，动比静要好，并且要大动 */
+                        else
+                            flag = false;
+                    }
                 }
             }
             if(flag)
