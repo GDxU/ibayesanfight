@@ -200,6 +200,7 @@ FAR void FgtLoadJNConsts(void) {
     FgtInitArmsJNNum();
 }
 
+U8 FgtGetGenTer(U8 idx);
 bool FgtChkAkRng(U8 x,U8 y);
 
 static U8 _CommonJNAction(U8 param, U8 aim, U8 sIdx, U8 aIdx, SKILLEF *skl) {
@@ -283,7 +284,9 @@ U8 FgtJNAction(FGTCMD *pcmd)
 
     gam_memset(buf,' ',10);
     if (g_engineConfig.enableScript) {
+        U8 ter = FgtGetGenTer(sIdx);
         Object* context = object_new(8);
+        object_bind_u8(context, "ter", &ter, 0);
         object_bind_u8(context, "skillId", &pcmd->param, 0);
         object_bind_u8(context, "success", &success, 1);
         call_script("showSkill", context);
