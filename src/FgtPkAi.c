@@ -259,7 +259,7 @@ void FgtCmpMove(U8 idx)
             by = y - g_PUseSY + g_PathSY;
             pTer = FgtGetTerrain(bx,by);
             /* 若电脑为进攻模式，且能进入城池，利马儿执行 */
-            if(FGT_DF == g_FgtParam.Mode && TERRAIN_CITY == pTer)
+            if(TERRAIN_CITY == pTer && (FGT_DF == g_FgtParam.Mode || g_engineConfig.aiDefenceMode == 1))
             {
                 g_GenPos[idx].x = bx;
                 g_GenPos[idx].y = by;
