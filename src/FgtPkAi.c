@@ -479,7 +479,7 @@ FAR U8 FgtJNChkAim(U8 param,U8 same,U8 aidx)
     if(!skl->eland[terrain])
         return 0;
     /* 施展对象是否符合 */
-    if((skl->aim == AIM_OWNER && !same) || (skl->aim == AIM_ENEMY && same))
+    if(((skl->aim & 1) && !same) || (!(skl->aim & 1) && same))
         return 0;
     return 1;
 }

@@ -200,19 +200,86 @@ FAR void FgtLoadJNConsts(void) {
     FgtInitArmsJNNum();
 }
 
+bool FgtChkAkRng(U8 x,U8 y);
+
+static U8 _CommonJNAction(U8 param, U8 aim, U8 sIdx, U8 aIdx, SKILLEF *skl) {
+    U16 arms, prov, up;
+    U8 bidx, state, buf[25], *ptr;
+
+    BuiltAtkAttr(1, aIdx);
+
+    /* 驱动状态 */
+    state = skl->state;
+    g_GenPos[aIdx].state = state;
+    if(state == STATE_DS)		/* 定身状态时，设置将领的移动力为1 */
+        g_GenPos[aIdx].move = NO_MOV;
+
+    /* 驱动通用的技能 */
+    CountSklHurt(skl,&arms,&prov);		/* 计算该技能的兵力和粮草伤害 */
+    param -= 1;
+    if(dJNSpeId[param])
+    {
+        if(g_LookMovie)
+        {
+            if(dJNMode[param])
+                PlcRPicShow(SPE_BACKPIC,1,FGT_SPESX,FGT_SPESY,false);
+            PlcMovie(dJNSpeId[param],dJNSpeSFrm[param],dJNSpeEFrm[param],0,FGT_SPESX + dJNSpeSX[param],FGT_SPESY);
+        }
+    }
+    if(arms)
+    {
+        if(aim & 1)
+        {
+            bidx = TransIdxToGen1(aIdx);
+            up = PlcArmsMax(bidx);
+            bidx = dFgtArmsA;
+            arms = CountOverAdd(g_GenAtt[1].arms,arms,up);
+        }
+        else
+        {
+            bidx = dFgtArmsH;
+            arms = CountPlusSub(g_GenAtt[1].arms,arms);
+        }
+        if(g_LookMovie)
+        {
+            FgtLoadToMem2(bidx,buf);
+            GamStrShowS(FGT_SPESX + 40,FGT_SPESY + 2,buf);
+            FgtAtvShowNum(FGT_SPESX + 40,FGT_SPESY + 40,arms);
+        }
+        else
+            FgtShowSNum2((aim & 1) ? '+' : '-',aIdx,arms);
+        GamDelay(SHOW_DLYBASE * 5,false);
+    }
+    if(state != STATE_ZC)
+    {
+        up = TransIdxToGen1(aIdx);
+        GetPersonName(up,buf);
+        up = gam_strlen(buf);
+        ptr = buf + up;
+        FgtLoadToMem2(dFgtInSta,ptr);
+        FgtLoadToMem2(dFgtState0 + state,ptr + 8);
+        FgtLoadToMem2(dFgtState,ptr + 8 + 4);
+        GamMsgBox(buf,1);
+    }
+    return FgtGetExp(arms);
+}
+
 U8 FgtJNAction(FGTCMD *pcmd)
 {
     U8	param,sIdx,aIdx;
     U8	aim,bidx,buf[25];
-    U8	state,*ptr,success = 0xff;
-    U16	arms,prov,*provp,up;
+    U8	rnd,success = 0xff;
+    U16	arms,prov = 0,*provp;
     SKILLEF	*skl;
 
     param = pcmd->param;
     sIdx = pcmd->sIdx;
     aIdx = pcmd->aIdx;
     skl = (SKILLEF	*)FgtGetJNPtr(param);
-    g_GenPos[sIdx].mp -= skl->useMp;
+
+    if (!g_engineDebug) {
+        g_GenPos[sIdx].mp -= skl->useMp;
+    }
 
     gam_memset(buf,' ',10);
     if (g_engineConfig.enableScript) {
@@ -223,8 +290,8 @@ U8 FgtJNAction(FGTCMD *pcmd)
         object_release(context);
     }
     if (success == 0xff){
-        state = gam_rand() % (g_GenAtt[1].canny + 20);
-        success = state <= (g_GenAtt[0].canny >> 1);
+        rnd = gam_rand() % (g_GenAtt[1].canny + 20);
+        success = rnd <= (g_GenAtt[0].canny >> 1);
     }
     if(!success)
     {	/* 施展计谋失败 */
@@ -240,11 +307,6 @@ U8 FgtJNAction(FGTCMD *pcmd)
         ResLoadToMem(SKL_NAMID,param,buf+6);
         PlcGraMsgBox(buf,1,0);
     }
-    /* 驱动状态 */
-    state = skl->state;
-    g_GenPos[aIdx].state = state;
-    if(state == STATE_DS)		/* 定身状态时，设置将领的移动力为1 */
-        g_GenPos[aIdx].move = NO_MOV;
     aim = skl->aim;
     if(param == 22)		/* 天变 */
     {
@@ -268,33 +330,8 @@ U8 FgtJNAction(FGTCMD *pcmd)
 
     /* 驱动通用的技能 */
     CountSklHurt(skl,&arms,&prov);		/* 计算该技能的兵力和粮草伤害 */
-    param -= 1;
-    if(dJNSpeId[param])
-    {
-        if(g_LookMovie)
-        {
-            if(dJNMode[param])
-                PlcRPicShow(SPE_BACKPIC,1,FGT_SPESX,FGT_SPESY,false);
-            PlcMovie(dJNSpeId[param],dJNSpeSFrm[param],dJNSpeEFrm[param],0,FGT_SPESX + dJNSpeSX[param],FGT_SPESY);
-        }
-    }
-    if(arms)
-    {
-        if(aim)
-        {
-            bidx = TransIdxToGen1(aIdx);
-            up = PlcArmsMax(bidx);
-            bidx = dFgtArmsA;
-            arms = CountOverAdd(g_GenAtt[1].arms,arms,up);
-        }
-        else
-        {
-            bidx = dFgtArmsH;
-            arms = CountPlusSub(g_GenAtt[1].arms,arms);
-        }
-    }
-    else
-    {
+
+    if (prov) {
         bidx = dFgtProvH;
         arms = prov;
         if(sIdx < FGT_PLAMAX)
@@ -303,30 +340,33 @@ U8 FgtJNAction(FGTCMD *pcmd)
             provp = &g_FgtParam.MProvender;
         prov = CountPlusSub(provp,prov);
     }
-    if(arms)
-    {
-        if(g_LookMovie)
-        {
-            FgtLoadToMem2(bidx,buf);
-            GamStrShowS(FGT_SPESX + 40,FGT_SPESY + 2,buf);
-            FgtAtvShowNum(FGT_SPESX + 40,FGT_SPESY + 40,arms);
-        }
-        else
-            FgtShowSNum2(aim ? '+' : '-',aIdx,arms);
-        GamDelay(SHOW_DLYBASE * 5,false);
-    }
-    if(state != STATE_ZC)
-    {
-        up = TransIdxToGen1(aIdx);
-        GetPersonName(up,buf);
-        up = gam_strlen(buf);
-        ptr = buf + up;
-        FgtLoadToMem2(dFgtInSta,ptr);
-        FgtLoadToMem2(dFgtState0 + state,ptr + 8);
-        FgtLoadToMem2(dFgtState,ptr + 8 + 4);
-        GamMsgBox(buf,1);
-    }
 
+    if ((aim & 2) == 0) {
+        arms = _CommonJNAction(param, aim, sIdx, aIdx, skl);
+    } else {
+        for(int i = 0;i < FGTA_MAX;i += 1)
+        {
+            JLPOS* pos = &g_GenPos[i];
+            U8 same, skidx = param;
+
+            if(STATE_SW == pos->state)
+                continue;
+
+            if(!FgtChkAkRng(pos->x, pos->y))
+                continue;
+
+            if((sIdx >= FGT_PLAMAX && i >= FGT_PLAMAX) || (sIdx < FGT_PLAMAX && i < FGT_PLAMAX))
+                same = true;
+            else
+                same = false;
+            
+            if(!FgtJNChkAim(skidx, same, i))
+                continue;
+
+            arms += _CommonJNAction(param, aim, sIdx, i, skl);
+
+        }
+    }
     return (FgtGetExp(arms));
 }
 /***********************************************************************
