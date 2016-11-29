@@ -344,9 +344,8 @@ U8 FgtJNAction(FGTCMD *pcmd)
         prov = CountPlusSub(provp,prov);
     }
 
-    if ((aim & 2) == 0) {
-        arms = _CommonJNAction(param, aim, sIdx, aIdx, skl);
-    } else {
+    arms = _CommonJNAction(param, aim, sIdx, aIdx, skl);
+    if ((aim & 2)) {
         for(int i = 0;i < FGTA_MAX;i += 1)
         {
             JLPOS* pos = &g_GenPos[i];
@@ -366,8 +365,7 @@ U8 FgtJNAction(FGTCMD *pcmd)
             if(!FgtJNChkAim(skidx, same, i))
                 continue;
 
-            arms += _CommonJNAction(param, aim, sIdx, i, skl);
-
+            arms = add_16(arms, _CommonJNAction(param, aim, sIdx, i, skl));
         }
     }
     return (FgtGetExp(arms));
