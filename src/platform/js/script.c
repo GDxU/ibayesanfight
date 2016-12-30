@@ -34,14 +34,13 @@ int call_script(const char* name, Object* context)
 {
     return EM_ASM_INT({
         var name = UTF8ToString($0);
-        var cContext = $1;
-
-        var jsContext = baye_bridge_obj(cContext);
         var rv = 0;
 
         if (window.baye == undefined || window.baye.methods == undefined || window.baye.methods[name] == undefined) {
             rv = -1;
         } else {
+            var cContext = $1;
+            var jsContext = baye_bridge_obj(cContext);
             rv = window.baye.methods[name](jsContext);
             baye_sync_obj(cContext, jsContext);
         }
