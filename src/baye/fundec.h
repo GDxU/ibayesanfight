@@ -56,4 +56,6 @@ FgtPkAi void		FgtGetCmdRng(U8 type,U8 param,U8 idx);
 FgtPkAi void		FgtShowMvRng(void);
 FgtPkAi void		FgtShowView(void);
 
+U16 sqrt32(U32 a);
+
 #endif	/* _FUNDEC_H */

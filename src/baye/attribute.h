@@ -240,6 +240,7 @@ typedef struct {
     U8 maxLevel;                //最大等级
     U8 responseNoteOfBettle;   //"战斗提示"允许按键跳过(默认0，填2允许)
     U8 aiDefenceMode;          // AI行军策略，默认0追主将，1守城
+    U8 aiAttackMethod;          // AI攻击时选择技能的算法(0原版，1优化版)
 } EngineConfig;
 
 extern EngineConfig g_engineConfig;

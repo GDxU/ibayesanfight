@@ -443,7 +443,8 @@ FAR void PlcGraMsgBox(U8 *buf,U8 delay,U8 line)
     GamDelay(delay * 100, 2);
 }
 
-U16 sqrt32(U32 a){
+U16 sqrt32(U32 a)
+{
     U32 rem = 0;
     U32 root = 0;
     U32 divisor = 0;

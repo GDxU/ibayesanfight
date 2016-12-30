@@ -27,7 +27,7 @@
 /*本体函数声明*/
 /*------------------------------------------*/
 U8 FgtGetMCmdNear(FGTCMD *pcmd);
-bool FgtJiNeng(FGTCMD *pcmd);
+bool FgtJiNeng(FGTCMD *pcmd, U8 force);
 bool FgtAtkCmd(FGTCMD *pcmd);
 void FgtCmpMove(U8 idx);
 void FgtMakeSklNam(U8 *buf);
@@ -112,53 +112,32 @@ U8 FgtGetMCmdNear(FGTCMD *pcmd)
             if(g_MoveSpeed)
                 GamDelay(SHOW_DLYBASE * 5,false);
         }
-        if(!FgtJiNeng(pcmd) && !FgtAtkCmd(pcmd))
-            pcmd->type = CMD_REST;		/* 仍没目标，只好休息了 */
+        if (g_engineConfig.aiAttackMethod == 1) {
+            FGTCMD atk;
+            memcpy(&atk, pcmd, sizeof(atk));
+            if(FgtAtkCmd(&atk)) {
+                if (!FgtJiNeng(pcmd, 0)) {
+                    memcpy(pcmd, &atk, sizeof(atk));
+                }
+            } else if(!FgtJiNeng(pcmd, 1)) {
+                pcmd->type = CMD_REST;		/* 仍没目标，只好休息了 */
+            }
+        } else {
+            if(!FgtJiNeng(pcmd, 0) && !FgtAtkCmd(pcmd))
+                pcmd->type = CMD_REST;		/* 仍没目标，只好休息了 */
+        }
     }
     return i;
 }
-/***********************************************************************
- * 说明:     产生将领的技能
- * 输入参数: pcmd-命令结构
- * 返回值  : true-操作成功	false-操作失败
- * 修改历史:
- *               姓名            日期             说明
- *             ------          ----------      -------------
- *             高国军          2005.5.16       完成基本功能
- ***********************************************************************/
-bool FgtJiNeng(FGTCMD *pcmd)
-{
-    U8	i,id,idx,skidx;
-    U8	sklbuf[SKILL_NMAX + 1];
-    bool	same;
-    U16	arms,ranv;
-    PersonType	*per;
-    JLPOS		*pos;
 
-    idx = pcmd->sIdx;
-    if(STATE_JZ == g_GenPos[idx].state)
-        return false;
-    id = TransIdxToGen3(idx);
-    per = &g_Persons[id];
-    ranv = gam_rand();
-    /* 智力越高的，施展技能的可能性越高 */
-    if(ranv % 150 > per->IQ)
-        return false;
-    /* 兵力剩余越少，施展技能的可能性越高(玄兵除外) */
-    if(GetArmType(per) != ARM_XUANBING)
-    {
-        arms = PlcArmsMax(id);
-        arms += arms >> 1;		/* arms = max * 1.5 */
-        if(gam_rand() % arms < per->Arms)
-            return false;
-    }
-    /* 获取要施展的技能 */
-    FgtGetSklBuf(id,sklbuf);
-    skidx = ranv % gam_strlen(sklbuf);
-    skidx = sklbuf[skidx];
-    /* 自己是否符合施展的条件 */
-    if(FgtCanUse(skidx,idx))
-        return false;
+bool FgtJiNengGetAim(FGTCMD *pcmd, PersonType*per, U8 skidx, U8 idx)
+{
+    U8 i;
+    JLPOS		*pos;
+    bool	same;
+    U16	arms;
+    U8 id;
+
     /* 搜索目标 */
     FgtGetCmdRng(CMD_STGM,skidx,idx);
     for(i = 0;i < FGTA_MAX;i += 1)
@@ -189,6 +168,76 @@ bool FgtJiNeng(FGTCMD *pcmd)
             pcmd->aIdx = i;
             pcmd->param = skidx;
             return true;
+        }
+    }
+    return false;
+}
+
+/***********************************************************************
+ * 说明:     产生将领的技能
+ * 输入参数: pcmd-命令结构
+ * 返回值  : true-操作成功	false-操作失败
+ * 修改历史:
+ *               姓名            日期             说明
+ *             ------          ----------      -------------
+ *             高国军          2005.5.16       完成基本功能
+ ***********************************************************************/
+bool FgtJiNeng(FGTCMD *pcmd, U8 force)
+{
+    U8	id,idx,skidx;
+    U8	sklbuf[SKILL_NMAX + 1];
+    U16	arms,ranv;
+    PersonType	*per;
+
+    idx = pcmd->sIdx;
+    if(STATE_JZ == g_GenPos[idx].state)
+        return false;
+    id = TransIdxToGen3(idx);
+    per = &g_Persons[id];
+    ranv = gam_rand();
+
+    if (force == 0) {
+        /* 智力越高的，施展技能的可能性越高 */
+        if(ranv % 150 > per->IQ)
+            return false;
+        /* 兵力剩余越少，施展技能的可能性越高(玄兵除外) */
+        if(GetArmType(per) != ARM_XUANBING)
+        {
+            arms = PlcArmsMax(id);
+            arms += arms >> 1;		/* arms = max * 1.5 */
+            if(gam_rand() % arms < per->Arms)
+                return false;
+        }
+    }
+
+    if (force == 0 && g_engineConfig.aiAttackMethod == 0) {
+        /* 获取要施展的技能 */
+        FgtGetSklBuf(id,sklbuf);
+        skidx = ranv % gam_strlen(sklbuf);
+        skidx = sklbuf[skidx];
+        /* 自己是否符合施展的条件 */
+        if(FgtCanUse(skidx,idx))
+            return false;
+        return FgtJiNengGetAim(pcmd, per, skidx, idx);
+    } else {
+        /* 查找最佳技能 */
+        FgtGetSklBuf(id,sklbuf);
+        U8 count = gam_strlen(sklbuf);
+        while (count > 0) {
+            // 序号越高, 可能性越高
+            U16 rand = gam_rand() % (count * count);
+            U8 ind = sqrt32(rand) % count;
+
+            skidx = sklbuf[ind];
+            if(skidx != 30 && FgtCanUse(skidx,idx) == 0) {
+                if (FgtJiNengGetAim(pcmd, per, skidx, idx)) {
+                    return true;
+                }
+            }
+            for (;ind < count - 1; ind++) {
+                sklbuf[ind] = sklbuf[ind+1];
+            }
+            count -= 1;
         }
     }
     return false;
