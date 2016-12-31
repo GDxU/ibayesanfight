@@ -203,7 +203,7 @@ FAR void FgtLoadJNConsts(void) {
 U8 FgtGetGenTer(U8 idx);
 bool FgtChkAkRng(U8 x,U8 y);
 
-static U8 _CommonJNAction(U8 param, U8 aim, U8 sIdx, U8 aIdx, SKILLEF *skl) {
+static U8 _CommonJNAction(U8 param, U8 aim, U8 sIdx, U8 aIdx, SKILLEF *skl, U8 percent) {
     U16 arms, prov, up;
     U8 bidx, state, buf[25], *ptr;
 
@@ -241,6 +241,7 @@ static U8 _CommonJNAction(U8 param, U8 aim, U8 sIdx, U8 aIdx, SKILLEF *skl) {
             bidx = dFgtArmsH;
             arms = CountPlusSub(g_GenAtt[1].arms,arms);
         }
+        arms = arms * (U32)percent / 100;
         if(g_LookMovie)
         {
             FgtLoadToMem2(bidx,buf);
@@ -296,6 +297,9 @@ U8 FgtJNAction(FGTCMD *pcmd)
         rnd = gam_rand() % (g_GenAtt[1].canny + 20);
         success = rnd <= (g_GenAtt[0].canny >> 1);
     }
+    if (g_engineDebug) {
+        success = 1;
+    }
     if(!success)
     {	/* 施展计谋失败 */
         ResLoadToMem(SKL_NAMID,param,buf + 1);
@@ -344,12 +348,14 @@ U8 FgtJNAction(FGTCMD *pcmd)
         prov = CountPlusSub(provp,prov);
     }
 
-    arms = _CommonJNAction(param, aim, sIdx, aIdx, skl);
+    arms = _CommonJNAction(param, aim, sIdx, aIdx, skl, 100);
     if ((aim & 2)) {
         for(int i = 0;i < FGTA_MAX;i += 1)
         {
             JLPOS* pos = &g_GenPos[i];
             U8 same, skidx = param;
+
+            if (i == aIdx) continue;
 
             if(STATE_SW == pos->state)
                 continue;
@@ -365,7 +371,7 @@ U8 FgtJNAction(FGTCMD *pcmd)
             if(!FgtJNChkAim(skidx, same, i))
                 continue;
 
-            arms = add_16(arms, _CommonJNAction(param, aim, sIdx, i, skl));
+            arms = add_16(arms, _CommonJNAction(param, aim, sIdx, i, skl, 60));
         }
     }
     return (FgtGetExp(arms));
