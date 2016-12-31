@@ -614,7 +614,7 @@ void HoldCaptive(U8 person,U8 city)
     PersonType *pptr;
 
     pptr = &g_Persons[person];
-    pptr->Id = pptr->Belong;
+    pptr->OldBelong = pptr->Belong;
     pptr->Belong = 0xff;
     pptr->Arms = 0;
     cavpdb = person;

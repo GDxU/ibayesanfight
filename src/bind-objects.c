@@ -32,7 +32,7 @@ Object* create_JLATT(JLATT	*pAtk)
 
 void object_bind_city(Object*o, CityType *city)
 {
-    object_bind_u8(o, "id", &city->Id, 0);
+    object_bind_u8(o, "state", &city->State, 0);
     object_bind_u8(o, "belong", &city->Belong, 1);
     object_bind_u8(o, "satrapId", &city->SatrapId, 1);
     object_bind_u16(o, "farmingLimit", &city->FarmingLimit, 1);

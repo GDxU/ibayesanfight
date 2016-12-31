@@ -153,7 +153,7 @@ void ComputerTactic(void)
     for (i = 0;i < CITY_MAX;i ++)
     {
         cptr = &g_Cities[i];
-        cptr->Id = STATE_NORMAL;
+        cptr->State = STATE_NORMAL;
         b = cptr->Belong;
         if (!(b))
             continue;
@@ -312,7 +312,7 @@ void ComputerTacticDiplomatism(U8 city)
                 if (ecount)
                 {
                     rnd = gam_rand() % ecount;
-                    if (g_Persons[eqptr[rnd]].Id != g_PlayerKing + 1)
+                    if (g_Persons[eqptr[rnd]].OldBelong != g_PlayerKing + 1)
                     {
                         g_Persons[eqptr[rnd]].Belong = g_Cities[city].Belong;
                         continue;
@@ -444,7 +444,7 @@ void ComputerTacticHarmonize(U8 city)
         switch (rnd)
         {
             case 0:		/*治理*/
-                cptr->Id = STATE_NORMAL;
+                cptr->State = STATE_NORMAL;
                 cptr->AvoidCalamity += 4;
                 if (cptr->AvoidCalamity > 100)
                     cptr->AvoidCalamity = 100;
@@ -940,8 +940,8 @@ U8 GetAllKing(U8 *kings)
  ******************************************************************************/
 static U8* loadCity(CityType*city, U8*raw)
 {
-    gam_memcpy(&city->Id, raw, sizeof(city->Id));
-    raw += sizeof(city->Id);
+    gam_memcpy(&city->State, raw, sizeof(city->State));
+    raw += sizeof(city->State);
     gam_memcpy(&city->Belong, raw, sizeof(city->Belong));
     raw += sizeof(city->Belong);
     gam_memcpy(&city->SatrapId, raw, sizeof(city->SatrapId));
@@ -988,49 +988,10 @@ U8* loadCities(CityType*cities, U8*raw)
     return raw;
 }
 
-U8* loadPersonRes(PersonResType*person, U8*raw)
-{
-    gam_memcpy(&person->Id, raw, sizeof(person->Id));
-    raw += sizeof(person->Id);
-    gam_memcpy(&person->Belong, raw, sizeof(person->Belong));
-    raw += sizeof(person->Belong);
-    gam_memcpy(&person->Level, raw, sizeof(person->Level));
-    raw += sizeof(person->Level);
-    gam_memcpy(&person->Force, raw, sizeof(person->Force));
-    raw += sizeof(person->Force);
-    gam_memcpy(&person->IQ, raw, sizeof(person->IQ));
-    raw += sizeof(person->IQ);
-    gam_memcpy(&person->Devotion, raw, sizeof(person->Devotion));
-    raw += sizeof(person->Devotion);
-    gam_memcpy(&person->Character, raw, sizeof(person->Character));
-    raw += sizeof(person->Character);
-    gam_memcpy(&person->Experience, raw, sizeof(person->Experience));
-    raw += sizeof(person->Experience);
-    gam_memcpy(&person->Thew, raw, sizeof(person->Thew));
-    raw += sizeof(person->Thew);
-    gam_memcpy(&person->ArmsType, raw, sizeof(person->ArmsType));
-    raw += sizeof(person->ArmsType);
-    gam_memcpy(&person->Arms, raw, sizeof(person->Arms));
-    raw += sizeof(person->Arms);
-    gam_memcpy(&person->Equip, raw, sizeof(person->Equip));
-    raw += sizeof(person->Equip);
-    gam_memcpy(&person->Age, raw, sizeof(person->Age));
-    raw += sizeof(person->Age);
-    gam_memcpy(&person->name, raw, sizeof(person->name));
-    raw += sizeof(person->name);
-    gam_memcpy(&person->Birth, raw, sizeof(person->Birth));
-    raw += sizeof(person->Birth);
-    gam_memcpy(&person->SearchId, raw, sizeof(person->SearchId));
-    raw += sizeof(person->SearchId);
-    gam_memcpy(&person->AppearCityId, raw, sizeof(person->AppearCityId));
-    raw += sizeof(person->AppearCityId);
-    return raw;
-}
-
 U8* loadPerson(PersonType*person, U8*raw)
 {
-    gam_memcpy(&person->Id, raw, sizeof(person->Id));
-    raw += sizeof(person->Id);
+    gam_memcpy(&person->OldBelong, raw, sizeof(person->OldBelong));
+    raw += sizeof(person->OldBelong);
     gam_memcpy(&person->Belong, raw, sizeof(person->Belong));
     raw += sizeof(person->Belong);
     gam_memcpy(&person->Level, raw, sizeof(person->Level));
@@ -1090,12 +1051,12 @@ void LoadPeriod(U8 period)
     g_PIdx = period;
     
     for (i = 0;i < CITY_MAX;i ++)
-        g_Cities[i].Id = 0;
+        g_Cities[i].State = 0;
     for (i = 0;i < PERSON_MAX;i ++)
     {
         g_Persons[i].Thew = 100;
         g_Persons[i].Arms = 100;
-        g_Persons[i].Id = 0;
+        g_Persons[i].OldBelong = 0;
     }
     
     g_MonthDate = 1;

@@ -117,30 +117,9 @@ typedef struct {
 	U8	arm;			/* 对兵种的改变 */
 }GOODS;
 
-typedef struct PersonRes			/*人才属性*/
-{
-	U8 Id;				/*编号*/
-	U8 Belong;			/*归属*/
-	U8 Level;			/*等级*/
-	U8 Force;			/*武力*/
-	U8 IQ;				/*智力*/
-	U8 Devotion;			/*忠诚*/
-	U8 Character;			/*性格*/
-	U8 Experience;			/*经验*/
-	U8 Thew;			/*体力*/
-	U8 ArmsType;			/*兵种*/
-	U16 Arms;			/*兵力*/
-	U8 Equip[2];			/*装备*/
-	U8 Age;				/*年龄*/
-	U8 name[10];		/*名称*/
-	U8 Birth;			/*出生年*/
-	U8 SearchId;		/*搜索者编号*/
-	U8 AppearCityId;	/*出现城市编号*/
-}PersonResType;
-
 typedef struct Person				/*人才属性 (12 Bytes) */
 {
-	U8 Id;				/*编号*/
+	U8 OldBelong;		/*编号*/
 	U8 Belong;			/*归属*/
 	U8 Level;			/*等级*/
 	U8 Force;			/*武力*/
@@ -155,34 +134,9 @@ typedef struct Person				/*人才属性 (12 Bytes) */
 	U8 Age;				/*年龄*/
 }PersonType;
 
-typedef struct CityRes				/*城市属性*/
-{
-	U8 Id;				/*编号*/
-	U8 Belong;			/*归属*/
-	U8 SatrapId;			/*太守编号*/
-	U16 FarmingLimit;		/*农业上限*/
-	U16 Farming;			/*农业开发度*/
-	U16 CommerceLimit;		/*商业上限*/
-	U16 Commerce;			/*商业开发度*/
-	U8 PeopleDevotion;		/*民忠*/
-	U8 AvoidCalamity;		/*防灾*/
-	U32 PopulationLimit;		/*人口上限*/
-	U32 Population;			/*人口*/
-	U16 Money;			/*金钱*/
-	U16 Food;			/*粮食*/
-	U16 MothballArms;		/*后备兵力*/
-	U8 PersonQueue;			/*人才队列*/
-	U8 Persons;			/*人才数*/
-	U8 ToolQueue;			/*道具队列*/
-	U8 Tools;			/*道具数*/
-	U8 name[10];		/*名称*/
-	U8 Links[8];			/*城市连接（北、东北、东、东南、南、西南、西、西北）*/
-	U8 Distances[8];	/*城市间距离*/
-}CityResType;
-
 typedef struct City				/*城市属性(30 Bytes)*/
 {
-	U8 Id;
+	U8 State;
 	U8 Belong;			/*归属*/
 	U8 SatrapId;			/*太守编号*/
 	U16 FarmingLimit;		/*农业上限*/

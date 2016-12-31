@@ -89,7 +89,7 @@ FAR U8 CitiesUpDataDate(void)
             for (j = 0;j < c;j ++)
             {
                 as = g_Persons[pqptr[j]].Arms;
-                switch (g_Cities[i].Id)
+                switch (g_Cities[i].State)
                 {
                     case STATE_NORMAL:	/*正常*/
                     case STATE_FAMINE:	/*饥荒*/
@@ -126,15 +126,15 @@ FAR U8 CitiesUpDataDate(void)
                 }
                 *food = 0;
                 /*闹饥荒*/
-                s = cptr->Id;;
-                cptr->Id = STATE_FAMINE;
+                s = cptr->State;;
+                cptr->State = STATE_FAMINE;
                 if ((STATE_FAMINE != s) && (cptr->Belong == g_PlayerKing + 1))
                     ReportCalamity(i);
             }
             c = GetCityCaptives(i,pqptr);
             for (j = 0;j < c;j ++)
             {
-                if (g_Persons[pqptr[j]].Id == cptr->Belong)
+                if (g_Persons[pqptr[j]].OldBelong == cptr->Belong)
                     g_Persons[pqptr[j]].Belong = cptr->Belong;
             }
         }
@@ -167,7 +167,7 @@ FAR U8 RandEvents(void)
         ccb = g_Cities[i].Belong;
         if (ccb)
         {
-            state = &g_Cities[i].Id;
+            state = &g_Cities[i].State;
             rnd = gam_rand() % 100;
             switch (*state)
             {
@@ -246,7 +246,7 @@ FAR U8 EventStateDeal(void)
         Population = &g_Cities[i].Population;
 
 
-        switch (g_Cities[i].Id)
+        switch (g_Cities[i].State)
         {
             case STATE_NORMAL:	/*正常*/
                 continue;

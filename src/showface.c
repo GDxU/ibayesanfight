@@ -989,7 +989,7 @@ FAR void GetCityState(U8 city,U8 *str)
 {
     U8 state = '\0';
     
-    switch (g_Cities[city].Id)
+    switch (g_Cities[city].State)
     {
         case STATE_NORMAL:	/*正常*/
             state = CITY_STATE_STR1;

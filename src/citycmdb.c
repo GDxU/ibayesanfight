@@ -705,7 +705,7 @@ FAR U8 FatherMake(U8 city)
             return(1);
         }
 
-        if (STATE_NORMAL == g_Cities[city].Id && g_Cities[city].AvoidCalamity >= 100)
+        if (STATE_NORMAL == g_Cities[city].State && g_Cities[city].AvoidCalamity >= 100)
         {
             ShowConstStrMsg(NOTE_STR10);
             return(1);
@@ -734,7 +734,7 @@ FAR U8 FatherMake(U8 city)
                 OrderConsumeMoney(city,STATE_NORMAL);
 
                 rnd = 1 + gam_rand() % 4;
-                g_Cities[city].Id = STATE_NORMAL;
+                g_Cities[city].State = STATE_NORMAL;
                 g_Cities[city].AvoidCalamity += rnd;
                 if (g_Cities[city].AvoidCalamity > 100)
                     g_Cities[city].AvoidCalamity = 100;
