@@ -466,27 +466,6 @@ FAR U8 AddGoodsPerson(U8 goods,U8 person)
     U8 arm = gptr[goods].arm;
 
     if (g_engineConfig.enableScript) {
-        Object* context = object_new(8);
-
-        Object* tool = object_new(32);
-        object_bind_tool(tool, &gptr[goods]);
-        object_bind_u8(tool, "index", &goods, 0);
-        object_bind_object(context, "tool", tool, 0);
-
-        Object* p = object_new(32);
-        object_bind_person(p, &g_Persons[person]);
-        object_bind_u8(p, "index", &person, 0);
-        object_bind_object(context, "person", p, 0);
-
-        U8 result = 0;
-        object_bind_u8(context, "result", &result, 1);
-
-        int rv = call_script("giveTool", context);
-        object_release(context);
-
-        if (rv == 0 && result == 0) {
-            return 0xff;
-        }
     }
 
     if (gptr[goods].useflag) {
@@ -542,27 +521,6 @@ FAR U8 DelGoodsPerson(U8 goods,U8 person)
     gptr = (GOODS *) ResLoadToCon(GOODS_RESID,1,g_CBnkPtr);
 
     if (g_engineConfig.enableScript) {
-        Object* context = object_new(8);
-
-        Object* tool = object_new(32);
-        object_bind_tool(tool, &gptr[goods]);
-        object_bind_u8(tool, "index", &goods, 0);
-        object_bind_object(context, "tool", tool, 0);
-
-        Object* p = object_new(32);
-        object_bind_person(p, &g_Persons[person]);
-        object_bind_u8(p, "index", &person, 0);
-        object_bind_object(context, "person", p, 0);
-
-        U8 result = 1;
-        object_bind_u8(context, "result", &result, 1);
-
-        int rv = call_script("confiscateTool", context);
-        object_release(context);
-
-        if (rv == 0 && result == 0) {
-            return 0;
-        }
     }
 
     g_Persons[person].Force -= gptr[goods].at;

@@ -1104,17 +1104,6 @@ FAR U8 LargessMake(U8 city)
                     g = gqptr[gcode];
                     p = pqptr[pcode];
                     if (g_engineConfig.enableScript) {
-                        Object *context = object_new(8);
-                        object_bind_u8(context, "cityIndex", &city, 0);
-                        object_bind_u8(context, "personIndex", &p, 0);
-                        object_bind_u8(context, "toolIndex", &g, 0);
-
-                        int ret = call_script("makeLargess", context);
-                        object_release(context);
-
-                        if (ret == 0) {
-                            break;
-                        }
                     }
                     eq = g_Persons[p].Equip;
                     if (!(eq[0]))

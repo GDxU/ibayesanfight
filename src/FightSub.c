@@ -285,13 +285,6 @@ U8 FgtJNAction(FGTCMD *pcmd)
 
     gam_memset(buf,' ',10);
     if (g_engineConfig.enableScript) {
-        U8 ter = FgtGetGenTer(sIdx);
-        Object* context = object_new(8);
-        object_bind_u8(context, "ter", &ter, 0);
-        object_bind_u8(context, "skillId", &pcmd->param, 0);
-        object_bind_u8(context, "success", &success, 1);
-        call_script("showSkill", context);
-        object_release(context);
     }
     if (success == 0xff){
         rnd = gam_rand() % (g_GenAtt[1].canny + 20);

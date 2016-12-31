@@ -1078,36 +1078,4 @@ static void AdvancedCmdRng(U8 type, U8 param, U8 idx) {
      人物
      */
     if (!g_engineConfig.enableScript) return;
-
-    BuiltAtkAttr(0, idx);
-
-    Object* context = object_new(8);
-
-    Object* attack = object_new(32);
-    object_bind_JLATT(attack, &g_GenAtt[0]);
-    object_bind_object(context, "attack", attack, 0);
-
-    U8 ter = FgtGetTerrain(g_GenPos[idx].x, g_GenPos[idx].y);
-    object_bind_u8(context, "ter", &ter, 0);
-
-    Object* person = object_new(32);
-    object_bind_person(person, &g_Persons[g_FgtParam.GenArray[idx] - 1]);
-    object_bind_object(context, "person", person, 1);
-
-    object_bind_bin(context, "range", g_FgtAtkRng + 3, TOOL_ATT_RANGE, 1);
-
-    object_bind_u8(context, "type", &type, 0);
-
-    object_bind_u8(context, "skill", &param, 0);
-
-    U8 rngb = g_FgtAtkRng[0];
-
-    object_bind_u8(context, "rangeSize", &rngb, 1);
-
-    call_script("calcAttackRange", context);
-    object_release(context);
-
-    g_FgtAtkRng[0] = rngb;
-    g_FgtAtkRng[1] = (U8)(g_GenPos[idx].x - (rngb >> 1));
-    g_FgtAtkRng[2] = (U8)(g_GenPos[idx].y - (rngb >> 1));
 }

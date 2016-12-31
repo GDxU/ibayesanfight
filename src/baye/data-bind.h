@@ -18,36 +18,108 @@
 #define EMSCRIPTEN_KEEPALIVE
 #endif
 
+typedef struct ObjectDef ObjectDef;
+typedef struct ValueDef ValueDef;
 typedef struct Object Object;
-typedef struct Field Field;
+typedef struct Value Value;
 
-Object* object_new(U16 maxFields);
-EMSCRIPTEN_KEEPALIVE
-Object* object_new_slave(Object* master, U16 maxFields);
-void object_release(Object* obj);
+typedef void(*Object_deinit_t)(Object*);
+typedef void(*Value_deinit_t)(Value*);
 
-void object_bind_u8(Object*context, const char*name, U8*ptr, U8 writeable);
-void object_bind_u16(Object*context, const char*name, U16*ptr, U8 writeable);
-void object_bind_u32(Object*context, const char*name, U32*ptr, U8 writeable);
-void object_bind_str(Object*context, const char*name, U8*ptr, U8 writeable);
-void object_bind_bin(Object*context, const char*name, U8*ptr, U32 len, U8 writeable);
-void object_bind_object(Object*context, const char*name, Object*ptr, U8 writeable);
+typedef enum ValueType {
+    ValueTypeU8 = 0,
+    ValueTypeU16,
+    ValueTypeU32,
+    ValueTypeString,
+    ValueTypeObject,
+    ValueTypeArray,
+    ValueTypeMethod,
+} ValueType;
+
+#define ValueFlagRead       (1 << 0)
+#define ValueFlagWrite      (1 << 1)
+#define ValueFlagConst      (1 << 2)
+#define ValueFlagRelative   (1 << 3)
+
+#define ValueFlagRW (ValueFlagRead | ValueFlagWrite)
+#define ValueFlagRO ValueFlagRead
+
+typedef struct ValueDef {
+    ValueType type;
+    U32 size;
+    union {
+        ObjectDef *objDef;
+        ValueDef *arrDef;
+    }subdef;
+} ValueDef;
+
+typedef struct Value {
+    ValueDef *def;
+    U32 offset;
+} Value;
+
+typedef struct Field {
+    const char *name;
+    Value value;
+} Field;
+
+typedef struct ObjectDef
+{
+    U16 count;
+    U16 alloced;
+    Field* fields;
+} ObjectDef;
+
+ObjectDef* ObjectDef_new(void);
+
+void ObjectDef_free(ObjectDef* def);
+void ObjectDef_addField(ObjectDef* def, Field* field);
+
+
+extern ValueDef _U8_def;
+extern ValueDef _U16_def;
+extern ValueDef _U32_def;
+extern ValueDef _str_def;
+
 
 EMSCRIPTEN_KEEPALIVE
-U16 object_get_field_count(Object*context);
+ValueType Value_get_type(Value*value);
+
 EMSCRIPTEN_KEEPALIVE
-Field* object_get_field_by_index(Object*context, U16 index);
+void* Value_get_addr(Value*value);
+
 EMSCRIPTEN_KEEPALIVE
-Field* object_get_field(Object*context, const char*name);
+U8 Value_get_u8_value(Value*value);
+
 EMSCRIPTEN_KEEPALIVE
-unsigned long object_get_field_type(Field*field);
+void Value_set_u8_value(Value*value, U8 cvalue);
+
 EMSCRIPTEN_KEEPALIVE
-unsigned long object_get_field_name(Field*field);
+U16 Value_get_u16_value(Value*value);
+
 EMSCRIPTEN_KEEPALIVE
-unsigned long object_get_field_size(Field*field);
+void Value_set_u16_value(Value*value, U16 cvalue);
+
 EMSCRIPTEN_KEEPALIVE
-unsigned long object_get_field_value(Field*field);
+U32 Value_get_u32_value(Value*value);
+
 EMSCRIPTEN_KEEPALIVE
-void object_set_field_value(Field*field, unsigned long value, U32 size);
+void Value_set_u32_value(Value*value, U32 cvalue);
+
+EMSCRIPTEN_KEEPALIVE
+U32 Object_get_field_count(Value*value);
+
+EMSCRIPTEN_KEEPALIVE
+Field* Object_get_field_by_index(Value*obj, U32 ind);
+
+EMSCRIPTEN_KEEPALIVE
+const char* Object_get_field_name(Field*field);
+
+EMSCRIPTEN_KEEPALIVE
+Value* Object_get_field_value(Field*field);
+
+EMSCRIPTEN_KEEPALIVE
+ValueType Object_get_field_type(Field*field);
+
 
 #endif /* data_bind_h */

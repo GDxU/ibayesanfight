@@ -10,71 +10,120 @@
 #include "baye/extern.h"
 #include "baye/datman.h"
 
-void object_bind_JLATT(Object*o, JLATT	*pAtk)
-{
-    object_bind_u8(o, "level", pAtk->level, 1);
-    object_bind_u8(o, "canny", &pAtk->canny, 1);
-    object_bind_u8(o, "ter", &pAtk->ter, 1);
-    //object_bind_u8(o, "bile", &pAtk->bile, 1);
-    object_bind_u8(o, "armsType", &pAtk->armsType, 1);
-    object_bind_u8(o, "exp", pAtk->exp, 1);
-    object_bind_u16(o, "arms", pAtk->arms, 1);
-    object_bind_u16(o, "at", &pAtk->at, 1);
-    object_bind_u16(o, "df", &pAtk->df, 1);
+#ifndef offsetof
+#define offsetof __builtin_offsetof
+#endif
+
+#define AL(a) sizeof(a)/sizeof(*a)
+
+#define _FIELD(name, ST, field, t) {name, {.def=&_##t##_def, .offset=offsetof(ST, field)}}
+
+#define FIELD_RW(ST, field, t) _FIELD(#field, ST, field, t)
+#define _FIELD_RW(field, t) FIELD_RW(_ST, field, t)
+#define _FIELD_RO _FIELD_RW
+
+static Field JLATT_fields[] = {
+    {"level", {.def=&_U8_def, .offset=offsetof(JLATT, level)}},
+#define _ST JLATT
+    _FIELD_RW(level, U8),
+    _FIELD_RW(canny, U8),
+    _FIELD_RW(ter, U8),
+    _FIELD_RW(bile, U8),
+    _FIELD_RW(armsType, U8),
+    _FIELD_RW(exp, U8),
+    _FIELD_RW(arms, U16),
+    _FIELD_RW(at, U16),
+    _FIELD_RW(df, U16),
+#undef _ST
+};
+
+static ObjectDef JLATT_def = {
+    AL(JLATT_fields), 0, JLATT_fields
+};
+
+static Field City_fields[] = {
+#define _ST CityType
+    _FIELD_RW(State, U8),
+    _FIELD_RW(Belong, U8),
+    _FIELD_RW(SatrapId, U8),
+    _FIELD_RW(FarmingLimit, U16),
+    _FIELD_RW(Farming, U16),
+    _FIELD_RW(CommerceLimit, U16),
+    _FIELD_RW(Commerce, U16),
+    _FIELD_RW(PeopleDevotion, U8),
+    _FIELD_RW(AvoidCalamity, U8),
+    _FIELD_RW(PopulationLimit, U32),
+    _FIELD_RW(Population, U32),
+    _FIELD_RW(Money, U16),
+    _FIELD_RW(Food, U16),
+    _FIELD_RW(MothballArms, U16),
+#undef _ST
+};
+
+static ObjectDef City_def = {
+    AL(City_fields), 0, City_fields
+};
+
+static Field Person_fields[] = {
+#define _ST PersonType
+    _FIELD_RW(OldBelong, U8),
+    _FIELD_RW(Belong, U8),
+    _FIELD_RW(Level, U8),
+    _FIELD_RW(Force, U8),
+    _FIELD_RW(IQ, U8),
+    _FIELD_RW(Devotion, U8),
+    _FIELD_RW(Character, U8),
+    _FIELD_RW(Experience, U8),
+    _FIELD_RW(Thew, U8),
+    _FIELD_RW(ArmsType, U8),
+    _FIELD_RW(Arms, U16),
+    _FIELD("Tool1", _ST, Equip[0], U8),
+    _FIELD("Tool2", _ST, Equip[1], U8),
+    _FIELD_RW(Age, U8),
+#undef _ST
+};
+
+static ObjectDef Person_object_def = {
+    AL(Person_fields), 0, Person_fields
+};
+
+static ValueDef Person_value_def = {
+    .type = ValueTypeObject,
+    .size = sizeof(PersonType),
+    .subdef.objDef = &Person_object_def,
+};
+
+static Field Tool_fields[] = {
+#define _ST GOODS
+    _FIELD_RO(useflag, U8),
+    _FIELD_RO(changeAttackRange, U8),
+    //_FIELD_RO(atRange, Binary),// TODO
+    _FIELD_RO(at, U8),
+    _FIELD_RO(iq, U8),
+    _FIELD_RO(move, U8),
+    _FIELD_RO(arm, U8),
+#undef _ST
+};
+
+static ObjectDef Tool_def = {
+    AL(Tool_fields), 0, Tool_fields
+};
+
+static struct g_var {
+    Value* people;
+    Value* tools;
+    Value* cities;
+} g_var = {0};
+
+void g_var_init(void) {
+    static ValueDef personArray_def = { .type=ValueTypeArray, .size=0, .subdef.arrDef=&Person_value_def };
+    static Value personArray = {.def=&personArray_def, .offset=0};
+    personArray_def.size =Person_value_def.size * PERSON_MAX;
+    personArray.offset = (U32)g_Persons;
+    g_var.people = &personArray;
 }
 
-Object* create_JLATT(JLATT	*pAtk)
-{
-    Object* obj = object_new(16);
-    object_bind_JLATT(obj, pAtk);
-    return obj;
-}
-
-void object_bind_city(Object*o, CityType *city)
-{
-    object_bind_u8(o, "state", &city->State, 0);
-    object_bind_u8(o, "belong", &city->Belong, 1);
-    object_bind_u8(o, "satrapId", &city->SatrapId, 1);
-    object_bind_u16(o, "farmingLimit", &city->FarmingLimit, 1);
-    object_bind_u16(o, "farming", &city->Farming, 1);
-    object_bind_u16(o, "commerceLimit", &city->CommerceLimit, 1);
-    object_bind_u16(o, "commerce", &city->Commerce, 1);
-    object_bind_u8(o, "peopleDevotion", &city->PeopleDevotion, 1);
-    object_bind_u8(o, "avoidCalamity", &city->AvoidCalamity, 1);
-    object_bind_u32(o, "populationLimit", &city->PopulationLimit, 1);
-    object_bind_u32(o, "population", &city->Population, 1);
-    object_bind_u16(o, "money", &city->Money, 1);
-    object_bind_u16(o, "food", &city->Food, 1);
-    object_bind_u16(o, "mothballArms", &city->MothballArms, 1);
-}
-
-void object_bind_person(Object*o, PersonType *person)
-{
-    object_bind_u8(o, "belong", &person->Belong, 1);
-    object_bind_u8(o, "level", &person->Level, 1);
-    object_bind_u8(o, "force", &person->Force, 1);
-    object_bind_u8(o, "iq", &person->IQ, 1);
-    object_bind_u8(o, "devotion", &person->Devotion, 1);
-    object_bind_u8(o, "character", &person->Character, 1);
-    object_bind_u8(o, "experience", &person->Experience, 1);
-    object_bind_u8(o, "thew", &person->Thew, 1);
-    object_bind_u8(o, "armsType", &person->ArmsType, 1);
-    object_bind_u16(o, "arms", &person->Arms, 1);
-    object_bind_u8(o, "equip1", &person->Equip[0], 1);
-    object_bind_u8(o, "equip2", &person->Equip[1], 1);
-    object_bind_u8(o, "age", &person->Age, 1);
-}
-
-void object_bind_tool(Object*o, GOODS *tool)
-{
-    object_bind_u8(o, "useflag", &tool->useflag, 0);
-    object_bind_u8(o, "changeAttackRange", &tool->changeAttackRange, 0);
-    object_bind_bin(o, "atRange", tool->atRange, sizeof(tool->atRange), 0);
-    object_bind_u8(o, "at", &tool->at, 0);
-    object_bind_u8(o, "iq", &tool->iq, 0);
-    object_bind_u8(o, "move", &tool->move, 0);
-    object_bind_u8(o, "arm", &tool->arm, 0);
-}
+#if 0
 
 void object_bind_FGTJK(Object*o, FGTJK*param)
 {
@@ -159,4 +208,10 @@ Object* get_geninfo_by_index(Object*context, U8 index)
     Object* infoObj = object_new_slave(context, 32);
     object_bind_JLPOS(infoObj, info);
     return infoObj;
+}
+#endif
+
+Value* test_value(void) {
+    g_var_init();
+    return g_var.people;
 }
