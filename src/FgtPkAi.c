@@ -104,6 +104,34 @@ U8 FgtGetMCmdNear(FGTCMD *pcmd)
             if(g_MoveSpeed)
                 GamDelay(SHOW_DLYBASE * 5,false);
         }
+
+        if (g_engineConfig.enableScript) {
+#define _ST FGTCMD
+            static Field _fields[] = {
+                _FIELD_RW(type, U8),
+                _FIELD_RW(param, U8),
+                _FIELD_RW(sIdx, U8),
+                _FIELD_RW(aIdx, U8),
+            };
+
+            static ObjectDef _obj_def = {
+                AL(_fields), 0, sizeof(_ST), _fields
+            };
+
+            static ValueDef _value_def = {
+                .type = ValueTypeObject,
+                .size = sizeof(_ST),
+                .subdef.objDef = &_obj_def,
+            };
+#undef _ST
+            static Value context = {.def = &_value_def};
+            context.offset = (U32)pcmd;
+
+            if (call_script("aiFightCommand", &context) == 0) {
+                return i;
+            }
+        }
+
         /* 将领移动 */
         FgtCmpMove(i);
         if(g_LookEnemy)
@@ -1073,10 +1101,6 @@ U8 TransIdxToGen3(U8 idx)
 }
 
 static void AdvancedCmdRng(U8 type, U8 param, U8 idx) {
-    /*
-     人物属性
-     人物
-     */
     if (!g_engineConfig.enableScript) return;
     BuiltAtkAttr(0, idx);
 

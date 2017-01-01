@@ -9,29 +9,12 @@
 #include "baye/bind-objects.h"
 #include "baye/extern.h"
 #include "baye/datman.h"
+#include "baye/comm.h"
 
 DEC_U8ARR_DEF(5);
 DEC_U8ARR_DEF(6);
 DEC_U8ARR_DEF(8);
-
-static Field JLATT_fields[] = {
-    {"level", {.def=&_U8_def, .offset=offsetof(JLATT, level)}},
-#define _ST JLATT
-    _FIELD_RW(level, U8),
-    _FIELD_RW(canny, U8),
-    _FIELD_RW(ter, U8),
-    _FIELD_RW(bile, U8),
-    _FIELD_RW(armsType, U8),
-    _FIELD_RW(exp, U8),
-    _FIELD_RW(arms, U16),
-    _FIELD_RW(at, U16),
-    _FIELD_RW(df, U16),
-#undef _ST
-};
-
-static ObjectDef JLATT_def = {
-    AL(JLATT_fields), 0, sizeof(JLATT), JLATT_fields
-};
+DEC_U8ARR_DEF(FGTA_MAX);
 
 static Value g_var = {0};
 
@@ -230,6 +213,89 @@ void global_var_init(void) {
         ObjectDef_addField(def, &arrfield);
     }
     {
+#define _ST JLATT
+        static Field _fields[] = {
+            _FIELD_RW(level, U8),
+            _FIELD_RW(canny, U8),
+            _FIELD_RW(ter, U8),
+            _FIELD_RW(bile, U8),
+            _FIELD_RW(armsType, U8),
+            _FIELD_RW(exp, U8),
+            _FIELD_RW(arms, U16),
+            _FIELD_RW(at, U16),
+            _FIELD_RW(df, U16),
+        };
+
+        static ObjectDef _obj_def = {
+            AL(_fields), 0, sizeof(_ST), _fields
+        };
+
+        static ValueDef _value_def = {
+            .type = ValueTypeObject,
+            .size = sizeof(_ST),
+            .subdef.objDef = &_obj_def,
+        };
+#undef _ST
+        static ValueDef arrdef = { .type=ValueTypeArray, .size=0, .subdef.arrDef=&_value_def };
+        static Field arrfield = {"g_GenAtt", {.def=&arrdef, .offset=0}};
+        arrdef.size = _value_def.size * 2;
+        arrfield.value.offset = (U32)g_GenAtt;
+        ObjectDef_addField(def, &arrfield);
+    }
+    {
+#define _ST JLPOS
+        static Field _fields[] = {
+            _FIELD_RW(x, U8),
+            _FIELD_RW(y, U8),
+            _FIELD_RW(hp, U8),
+            _FIELD_RW(mp, U8),
+            _FIELD_RW(move, U8),
+            _FIELD_RW(active, U8),
+            _FIELD_RW(state, U8),
+        };
+
+        static ObjectDef _obj_def = {
+            AL(_fields), 0, sizeof(_ST), _fields
+        };
+
+        static ValueDef _value_def = {
+            .type = ValueTypeObject,
+            .size = sizeof(_ST),
+            .subdef.objDef = &_obj_def,
+        };
+#undef _ST
+        static ValueDef arrdef = { .type=ValueTypeArray, .size=0, .subdef.arrDef=&_value_def };
+        static Field arrfield = {"g_GenPos", {.def=&arrdef, .offset=0}};
+        arrdef.size = _value_def.size * FGTA_MAX;
+        arrfield.value.offset = (U32)g_GenPos;
+        ObjectDef_addField(def, &arrfield);
+    }
+    {
+#define _ST FGTJK
+        static Field _fields[] = {
+            _FIELD_RW(Mode, U8),
+            _FIELD_RW(Way, U8),
+            _FIELD_RW(MapId, U16),
+            _FIELD_RW(MProvender, U16),
+            _FIELD_RW(EProvender, U16),
+            _U8ARR_FIELD(GenArray, FGTA_MAX),
+        };
+
+        static ObjectDef _obj_def = {
+            AL(_fields), 0, sizeof(_ST), _fields
+        };
+
+        static ValueDef _value_def = {
+            .type = ValueTypeObject,
+            .size = sizeof(_ST),
+            .subdef.objDef = &_obj_def,
+        };
+#undef _ST
+        static Field field = {"g_FgtParam", {.def=&_value_def, .offset=0}};
+        field.value.offset = (U32)&g_FgtParam;
+        ObjectDef_addField(def, &field);
+    }
+    {
 #define _ST EngineConfig
         static Field _fields[] = {
             _FIELD_RW(enableToolAttackRange, U8),
@@ -279,43 +345,40 @@ void global_var_init(void) {
         static Field field = {"g_engineConfig", {.def=&_value_def, .offset=0}};
         field.value.offset = (U32)&g_engineConfig;
         ObjectDef_addField(def, &field);
-typedef struct {
-} EngineConfig;
+    }
+    {
+#define _ST OrderType
+        static Field _fields[] = {
+            _FIELD_RW(OrderId, U8),
+            _FIELD_RW(Person, U8),
+            _FIELD_RW(City, U8),
+            _FIELD_RW(Object, U8),
+            _FIELD_RW(Arms, U16),
+            _FIELD_RW(Food, U16),
+            _FIELD_RW(Money, U16),
+            _FIELD_RW(Consume, U8),
+            _FIELD_RW(TimeCount, U8),
+        };
+
+        static ObjectDef _obj_def = {
+            AL(_fields), 0, sizeof(_ST), _fields
+        };
+
+        static ValueDef _value_def = {
+            .type = ValueTypeObject,
+            .size = sizeof(_ST),
+            .subdef.objDef = &_obj_def,
+        };
+#undef _ST
+        static ValueDef arrdef = { .type=ValueTypeArray, .size=0, .subdef.arrDef=&_value_def };
+        static Field arrfield = {"g_OrderQueue", {.def=&arrdef, .offset=0}};
+        arrdef.size = _value_def.size * ORDER_MAX;
+        arrfield.value.offset = (U32)ORDERQUEUE;
+        ObjectDef_addField(def, &arrfield);
     }
 
-#if 0
-
-/*-------------------TODO:-----------------------*/
-FGTJK	g_FgtParam;		/* 战斗模块接口参数 */
-JLPOS	g_GenPos[FGTA_MAX];	/* 将领地图位置及基本属性 */
-JLATT	g_GenAtt[2];		/* 攻击状态下的两个将领属性 */
-
-extern U8 *_FIGHTERS_IDX;      /* 出征武将队列索引(30个字节) */
-extern U8 *_FIGHTERS;      /* 出征武将队列(30*10=300个字节) */
-extern U8 *_ORDERQUEUE;        /* 命令队列(12*100=1200个字节) */
-
-void object_bind_FGTJK(Object*o, FGTJK*param)
-{
-    object_bind_u8(o, "mode", &param->Mode, 0);
-    object_bind_u8(o, "way", &param->Way, 0);
-    object_bind_u16(o, "mapId", &param->MapId, 0);
-    object_bind_u16(o, "ourFoods", &param->MProvender, 1);
-    object_bind_u16(o, "enemyFoods", &param->EProvender, 1);
-    object_bind_bin(o, "genArray", param->GenArray, FGTA_MAX, 1);
-}
-
-void object_bind_JLPOS(Object*o, JLPOS *pos)
-{
-    object_bind_u8(o, "x", &pos->x, 1);
-    object_bind_u8(o, "y", &pos->y, 1);
-    object_bind_u8(o, "hp", &pos->hp, 1);
-    object_bind_u8(o, "mp", &pos->mp, 1);
-    object_bind_u8(o, "move", &pos->move, 1);
-    object_bind_u8(o, "active", &pos->active, 1);
-    object_bind_u8(o, "state", &pos->state, 1);
-}
-
-#endif
+    DEFADD_U8ARR(FIGHTERS_IDX, 30);
+    DEFADD_U8ARR(FIGHTERS, 300);
 }
 
 Value* bind_get_global(void) {
