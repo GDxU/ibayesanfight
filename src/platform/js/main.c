@@ -33,9 +33,6 @@ int main(int argc, char*argv[])
     GamSetDataDir((U8*)"/data/");
     GamSetLcdFlushCallback(_lcd_flush_cb);
     GamConInit();
-    if (g_engineConfig.enableScript) {
-        script_init();
-    }
     GamBaYeEng();
 
     EM_ASM({

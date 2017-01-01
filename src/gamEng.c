@@ -20,6 +20,8 @@
 #define	GamEng
 #include "baye/enghead.h"
 #include "touch.h"
+#include "baye/bind-objects.h"
+#include "baye/script.h"
 
 #define		IN_FILE	1	/* 当前文件位置 */
 
@@ -138,6 +140,12 @@ U8 GamVarInit(void)
     g_LookEnemy = true;
     g_LookMovie = true;
     g_MoveSpeed = true;
+
+
+    if (g_engineConfig.enableScript) {
+        global_var_init();
+        script_init();
+    }
     return 0;
 }
 /***********************************************************************

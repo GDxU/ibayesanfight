@@ -10,17 +10,9 @@
 #include "baye/extern.h"
 #include "baye/datman.h"
 
-#ifndef offsetof
-#define offsetof __builtin_offsetof
-#endif
-
-#define AL(a) sizeof(a)/sizeof(*a)
-
-#define _FIELD(name, ST, field, t) {name, {.def=&_##t##_def, .offset=offsetof(ST, field)}}
-
-#define FIELD_RW(ST, field, t) _FIELD(#field, ST, field, t)
-#define _FIELD_RW(field, t) FIELD_RW(_ST, field, t)
-#define _FIELD_RO _FIELD_RW
+DEC_U8ARR_DEF(5);
+DEC_U8ARR_DEF(6);
+DEC_U8ARR_DEF(8);
 
 static Field JLATT_fields[] = {
     {"level", {.def=&_U8_def, .offset=offsetof(JLATT, level)}},
@@ -38,92 +30,216 @@ static Field JLATT_fields[] = {
 };
 
 static ObjectDef JLATT_def = {
-    AL(JLATT_fields), 0, JLATT_fields
+    AL(JLATT_fields), 0, sizeof(JLATT), JLATT_fields
 };
 
-static Field City_fields[] = {
-#define _ST CityType
-    _FIELD_RW(State, U8),
-    _FIELD_RW(Belong, U8),
-    _FIELD_RW(SatrapId, U8),
-    _FIELD_RW(FarmingLimit, U16),
-    _FIELD_RW(Farming, U16),
-    _FIELD_RW(CommerceLimit, U16),
-    _FIELD_RW(Commerce, U16),
-    _FIELD_RW(PeopleDevotion, U8),
-    _FIELD_RW(AvoidCalamity, U8),
-    _FIELD_RW(PopulationLimit, U32),
-    _FIELD_RW(Population, U32),
-    _FIELD_RW(Money, U16),
-    _FIELD_RW(Food, U16),
-    _FIELD_RW(MothballArms, U16),
-#undef _ST
-};
+static Value g_var = {0};
 
-static ObjectDef City_def = {
-    AL(City_fields), 0, City_fields
-};
+void global_var_init(void) {
+    static ObjectDef* def = NULL;
+    static ValueDef vref;
 
-static Field Person_fields[] = {
+    if (def == NULL) {
+        def = ObjectDef_new();
+    }
+
+    vref.size = 0;
+    vref.subdef.objDef = def;
+    vref.type = ValueTypeObject;
+
+    g_var.def = &vref;
+    g_var.offset = 0;
+
+    DEFADD_U8ARR(g_FightMap, SCR_MAPWID*SCR_MAPHGT);
+    DEFADD_U8ARR(g_FightPath, FGT_MRG*FGT_MRG + 25);
+    DEFADD_U8ARR(g_FgtAtkRng, MAX_ATT_RANGE + 5);
+
+    DEFADDF(g_TileId, U16);
+    DEFADDF(g_EneTmpProv, U16);
+
+    DEFADDF(g_MapWid, U8);
+    DEFADDF(g_MapHgt, U8);
+
+    DEFADDF(g_FoucsX, U8);
+    DEFADDF(g_FoucsY, U8);
+
+    DEFADDF(g_MapSX, U8);
+    DEFADDF(g_MapSY, U8);
+
+    DEFADDF(g_PathSX, U8);
+    DEFADDF(g_PathSY, U8);
+
+    DEFADDF(g_PUseSX, U8);
+    DEFADDF(g_PUseSY, U8);
+
+    DEFADDF(g_BakUpX, U8);
+    DEFADDF(g_BakUpY, U8);
+
+    DEFADDF(g_CityX, U8);
+    DEFADDF(g_CityY, U8);
+
+    DEFADDF(g_FgtOver, U8);
+
+    DEFADDF(g_FgtWeather, U8);
+    DEFADDF(g_FgtBoutCnt, U8);
+    DEFADDF(g_MainGenIdx, U8);
+    DEFADDF(g_LookEnemy, U8);
+    DEFADDF(g_LookMovie, U8);
+    DEFADDF(g_MoveSpeed, U8);
+
+    DEFADDF(g_PlayerKing, U8);
+    DEFADDF(g_YearDate, U16);
+
+    DEFADDF(g_MonthDate, U8);
+    DEFADDF(g_PIdx, U8);
+
+    DEFADD_U8ARR(&g_PersonsQueue, PERSON_MAX);
+    DEFADD_U8ARR(&g_GoodsQueue, GOODS_MAX);
+
+
+    {
 #define _ST PersonType
-    _FIELD_RW(OldBelong, U8),
-    _FIELD_RW(Belong, U8),
-    _FIELD_RW(Level, U8),
-    _FIELD_RW(Force, U8),
-    _FIELD_RW(IQ, U8),
-    _FIELD_RW(Devotion, U8),
-    _FIELD_RW(Character, U8),
-    _FIELD_RW(Experience, U8),
-    _FIELD_RW(Thew, U8),
-    _FIELD_RW(ArmsType, U8),
-    _FIELD_RW(Arms, U16),
-    _FIELD("Tool1", _ST, Equip[0], U8),
-    _FIELD("Tool2", _ST, Equip[1], U8),
-    _FIELD_RW(Age, U8),
+        static Field _fields[] = {
+            _FIELD_RW(OldBelong, U8),
+            _FIELD_RW(Belong, U8),
+            _FIELD_RW(Level, U8),
+            _FIELD_RW(Force, U8),
+            _FIELD_RW(IQ, U8),
+            _FIELD_RW(Devotion, U8),
+            _FIELD_RW(Character, U8),
+            _FIELD_RW(Experience, U8),
+            _FIELD_RW(Thew, U8),
+            _FIELD_RW(ArmsType, U8),
+            _FIELD_RW(Arms, U16),
+            _FIELD("Tool1", _ST, Equip[0], U8),
+            _FIELD("Tool2", _ST, Equip[1], U8),
+            _FIELD_RW(Age, U8),
+        };
+
+        static ObjectDef _obj_def = {
+            AL(_fields), 0, sizeof(_ST), _fields
+        };
+
+        static ValueDef _value_def = {
+            .type = ValueTypeObject,
+            .size = sizeof(_ST),
+            .subdef.objDef = &_obj_def,
+        };
 #undef _ST
-};
+        static ValueDef arrdef = { .type=ValueTypeArray, .size=0, .subdef.arrDef=&_value_def };
+        static Field arrfield = {"g_Persons", {.def=&arrdef, .offset=0}};
+        arrdef.size = _value_def.size * PERSON_MAX;
+        arrfield.value.offset = (U32)g_Persons;
 
-static ObjectDef Person_object_def = {
-    AL(Person_fields), 0, Person_fields
-};
+        ObjectDef_addField(def, &arrfield);
+    }
+    {
+#define _ST CityType
+        static Field _fields[] = {
+            _FIELD_RW(State, U8),
+            _FIELD_RW(Belong, U8),
+            _FIELD_RW(SatrapId, U8),
+            _FIELD_RW(FarmingLimit, U16),
+            _FIELD_RW(Farming, U16),
+            _FIELD_RW(CommerceLimit, U16),
+            _FIELD_RW(Commerce, U16),
+            _FIELD_RW(PeopleDevotion, U8),
+            _FIELD_RW(AvoidCalamity, U8),
+            _FIELD_RW(PopulationLimit, U32),
+            _FIELD_RW(Population, U32),
+            _FIELD_RW(Money, U16),
+            _FIELD_RW(Food, U16),
+            _FIELD_RW(MothballArms, U16),
+        };
 
-static ValueDef Person_value_def = {
-    .type = ValueTypeObject,
-    .size = sizeof(PersonType),
-    .subdef.objDef = &Person_object_def,
-};
+        static ObjectDef _obj_def = {
+            AL(_fields), 0, sizeof(_ST), _fields
+        };
 
-static Field Tool_fields[] = {
+        static ValueDef _value_def = {
+            .type = ValueTypeObject,
+            .size = sizeof(_ST),
+            .subdef.objDef = &_obj_def,
+        };
+#undef _ST
+        static ValueDef arrdef = { .type=ValueTypeArray, .size=0, .subdef.arrDef=&_value_def };
+        static Field arrfield = {"g_Cities", {.def=&arrdef, .offset=0}};
+        arrdef.size = _value_def.size * CITY_MAX;
+        arrfield.value.offset = (U32)g_Cities;
+
+        ObjectDef_addField(def, &arrfield);
+    }
+    {
 #define _ST GOODS
-    _FIELD_RO(useflag, U8),
-    _FIELD_RO(changeAttackRange, U8),
-    //_FIELD_RO(atRange, Binary),// TODO
-    _FIELD_RO(at, U8),
-    _FIELD_RO(iq, U8),
-    _FIELD_RO(move, U8),
-    _FIELD_RO(arm, U8),
+        static Field _fields[] = {
+            _FIELD_RO(useflag, U8),
+            _FIELD_RO(changeAttackRange, U8),
+            //_FIELD_RO(atRange, Binary),// TODO
+            _FIELD_RO(at, U8),
+            _FIELD_RO(iq, U8),
+            _FIELD_RO(move, U8),
+            _FIELD_RO(arm, U8),
+        };
+
+        static ObjectDef _obj_def = {
+            AL(_fields), 0, sizeof(_ST), _fields
+        };
+
+        static ValueDef _value_def = {
+            .type = ValueTypeObject,
+            .size = sizeof(_ST),
+            .subdef.objDef = &_obj_def,
+        };
 #undef _ST
-};
+        static ValueDef arrdef = { .type=ValueTypeArray, .size=0, .subdef.arrDef=&_value_def };
+        static Field arrfield = {"g_Tools", {.def=&arrdef, .offset=0}};
+        arrdef.size = _value_def.size * GOODS_MAX;
+        arrfield.value.offset = (U32)ResLoadToCon(GOODS_RESID, 1, g_CBnkPtr);
 
-static ObjectDef Tool_def = {
-    AL(Tool_fields), 0, Tool_fields
-};
+        ObjectDef_addField(def, &arrfield);
+    }
+    {
+#define _ST SKILLEF
 
-static struct g_var {
-    Value* people;
-    Value* tools;
-    Value* cities;
-} g_var = {0};
+        static Field _fields[] = {
+            _FIELD_RO(aim, U8),
+            _FIELD_RO(state, U8),
+            _FIELD_RO(power, U16),
+            _FIELD_RO(destroy, U16),
+            _FIELD_RO(useMp, U8),
+            _U8ARR_FIELD(weather, 5),
+            _U8ARR_FIELD(eland, 8),
+            _U8ARR_FIELD(oland, 8),
+            _U8ARR_FIELD(earm, 6),
+        };
 
-void g_var_init(void) {
-    static ValueDef personArray_def = { .type=ValueTypeArray, .size=0, .subdef.arrDef=&Person_value_def };
-    static Value personArray = {.def=&personArray_def, .offset=0};
-    personArray_def.size =Person_value_def.size * PERSON_MAX;
-    personArray.offset = (U32)g_Persons;
-    g_var.people = &personArray;
-}
+        static ObjectDef _obj_def = {
+            AL(_fields), 0, sizeof(_ST), _fields
+        };
+
+        static ValueDef _value_def = {
+            .type = ValueTypeObject,
+            .size = sizeof(_ST),
+            .subdef.objDef = &_obj_def,
+        };
+#undef _ST
+        static ValueDef arrdef = { .type=ValueTypeArray, .size=0, .subdef.arrDef=&_value_def };
+        static Field arrfield = {"g_Skills", {.def=&arrdef, .offset=0}};
+        arrdef.size = _value_def.size * 255; // TODO
+        arrfield.value.offset = (U32)ResLoadToCon(SKL_RESID, 1, g_CBnkPtr);
+        ObjectDef_addField(def, &arrfield);
+    }
 
 #if 0
+
+/*-------------------TODO:-----------------------*/
+FGTJK	g_FgtParam;		/* 战斗模块接口参数 */
+JLPOS	g_GenPos[FGTA_MAX];	/* 将领地图位置及基本属性 */
+JLATT	g_GenAtt[2];		/* 攻击状态下的两个将领属性 */
+
+extern U8 *_FIGHTERS_IDX;      /* 出征武将队列索引(30个字节) */
+extern U8 *_FIGHTERS;      /* 出征武将队列(30*10=300个字节) */
+extern U8 *_ORDERQUEUE;        /* 命令队列(12*100=1200个字节) */
 
 void object_bind_FGTJK(Object*o, FGTJK*param)
 {
@@ -144,74 +260,11 @@ void object_bind_JLPOS(Object*o, JLPOS *pos)
     object_bind_u8(o, "move", &pos->move, 1);
     object_bind_u8(o, "active", &pos->active, 1);
     object_bind_u8(o, "state", &pos->state, 1);
-
 }
 
-void object_bind_fight_env(Object*o) {
-
-    object_bind_bin(o, "fightPath", g_FightPath, FGT_MRG*FGT_MRG + 25, 1);
-    object_bind_bin(o, "attackRange", g_FgtAtkRng, MAX_ATT_RANGE + 5, 1);
-    object_bind_u16(o, "enemyFoods", &g_EneTmpProv, 1);
-    object_bind_u8(o, "mapHeight", &g_MapHgt, 0);
-    object_bind_u8(o, "mapWidth", &g_MapWid, 0);
-    object_bind_u8(o, "weather", &g_FgtWeather, 1);
-    object_bind_u8(o, "day", &g_FgtBoutCnt, 1);
-    object_bind_FGTJK(o, &g_FgtParam);
-
-    Object* ourAttackAttr = create_JLATT(&g_GenAtt[0]);
-    object_bind_object(o, "ourAttackAttr", ourAttackAttr, 1);
-    Object* enemyAttackAttr = create_JLATT(&g_GenAtt[1]);
-    object_bind_object(o, "enemyAttackAttr", enemyAttackAttr, 1);
-}
-
-Object* create_fight_env(void)
-{
-    Object* env = object_new(32);
-    object_bind_fight_env(env);
-    return env;
-}
-
-void object_bind_game_env(Object* o)
-{
-    object_bind_u8(o, "playerKing", &g_PlayerKing, 1);
-    object_bind_u16(o, "year", &g_YearDate, 1);
-    object_bind_u8(o, "month", &g_MonthDate, 1);
-    object_bind_u8(o, "period", &g_PIdx, 0);
-}
-
-Object* get_game_env(void) {
-    Object* env = object_new(8);
-    object_bind_game_env(env);
-    return env;
-}
-
-
-Object* get_tool_by_index(Object*context, U8 index)
-{
-    GOODS *ptr = (GOODS *)(ResLoadToCon(GOODS_RESID, 1, g_CBnkPtr) + (U16)(index) * sizeof(GOODS));
-    Object*toolObj = object_new_slave(context, 16);
-    object_bind_tool(toolObj, ptr);
-    return toolObj;
-}
-
-Object* get_person_by_index(Object*context, U8 index)
-{
-    PersonType* person = &g_Persons[index];
-    Object* personObj = object_new_slave(context, 32);
-    object_bind_person(personObj, person);
-    return personObj;
-}
-
-Object* get_geninfo_by_index(Object*context, U8 index)
-{
-    JLPOS* info = &g_GenPos[index];
-    Object* infoObj = object_new_slave(context, 32);
-    object_bind_JLPOS(infoObj, info);
-    return infoObj;
-}
 #endif
+}
 
-Value* test_value(void) {
-    g_var_init();
-    return g_var.people;
+Value* bind_get_global(void) {
+    return &g_var;
 }

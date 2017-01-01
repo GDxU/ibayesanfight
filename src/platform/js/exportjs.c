@@ -14,6 +14,7 @@
 #include	"baye/script.h"
 #include	"baye/extern.h"
 #include	"baye/sharefun.h"
+#include	"baye/datman.h"
 #include    "touch.h"
 
 EMSCRIPTEN_KEEPALIVE
@@ -51,15 +52,15 @@ int bayeGetCurrentPeriod()
 }
 
 EMSCRIPTEN_KEEPALIVE
-int bayeCityAddGoods(U8 city, U8 goods)
+int bayeCityAddGoods(U8 cityIndex, U8 goodsIndex)
 {
-    return AddGoodsEx(city, goods, 1);
+    return AddGoodsEx(cityIndex, goodsIndex, 1);
 }
 
 EMSCRIPTEN_KEEPALIVE
-int bayeCityDelGoods(U8 city, U8 goods)
+int bayeCityDelGoods(U8 cityIndex, U8 goodsIndex)
 {
-    return DelGoods(city, goods);
+    return DelGoods(cityIndex, goodsIndex);
 }
 
 EMSCRIPTEN_KEEPALIVE
@@ -139,7 +140,7 @@ ValueType ValueDef_get_type(ValueDef*def) {
 
 
 EMSCRIPTEN_KEEPALIVE
-U8 baye_get_u8_value(U8*value) {
+U32 baye_get_u8_value(U8*value) {
     return *(U8*)value;
 }
 
@@ -149,7 +150,7 @@ void baye_set_u8_value(U8*value, U8 cvalue) {
 }
 
 EMSCRIPTEN_KEEPALIVE
-U16 baye_get_u16_value(U16*value) {
+U32 baye_get_u16_value(U16*value) {
     return *(U16*)value;
 }
 
@@ -195,9 +196,39 @@ ValueDef* ValueDef_get_array_subdef(ValueDef*def) {
     return def->subdef.arrDef;
 }
 
-Value* test_value(void);
+EMSCRIPTEN_KEEPALIVE
+FAR const U8* bayeGetPersonName(U8 personIndex)
+{
+    static U8 name[32] = {0};
+    GetPersonName(personIndex, name);
+    return name;
+}
 
 EMSCRIPTEN_KEEPALIVE
-Value* baye_test_value(void) {
-    return test_value();
+FAR const U8* bayeGetToolName(U8 toolIndex)
+{
+    static U8 name[32] = {0};
+    GetGoodsName(toolIndex, name);
+    return name;
+}
+
+EMSCRIPTEN_KEEPALIVE
+FAR const U8* bayeGetSkillName(U8 skillIndex)
+{
+    static U8 name[32] = {0};
+    ResLoadToMem(SKL_NAMID, skillIndex+1, name);
+    return name;
+}
+
+EMSCRIPTEN_KEEPALIVE
+FAR U32 bayeStrLen(const U8* s)
+{
+    return (U32)strlen((const char*)s);
+}
+
+Value* bind_get_global(void);
+
+EMSCRIPTEN_KEEPALIVE
+Value* bayeGetGlobal(void) {
+    return bind_get_global();
 }

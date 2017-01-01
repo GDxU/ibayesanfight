@@ -33,7 +33,6 @@ typedef enum ValueType {
     ValueTypeString,
     ValueTypeObject,
     ValueTypeArray,
-    ValueTypeMethod,
 } ValueType;
 
 #define ValueFlagRead       (1 << 0)
@@ -67,6 +66,7 @@ typedef struct ObjectDef
 {
     U16 count;
     U16 alloced;
+    U32 size;
     Field* fields;
 } ObjectDef;
 
@@ -82,44 +82,8 @@ extern ValueDef _U32_def;
 extern ValueDef _str_def;
 
 
-EMSCRIPTEN_KEEPALIVE
-ValueType Value_get_type(Value*value);
-
-EMSCRIPTEN_KEEPALIVE
-void* Value_get_addr(Value*value);
-
-EMSCRIPTEN_KEEPALIVE
-U8 Value_get_u8_value(Value*value);
-
-EMSCRIPTEN_KEEPALIVE
-void Value_set_u8_value(Value*value, U8 cvalue);
-
-EMSCRIPTEN_KEEPALIVE
-U16 Value_get_u16_value(Value*value);
-
-EMSCRIPTEN_KEEPALIVE
-void Value_set_u16_value(Value*value, U16 cvalue);
-
-EMSCRIPTEN_KEEPALIVE
-U32 Value_get_u32_value(Value*value);
-
-EMSCRIPTEN_KEEPALIVE
-void Value_set_u32_value(Value*value, U32 cvalue);
-
-EMSCRIPTEN_KEEPALIVE
-U32 Object_get_field_count(Value*value);
-
-EMSCRIPTEN_KEEPALIVE
-Field* Object_get_field_by_index(Value*obj, U32 ind);
-
-EMSCRIPTEN_KEEPALIVE
-const char* Object_get_field_name(Field*field);
-
-EMSCRIPTEN_KEEPALIVE
-Value* Object_get_field_value(Field*field);
-
-EMSCRIPTEN_KEEPALIVE
-ValueType Object_get_field_type(Field*field);
-
+void ObjectDef_addField(ObjectDef* def, Field* field);
+void ObjectDef_addFieldF(ObjectDef* def, const char*name, ValueType t, void* ptr, void* subdef, U32 arrLen);
+void ObjectDef_addFieldArray(ObjectDef* def, const char*name, ValueType t, void* ptr, U32 arrLen);
 
 #endif /* data_bind_h */

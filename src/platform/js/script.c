@@ -19,6 +19,7 @@ void script_init(void)
                 methods: {}
             };
         }
+        window.baye.data = baye_bridge_value(_bayeGetGlobal());
     });
 
     U8* script = ResLoadStringWithId(ENGINE_SCRIPT);
