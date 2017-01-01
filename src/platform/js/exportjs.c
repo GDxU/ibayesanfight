@@ -224,6 +224,14 @@ FAR const U8* bayeGetSkillName(U8 skillIndex)
 }
 
 EMSCRIPTEN_KEEPALIVE
+FAR const U8* bayeGetCityName(U8 cityIndex)
+{
+    static U8 name[32] = {0};
+    GetCityName(cityIndex, name);
+    return name;
+}
+
+EMSCRIPTEN_KEEPALIVE
 FAR U32 bayeStrLen(const U8* s)
 {
     return (U32)strlen((const char*)s);
