@@ -126,3 +126,24 @@ void ObjectDef_addFieldArray(ObjectDef* def, const char*name, ValueType t, void*
     }
     return ObjectDef_addFieldF(def, name, ValueTypeArray, ptr, subdef, arrLen);
 }
+
+Value* Value_ObjectValue_new(void) {
+    ObjectDef* def = ObjectDef_new();
+    ValueDef* valuedef = malloc(sizeof(ValueDef));
+    Value* value = malloc(sizeof(Value));
+
+    valuedef->size = 0;
+    valuedef->subdef.objDef = def;
+    valuedef->type = ValueTypeObject;
+
+    value->offset = 0;
+    value->def = valuedef;
+
+    return value;
+}
+
+void Value_ObjectValue_free(Value*value) {
+    ObjectDef_free(value->def->subdef.objDef);
+    free(value->def);
+    free(value);
+}

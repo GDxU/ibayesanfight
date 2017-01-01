@@ -1104,6 +1104,19 @@ FAR U8 LargessMake(U8 city)
                     g = gqptr[gcode];
                     p = pqptr[pcode];
                     if (g_engineConfig.enableScript) {
+                        Value *context = Value_ObjectValue_new();
+
+                        ObjectDef_addFieldF(context->def->subdef.objDef, "cityIndex", ValueTypeU8, &city, 0, 0);
+                        ObjectDef_addFieldF(context->def->subdef.objDef, "personIndex", ValueTypeU8, &p, 0, 0);
+                        ObjectDef_addFieldF(context->def->subdef.objDef, "toolIndex", ValueTypeU8, &g, 0, 0);
+
+                        int ret = call_script("makeLargess", context);
+
+                        Value_ObjectValue_free(context);
+
+                        if (ret == 0) {
+                            break;
+                        }
                     }
                     eq = g_Persons[p].Equip;
                     if (!(eq[0]))

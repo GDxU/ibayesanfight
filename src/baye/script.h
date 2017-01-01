@@ -14,6 +14,6 @@
 #include <baye/data-bind.h>
 
 void script_init(void);
-int call_script(const char* name, Object* context);
+int call_script(const char* name, Value* context);
 
 #endif /* script_h */

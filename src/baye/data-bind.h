@@ -86,4 +86,7 @@ void ObjectDef_addField(ObjectDef* def, Field* field);
 void ObjectDef_addFieldF(ObjectDef* def, const char*name, ValueType t, void* ptr, void* subdef, U32 arrLen);
 void ObjectDef_addFieldArray(ObjectDef* def, const char*name, ValueType t, void* ptr, U32 arrLen);
 
+Value* Value_ObjectValue_new(void);
+void Value_ObjectValue_free(Value*value);
+
 #endif /* data_bind_h */
