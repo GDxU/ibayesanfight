@@ -15,9 +15,10 @@ void script_init(void)
 {
     EM_ASM({
         if (window.baye == undefined) {
-            window.baye = {
-                methods: {}
-            };
+            window.baye = {};
+        }
+        if (window.baye.methods == undefined) {
+            window.baye.methods = {};
         }
         window.baye.data = baye_bridge_value(_bayeGetGlobal());
     });

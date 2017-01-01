@@ -112,6 +112,12 @@ FAR U8 *gam_freadall(gam_FILE *fhandle)
         memcpy(rv + offset, buf, cnt);
         offset += cnt;
     } while (cnt > 0);
+
+    if (offset >= alloced) {
+        rv = realloc(rv, alloced+1);
+    }
+    rv[offset] = 0;
         
     return rv;
 }
+

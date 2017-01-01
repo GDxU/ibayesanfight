@@ -17,6 +17,9 @@
 #include	"baye/datman.h"
 #include    "touch.h"
 
+void gam_setcustomdata(U8*data);
+U8* gam_getcustomdata();
+
 EMSCRIPTEN_KEEPALIVE
 void bayeSendKey(int key)
 {
@@ -231,4 +234,14 @@ Value* bind_get_global(void);
 EMSCRIPTEN_KEEPALIVE
 Value* bayeGetGlobal(void) {
     return bind_get_global();
+}
+
+EMSCRIPTEN_KEEPALIVE
+U8* bayeGetCustomData(void) {
+    return gam_getcustomdata();
+}
+
+EMSCRIPTEN_KEEPALIVE
+void bayeSetCustomData(U8*data) {
+    return gam_setcustomdata(data);
 }

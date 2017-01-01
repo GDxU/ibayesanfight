@@ -52,6 +52,7 @@ U8 GamPicMenu(U16 picID,U16 speID, const Rect *buttonsRect, U8 buttonsCount, U8 
 void GamRcdIFace(U8 count);
 bool GamSaveRcd(U8 idx);
 bool GamLoadRcd(U8 idx);
+static U8* customData = NULL;
 
 #define	DBG_MEM_AFTER	0
 #define	DBG_MEM_BEFURE	1
@@ -246,6 +247,7 @@ bool GamMainChose(void)
                     }
                 }
                 g_FromSave = 0;
+                call_script("didOpenNewGame", NULL);
                 return true;
             case 1:		/* 重返沙场 */
                 idx = GamRecordMan(true);
@@ -778,6 +780,7 @@ bool GamLoadRcd(U8 idx)
     gam_fread((U8 *)g_Persons,sizeof(PersonType),personQueueLen,fp);
     gam_fread((U8 *)g_PersonsQueue,1,personQueueLen,fp);
     gam_fread((U8 *)g_GoodsQueue,1,goodsQueueLen,fp);
+    customData = gam_freadall(fp);
     gam_fclose(fp);
     
     /* 读取第二个文件 */
@@ -804,6 +807,7 @@ bool GamLoadRcd(U8 idx)
     }
     
     gam_fclose(fp);
+    call_script("didLoadGame", NULL);
     return true;	
 }
 /***********************************************************************
@@ -824,6 +828,8 @@ bool GamSaveRcd(U8 idx)
     ResLoadToMem(IFACE_STRID,dWriting,tbuf);
     GamMsgBox(tbuf,0);
     ResLoadToMem(IFACE_STRID,dSaveFNam,tbuf);
+    
+    call_script("willSaveGame", NULL);
     
     /* 存储第一个文件 */
     tbuf[5] = (idx << 1) + 0x30;		/* tbuf = "sango?.sav" */
@@ -848,6 +854,8 @@ bool GamSaveRcd(U8 idx)
     gam_fwrite((U8 *)g_Persons,sizeof(PersonType),PERSON_MAX,fp);
     gam_fwrite((U8 *)g_PersonsQueue,1,PERSON_MAX,fp);
     gam_fwrite((U8 *)g_GoodsQueue,1,GOODS_MAX,fp);
+    if (customData)
+        gam_fwrite(customData, strlen((const char*)customData), 1, fp);
     gam_fclose(fp);
     
     /* 存储第二个文件 */
@@ -870,7 +878,7 @@ bool GamSaveRcd(U8 idx)
     }
     
     gam_fclose(fp);
-    return true;	
+    return true;
 }
 
 void GamSetDataDir(const U8*dataDir_)
@@ -906,4 +914,13 @@ U16 add_16(U16 dst, int n)
     } else {
         return rv;
     }
+}
+
+U8* gam_getcustomdata() {
+    return customData;
+}
+
+void gam_setcustomdata(U8*data) {
+    if (customData) free(customData);
+    customData = (U8*)strdup((char*)data);
 }

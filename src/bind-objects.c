@@ -229,6 +229,59 @@ void global_var_init(void) {
         arrfield.value.offset = (U32)ResLoadToCon(SKL_RESID, 1, g_CBnkPtr);
         ObjectDef_addField(def, &arrfield);
     }
+    {
+#define _ST EngineConfig
+        static Field _fields[] = {
+            _FIELD_RW(enableToolAttackRange, U8),
+            _FIELD_RW(fixCityOffset, U8),
+            _FIELD_RW(fixThewOverFlow, U8),
+            _FIELD_RW(fixFoodOverFlow, U8),
+            _FIELD_RW(fixOverFlow16, U8),
+            _FIELD_RW(fixConsumeMoney, U8),
+            _FIELD_RW(fixFightMoveOutRange, U8),
+            _FIELD_RW(enable16bitConsumeMoney, U8),
+            _FIELD_RW(enableScript, U8),
+            _FIELD_RW(fixAlienateComsumeThew, U8),
+            _FIELD_RW(disableSL, U8),
+            _FIELD_RW(aiLevelUpSpeed, U8),
+            _FIELD_RW(disableAgeGrow, U8),
+            _FIELD_RW(enableCustomRatio, U8),
+            _FIELD_RW(ratioOfArmsToLevel, U16),
+            _FIELD_RW(ratioOfArmsToAge, U8),
+            _FIELD_RW(ratioOfArmsToIQ, U8),
+            _FIELD_RW(ratioOfArmsToForce, U8),
+            _FIELD_RW(ratioOfAttToForce, U8),
+            _FIELD_RW(ratioOfAttToIQ, U8),
+            _FIELD_RW(ratioOfAttToAge, U8),
+            _FIELD_RW(ratioOfDefenceToForce, U8),
+            _FIELD_RW(ratioOfDefenceToIQ, U8),
+            _FIELD_RW(ratioOfDefenceToAge, U8),
+            _FIELD_RW(ratioOfFoodToArmsPerMouth, U16),
+            _FIELD_RW(ratioOfFoodToArmsPerDay, U16),
+            _FIELD_RW(armsPerDevotion, U8),
+            _FIELD_RW(armsPerMoney, U8),
+            _FIELD_RW(maxLevel, U8),
+            _FIELD_RW(responseNoteOfBettle, U8),
+            _FIELD_RW(aiDefenceMode, U8),
+            _FIELD_RW(aiAttackMethod, U8),
+        };
+
+        static ObjectDef _obj_def = {
+            AL(_fields), 0, sizeof(_ST), _fields
+        };
+
+        static ValueDef _value_def = {
+            .type = ValueTypeObject,
+            .size = sizeof(_ST),
+            .subdef.objDef = &_obj_def,
+        };
+#undef _ST
+        static Field field = {"g_engineConfig", {.def=&_value_def, .offset=0}};
+        field.value.offset = (U32)&g_engineConfig;
+        ObjectDef_addField(def, &field);
+typedef struct {
+} EngineConfig;
+    }
 
 #if 0
 

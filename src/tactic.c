@@ -22,6 +22,7 @@
 #define	TACTIC_C
 #include "baye/enghead.h"
 #include "touch.h"
+#include "baye/script.h"
 
 /*void ComputerTacticInterior(U8 city);
  void ComputerTacticDiplomatism(U8 city);
@@ -726,6 +727,7 @@ FAR U8 GameDevDrv(void)
             SetCitySatrap();
         }
 
+        call_script("tacticStage1", NULL);
         /*玩家策略*/
         do
         {
@@ -745,16 +747,20 @@ FAR U8 GameDevDrv(void)
             }
         } while(1);
 
+        call_script("tacticStage2", NULL);
         /*提示电脑策略中*/
         ShowTacticNote();
         /*电脑策略*/
         ComputerTactic();
+        call_script("tacticStage3", NULL);
 
         /*命令队列执行*/
         PolicyExec();
+        call_script("tacticStage4", NULL);
 
         /*环境更新*/
         ConditionUpdate();
+        call_script("tacticStage5", NULL);
     }
 }
 

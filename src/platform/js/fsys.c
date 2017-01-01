@@ -106,6 +106,11 @@ FAR U8 *gam_freadall(gam_FILE *fhandle)
         memcpy(rv + offset, buf, cnt);
         offset += cnt;
     } while (cnt > 0);
+
+    if (offset >= alloced) {
+        rv = realloc(rv, alloced+1);
+    }
+    rv[offset] = 0;
         
     return rv;
 }
@@ -242,7 +247,7 @@ static U8* getValue(const U8*key) {
 
         if (value) {
             var buffer = Module._malloc(value.length+1);
-            Module.writeStringToMemory(value, buffer, false);
+            Module.stringToUTF8(value, buffer, 1024*1024*10);
             return buffer;
         }
         return 0;
