@@ -291,7 +291,7 @@ U8 FgtJNAction(FGTCMD *pcmd)
 
         ObjectDef_addFieldF(context->def->subdef.objDef, "ter", ValueTypeU8, &ter, 0, 0);
         ObjectDef_addFieldF(context->def->subdef.objDef, "skillId", ValueTypeU8, &pcmd->param, 0, 0);
-        ObjectDef_addFieldF(context->def->subdef.objDef, "success", ValueTypeU8, &success, 0, 0);
+        ObjectDef_addFieldF(context->def->subdef.objDef, "result", ValueTypeU8, &success, 0, 0);
 
         call_script("showSkill", context);
 

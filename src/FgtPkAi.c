@@ -1141,13 +1141,13 @@ static void AdvancedCmdRng(U8 type, U8 param, U8 idx) {
     U8 ter = FgtGetTerrain(g_GenPos[idx].x, g_GenPos[idx].y);
     ObjectDef_addFieldF(context->def->subdef.objDef, "ter", ValueTypeU8, &ter, 0, 0);
 
-    U8 personId = g_FgtParam.GenArray[idx] - 1;
-    ObjectDef_addFieldF(context->def->subdef.objDef, "personId", ValueTypeU8, &personId, 0, 0);
+    U8 personIndex = g_FgtParam.GenArray[idx] - 1;
+    ObjectDef_addFieldF(context->def->subdef.objDef, "personIndex", ValueTypeU8, &personIndex, 0, 0);
 
     ObjectDef_addFieldArray(context->def->subdef.objDef, "range", ValueTypeU8, g_FgtAtkRng + 3, TOOL_ATT_RANGE);
 
     ObjectDef_addFieldF(context->def->subdef.objDef, "type", ValueTypeU8, &type, 0, 0);
-    ObjectDef_addFieldF(context->def->subdef.objDef, "skill", ValueTypeU8, &param, 0, 0);
+    ObjectDef_addFieldF(context->def->subdef.objDef, "skillId", ValueTypeU8, &param, 0, 0);
     U8 rngb = g_FgtAtkRng[0];
 
     ObjectDef_addFieldF(context->def->subdef.objDef, "rangeSize", ValueTypeU8, &rngb, 0, 0);
