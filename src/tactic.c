@@ -725,9 +725,8 @@ FAR U8 GameDevDrv(void)
             skipUpdateSatrap = 0;
         } else {
             SetCitySatrap();
+            call_script("tacticStage1", NULL);
         }
-
-        call_script("tacticStage1", NULL);
         /*玩家策略*/
         do
         {
