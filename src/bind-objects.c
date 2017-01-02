@@ -133,6 +133,10 @@ void global_var_init(void) {
             _FIELD_RW(Money, U16),
             _FIELD_RW(Food, U16),
             _FIELD_RW(MothballArms, U16),
+            _FIELD_RW(PersonQueue, U8),
+            _FIELD_RW(Persons, U8),
+            _FIELD_RW(ToolQueue, U8),
+            _FIELD_RW(Tools, U8),
         };
 
         static ObjectDef _obj_def = {
