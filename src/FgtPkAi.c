@@ -509,6 +509,38 @@ void FgtGetSklBuf(U8 id,U8 *buf)
     len = ((float)dArmsJNNum[type] * g_Persons[id].Level / (MAX_LEVEL + 1)) + 1;
     ptr += type * SKILL_NMAX;
     gam_memcpy(sklbuf,ptr,len);
+    if (g_engineConfig.enableScript) {
+        struct S {
+            U8 personIndex;
+            U8 skillIds[SKILL_NMAX+1];
+        } tmp;
+        tmp.personIndex = id;
+        gam_memcpy(tmp.skillIds, buf, SKILL_NMAX+1);
+
+#define PMAX_SKILL (FGTA_MAX+1)
+
+        DEC_U8ARR_DEF(PMAX_SKILL);
+
+#define _ST struct S
+        static Field _fields[] = {
+            _FIELD_RW(personIndex, U8),
+            _U8ARR_FIELD(skillIds, PMAX_SKILL),
+        };
+
+        static ObjectDef _obj_def = {
+            AL(_fields), 0, sizeof(_ST), _fields
+        };
+
+        static ValueDef _value_def = {
+            .type = ValueTypeObject,
+            .size = sizeof(_ST),
+            .subdef.objDef = &_obj_def,
+        };
+#undef _ST
+        static Value context = {.def = &_value_def};
+        context.offset = (U32)&tmp;
+        call_script("getSkillIds", &context);
+    }
 }
 /***********************************************************************
  * 说明:     构造技能名字缓冲
