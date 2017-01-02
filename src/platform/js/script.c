@@ -17,8 +17,8 @@ void script_init(void)
         if (window.baye == undefined) {
             window.baye = {};
         }
-        if (window.baye.methods == undefined) {
-            window.baye.methods = {};
+        if (window.baye.hooks == undefined) {
+            window.baye.hooks = {};
         }
         window.baye.data = baye_bridge_value(_bayeGetGlobal());
     });
@@ -38,15 +38,15 @@ int call_script(const char* name, Value* context)
         var name = UTF8ToString($0);
         var rv = 0;
 
-        if (window.baye == undefined || window.baye.methods == undefined || window.baye.methods[name] == undefined) {
+        if (window.baye == undefined || window.baye.hooks == undefined || window.baye.hooks[name] == undefined) {
             rv = -1;
         } else {
             var cContext = $1;
             if (cContext != 0) {
                 var jsContext = baye_bridge_value(cContext);
-                rv = window.baye.methods[name](jsContext);
+                rv = window.baye.hooks[name](jsContext);
             } else {
-                rv = window.baye.methods[name]();
+                rv = window.baye.hooks[name]();
             }
         }
         return rv;
