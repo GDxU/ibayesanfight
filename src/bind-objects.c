@@ -386,5 +386,8 @@ void global_var_init(void) {
 }
 
 Value* bind_get_global(void) {
+    if (g_var.def == NULL) {
+        global_var_init();
+    }
     return &g_var;
 }
