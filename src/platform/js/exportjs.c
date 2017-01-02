@@ -253,3 +253,8 @@ EMSCRIPTEN_KEEPALIVE
 void bayeSetCustomData(U8*data) {
     return gam_setcustomdata(data);
 }
+
+EMSCRIPTEN_KEEPALIVE
+void bayeScriptInit(void) {
+    script_init();
+}
