@@ -24,7 +24,7 @@ Object* get_tool_by_index(Object*context, U8 index);
 
 void object_bind_game_env(Object* o);
 Object* get_game_env(void);
-void global_var_init(void);
+void bind_init(void);
 
 #ifndef offsetof
 #define offsetof __builtin_offsetof

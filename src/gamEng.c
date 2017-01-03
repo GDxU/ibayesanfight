@@ -147,7 +147,6 @@ U8 GamVarInit(void)
     }
 
     if (g_engineConfig.enableScript) {
-        global_var_init();
         script_init();
     }
     return 0;

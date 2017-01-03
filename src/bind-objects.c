@@ -18,7 +18,7 @@ DEC_U8ARR_DEF(FGTA_MAX);
 
 static Value g_var = {0};
 
-void global_var_init(void) {
+void bind_init(void) {
     static ObjectDef* def = NULL;
     static ValueDef vref;
 
@@ -32,6 +32,15 @@ void global_var_init(void) {
 
     g_var.def = &vref;
     g_var.offset = 0;
+
+    DEFADDF(c_ReFlag, U8);
+    DEFADDF(c_Sx, U8);
+    DEFADDF(c_Sy, U8);
+    DEFADDF(c_Ex, U8);
+    DEFADDF(c_Ey, U8);
+
+    DEFADD_U8ARR(g_VisScr, WK_BLEN);
+    DEFADD_U8ARR(g_BVisScr, WK_BLEN);
 
     DEFADD_U8ARR(g_FightMap, SCR_MAPWID*SCR_MAPHGT);
     DEFADD_U8ARR(g_FightPath, FGT_MRG*FGT_MRG + 25);
@@ -388,7 +397,7 @@ void global_var_init(void) {
 
 Value* bind_get_global(void) {
     if (g_var.def == NULL) {
-        global_var_init();
+        bind_init();
     }
     return &g_var;
 }
