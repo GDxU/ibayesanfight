@@ -75,6 +75,7 @@ void global_var_init(void) {
 
     DEFADDF(g_MonthDate, U8);
     DEFADDF(g_PIdx, U8);
+    DEFADDF(g_AutoUpdateMapXY, U8);
 
     DEFADD_U8ARR(&g_PersonsQueue, PERSON_MAX);
     DEFADD_U8ARR(&g_GoodsQueue, GOODS_MAX);
