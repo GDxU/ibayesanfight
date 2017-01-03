@@ -142,6 +142,9 @@ U8 GamVarInit(void)
     g_LookMovie = true;
     g_MoveSpeed = true;
 
+    if (ResLoadStringWithId(ENGINE_SCRIPT)) {
+        g_engineConfig.enableScript = 1;
+    }
 
     if (g_engineConfig.enableScript) {
         global_var_init();
