@@ -106,25 +106,15 @@ U8 FgtGetMCmdNear(FGTCMD *pcmd)
         }
 
         if (g_engineConfig.enableScript) {
+
 #define _ST FGTCMD
-            static Field _fields[] = {
+            _BEGIN_SDEF(context)
                 _FIELD_RW(type, U8),
                 _FIELD_RW(param, U8),
                 _FIELD_RW(sIdx, U8),
                 _FIELD_RW(aIdx, U8),
-            };
-
-            static ObjectDef _obj_def = {
-                AL(_fields), 0, sizeof(_ST), _fields
-            };
-
-            static ValueDef _value_def = {
-                .type = ValueTypeObject,
-                .size = sizeof(_ST),
-                .subdef.objDef = &_obj_def,
-            };
+            _END_SDEF(context);
 #undef _ST
-            static Value context = {.def = &_value_def};
             context.offset = (U32)pcmd;
 
             if (call_script("aiFightCommand", &context) == 0) {

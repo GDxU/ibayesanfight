@@ -14,16 +14,6 @@
 #include "baye/fight.h"
 #include "baye/attribute.h"
 
-void object_bind_JLATT(Object*o, JLATT	*pAtk);
-void object_bind_person(Object*o, PersonType *person);
-void object_bind_city(Object*o, CityType *city);
-void object_bind_tool(Object*o, GOODS *tool);
-
-Object* get_person_by_index(Object*context, U8 index);
-Object* get_tool_by_index(Object*context, U8 index);
-
-void object_bind_game_env(Object* o);
-Object* get_game_env(void);
 void bind_init(void);
 
 #ifndef offsetof
@@ -32,6 +22,8 @@ void bind_init(void);
 
 #define AL(a) sizeof(a)/sizeof(*a)
 
+
+// static
 #define _FIELD(name, ST, field, t) {name, {.def=&_##t##_def, .offset=offsetof(ST, field)}}
 
 #define FIELD_RW(ST, field, t) _FIELD(#field, ST, field, t)
@@ -45,7 +37,23 @@ void bind_init(void);
             ValueTypeArray, n, .subdef.arrDef = &_U8_def\
         }
 
+#define _BEGIN_SDEF(name) static Field name##_fields[] = {
+#define _END_SDEF(name) }; \
+\
+            static ObjectDef name##_obj_def = { \
+                AL(name##_fields), 0, sizeof(_ST), name##_fields \
+            }; \
+\
+            static ValueDef name##_value_def = { \
+                .type = ValueTypeObject, \
+                .size = sizeof(_ST), \
+                .subdef.objDef = &name##_obj_def, \
+            }; \
+            static Value name = {.def = &name##_value_def}
+
+// #### dynamic add
 #define DEFADD_U8ARR(name, n) ObjectDef_addFieldArray(def, #name, ValueTypeU8, name, n);
 #define DEFADDF(name, t) ObjectDef_addFieldF(def, #name, ValueType##t, &name, 0, 0)
 
 #endif /* bind_objects_h */
+
