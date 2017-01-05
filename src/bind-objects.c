@@ -11,6 +11,8 @@
 #include "baye/datman.h"
 #include "baye/comm.h"
 
+void bind_skill_var(ObjectDef* def);
+
 DEC_U8ARR_DEF(5);
 DEC_U8ARR_DEF(6);
 DEC_U8ARR_DEF(8);
@@ -32,6 +34,8 @@ void bind_init(void) {
 
     g_var.def = &vref;
     g_var.offset = 0;
+
+    bind_skill_var(def);
 
     DEFADDF(c_ReFlag, U8);
     DEFADDF(c_Sx, U8);

@@ -485,6 +485,15 @@ void FgtInitArmsJNNum(void)
         dArmsJNNum[i] = n;
     }
 }
+
+#define sizeof_dArmsJNNum sizeof(dArmsJNNum)
+
+void bind_skill_num(ObjectDef*def)
+{
+    DEFADD_U8ARR(dArmsJNNum, sizeof_dArmsJNNum);
+}
+
+
 void FgtGetSklBuf(U8 id,U8 *buf)
 {
     U8	type,len;

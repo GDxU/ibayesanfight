@@ -22,6 +22,7 @@
 #include "baye/data-bind.h"
 #define		IN_FILE	1	/* 当前文件位置 */
 #include "baye/script.h"
+#include "baye/bind-objects.h"
 
 /*本体函数声明*/
 /*------------------------------------------*/
@@ -191,6 +192,8 @@ static U8 dJNSpeSX[JN_MAX] = {0,0,0,0,33,33,33,0,0,0,33,33,0,33,33,33,33,33,33,3
 static U8 dJNMode[JN_MAX] = {1,1,1,1,0,0,0,1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
 void FgtInitArmsJNNum(void);
+void bind_skill_num(ObjectDef*def);
+
 FAR void FgtLoadJNConsts(void) {
     ResItemGetN(IFACE_CONID, kdJNSpeId, dJNSpeId, sizeof(dJNSpeId));
     ResItemGetN(IFACE_CONID, kdJNSpeSFrm, dJNSpeSFrm, sizeof(dJNSpeSFrm));
@@ -198,6 +201,18 @@ FAR void FgtLoadJNConsts(void) {
     ResItemGetN(IFACE_CONID, kdJNSpeSX, dJNSpeSX, sizeof(dJNSpeSX));
     ResItemGetN(IFACE_CONID, kdJNMode, dJNMode, sizeof(dJNMode));
     FgtInitArmsJNNum();
+}
+
+DEC_U8ARR_DEF(JN_MAX);
+
+void bind_skill_var(ObjectDef* def)
+{
+    DEFADD_U8ARR(dJNSpeId, JN_MAX);
+    DEFADD_U8ARR(dJNSpeSFrm, JN_MAX);
+    DEFADD_U8ARR(dJNSpeEFrm, JN_MAX);
+    DEFADD_U8ARR(dJNSpeSX, JN_MAX);
+    DEFADD_U8ARR(dJNMode, JN_MAX);
+    bind_skill_num(def);
 }
 
 U8 FgtGetGenTer(U8 idx);
