@@ -12,6 +12,7 @@
 #include "baye/comm.h"
 
 void bind_skill_var(ObjectDef* def);
+void bind_show_face(ObjectDef* def);
 
 DEC_U8ARR_DEF(5);
 DEC_U8ARR_DEF(6);
@@ -36,6 +37,7 @@ void bind_init(void) {
     g_var.offset = 0;
 
     bind_skill_var(def);
+    bind_show_face(def);
 
     DEFADDF(c_ReFlag, U8);
     DEFADDF(c_Sx, U8);

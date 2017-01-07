@@ -10,7 +10,7 @@
 #define bind_objects_h
 
 #include <stdio.h>
-#include "data-bind.h"
+#include "baye/script.h"
 #include "baye/fight.h"
 #include "baye/attribute.h"
 

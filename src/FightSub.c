@@ -203,8 +203,6 @@ FAR void FgtLoadJNConsts(void) {
     FgtInitArmsJNNum();
 }
 
-DEC_U8ARR_DEF(JN_MAX);
-
 void bind_skill_var(ObjectDef* def)
 {
     DEFADD_U8ARR(dJNSpeId, JN_MAX);

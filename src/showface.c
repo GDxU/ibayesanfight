@@ -22,13 +22,26 @@
 #define	SHOWFACE_C
 #include "baye/enghead.h"
 #include "touch.h"
+#include "baye/bind-objects.h"
 
 /*void GetCityProStr(U8 city,U8 pro,U8 *str);
  void GetPersonProStr(U8 person,U8 pro,U8 *str);
  void GetPersonName(U8 person,U8 *str);*/
 
+static U8 personPropertiesDisplayWitdh[256] = {0};
+static U8 personPropertiesCount = PERSON_PROP_COUNT;
+static U8 toolPropertiesDisplayWitdh[256] = {0};
+static U8 toolPropertiesCount = GOODS_PROP_COUNT;
+static U8 cityPropertiesCount = 11;
 
-
+void bind_show_face(ObjectDef* def)
+{
+    BIND_U8ARR(personPropertiesDisplayWitdh, sizeof(personPropertiesDisplayWitdh));
+    BIND_U8ARR(toolPropertiesDisplayWitdh,   sizeof(toolPropertiesDisplayWitdh));
+    BIND_U8(&personPropertiesCount);
+    BIND_U8(&toolPropertiesCount);
+    BIND_U8(&cityPropertiesCount);
+}
 
 
 
@@ -48,9 +61,9 @@
 void ShowGoodsPro(U8 goods,U8 pro,U8 x,U8 y,U8 wid)
 {
     U8 sx,sy;
-    U8 str[20];
+    U8 str[128];
     U8 i;
-    U8 ptr[7];
+    U8 *ptr = toolPropertiesDisplayWitdh;
     PosItemType positem;
 
     InitItem(x,y,x + wid - 1,y + ASC_HGT,&positem);
@@ -66,8 +79,9 @@ void ShowGoodsPro(U8 goods,U8 pro,U8 x,U8 y,U8 wid)
         return;
     }
 
-    ResItemGet(IFACE_CONID,GOODS_PRO_WID,ptr);
-    for (i = pro;i < 5;i ++)
+    if (ptr[0] == 0) ResItemGet(IFACE_CONID,GOODS_PRO_WID,ptr);
+
+    for (i = pro; i < toolPropertiesCount; i++)
     {
         if (AddItem(ASC_WID * ptr[i] + 1,ASC_HGT,&positem,&sx,&sy))
         {
@@ -101,6 +115,14 @@ void GetGoodsProStr(U8 goods,U8 pro,U8 *str)
     U8 idx = '\0';
     GOODS *gptr;
 
+    IF_HAS_HOOK("getToolPropertyValue") {
+        U8* value = str;
+        BIND_U8EX("toolIndex", &goods);
+        BIND_U8EX("propertyIndex", &pro);
+        BIND_U8ARR(value, 128);
+
+        if (CALL_HOOK() == 0) return;
+    }
 
     gptr = (GOODS *) ResLoadToCon(GOODS_RESID,1,g_CBnkPtr);
     gptr = &gptr[goods];
@@ -167,7 +189,7 @@ void GetGoodsProStr(U8 goods,U8 pro,U8 *str)
 U8 ShowGoodsProStr(U8 pro,U8 x,U8 y,U8 wid)
 {
     U8 sx,sy;
-    U8 str[12];
+    U8 str[128];
     U8 ptr[7];
     U8 i;
     PosItemType positem;
@@ -186,11 +208,21 @@ U8 ShowGoodsProStr(U8 pro,U8 x,U8 y,U8 wid)
     }
 
     ResItemGet(IFACE_CONID,GOODS_PRO_WID,ptr);
-    for (i = pro;i < GOODS_PROP_COUNT;i ++)
+    for (i = pro; i < toolPropertiesCount; i ++)
     {
         if (AddItem(ASC_WID * ptr[i] + 1,ASC_HGT,&positem,&sx,&sy))
         {
-            ResLoadToMem(STRING_CONST,GOODS_ATRR_STR1 + i,str);
+            str[0] = 0;
+
+            IF_HAS_HOOK("getToolPropertyTitle") {
+                U8* title = str;
+                BIND_U8EX("column", &i);
+                BIND_U8ARR(title, 128);
+                CALL_HOOK();
+            }
+            if (str[0] == 0) {
+                ResLoadToMem(STRING_CONST,GOODS_ATRR_STR1 + i,str);
+            }
             PlcMidShowStr(sx + ASC_WID * ptr[i] / 2,sy,str);
             /*GamStrShowS(sx,sy,str);*/
         }
@@ -455,8 +487,8 @@ FAR void GetPersonName(U8 person,U8 *str)
 void ShowPersonPro(U8 person,U8 pro,U8 x,U8 y,U8 wid)
 {
     U8 sx,sy;
-    U8 str[20];
-    U8 ptr[14];
+    U8 str[128];
+    U8 *ptr = personPropertiesDisplayWitdh;
     U8 i;
     PosItemType positem;
 
@@ -474,7 +506,7 @@ void ShowPersonPro(U8 person,U8 pro,U8 x,U8 y,U8 wid)
     }
 
     ResLoadToMem(IFACE_CONID,PERSON_PRO_WID,ptr);
-    for (i = pro;i < 13;i ++)
+    for (i = pro;i < personPropertiesCount;i ++)
     {
         if (AddItem(ASC_WID * ptr[i] + 1,ASC_HGT,&positem,&sx,&sy))
         {
@@ -506,6 +538,17 @@ void GetPersonProStr(U8 person,U8 pro,U8 *str)
 {
     U8 idx = '\0';
     U8 b;
+
+    IF_HAS_HOOK("getPersonPropertyValue") {
+        U8* value = str;
+
+        BIND_U8EX("personIndex", &person);
+        BIND_U8EX("propertyIndex", &pro);
+        BIND_U8ARR(value, 128);
+
+        if (CALL_HOOK() == 0) return;
+    }
+
 
     b = g_Persons[person].Belong;
     switch (pro)
@@ -622,8 +665,8 @@ void GetPersonProStr(U8 person,U8 pro,U8 *str)
 U8 ShowPersonProStr(U8 pro,U8 x,U8 y,U8 wid)
 {
     U8 sx,sy;
-    U8 str[12];
-    U8 ptr[14];
+    U8 str[128];
+    U8 *ptr = personPropertiesDisplayWitdh;
     U8 i;
     PosItemType positem;
 
@@ -641,11 +684,24 @@ U8 ShowPersonProStr(U8 pro,U8 x,U8 y,U8 wid)
     }
 
     ResItemGet(IFACE_CONID,PERSON_PRO_WID,ptr);
-    for (i = pro;i < PERSON_PROP_COUNT;i ++)
+    for (i = pro; i < personPropertiesCount; i++)
     {
         if (AddItem(ASC_WID * ptr[i] + 1,ASC_HGT,&positem,&sx,&sy))
         {
-            ResLoadToMem(STRING_CONST,ATRR_STR18 + i,str);
+            str[0] = 0;
+
+            IF_HAS_HOOK("getPersonPropertyTitle") {
+                U8 column = i;
+                U8* value = str;
+
+                BIND_U8(&column);
+                BIND_U8ARR(value, 128);
+                
+                CALL_HOOK();
+            }
+
+            if (str[0] == 0) ResLoadToMem(STRING_CONST,ATRR_STR18 + i,str);
+
             PlcMidShowStr(sx + ASC_WID * ptr[i] / 2,sy,str);
             /*GamStrShowS(sx,sy,str);*/
         }
@@ -903,8 +959,19 @@ FAR void GetCityName(U8 city,U8 *str)
 void GetCityProStr(U8 city,U8 pro,U8 *str)
 {
     U8 strbuf[20];
-
     str[0] = '\0';
+
+    IF_HAS_HOOK("getCityPropertyDisplay") {
+        U8* display = str;
+
+        BIND_U8EX("cityIndex", &city);
+        BIND_U8EX("propertyIndex", &pro);
+        BIND_U8ARR(display, 128);
+        if (CALL_HOOK() == 0) {
+            return;
+        }
+    }
+
     switch (pro)
     {
         case 0:		/*归属*/
@@ -1026,7 +1093,7 @@ FAR void GetCityState(U8 city,U8 *str)
 FAR U8 ShowCityPro(U8 city)
 {
     U8 showflag,showtop,i;
-    U8 str[30];
+    U8 str[128];
     GMType Msg;
     Touch touch = {0};
     
@@ -1064,7 +1131,7 @@ FAR U8 ShowCityPro(U8 city)
                     break;
                 case VK_DOWN:
                 case VK_RIGHT:
-                    if (showtop + ((WK_EY - 1 - 2 - (WK_SY + 2)) / (ASC_HGT + 1)) - 1 < 11)
+                    if (showtop + ((WK_EY - 1 - 2 - (WK_SY + 2)) / (ASC_HGT + 1)) - 1 < cityPropertiesCount)
                     {
                         showtop += ((WK_EY - 1 - 2 - (WK_SY + 2)) / (ASC_HGT + 1)) - 1;
                         showflag = 1;
