@@ -105,23 +105,15 @@ U8 FgtGetMCmdNear(FGTCMD *pcmd)
                 GamDelay(SHOW_DLYBASE * 5,false);
         }
 
-        if (g_engineConfig.enableScript) {
+        IF_HAS_HOOK("aiFightCommand") {
+            BIND_U8EX("type", &pcmd->type);
+            BIND_U8EX("skillId", &pcmd->param);
+            BIND_U8EX("sIdx", &pcmd->sIdx);
+            BIND_U8EX("aIdx", &pcmd->aIdx);
 
-#define _ST FGTCMD
-            _BEGIN_SDEF(context)
-                _FIELD_RW(type, U8),
-                _FIELD_RW(param, U8),
-                _FIELD_RW(sIdx, U8),
-                _FIELD_RW(aIdx, U8),
-            _END_SDEF(context);
-#undef _ST
-            context.offset = (U32)pcmd;
-
-            if (call_script("aiFightCommand", &context) == 0) {
-                return i;
-            }
+            if (CALL_HOOK() == 0) return i;
         }
-
+        
         /* 将领移动 */
         FgtCmpMove(i);
         if(g_LookEnemy)
@@ -508,37 +500,15 @@ void FgtGetSklBuf(U8 id,U8 *buf)
     len = ((float)dArmsJNNum[type] * g_Persons[id].Level / (MAX_LEVEL + 1)) + 1;
     ptr += type * SKILL_NMAX;
     gam_memcpy(sklbuf,ptr,len);
-    if (g_engineConfig.enableScript) {
-        struct S {
-            U8 personIndex;
-            U8 skillIds[SKILL_NMAX+1];
-        } tmp;
-        tmp.personIndex = id;
-        gam_memcpy(tmp.skillIds, buf, SKILL_NMAX+1);
 
-#define PMAX_SKILL (FGTA_MAX+1)
-
-        DEC_U8ARR_DEF(PMAX_SKILL);
-
-#define _ST struct S
-        static Field _fields[] = {
-            _FIELD_RW(personIndex, U8),
-            _U8ARR_FIELD(skillIds, PMAX_SKILL),
-        };
-
-        static ObjectDef _obj_def = {
-            AL(_fields), 0, sizeof(_ST), _fields
-        };
-
-        static ValueDef _value_def = {
-            .type = ValueTypeObject,
-            .size = sizeof(_ST),
-            .subdef.objDef = &_obj_def,
-        };
-#undef _ST
-        static Value context = {.def = &_value_def};
-        context.offset = (U32)&tmp;
-        call_script("getSkillIds", &context);
+    IF_HAS_HOOK("getSkillIds") {
+        U8 skillIds[SKILL_NMAX+1];
+        gam_memcpy(skillIds, buf, SKILL_NMAX+1);
+        BIND_U8EX("personIndex", &id);
+        BIND_U8ARR(skillIds, sizeof(skillIds));
+        if (CALL_HOOK() == 0) {
+            gam_memcpy(buf, skillIds, SKILL_NMAX+1);
+        }
     }
 }
 /***********************************************************************
@@ -1132,32 +1102,26 @@ U8 TransIdxToGen3(U8 idx)
 }
 
 static void AdvancedCmdRng(U8 type, U8 param, U8 idx) {
-    if (!g_engineConfig.enableScript) return;
-    BuiltAtkAttr(0, idx);
+    IF_HAS_HOOK("calcAttackRange") {
+        BuiltAtkAttr(0, idx);
 
-    Value *context = Value_ObjectValue_new();
+        U8 ter = FgtGetTerrain(g_GenPos[idx].x, g_GenPos[idx].y);
+        U8 personIndex = g_FgtParam.GenArray[idx] - 1;
+        U8*range = g_FgtAtkRng+3;
+        U8 rangeSize = g_FgtAtkRng[0];
+        U8* skillId = &param;
 
-    U8 ter = FgtGetTerrain(g_GenPos[idx].x, g_GenPos[idx].y);
-    ObjectDef_addFieldF(context->def->subdef.objDef, "ter", ValueTypeU8, &ter, 0, 0);
+        BIND_U8(&ter);
+        BIND_U8(&personIndex);
+        BIND_U8(&type);
+        BIND_U8(skillId);
+        BIND_U8(&rangeSize);
+        BIND_U8ARR(range, TOOL_ATT_RANGE);
 
-    U8 personIndex = g_FgtParam.GenArray[idx] - 1;
-    ObjectDef_addFieldF(context->def->subdef.objDef, "personIndex", ValueTypeU8, &personIndex, 0, 0);
-
-    ObjectDef_addFieldArray(context->def->subdef.objDef, "range", ValueTypeU8, g_FgtAtkRng + 3, TOOL_ATT_RANGE);
-
-    ObjectDef_addFieldF(context->def->subdef.objDef, "type", ValueTypeU8, &type, 0, 0);
-    ObjectDef_addFieldF(context->def->subdef.objDef, "skillId", ValueTypeU8, &param, 0, 0);
-    U8 rngb = g_FgtAtkRng[0];
-
-    ObjectDef_addFieldF(context->def->subdef.objDef, "rangeSize", ValueTypeU8, &rngb, 0, 0);
-
-
-    call_script("calcAttackRange", context);
-    
-    Value_ObjectValue_free(context);
-
-
-    g_FgtAtkRng[0] = rngb;
-    g_FgtAtkRng[1] = (U8)(g_GenPos[idx].x - (rngb >> 1));
-    g_FgtAtkRng[2] = (U8)(g_GenPos[idx].y - (rngb >> 1));
+        if (CALL_HOOK() == 0) {
+            g_FgtAtkRng[0] = rangeSize;
+            g_FgtAtkRng[1] = (U8)(g_GenPos[idx].x - (rangeSize >> 1));
+            g_FgtAtkRng[2] = (U8)(g_GenPos[idx].y - (rangeSize >> 1));
+        }
+    }
 }

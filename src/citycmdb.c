@@ -1101,23 +1101,19 @@ FAR U8 LargessMake(U8 city)
                 pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
                 if (0xff != pcode)
                 {
-                    g = gqptr[gcode];
-                    p = pqptr[pcode];
-                    if (g_engineConfig.enableScript) {
-                        Value *context = Value_ObjectValue_new();
+                    int ret = -1;
 
-                        ObjectDef_addFieldF(context->def->subdef.objDef, "cityIndex", ValueTypeU8, &city, 0, 0);
-                        ObjectDef_addFieldF(context->def->subdef.objDef, "personIndex", ValueTypeU8, &p, 0, 0);
-                        ObjectDef_addFieldF(context->def->subdef.objDef, "toolIndex", ValueTypeU8, &g, 0, 0);
-
-                        int ret = call_script("makeLargess", context);
-
-                        Value_ObjectValue_free(context);
-
-                        if (ret == 0) {
-                            break;
-                        }
+                    IF_HAS_HOOK("makeLargess") {
+                        BIND_U8EX("cityIndex", &city);
+                        BIND_U8EX("personIndex", &pqptr[pcode]);
+                        BIND_U8EX("toolIndex", &gqptr[gcode]);
+                        ret = CALL_HOOK();
                     }
+
+                    if (ret == 0) {
+                        break;
+                    }
+
                     eq = g_Persons[p].Equip;
                     if (!(eq[0]))
                     {

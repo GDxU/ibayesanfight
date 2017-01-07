@@ -86,6 +86,30 @@ void ObjectDef_addField(ObjectDef* def, Field* field);
 void ObjectDef_addFieldF(ObjectDef* def, const char*name, ValueType t, void* ptr, void* subdef, U32 arrLen);
 void ObjectDef_addFieldArray(ObjectDef* def, const char*name, ValueType t, void* ptr, U32 arrLen);
 
+#define ObjectDef_addFieldU8(def, name, ptr) ObjectDef_addFieldF(def, name, ValueTypeU8, ptr, 0, 0)
+#define ObjectDef_addFieldU16(def, name, ptr) ObjectDef_addFieldF(def, name, ValueTypeU16, ptr, 0, 0)
+#define ObjectDef_addFieldU32(def, name, ptr) ObjectDef_addFieldF(def, name, ValueTypeU32, ptr, 0, 0)
+
+#define ObjectDef_addFieldArray_DEF(name, t, len) ObjectDef_addFieldArray(def, #name, t, name, len)
+#define ObjectDef_addFieldU8Array_DEF(name, len) ObjectDef_addFieldArray_DEF(name, ValueTypeU8, len)
+
+#define ObjectDef_addFieldU8_DEF(name) ObjectDef_addFieldU8(def, #name, name)
+#define ObjectDef_addFieldU16_DEF(name) ObjectDef_addFieldU16(def, #name, name)
+#define ObjectDef_addFieldU32_DEF(name) ObjectDef_addFieldU32(def, #name, name)
+
+#define BIND_U8EX(name, ptr) ObjectDef_addFieldF(def, name, ValueTypeU8, ptr, 0, 0)
+#define BIND_U8(name) BIND_U8EX(#name, name)
+
+#define BIND_U8ARR ObjectDef_addFieldU8Array_DEF
+
+#define IF_HAS_HOOK(name) \
+    if (has_hook(name)) \
+        for (const char* _hook_name = name; _hook_name; _hook_name=0) \
+            for(Value *__v = Value_ObjectValue_new(); __v; Value_ObjectValue_free(__v), __v=0) \
+                for (ObjectDef *def = __v->def->subdef.objDef; def; def=0)
+
+#define CALL_HOOK() call_hook(_hook_name, __v)
+
 Value* Value_ObjectValue_new(void);
 void Value_ObjectValue_free(Value*value);
 

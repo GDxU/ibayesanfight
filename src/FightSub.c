@@ -300,18 +300,14 @@ U8 FgtJNAction(FGTCMD *pcmd)
 
     gam_memset(buf,' ',10);
 
-    if (g_engineConfig.enableScript) {
+    IF_HAS_HOOK("showSkill") {
         U8 ter = FgtGetGenTer(sIdx);
-        Value *context = Value_ObjectValue_new();
-
-        ObjectDef_addFieldF(context->def->subdef.objDef, "ter", ValueTypeU8, &ter, 0, 0);
-        ObjectDef_addFieldF(context->def->subdef.objDef, "skillId", ValueTypeU8, &pcmd->param, 0, 0);
-        ObjectDef_addFieldF(context->def->subdef.objDef, "result", ValueTypeU8, &success, 0, 0);
-
-        call_script("showSkill", context);
-
-        Value_ObjectValue_free(context);
+        BIND_U8(&ter);
+        BIND_U8EX("skillId", &pcmd->param);
+        BIND_U8EX("result", &success);
+        CALL_HOOK();
     }
+
     if (success == 0xff){
         rnd = gam_rand() % (g_GenAtt[1].canny + 20);
         success = rnd <= (g_GenAtt[0].canny >> 1);

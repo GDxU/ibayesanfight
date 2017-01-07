@@ -465,20 +465,16 @@ FAR U8 AddGoodsPerson(U8 goods,U8 person)
     gptr = (GOODS *) ResLoadToCon(GOODS_RESID,1,g_CBnkPtr);
     U8 arm = gptr[goods].arm;
 
-    if (g_engineConfig.enableScript) {
+    IF_HAS_HOOK("giveTool") {
+        U8* personIndex = &person;
+        U8* toolIndex = &goods;
         U8 result = 0;
-        Value *context = Value_ObjectValue_new();
 
-        ObjectDef_addFieldF(context->def->subdef.objDef, "personIndex", ValueTypeU8, &person, 0, 0);
-        ObjectDef_addFieldF(context->def->subdef.objDef, "toolIndex", ValueTypeU8, &goods, 0, 0);
-        ObjectDef_addFieldF(context->def->subdef.objDef, "result", ValueTypeU8, &result, 0, 0);
+        BIND_U8(personIndex);
+        BIND_U8(toolIndex);
+        BIND_U8(&result);
 
-        int rv = call_script("giveTool", context);
-
-        Value_ObjectValue_free(context);
-
-
-        if (rv == 0 && result == 0) {
+        if (CALL_HOOK() == 0 && result == 0) {
             return 0xff;
         }
     }
@@ -535,20 +531,17 @@ FAR U8 DelGoodsPerson(U8 goods,U8 person)
 
     gptr = (GOODS *) ResLoadToCon(GOODS_RESID,1,g_CBnkPtr);
 
-    if (g_engineConfig.enableScript) {
-        U8 result = 1;
-        Value *context = Value_ObjectValue_new();
+    IF_HAS_HOOK("takeOffTool") {
+        U8* personIndex = &person;
+        U8* toolIndex = &goods;
+        U8 result = 0;
 
-        ObjectDef_addFieldF(context->def->subdef.objDef, "personIndex", ValueTypeU8, &person, 0, 0);
-        ObjectDef_addFieldF(context->def->subdef.objDef, "toolIndex", ValueTypeU8, &goods, 0, 0);
-        ObjectDef_addFieldF(context->def->subdef.objDef, "result", ValueTypeU8, &result, 0, 0);
+        BIND_U8(personIndex);
+        BIND_U8(toolIndex);
+        BIND_U8(&result);
 
-        int rv = call_script("takeOffTool", context);
-
-        Value_ObjectValue_free(context);
-
-        if (rv == 0 && result == 0) {
-            return 0;
+        if (CALL_HOOK() == 0 && result == 0) {
+            return 0xff;
         }
     }
 

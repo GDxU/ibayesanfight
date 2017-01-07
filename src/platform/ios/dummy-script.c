@@ -10,5 +10,5 @@
 #include "script.h"
 
 void script_init(void) {}
-int has_script(const char* name) { return 0; }
-int call_script(const char* name, Value* context) { return -1; }
+int has_hook(const char* name) { return 1; }
+int call_hook(const char* name, Value* context) { return -1; }

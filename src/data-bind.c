@@ -34,6 +34,29 @@ ValueDef _str_def = {
     .subdef = {0},
 };
 
+void ValueDef_free(ValueDef*def) {
+    switch (def->type) {
+        case ValueTypeU8:
+        case ValueTypeU16:
+        case ValueTypeU32:
+        case ValueTypeString:
+            break;
+        case ValueTypeArray:
+        {
+            ValueDef_free(def->subdef.arrDef);
+            free(def);
+            break;
+        }
+        case ValueTypeObject:
+        {
+            ObjectDef_free(def->subdef.objDef);
+            free(def);
+            break;
+        }
+    }
+}
+
+
 ObjectDef* ObjectDef_new(void) {
     ObjectDef* def = (ObjectDef*)malloc(sizeof(ObjectDef));
     def->count = 0;
@@ -44,6 +67,9 @@ ObjectDef* ObjectDef_new(void) {
 
 void ObjectDef_free(ObjectDef* def) {
     if (def == NULL) return;
+    for (int i = 0; i < def->count; i++) {
+        ValueDef_free(def->fields[i].value.def);
+    }
     free(def->fields);
     free(def);
 }
@@ -61,6 +87,9 @@ void ObjectDef_addField(ObjectDef* def, Field* field)
 void ObjectDef_addFieldF(ObjectDef* def, const char*name, ValueType t, void* ptr, void* subdef, U32 arrLen)
 {
     Field field;
+    if (*name == '&') {
+        name += 1;
+    }
     field.name = name;
     field.value.offset = (U32)ptr;
     switch (t) {
@@ -103,9 +132,6 @@ void ObjectDef_addFieldF(ObjectDef* def, const char*name, ValueType t, void* ptr
 void ObjectDef_addFieldArray(ObjectDef* def, const char*name, ValueType t, void* ptr, U32 arrLen)
 {
     ValueDef *subdef;
-    if (*name == '&') {
-        name += 1;
-    }
     switch (t) {
         case ValueTypeU8:
             subdef = &_U8_def;
@@ -143,7 +169,8 @@ Value* Value_ObjectValue_new(void) {
 }
 
 void Value_ObjectValue_free(Value*value) {
-    ObjectDef_free(value->def->subdef.objDef);
-    free(value->def);
+    if (value == NULL)
+        return;
+    ValueDef_free(value->def);
     free(value);
 }

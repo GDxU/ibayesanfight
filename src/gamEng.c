@@ -249,7 +249,7 @@ bool GamMainChose(void)
                     }
                 }
                 g_FromSave = 0;
-                call_script("didOpenNewGame", NULL);
+                call_hook("didOpenNewGame", NULL);
                 return true;
             case 1:		/* 重返沙场 */
                 idx = GamRecordMan(true);
@@ -809,7 +809,7 @@ bool GamLoadRcd(U8 idx)
     }
     
     gam_fclose(fp);
-    call_script("didLoadGame", NULL);
+    call_hook("didLoadGame", NULL);
     return true;	
 }
 /***********************************************************************
@@ -831,7 +831,7 @@ bool GamSaveRcd(U8 idx)
     GamMsgBox(tbuf,0);
     ResLoadToMem(IFACE_STRID,dSaveFNam,tbuf);
     
-    call_script("willSaveGame", NULL);
+    call_hook("willSaveGame", NULL);
     
     /* 存储第一个文件 */
     tbuf[5] = (idx << 1) + 0x30;		/* tbuf = "sango?.sav" */

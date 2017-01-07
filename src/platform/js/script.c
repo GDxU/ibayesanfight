@@ -32,7 +32,7 @@ void script_init(void)
     }
 }
 
-int call_script(const char* name, Value* context)
+int call_hook(const char* name, Value* context)
 {
     return EM_ASM_INT({
         var name = UTF8ToString($0);
@@ -53,7 +53,7 @@ int call_script(const char* name, Value* context)
     }, name, context);
 }
 
-int has_script(const char* name) {
+int has_hook(const char* name) {
     return EM_ASM_INT({
         var name = UTF8ToString($0);
         if (window.baye && window.baye.hooks && window.baye.hooks[name]) {

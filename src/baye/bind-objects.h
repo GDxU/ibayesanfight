@@ -38,7 +38,7 @@ void bind_init(void);
         }
 
 #define _BEGIN_SDEF(name) static Field name##_fields[] = {
-#define _END_SDEF(name) }; \
+#define _END_SDEF(name, p) }; \
 \
             static ObjectDef name##_obj_def = { \
                 AL(name##_fields), 0, sizeof(_ST), name##_fields \
@@ -49,7 +49,8 @@ void bind_init(void);
                 .size = sizeof(_ST), \
                 .subdef.objDef = &name##_obj_def, \
             }; \
-            static Value name = {.def = &name##_value_def}
+            static Value name = {.def = &name##_value_def}; \
+            name.offset = (U32)p;
 
 // #### dynamic add
 #define DEFADD_U8ARR(name, n) ObjectDef_addFieldArray(def, #name, ValueTypeU8, name, n);
