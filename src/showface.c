@@ -115,6 +115,7 @@ void GetGoodsProStr(U8 goods,U8 pro,U8 *str)
     U8 idx = '\0';
     GOODS *gptr;
 
+    str[0] = 0;
     IF_HAS_HOOK("getToolPropertyValue") {
         U8* value = str;
         BIND_U8EX("toolIndex", &goods);
@@ -343,7 +344,7 @@ FAR U8 ShowGoodsControl(U8 *goods,U8 gcount,U8 x0,U8 y0,U8 x1,U8 y1)
                     }
                     break;
                 case VK_RIGHT:
-                    if (spcv[spc + 1] < GOODS_PROP_COUNT)
+                    if (spcv[spc + 1] < toolPropertiesCount)
                     {
                         spc += 1;
                         showflag = 1;
@@ -386,7 +387,7 @@ FAR U8 ShowGoodsControl(U8 *goods,U8 gcount,U8 x0,U8 y0,U8 x1,U8 y1)
                     if (spc != p.x || top != p.y) {
                         top = p.y;
                         if (p.x > spc) {
-                            if (spcv[spc + 1] < GOODS_PROP_COUNT) {
+                            if (spcv[spc + 1] < toolPropertiesCount) {
                                 spc = spc + 1;
                             }
                         } else {
@@ -851,7 +852,7 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 initSelected,U8 x0,U8 y0,U8 x1,
                     }
                     break;
                 case VK_RIGHT:
-                    if (spcv[spc + 1] < PERSON_PROP_COUNT)
+                    if (spcv[spc + 1] < personPropertiesCount)
                     {
                         spc += 1;
                         showflag = 1;
@@ -896,7 +897,7 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 initSelected,U8 x0,U8 y0,U8 x1,
                     if (spc != p.x || top != p.y) {
                         top = p.y;
                         if (p.x > spc) {
-                            if (spcv[spc + 1] < PERSON_PROP_COUNT) {
+                            if (spcv[spc + 1] < personPropertiesCount) {
                                 spc = spc + 1;
                             }
                         } else {
@@ -1109,6 +1110,7 @@ FAR U8 ShowCityPro(U8 city)
             GamStrShowS((WK_EX - WK_SX - ASC_WID * 15) / 2 + WK_SX,WK_SY + 2,str);
             for (i = 0;i < ((WK_EY - 1 - 2 - (WK_SY + 2)) / (ASC_HGT + 1)) - 1;i ++)
             {
+                if (i >= cityPropertiesCount) break;
                 GetCityProStr(city,showtop + i,str);
                 GamStrShowS((WK_EX - WK_SX - ASC_WID * 15) / 2 + WK_SX,WK_SY + 2 + ASC_HGT + (ASC_HGT + 1) * i,str);
             }
