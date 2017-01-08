@@ -1120,6 +1120,9 @@ FAR U8 LargessMake(U8 city)
                 if (0xff != pcode)
                 {
                     int ret = -1;
+                    
+                    g = gqptr[gcode];
+                    p = pqptr[pcode];
 
                     IF_HAS_HOOK("makeLargess") {
                         BIND_U8EX("cityIndex", &city);
