@@ -7,8 +7,12 @@
 //
 
 #include "baye/script.h"
+#include "baye/bind-objects.h"
 #include "baye/consdef.h"
 #include "baye/datman.h"
+#include "baye/extern.h"
+#include "baye/sharefun.h"
+#include "baye/comm.h"
 #include <emscripten.h>
 
 void script_init(void)
@@ -48,9 +52,55 @@ int call_hook(const char* name, Value* context)
             } else {
                 rv = window.baye.hooks[name]();
             }
+            if (baye.data.g_asyncActionID > 0) {
+                baye.data.g_asyncActionID = 0;
+                alert("Invalid operation in hook " + name);
+            }
         }
         return rv;
     }, name, context);
+}
+
+static int js_callback(void) {
+    return EM_ASM_INT({
+        if (baye.callback)
+            return baye.callback();
+        return 0;
+    }, 0);
+}
+
+int call_hook_a(const char* name, Value* context)
+{
+    int rv = call_hook(name, context);
+
+    if (rv) {
+        if (g_asyncActionID) {
+            printf("Error: %s return %d with async action %d\n", name, rv, g_asyncActionID);
+        }
+        return rv;
+    }
+
+    while (g_asyncActionID) {
+        U16 action = g_asyncActionID;
+        g_asyncActionID = 0;
+
+        switch (action) {
+            case 1: // alert
+                GamMsgBox(g_asyncActionStringParam, g_asyncActionParams[0]);
+                rv = js_callback();
+                break;
+            case 2: // say
+                ShowGReport(g_asyncActionParams[0], g_asyncActionStringParam);
+                rv = js_callback();
+                break;
+            case 3: // menu
+                // TODO: 显示菜单
+                break;
+            default:
+                break;
+        }
+    }
+    return rv;
 }
 
 int has_hook(const char* name) {

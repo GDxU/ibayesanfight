@@ -22,6 +22,11 @@ DEC_U8ARR_DEF(FGTA_MAX);
 static Value g_var = {0};
 static U8 g_errorString[128] = {0};
 
+U16 g_asyncActionID = 0;
+U32 g_asyncActionParams[8] = {0};
+U8 g_asyncActionStringParam[1024*10] = {0};
+
+
 void bind_clear_error_string(void) {
     g_errorString[0] = 0;
 }
@@ -55,6 +60,15 @@ void bind_init(void) {
     DEFADDF(c_Ey, U8);
 
     DEFADD_GBKARR(g_errorString, sizeof(g_errorString));
+    {
+        // FOR AYNC CALL
+        BIND_U8(&g_asyncActionID);
+        ObjectDef_addFieldArray_DEF(g_asyncActionParams, ValueTypeU32, 8);
+        DEFADD_GBKARR(g_asyncActionStringParam, sizeof(g_asyncActionStringParam));
+    }
+
+    DEFADD_GBKARR(g_errorString, sizeof(g_errorString));
+
     DEFADD_U8ARR(g_VisScr, WK_BLEN);
     DEFADD_U8ARR(g_BVisScr, WK_BLEN);
 

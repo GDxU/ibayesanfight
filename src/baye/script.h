@@ -16,5 +16,6 @@
 void script_init(void);
 int has_hook(const char* name);
 int call_hook(const char* name, Value* context);
+int call_hook_a(const char* name, Value* context);
 
 #endif /* script_h */

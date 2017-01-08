@@ -127,6 +127,7 @@
  "_WeightOverNote",
  "_WonPersonNoet",
  "__CommonJNAction",
+ "_call_hook_a",
  "_gam_sem_wait",
  "_main",
  "_msg_queue_get"]
