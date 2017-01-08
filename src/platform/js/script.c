@@ -52,10 +52,6 @@ int call_hook(const char* name, Value* context)
             } else {
                 rv = window.baye.hooks[name]();
             }
-            if (baye.data.g_asyncActionID > 0) {
-                baye.data.g_asyncActionID = 0;
-                alert("Invalid operation in hook " + name);
-            }
         }
         return rv;
     }, name, context);
