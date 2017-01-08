@@ -219,6 +219,24 @@ FAR U8 CityCommon(U8 city,U8 cmd)
     if (CITY_MAX <= city)
         return(0);
 
+    IF_HAS_HOOK("cityMakeCommand") {
+        BIND_U8EX("cityIndex", &city);
+        BIND_U8EX("commandIndex", &cmd);
+        bind_clear_error_string();
+        switch (CALL_HOOK()) {
+            case 0:
+                return 1;
+            case 1:
+            {
+                U8* msg = bind_get_error_string();
+                if (*msg) GamMsgBox(msg,2);
+                return 0;
+            }
+            default:
+                break;
+        }
+    }
+
     /*while (1)
      {
      switch(OrderMenu())*/

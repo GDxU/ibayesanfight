@@ -42,6 +42,7 @@ void ValueDef_free(ValueDef*def) {
         case ValueTypeString:
             break;
         case ValueTypeArray:
+        case ValueTypeGBKArray:
         {
             ValueDef_free(def->subdef.arrDef);
             free(def);
@@ -106,6 +107,7 @@ void ObjectDef_addFieldF(ObjectDef* def, const char*name, ValueType t, void* ptr
             field.value.def = &_str_def;
             break;
         case ValueTypeArray:
+        case ValueTypeGBKArray:
         {
             //TODO: Free it
             ValueDef* arrDef = malloc(sizeof(ValueDef));
@@ -127,6 +129,11 @@ void ObjectDef_addFieldF(ObjectDef* def, const char*name, ValueType t, void* ptr
         }
     }
     ObjectDef_addField(def, &field);
+}
+
+void ObjectDef_addFieldGBKArray(ObjectDef* def, const char*name, void* ptr, U32 arrLen)
+{
+    return ObjectDef_addFieldF(def, name, ValueTypeGBKArray, ptr, &_U8_def, arrLen);
 }
 
 void ObjectDef_addFieldArray(ObjectDef* def, const char*name, ValueType t, void* ptr, U32 arrLen)

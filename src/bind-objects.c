@@ -20,6 +20,15 @@ DEC_U8ARR_DEF(8);
 DEC_U8ARR_DEF(FGTA_MAX);
 
 static Value g_var = {0};
+static U8 g_errorString[128] = {0};
+
+void bind_clear_error_string(void) {
+    g_errorString[0] = 0;
+}
+
+U8* bind_get_error_string(void) {
+    return g_errorString;
+}
 
 void bind_init(void) {
     static ObjectDef* def = NULL;
@@ -45,6 +54,7 @@ void bind_init(void) {
     DEFADDF(c_Ex, U8);
     DEFADDF(c_Ey, U8);
 
+    DEFADD_GBKARR(g_errorString, sizeof(g_errorString));
     DEFADD_U8ARR(g_VisScr, WK_BLEN);
     DEFADD_U8ARR(g_BVisScr, WK_BLEN);
 

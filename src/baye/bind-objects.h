@@ -16,6 +16,10 @@
 
 void bind_init(void);
 
+void bind_clear_error_string(void);
+
+U8* bind_get_error_string(void);
+
 #ifndef offsetof
 #define offsetof __builtin_offsetof
 #endif
@@ -54,7 +58,10 @@ void bind_init(void);
 
 // #### dynamic add
 #define DEFADD_U8ARR(name, n) ObjectDef_addFieldArray(def, #name, ValueTypeU8, name, n);
+#define DEFADD_GBKARR(name, n) ObjectDef_addFieldGBKArray(def, #name, name, n);
 #define DEFADDF(name, t) ObjectDef_addFieldF(def, #name, ValueType##t, &name, 0, 0)
+
+#define HOOK_showSkill "showSkill"
 
 #endif /* bind_objects_h */
 

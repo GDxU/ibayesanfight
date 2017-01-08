@@ -33,6 +33,7 @@ typedef enum ValueType {
     ValueTypeString,
     ValueTypeObject,
     ValueTypeArray,
+    ValueTypeGBKArray = 7,
 } ValueType;
 
 #define ValueFlagRead       (1 << 0)
@@ -85,13 +86,13 @@ extern ValueDef _str_def;
 void ObjectDef_addField(ObjectDef* def, Field* field);
 void ObjectDef_addFieldF(ObjectDef* def, const char*name, ValueType t, void* ptr, void* subdef, U32 arrLen);
 void ObjectDef_addFieldArray(ObjectDef* def, const char*name, ValueType t, void* ptr, U32 arrLen);
+void ObjectDef_addFieldGBKArray(ObjectDef* def, const char*name, void* ptr, U32 arrLen);
 
 #define ObjectDef_addFieldU8(def, name, ptr) ObjectDef_addFieldF(def, name, ValueTypeU8, ptr, 0, 0)
 #define ObjectDef_addFieldU16(def, name, ptr) ObjectDef_addFieldF(def, name, ValueTypeU16, ptr, 0, 0)
 #define ObjectDef_addFieldU32(def, name, ptr) ObjectDef_addFieldF(def, name, ValueTypeU32, ptr, 0, 0)
 
 #define ObjectDef_addFieldArray_DEF(name, t, len) ObjectDef_addFieldArray(def, #name, t, name, len)
-#define ObjectDef_addFieldU8Array_DEF(name, len) ObjectDef_addFieldArray_DEF(name, ValueTypeU8, len)
 
 #define ObjectDef_addFieldU8_DEF(name) ObjectDef_addFieldU8(def, #name, name)
 #define ObjectDef_addFieldU16_DEF(name) ObjectDef_addFieldU16(def, #name, name)
@@ -100,7 +101,8 @@ void ObjectDef_addFieldArray(ObjectDef* def, const char*name, ValueType t, void*
 #define BIND_U8EX(name, ptr) ObjectDef_addFieldF(def, name, ValueTypeU8, ptr, 0, 0)
 #define BIND_U8(name) BIND_U8EX(#name, name)
 
-#define BIND_U8ARR ObjectDef_addFieldU8Array_DEF
+#define BIND_U8ARR(name, len) ObjectDef_addFieldArray_DEF(name, ValueTypeU8, len)
+#define BIND_GBKARR(name, len) ObjectDef_addFieldGBKArray(def, #name, name, len)
 
 #define IF_HAS_HOOK(name) \
     if (has_hook(name)) \

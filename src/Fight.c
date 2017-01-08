@@ -19,6 +19,7 @@
 #undef	Fight
 #define	Fight
 #include "baye/enghead.h"
+#include "baye/bind-objects.h"
 #include "touch.h"
 #define		IN_FILE	1	/* 当前文件位置 */
 
@@ -77,12 +78,21 @@ void FgtChkEnd(U8 flag);
 FAR U8 GamFight(void)
 {
     FgtInit();
-    while(!g_FgtOver)
-    {
-        FgtDealBout();
-        FgtDealMan();
-        FgtDealCmp();
-        CountProvUse();
+    if (!g_FgtOver) {
+        call_hook("enterBattle", NULL);
+        while(!g_FgtOver)
+        {
+            call_hook("battleStage1", NULL);
+            FgtDealBout();
+            call_hook("battleStage2", NULL);
+            FgtDealMan();
+            call_hook("battleStage3", NULL);
+            FgtDealCmp();
+            call_hook("battleStage4", NULL);
+            CountProvUse();
+            call_hook("battleStage5", NULL);
+        }
+        call_hook("exitBattle", NULL);
     }
     /* 战斗只通过g_FgtOver返回胜败，战后处理由外部完成 */
     return 0;
