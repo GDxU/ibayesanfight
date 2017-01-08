@@ -19,6 +19,7 @@
 #undef	FgtCount
 #define	FgtCount
 #include "baye/enghead.h"
+#include "baye/bind-objects.h"
 #define		IN_FILE	1	/* 当前文件位置 */
 
 
@@ -242,9 +243,20 @@ FAR void BuiltAtkAttr(U8 idx,U8 pIdx)
     if(pGen > PERSON_MAX - 1)
         return;
     pAtk = (JLATT *)(&g_GenAtt[idx]);
-    pTyp = (PersonType *)(&g_Persons[pGen]);
-
+    pAtk->arms = &(pTyp->Arms);
+    pAtk->exp = &(pTyp->Experience);
     pAtk->level = &(pTyp->Level);
+    pAtk->generalIndex= pIdx;
+
+    IF_HAS_HOOK("battleBuildAttackAttriutes") {
+        BIND_U8EX("index", &idx);
+        BIND_U8EX("generalIndex", &pIdx);
+        if (CALL_HOOK() == 0) {
+            return;
+        }
+    }
+
+    pTyp = (PersonType *)(&g_Persons[pGen]);
     pAtk->canny = pTyp->IQ + pTyp->Level + 5;
     pTer = FgtGetTerrain(g_GenPos[pIdx].x,g_GenPos[pIdx].y);
     pAtk->ter = pTer;

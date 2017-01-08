@@ -245,15 +245,13 @@ void bind_init(void) {
     {
 #define _ST JLATT
         static Field _fields[] = {
-            _FIELD_RW(level, U8),
             _FIELD_RW(canny, U8),
             _FIELD_RW(ter, U8),
             _FIELD_RW(bile, U8),
             _FIELD_RW(armsType, U8),
-            _FIELD_RW(exp, U8),
-            _FIELD_RW(arms, U16),
             _FIELD_RW(at, U16),
             _FIELD_RW(df, U16),
+            _FIELD_RW(generalIndex, U8),
         };
 
         static ObjectDef _obj_def = {

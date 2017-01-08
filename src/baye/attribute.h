@@ -195,6 +195,9 @@ typedef struct {
     U8 responseNoteOfBettle;   //"战斗提示"允许按键跳过(默认0，填2允许)
     U8 aiDefenceMode;          // AI行军策略，默认0追主将，1守城
     U8 aiAttackMethod;          // AI攻击时选择技能/普攻的算法(0原版，1优化版)
+
+    U8 batlleDisableWeatherChange;    // 禁止战场天气变化
+
 } EngineConfig;
 
 extern EngineConfig g_engineConfig;

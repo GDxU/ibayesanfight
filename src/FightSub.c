@@ -703,7 +703,8 @@ FAR U8 FgtGetGenIdx(U8 x,U8 y)
  ***********************************************************************/
 FAR void FgtChgWeather(void)
 {
-    g_FgtWeather = gam_rand() % 5 + 1;
+    if (!g_engineConfig.batlleDisableWeatherChange)
+        g_FgtWeather = gam_rand() % 5 + 1;
     PlcRPicShow(WEATHER_PIC1 - 1 + g_FgtWeather,1,FGT_SPESX,FGT_SPESY,true);
     PlcRPicShow(WEATHER_PIC,g_FgtWeather,STA_TQX,STA_TQY,true);		/* 显示天气 */
     PlcRPicShow(WEATHER_PIC,g_FgtWeather,STA_TQX,STA_TQY,false);		/* 显示天气 */

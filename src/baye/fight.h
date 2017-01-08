@@ -227,6 +227,7 @@ typedef	struct {
 	U16	*arms;				/* 兵力 */
 	U16	at;				/* 攻击力 */
 	U16	df;				/* 防御力 */
+	U8	generalIndex;   /* 将领战场序号 (新增) */
 }JLATT;						/* 执行攻击或被攻击的将领属性 */
 
 typedef	struct {

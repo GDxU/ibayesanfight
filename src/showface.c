@@ -380,7 +380,7 @@ FAR U8 ShowGoodsControl(U8 *goods,U8 gcount,U8 x0,U8 y0,U8 x1,U8 y1)
                 case VT_TOUCH_MOVE:
                 {
                     if (!touch.touched) break;
-                    U8 zMax = 2;
+                    U8 zMax = 100;
 
                     Point p = touchListViewCalcTopLeftForMove(&touch, leftWhenTouchDown, zMax, 30, topWhenTouchDown, gcount - count, ASC_HGT);
 
@@ -889,8 +889,7 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 initSelected,U8 x0,U8 y0,U8 x1,
                 {
                     if (!touch.touched) break;
 
-                    // FIXME: 横向最大值计算问题
-                    U8 xMax = 5;
+                    U8 xMax = 100;
 
                     Point p = touchListViewCalcTopLeftForMove(&touch, leftWhenTouchDown, xMax, 30, topWhenTouchDown, pcount - count, ASC_HGT);
 

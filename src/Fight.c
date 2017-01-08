@@ -1006,7 +1006,7 @@ void FgtAllRight(bool *flag)
 void FgtDrvState(void)
 {
     U8	i,state,tmp;
-    U16	arms,hurt;
+    U16	arms;
     bool	rec,update;
     PersonType	*per;
 
@@ -1021,16 +1021,23 @@ void FgtDrvState(void)
         per = &g_Persons[tmp];
         rec = (gam_rand() % 60) < (per->IQ >> 1);
         arms = per->Arms;
-        hurt = 0;
         update = false;
+
+        IF_HAS_HOOK("battleDrivePersonState") {
+            BIND_U8EX("generalIndex", &i);
+            if(CALL_HOOK() == 0) {
+                update = true;
+            }
+        }
+
+        if (!update)
         switch(state)
         {
             case STATE_ZC:		/* 正常 */
             case STATE_DJ:		/* 遁甲 */
                 break;
             case STATE_SZ:		/* 石阵 */
-                hurt = arms >> 3;
-                arms -= hurt;
+                per->Arms -= (arms >> 3);
             case STATE_HL:		/* 混乱 */
             case STATE_JZ:		/* 禁咒 */
             case STATE_DS:		/* 定身 */
@@ -1050,11 +1057,15 @@ void FgtDrvState(void)
                 }
                 break;
         }
-        if(hurt)
+        if(arms != per->Arms)
         {
+            I32 hurt = per->Arms - arms;
             FgtSetFocus(i);
-            FgtShowSNum('-',i,hurt);	/* 在地图上显示数字 */
-            per->Arms = arms;
+            if (hurt < 0) {
+                FgtShowSNum('-', i, -hurt);	/* 在地图上显示数字 */
+            } else {
+                FgtShowSNum('+', i, hurt);	/* 在地图上显示数字 */
+            }
         }
         if(update)
         {
