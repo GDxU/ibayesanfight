@@ -242,6 +242,7 @@ FAR void BuiltAtkAttr(U8 idx,U8 pIdx)
     pGen = TransIdxToGen(pIdx);
     if(pGen > PERSON_MAX - 1)
         return;
+    pTyp = (PersonType *)(&g_Persons[pGen]);
     pAtk = (JLATT *)(&g_GenAtt[idx]);
     pAtk->arms = &(pTyp->Arms);
     pAtk->exp = &(pTyp->Experience);
@@ -255,8 +256,7 @@ FAR void BuiltAtkAttr(U8 idx,U8 pIdx)
             return;
         }
     }
-
-    pTyp = (PersonType *)(&g_Persons[pGen]);
+    
     pAtk->canny = pTyp->IQ + pTyp->Level + 5;
     pTer = FgtGetTerrain(g_GenPos[pIdx].x,g_GenPos[pIdx].y);
     pAtk->ter = pTer;
