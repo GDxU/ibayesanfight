@@ -258,3 +258,18 @@ EMSCRIPTEN_KEEPALIVE
 void bayeScriptInit(void) {
     script_init();
 }
+
+EMSCRIPTEN_KEEPALIVE
+U32 bayeRand(void) {
+    return gam_rand();
+}
+
+EMSCRIPTEN_KEEPALIVE
+void bayeSRand(U32 seed) {
+    gam_srand(seed);
+}
+
+EMSCRIPTEN_KEEPALIVE
+U32 bayeGetSeed(void) {
+    return gam_seed();
+}
