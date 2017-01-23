@@ -515,3 +515,9 @@ FAR U8 GetWeekCity(U8 count,U8 *cqueue)
     }
     return(cqueue[cw]);
 }
+
+U32 OrderNeedMoney(U8 order)
+{
+    return needMoney(order);
+}
+

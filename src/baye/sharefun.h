@@ -186,4 +186,6 @@ INFDEAL_C void ReportCalamity(U8 city);
 
 U8 GetArmType(PersonType* p);
 void LevelUp(PersonType*p);
+U32 OrderNeedMoney(U8 order);
+
 #endif

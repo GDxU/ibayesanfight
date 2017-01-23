@@ -273,3 +273,18 @@ EMSCRIPTEN_KEEPALIVE
 U32 bayeGetSeed(void) {
     return gam_seed();
 }
+
+EMSCRIPTEN_KEEPALIVE
+void bayeLevelUp(U8 person) {
+    LevelUp(&g_Persons[person]);
+}
+
+EMSCRIPTEN_KEEPALIVE
+U32 bayeOrderNeedMoney(U8 order) {
+    return OrderNeedMoney(order);
+}
+
+EMSCRIPTEN_KEEPALIVE
+void bayeOrderComsumeMoney(U8 city, U8 order) {
+    OrderConsumeMoney(city, order);
+}

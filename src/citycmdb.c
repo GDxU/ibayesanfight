@@ -909,6 +909,12 @@ FAR U8 SurrenderMake(U8 city)
     }
     do
     {
+        if (g_engineConfig.fixConsumeMoney && !IsMoney(city, SURRENDER))
+        {
+            /*金钱不足*/
+            ShowConstStrMsg(NOTE_STR8);
+            return(1);
+        }
         pcount = GetCityCaptives(city,pqptr);
         if (!pcount)
         {
@@ -944,7 +950,7 @@ FAR U8 SurrenderMake(U8 city)
                     
                     OrderConsumeThew(p,SURRENDER);
                     if (g_engineConfig.fixConsumeMoney) {
-                        OrderConsumeMoney(p,SURRENDER);
+                        OrderConsumeMoney(city, SURRENDER);
                     }
 
                     order.OrderId = SURRENDER;
