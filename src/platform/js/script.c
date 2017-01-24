@@ -24,6 +24,11 @@ void script_init(void)
         if (window.baye.hooks == undefined) {
             window.baye.hooks = {};
         }
+
+        window.baye.callHook = function(name, context) {
+            return window.baye.hooks[name](context);
+        };
+
         window.baye.data = baye_bridge_value(_bayeGetGlobal());
     });
 
@@ -48,9 +53,9 @@ int call_hook(const char* name, Value* context)
             var cContext = $1;
             if (cContext != 0) {
                 var jsContext = baye_bridge_value(cContext);
-                rv = window.baye.hooks[name](jsContext);
+                rv = baye.callHook(name, jsContext);
             } else {
-                rv = window.baye.hooks[name]();
+                rv = baye.callHook(name, undefined);
             }
         }
         return rv;
