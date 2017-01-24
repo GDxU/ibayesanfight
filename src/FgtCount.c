@@ -248,15 +248,6 @@ FAR void BuiltAtkAttr(U8 idx,U8 pIdx)
     pAtk->exp = &(pTyp->Experience);
     pAtk->level = &(pTyp->Level);
     pAtk->generalIndex= pIdx;
-
-    IF_HAS_HOOK("battleBuildAttackAttriutes") {
-        BIND_U8EX("index", &idx);
-        BIND_U8EX("generalIndex", &pIdx);
-        if (CALL_HOOK() == 0) {
-            return;
-        }
-    }
-    
     pAtk->canny = pTyp->IQ + pTyp->Level + 5;
     pTer = FgtGetTerrain(g_GenPos[pIdx].x,g_GenPos[pIdx].y);
     pAtk->ter = pTer;
@@ -265,6 +256,14 @@ FAR void BuiltAtkAttr(U8 idx,U8 pIdx)
     pAtk->armsType = pGen;
     pAtk->arms = &(pTyp->Arms);
     pAtk->exp = &(pTyp->Experience);
+
+    IF_HAS_HOOK("battleBuildAttackAttriutes") {
+        BIND_U8EX("index", &idx);
+        BIND_U8EX("generalIndex", &pIdx);
+        if (CALL_HOOK() == 0) {
+            return;
+        }
+    }
 
     /* 获取地形影响 */
     mptr = ResLoadToCon(IFACE_CONID,dFgtLandF,g_CBnkPtr);
