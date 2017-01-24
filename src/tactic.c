@@ -531,8 +531,9 @@ void ComputerTacticArmament(U8 city)
     pcount = GetCityPersons(city,pqptr);
     if (!pcount)
         return;
-
-    pptr = &g_Persons[pqptr[gam_rand() % pcount]];
+    
+    U8 pind = pqptr[gam_rand() % pcount];
+    pptr = &g_Persons[pind];
 
     if (g_engineConfig.aiLevelUpSpeed == 0 && !(g_MonthDate % 3))
     {
@@ -552,7 +553,7 @@ void ComputerTacticArmament(U8 city)
             case 3:		/*征兵*/
             case 4:		/*分配*/
             case 5:		/*分配*/
-                pptr->Arms = PlcArmsMaxP(pptr);
+                pptr->Arms = PlcArmsMax(pind);
                 /*g_Cities[city].MothballArms += ((U16) 20) * g_Cities[city].PeopleDevotion;*/
 
                 order.OrderId = CONSCRIPTION;

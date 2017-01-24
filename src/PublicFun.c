@@ -20,6 +20,7 @@
 #define	PublicFun
 #include "baye/enghead.h"
 #include "touch.h"
+#include "baye/script.h"
 #define		IN_FILE	1	/* 当前文件位置 */
 
 /*本体函数声明*/
@@ -559,6 +560,14 @@ FAR void PlcRPicShow(U16 id,U8 idx,U8 x,U8 y,U8 flag)
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
 FAR U16 PlcArmsMax(U8 id) {
+    IF_HAS_HOOK("getMaxArms") {
+        U32 maxArms = 0;
+        BIND_U8EX("personIndex", &id);
+        BIND_U32(&maxArms);
+        if (CALL_HOOK() == 0) {
+            return maxArms;
+        }
+    }
     return PlcArmsMaxP(&g_Persons[id]);
 }
 
