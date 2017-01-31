@@ -31,7 +31,7 @@ bool FgtJiNeng(FGTCMD *pcmd, U8 force);
 bool FgtAtkCmd(FGTCMD *pcmd);
 void FgtCmpMove(U8 idx);
 void FgtMakeSklNam(U8 *buf);
-void FgtGetSklBuf(U8 id,U8 *buf);
+void FgtGetSklBuf(U8 gid,U8 *buf);
 U8 FgtCanUse(U8 param,U8 idx);
 bool FgtChkAkRng(U8 x,U8 y);
 U8 FgtCntInterval(U8 x1,U8 y1,U8 x2,U8 y2);
@@ -220,9 +220,10 @@ bool FgtJiNeng(FGTCMD *pcmd, U8 force)
         }
     }
 
+    FgtGetSklBuf(idx, sklbuf);
+
     if (force == 0 && g_engineConfig.aiAttackMethod == 0) {
         /* 获取要施展的技能 */
-        FgtGetSklBuf(id,sklbuf);
         skidx = ranv % gam_strlen(sklbuf);
         skidx = sklbuf[skidx];
         /* 自己是否符合施展的条件 */
@@ -231,7 +232,6 @@ bool FgtJiNeng(FGTCMD *pcmd, U8 force)
         return FgtJiNengGetAim(pcmd, per, skidx, idx);
     } else {
         /* 查找最佳技能 */
-        FgtGetSklBuf(id,sklbuf);
         U8 count = gam_strlen(sklbuf);
         while (count > 0) {
             // 序号越高, 可能性越高
@@ -392,7 +392,7 @@ FAR U8 FgtGetJNIdx(U8 idx,RECT *pRect,U8 *buf)
 {
     U8	rngb,param,inf[10];
 
-    FgtGetSklBuf(TransIdxToGen3(idx),buf);
+    FgtGetSklBuf(idx, buf);
     FgtMakeSklNam(buf);
     rngb = gam_strlen(buf + SKILL_NMAX + 1) / SKILL_NAMELEN;
     pRect->sx += 4;
@@ -476,10 +476,11 @@ void bind_skill_num(ObjectDef*def)
 }
 
 
-void FgtGetSklBuf(U8 id,U8 *buf)
+void FgtGetSklBuf(U8 gid, U8 *buf)
 {
     U8	type,len;
     U8	*sklbuf,*ptr;
+    U8 id = TransIdxToGen3(gid);
 
     gam_memset(buf,0,SKILL_NMAX + 1);
     /* 构造技能缓冲 */
@@ -502,13 +503,10 @@ void FgtGetSklBuf(U8 id,U8 *buf)
     gam_memcpy(sklbuf,ptr,len);
 
     IF_HAS_HOOK("getSkillIds") {
-        U8 skillIds[SKILL_NMAX+1];
-        gam_memcpy(skillIds, buf, SKILL_NMAX+1);
-        BIND_U8EX("personIndex", &id);
+        U8* skillIds = buf;
+        BIND_U8EX("generalIndex", &gid);
         BIND_U8ARR(skillIds, sizeof(skillIds));
-        if (CALL_HOOK() == 0) {
-            gam_memcpy(buf, skillIds, SKILL_NMAX+1);
-        }
+        CALL_HOOK();
     }
 }
 /***********************************************************************

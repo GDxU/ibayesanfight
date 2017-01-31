@@ -188,4 +188,6 @@ U8 GetArmType(PersonType* p);
 void LevelUp(PersonType*p);
 U32 OrderNeedMoney(U8 order);
 
+U8 FgtGetGenTer(U8 idx);
+
 #endif
