@@ -359,6 +359,16 @@ U8 FgtJNAction(FGTCMD *pcmd)
         else
             provp = &g_FgtParam.MProvender;
         prov = CountPlusSub(provp,prov);
+
+        if(g_LookMovie)
+        {
+            FgtLoadToMem2(dFgtProvH, buf);
+            GamStrShowS(FGT_SPESX + 40, FGT_SPESY + 2, buf);
+            FgtAtvShowNum(FGT_SPESX + 40, FGT_SPESY + 40, arms);
+        }
+        else
+            FgtShowSNum2('-', aIdx, arms);
+        GamDelay(SHOW_DLYBASE * 5,false);
     }
 
     arms = _CommonJNAction(param, aim, sIdx, aIdx, skl, 100);
