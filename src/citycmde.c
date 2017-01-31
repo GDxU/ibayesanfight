@@ -288,7 +288,7 @@ FAR void ShowFightWinNote(U8 wp)
     ResLoadToMem(STRING_CONST,STR_WON,buf);
     gam_strcat(str,buf);
     PlcMidShowStr(WK_SX + (WK_EX  - WK_SX) / 2,WK_SY + (WK_EY - 84 - WK_SY) / 2 + 2 + 64 + 2,str);
-    GamDelay(300,false);
+    GamDelay(300, g_engineConfig.responseNoteOfBettle);
 }
 
 /******************************************************************************
@@ -318,7 +318,7 @@ FAR void ShowFightLossNote(void)
     ResLoadToMem(STRING_CONST,STR_LOST,buf);
     gam_strcat(str,buf);
     PlcMidShowStr(WK_SX + (WK_EX  - WK_SX) / 2,WK_SY + (WK_EY - 84 - WK_SY) / 2 + 2 + 64 + 2,str);
-    GamDelay(300,false);
+    GamDelay(300, g_engineConfig.responseNoteOfBettle);
 }
 
 /******************************************************************************
