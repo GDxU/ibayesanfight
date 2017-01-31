@@ -288,3 +288,9 @@ EMSCRIPTEN_KEEPALIVE
 void bayeOrderComsumeMoney(U8 city, U8 order) {
     OrderConsumeMoney(city, order);
 }
+
+
+EMSCRIPTEN_KEEPALIVE
+U32 bayeFgtGetGenTer(U8 index) {
+    return FgtGetGenTer(index);
+}
