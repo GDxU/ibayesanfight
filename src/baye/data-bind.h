@@ -104,6 +104,9 @@ void ObjectDef_addFieldGBKArray(ObjectDef* def, const char*name, void* ptr, U32 
 #define BIND_U32EX(name, ptr) ObjectDef_addFieldU32(def, name, ptr)
 #define BIND_U32(name) ObjectDef_addFieldU32(def, #name, name)
 
+#define BIND_U16EX(name, ptr) ObjectDef_addFieldU16(def, name, ptr)
+#define BIND_U16(name) ObjectDef_addFieldU16(def, #name, name)
+
 #define BIND_U8ARR(name, len) ObjectDef_addFieldArray_DEF(name, ValueTypeU8, len)
 #define BIND_GBKARR(name, len) ObjectDef_addFieldGBKArray(def, #name, name, len)
 

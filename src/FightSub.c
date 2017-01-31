@@ -216,9 +216,10 @@ void bind_skill_var(ObjectDef* def)
 U8 FgtGetGenTer(U8 idx);
 bool FgtChkAkRng(U8 x,U8 y);
 
-static U8 _CommonJNAction(U8 param, U8 aim, U8 sIdx, U8 aIdx, SKILLEF *skl, U8 percent) {
+static U8 _CommonJNAction(U8 param, U8 aim, U8 sIdx, U8 aIdx, U8 percent) {
     U16 arms, prov, up;
     U8 bidx, state, buf[25], *ptr;
+    SKILLEF	*skl = (SKILLEF	*)FgtGetJNPtr(param);
 
     BuiltAtkAttr(1, aIdx);
 
@@ -229,7 +230,7 @@ static U8 _CommonJNAction(U8 param, U8 aim, U8 sIdx, U8 aIdx, SKILLEF *skl, U8 p
         g_GenPos[aIdx].move = NO_MOV;
 
     /* 驱动通用的技能 */
-    CountSklHurt(skl,&arms,&prov);		/* 计算该技能的兵力和粮草伤害 */
+    CountSklHurt(param, &arms, &prov);		/* 计算该技能的兵力和粮草伤害 */
     param -= 1;
     if(dJNSpeId[param])
     {
@@ -349,7 +350,7 @@ U8 FgtJNAction(FGTCMD *pcmd)
     }
 
     /* 驱动通用的技能 */
-    CountSklHurt(skl,&arms,&prov);		/* 计算该技能的兵力和粮草伤害 */
+    CountSklHurt(param, &arms, &prov);		/* 计算该技能的兵力和粮草伤害 */
 
     if (prov) {
         bidx = dFgtProvH;
@@ -371,7 +372,7 @@ U8 FgtJNAction(FGTCMD *pcmd)
         GamDelay(SHOW_DLYBASE * 5,false);
     }
 
-    arms = _CommonJNAction(param, aim, sIdx, aIdx, skl, 100);
+    arms = _CommonJNAction(param, aim, sIdx, aIdx, 100);
     if ((aim & 2)) {
         for(int i = 0;i < FGTA_MAX;i += 1)
         {
@@ -394,7 +395,7 @@ U8 FgtJNAction(FGTCMD *pcmd)
             if(!FgtJNChkAim(skidx, same, i))
                 continue;
 
-            arms = add_16(arms, _CommonJNAction(param, aim, sIdx, i, skl, 60));
+            arms = add_16(arms, _CommonJNAction(param, aim, sIdx, i, 60));
         }
     }
     return (FgtGetExp(arms));

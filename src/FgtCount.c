@@ -198,10 +198,18 @@ FAR U16 CountAtkHurt(void)
 {
     U16	hurt;
 
+    IF_HAS_HOOK("countAttackHurt") {
+        BIND_U16(&hurt);
+        
+        if (CALL_HOOK() == 0) {
+            return hurt;
+        }
+    }
     /* 基本伤害 hurt = (at / df) * arms / 8 */
     hurt = (float)(g_GenAtt[0].at) / g_GenAtt[1].df * ((*g_GenAtt[0].arms) >> 3);
     /* 相克加层 hurt *= modu */
     hurt *= SubduModu[g_GenAtt[0].armsType][g_GenAtt[1].armsType];
+
     return (U16)(hurt + 10);	/* +10是为了防止双方兵力<4时，出现的平局状态 */
 }
 /***********************************************************************
@@ -385,11 +393,24 @@ FAR U16 CountOverAdd(U16 *a,U16 v,U16 up)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-FAR void CountSklHurt(SKILLEF *skl,U16 *arms,U16 *prov)
+FAR void CountSklHurt(U8 param, U16 *arms, U16 *prov)
 {
     U8	i,eTyp;
     U8	oTer,eTer;
     U16	cnt,count[2];
+    SKILLEF	*skl;
+
+    IF_HAS_HOOK("countSkillHurt") {
+        BIND_U8EX("skillId", &param);
+        BIND_U16EX("hurt", arms);
+        BIND_U16(prov);
+
+        if (CALL_HOOK() == 0) {
+            return;
+        }
+    }
+
+    skl = (SKILLEF	*)FgtGetJNPtr(param);
 
     count[0] = skl->power;
     count[1] = skl->destroy;
