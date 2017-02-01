@@ -294,3 +294,24 @@ EMSCRIPTEN_KEEPALIVE
 U32 bayeFgtGetGenTer(U8 index) {
     return FgtGetGenTer(index);
 }
+
+EMSCRIPTEN_KEEPALIVE
+void bayePutPersonInCity(U8 city, U8 person) {
+    AddPerson(city, person);
+}
+
+EMSCRIPTEN_KEEPALIVE
+void bayePutToolInCity(U8 city, U8 tool, U8 hide) {
+    AddGoodsEx(city, tool, !hide);
+}
+
+
+EMSCRIPTEN_KEEPALIVE
+void bayeDeletePersonInCity(U8 city, U8 person) {
+    DelPerson(city, person);
+}
+
+EMSCRIPTEN_KEEPALIVE
+void bayeDeleteToolInCity(U8 city, U8 tool, U8 hide) {
+    DelGoods(city, tool);
+}
