@@ -21,6 +21,7 @@
 #undef	CITYCMD_C
 #define	CITYCMD_C
 #include "baye/enghead.h"
+#include "baye/bind-objects.h"
 
 /*U8 MainOrderMenu(void);
  U8 InteriorOrderMenu(void);
@@ -1120,6 +1121,37 @@ U8 DepredateDrv(OrderType *Order)
  ******************************************************************************/
 U8 OrderExec(OrderType *Order)
 {
+    {
+#define _ST OrderType
+        static Field _fields[] = {
+            _FIELD_RW(OrderId, U8),
+            _FIELD_RW(Person, U8),
+            _FIELD_RW(City, U8),
+            _FIELD_RW(Object, U8),
+            _FIELD_RW(Arms, U16),
+            _FIELD_RW(Food, U16),
+            _FIELD_RW(Money, U16),
+            _FIELD_RW(Consume, U8),
+            _FIELD_RW(TimeCount, U8),
+        };
+
+        static ObjectDef _obj_def = {
+            AL(_fields), 0, sizeof(_ST), _fields
+        };
+
+        static ValueDef _value_def = {
+            .type = ValueTypeObject,
+            .size = sizeof(_ST),
+            .subdef.objDef = &_obj_def,
+        };
+        static Value context = {.def = &_value_def };
+#undef _ST
+
+        context.offset = (U32)Order;
+        if (call_hook_a("willExecuteOrder", &context) != 0){
+            return 0;
+        }
+    }
     switch (Order->OrderId)
     {
             /*内政指令*/
