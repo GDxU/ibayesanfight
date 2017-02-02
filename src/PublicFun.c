@@ -693,3 +693,19 @@ U8 *strlchr(U8 *buf,U8 len,U8 ch)
     }
     return ((U8 *)NULL);
 }
+
+U8 GamChoosePerson(U8* pqptr, U8 pcount, U8 selected)
+{
+    return ShowPersonControl(pqptr, pcount, selected, WK_SX + 4, WK_SY + 2, WK_EX - 4, WK_EY - 2);
+}
+
+U16 GamChoose(U16 x, U16 y, U16 w, U16 h, U16 pIdx, U8* buf)
+{
+    RECT r = {
+        .sx = x,
+        .sy = y,
+        .ex = x + w,
+        .ey = y + h,
+    };
+    return PlcSplMenu(&r, pIdx, buf);
+}

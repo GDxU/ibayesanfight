@@ -12,9 +12,8 @@
 #include	"baye/bind-objects.h"
 #include	"baye/data-bind.h"
 #include	"baye/script.h"
-#include	"baye/extern.h"
-#include	"baye/sharefun.h"
-#include	"baye/datman.h"
+#include	"baye/fundef.h"
+#include	"baye/enghead.h"
 #include    "touch.h"
 
 void gam_setcustomdata(U8*data);
@@ -203,6 +202,7 @@ EMSCRIPTEN_KEEPALIVE
 FAR const U8* bayeGetPersonName(U8 personIndex)
 {
     static U8 name[32] = {0};
+    name[0] = 0;
     GetPersonName(personIndex, name);
     return name;
 }
@@ -211,6 +211,7 @@ EMSCRIPTEN_KEEPALIVE
 FAR const U8* bayeGetToolName(U8 toolIndex)
 {
     static U8 name[32] = {0};
+    name[0] = 0;
     GetGoodsName(toolIndex, name);
     return name;
 }
@@ -219,6 +220,7 @@ EMSCRIPTEN_KEEPALIVE
 FAR const U8* bayeGetSkillName(U8 skillIndex)
 {
     static U8 name[32] = {0};
+    name[0] = 0;
     ResLoadToMem(SKL_NAMID, skillIndex+1, name);
     return name;
 }
@@ -227,6 +229,7 @@ EMSCRIPTEN_KEEPALIVE
 FAR const U8* bayeGetCityName(U8 cityIndex)
 {
     static U8 name[32] = {0};
+    name[0] = 0;
     GetCityName(cityIndex, name);
     return name;
 }

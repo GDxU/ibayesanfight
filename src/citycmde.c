@@ -83,7 +83,7 @@ FAR U8 ConfiscateMake(U8 city)
             {
                 /*gam_clrlcd(WK_SX,WK_SY,WK_EX,WK_EY);*/
                 ShowMapClear();
-                g = ShowGoodsControl(gq,c,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+                g = ShowGoodsControl(gq, c, 0, WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
                 if (0xff == g)
                 {
                     continue;

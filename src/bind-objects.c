@@ -10,6 +10,7 @@
 #include "baye/extern.h"
 #include "baye/datman.h"
 #include "baye/comm.h"
+#include "baye/consdef.h"
 
 void bind_skill_var(ObjectDef* def);
 void bind_show_face(ObjectDef* def);
@@ -23,7 +24,7 @@ static Value g_var = {0};
 static U8 g_errorString[128] = {0};
 
 U16 g_asyncActionID = 0;
-U32 g_asyncActionParams[8] = {0};
+U32 g_asyncActionParams[32] = {0};
 U8 g_asyncActionStringParam[1024*10] = {0};
 
 
@@ -58,13 +59,18 @@ void bind_init(void) {
     DEFADDF(c_Sy, U8);
     DEFADDF(c_Ex, U8);
     DEFADDF(c_Ey, U8);
+    DEFADDF(g_screenWidth, U16);
+    DEFADDF(g_screenHeight, U16);
 
     DEFADD_GBKARR(g_errorString, sizeof(g_errorString));
     {
         // FOR AYNC CALL
         BIND_U8(&g_asyncActionID);
-        ObjectDef_addFieldArray_DEF(g_asyncActionParams, ValueTypeU32, 8);
+        ObjectDef_addFieldArray_DEF(g_asyncActionParams, ValueTypeU32, 32);
         DEFADD_GBKARR(g_asyncActionStringParam, sizeof(g_asyncActionStringParam));
+        
+        U8* g_asyncActionStringParamArray = g_asyncActionStringParam;
+        DEFADD_U8ARR(g_asyncActionStringParamArray, sizeof(g_asyncActionStringParam));
     }
 
     DEFADD_GBKARR(g_errorString, sizeof(g_errorString));

@@ -21,7 +21,7 @@ void bind_clear_error_string(void);
 U8* bind_get_error_string(void);
 
 extern U16 g_asyncActionID;
-extern U32 g_asyncActionParams[8];
+extern U32 g_asyncActionParams[32];
 extern U8 g_asyncActionStringParam[1024*10];
 
 #ifndef offsetof

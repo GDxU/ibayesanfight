@@ -123,7 +123,7 @@ CITYCMDE_C U8 GetWeekCity(U8 count,U8 *cqueue);
 SHOWFACE_C void ShowGoodsPro(U8 goods,U8 pro,U8 x,U8 y,U8 wid);
 SHOWFACE_C void GetGoodsProStr(U8 goods,U8 pro,U8 *str);
 SHOWFACE_C U8 ShowGoodsProStr(U8 pro,U8 x,U8 y,U8 wid);
-SHOWFACE_C U8 ShowGoodsControl(U8 *goods,U8 gcount,U8 x0,U8 y0,U8 x1,U8 y1);
+SHOWFACE_C U8 ShowGoodsControl(U8 *goods,U8 gcount, U8 init, U8 x0,U8 y0,U8 x1,U8 y1);
 SHOWFACE_C void GetPersonName(U8 person,U8 *str);
 SHOWFACE_C void ShowPersonPro(U8 person,U8 pro,U8 x,U8 y,U8 wid);
 SHOWFACE_C void GetPersonProStr(U8 person,U8 pro,U8 *str);
@@ -183,6 +183,8 @@ INFDEAL_C U8 GetCityDispGoods(U8 city,U8 *gqueue);
 INFDEAL_C U8 GetPersonsCount(U8 king);
 INFDEAL_C U8 GetDirect(U8 sc,U8 oc);
 INFDEAL_C void ReportCalamity(U8 city);
+U8 GamChoosePerson(U8* pqptr, U8 pcount, U8 selected);
+U16 GamChoose(U16 x, U16 y, U16 w, U16 h, U16 pIdx, U8* buf);
 
 U8 GetArmType(PersonType* p);
 void LevelUp(PersonType*p);

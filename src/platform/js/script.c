@@ -62,24 +62,17 @@ int call_hook(const char* name, Value* context)
     }, name, context);
 }
 
-static int js_callback(void) {
-    return EM_ASM_INT({
+static void js_callback(int *rv) {
+    *rv = EM_ASM_INT({
         if (baye.callback)
             return baye.callback();
-        return 0;
-    }, 0);
+        return $0;
+    }, *rv);
 }
 
 int call_hook_a(const char* name, Value* context)
 {
     int rv = call_hook(name, context);
-
-    if (rv) {
-        if (g_asyncActionID) {
-            printf("Error: %s return %d with async action %d\n", name, rv, g_asyncActionID);
-        }
-        return rv;
-    }
 
     while (g_asyncActionID) {
         U16 action = g_asyncActionID;
@@ -88,14 +81,42 @@ int call_hook_a(const char* name, Value* context)
         switch (action) {
             case 1: // alert
                 GamMsgBox(g_asyncActionStringParam, g_asyncActionParams[0]);
-                rv = js_callback();
+                js_callback(&rv);
                 break;
             case 2: // say
                 ShowGReport(g_asyncActionParams[0], g_asyncActionStringParam);
-                rv = js_callback();
+                js_callback(&rv);
                 break;
             case 3: // menu
-                // TODO: 显示菜单
+            {
+                U16 x = g_asyncActionParams[0];
+                U16 y = g_asyncActionParams[1];
+                U16 w = g_asyncActionParams[2];
+                U16 h = g_asyncActionParams[3];
+                U16 init = g_asyncActionParams[4];
+                g_asyncActionParams[0] = GamChoose(x, y, w, h, init, g_asyncActionStringParam);
+                js_callback(&rv);
+                break;
+            }
+            case 4: // Choose person
+            {
+                U16 count = g_asyncActionParams[0];
+                U16 init = g_asyncActionParams[1];
+                g_asyncActionParams[0] = GamChoosePerson(g_asyncActionStringParam, count, init);
+                js_callback(&rv);
+                break;
+            }
+            case 5: // Choose tool
+            {
+                U16 count = g_asyncActionParams[0];
+                U16 init = g_asyncActionParams[1];
+                g_asyncActionParams[0] = ShowGoodsControl(g_asyncActionStringParam,
+                                                          count, init, WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+                js_callback(&rv);
+                break;
+            }
+            case 6: // Choose city
+                // TODO:
                 break;
             default:
                 break;

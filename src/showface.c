@@ -249,7 +249,7 @@ U8 ShowGoodsProStr(U8 pro,U8 x,U8 y,U8 wid)
  *		----		----			-----------
  *		陈泽伟		2005/5/18 11:26AM	基本功能完成
  ******************************************************************************/
-FAR U8 ShowGoodsControl(U8 *goods,U8 gcount,U8 x0,U8 y0,U8 x1,U8 y1)
+FAR U8 ShowGoodsControl(U8 *goods,U8 gcount, U8 init, U8 x0,U8 y0,U8 x1,U8 y1)
 {
     U8 i,showflag,count,top,set;
     U8 spc,spcv[6];
@@ -284,8 +284,10 @@ FAR U8 ShowGoodsControl(U8 *goods,U8 gcount,U8 x0,U8 y0,U8 x1,U8 y1)
     y0 += 1;
     x1 -= 1;
 
-    top = 0;
-    set = 0;
+    top = init;
+    top = limitValueInRange(top, 0, gcount-count);
+    set = init;
+    set = limitValueInRange(set, 0, gcount-1);
     spc = 0;
     spcv[0] = 0;
     showflag = 1;

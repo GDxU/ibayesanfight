@@ -1107,7 +1107,7 @@ FAR U8 LargessMake(U8 city)
         gcount = GetCityPGoods(city,gqptr);
         if (gcount)
         {
-            gcode = ShowGoodsControl(gqptr,gcount,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            gcode = ShowGoodsControl(gqptr, gcount, 0, WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
             if (0xff == gcode)
             {
                 return(1);
