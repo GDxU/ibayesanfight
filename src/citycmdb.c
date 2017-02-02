@@ -223,7 +223,7 @@ FAR U8 CityCommon(U8 city,U8 cmd)
         BIND_U8EX("cityIndex", &city);
         BIND_U8EX("commandIndex", &cmd);
         bind_clear_error_string();
-        switch (CALL_HOOK()) {
+        switch (CALL_HOOK_A()) {
             case 0:
                 return 1;
             case 1:
@@ -1130,11 +1130,11 @@ FAR U8 LargessMake(U8 city)
                     g = gqptr[gcode];
                     p = pqptr[pcode];
 
-                    IF_HAS_HOOK("makeLargess") {
+                    IF_HAS_HOOK("willGiveTool") {
                         BIND_U8EX("cityIndex", &city);
                         BIND_U8EX("personIndex", &pqptr[pcode]);
                         BIND_U8EX("toolIndex", &gqptr[gcode]);
-                        ret = CALL_HOOK();
+                        ret = CALL_HOOK_A();
                     }
 
                     if (ret == 0) {

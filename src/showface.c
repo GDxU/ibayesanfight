@@ -217,7 +217,7 @@ U8 ShowGoodsProStr(U8 pro,U8 x,U8 y,U8 wid)
 
             IF_HAS_HOOK("getToolPropertyTitle") {
                 U8* title = str;
-                BIND_U8EX("column", &i);
+                BIND_U8EX("propertyIndex", &i);
                 BIND_U8ARR(title, 128);
                 CALL_HOOK();
             }
@@ -695,7 +695,7 @@ U8 ShowPersonProStr(U8 pro,U8 x,U8 y,U8 wid)
                 U8 column = i;
                 U8* value = str;
 
-                BIND_U8(&column);
+                BIND_U8EX("propertyIndex", &column);
                 BIND_U8ARR(value, 128);
                 
                 CALL_HOOK();

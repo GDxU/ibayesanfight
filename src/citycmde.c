@@ -21,6 +21,7 @@
 #undef	CITYCMDE_C
 #define	CITYCMDE_C
 #include "baye/enghead.h"
+#include "baye/bind-objects.h"
 
 
 /******************************************************************************
@@ -89,6 +90,19 @@ FAR U8 ConfiscateMake(U8 city)
                 }
                 else
                 {
+                    int ret = -1;
+
+                    IF_HAS_HOOK("willTakeOffTool") {
+                        BIND_U8EX("cityIndex", &city);
+                        BIND_U8EX("personIndex", &p);
+                        BIND_U8EX("toolIndex", &gq[g]);
+                        ret = CALL_HOOK_A();
+                    }
+
+                    if (ret == 0) {
+                        continue;
+                    }
+
                     /*添加没收成功代码*/
                     if (p != g_PlayerKing)
                     {

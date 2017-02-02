@@ -1148,7 +1148,7 @@ U8 OrderExec(OrderType *Order)
 #undef _ST
 
         context.offset = (U32)Order;
-        if (call_hook_a("willExecuteOrder", &context) != 0){
+        if (call_hook_a("willExecuteOrder", &context) == 0){
             return 0;
         }
     }
