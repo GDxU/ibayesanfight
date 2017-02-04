@@ -28,19 +28,35 @@
  void GetPersonProStr(U8 person,U8 pro,U8 *str);
  void GetPersonName(U8 person,U8 *str);*/
 
-static U8 personPropertiesDisplayWitdh[256] = {0};
-static U8 personPropertiesCount = PERSON_PROP_COUNT;
-static U8 toolPropertiesDisplayWitdh[256] = {0};
-static U8 toolPropertiesCount = GOODS_PROP_COUNT;
-static U8 cityPropertiesCount = 11;
+typedef struct{
+    U8 personPropertiesDisplayWitdh[256];
+    U8 personPropertiesCount;
+    U8 toolPropertiesDisplayWitdh[256];
+    U8 toolPropertiesCount;
+    U8 cityPropertiesCount;
+} UICfg;
 
-void bind_show_face(ObjectDef* def)
+static UICfg cfg = {
+    .personPropertiesDisplayWitdh = {8, 10, 4, 4, 4, 4, 4, 4, 4, 5, 4, 10, 10},
+    .personPropertiesCount  = PERSON_PROP_COUNT,
+    .toolPropertiesDisplayWitdh = {4, 6, 6, 6, 6},
+    .toolPropertiesCount  = GOODS_PROP_COUNT,
+    .cityPropertiesCount  = 11,
+};
+
+
+void bind_show_face(ObjectDef* global_def)
 {
-    BIND_U8ARR(personPropertiesDisplayWitdh, sizeof(personPropertiesDisplayWitdh));
-    BIND_U8ARR(toolPropertiesDisplayWitdh,   sizeof(toolPropertiesDisplayWitdh));
-    BIND_U8(&personPropertiesCount);
-    BIND_U8(&toolPropertiesCount);
-    BIND_U8(&cityPropertiesCount);
+    ObjectDef* def = ObjectDef_new();
+    ObjectDef_addFieldArray(def, "personPropertiesDisplayWitdh",
+                            ValueTypeU8, &cfg.personPropertiesDisplayWitdh, sizeof(cfg.personPropertiesDisplayWitdh));
+    ObjectDef_addFieldArray(def, "toolPropertiesDisplayWitdh",
+                            ValueTypeU8, &cfg.toolPropertiesDisplayWitdh, sizeof(cfg.toolPropertiesDisplayWitdh));
+    BIND_U8EX("personPropertiesCount", &cfg.personPropertiesCount);
+    BIND_U8EX("toolPropertiesCount", &cfg.toolPropertiesCount);
+    BIND_U8EX("cityPropertiesCount", &cfg.cityPropertiesCount);
+
+    ObjectDef_addFieldF(global_def, "g_uiCfg", ValueTypeObject, 0, def, 0);
 }
 
 
@@ -63,7 +79,7 @@ void ShowGoodsPro(U8 goods,U8 pro,U8 x,U8 y,U8 wid)
     U8 sx,sy;
     U8 str[128];
     U8 i;
-    U8 *ptr = toolPropertiesDisplayWitdh;
+    U8 *ptr = cfg.toolPropertiesDisplayWitdh;
     PosItemType positem;
 
     InitItem(x,y,x + wid - 1,y + ASC_HGT,&positem);
@@ -79,9 +95,7 @@ void ShowGoodsPro(U8 goods,U8 pro,U8 x,U8 y,U8 wid)
         return;
     }
 
-    if (ptr[0] == 0) ResItemGet(IFACE_CONID,GOODS_PRO_WID,ptr);
-
-    for (i = pro; i < toolPropertiesCount; i++)
+    for (i = pro; i < cfg.toolPropertiesCount; i++)
     {
         if (AddItem(ASC_WID * ptr[i] + 1,ASC_HGT,&positem,&sx,&sy))
         {
@@ -120,7 +134,7 @@ void GetGoodsProStr(U8 goods,U8 pro,U8 *str)
         U8* value = str;
         BIND_U8EX("toolIndex", &goods);
         BIND_U8EX("propertyIndex", &pro);
-        BIND_U8ARR(value, 128);
+        BIND_GBKARR(value, 128);
 
         if (CALL_HOOK() == 0) return;
     }
@@ -191,7 +205,7 @@ U8 ShowGoodsProStr(U8 pro,U8 x,U8 y,U8 wid)
 {
     U8 sx,sy;
     U8 str[128];
-    U8 ptr[7];
+    U8 *ptr = cfg.toolPropertiesDisplayWitdh;
     U8 i;
     PosItemType positem;
 
@@ -208,8 +222,7 @@ U8 ShowGoodsProStr(U8 pro,U8 x,U8 y,U8 wid)
         return(0);
     }
 
-    ResItemGet(IFACE_CONID,GOODS_PRO_WID,ptr);
-    for (i = pro; i < toolPropertiesCount; i ++)
+    for (i = pro; i < cfg.toolPropertiesCount; i ++)
     {
         if (AddItem(ASC_WID * ptr[i] + 1,ASC_HGT,&positem,&sx,&sy))
         {
@@ -218,7 +231,7 @@ U8 ShowGoodsProStr(U8 pro,U8 x,U8 y,U8 wid)
             IF_HAS_HOOK("getToolPropertyTitle") {
                 U8* title = str;
                 BIND_U8EX("propertyIndex", &i);
-                BIND_U8ARR(title, 128);
+                BIND_GBKARR(title, 128);
                 CALL_HOOK();
             }
             if (str[0] == 0) {
@@ -346,7 +359,7 @@ FAR U8 ShowGoodsControl(U8 *goods,U8 gcount, U8 init, U8 x0,U8 y0,U8 x1,U8 y1)
                     }
                     break;
                 case VK_RIGHT:
-                    if (spcv[spc + 1] < toolPropertiesCount)
+                    if (spcv[spc + 1] < cfg.toolPropertiesCount)
                     {
                         spc += 1;
                         showflag = 1;
@@ -389,7 +402,7 @@ FAR U8 ShowGoodsControl(U8 *goods,U8 gcount, U8 init, U8 x0,U8 y0,U8 x1,U8 y1)
                     if (spc != p.x || top != p.y) {
                         top = p.y;
                         if (p.x > spc) {
-                            if (spcv[spc + 1] < toolPropertiesCount) {
+                            if (spcv[spc + 1] < cfg.toolPropertiesCount) {
                                 spc = spc + 1;
                             }
                         } else {
@@ -491,7 +504,7 @@ void ShowPersonPro(U8 person,U8 pro,U8 x,U8 y,U8 wid)
 {
     U8 sx,sy;
     U8 str[128];
-    U8 *ptr = personPropertiesDisplayWitdh;
+    U8 *ptr = cfg.personPropertiesDisplayWitdh;
     U8 i;
     PosItemType positem;
 
@@ -508,8 +521,7 @@ void ShowPersonPro(U8 person,U8 pro,U8 x,U8 y,U8 wid)
         return;
     }
 
-    ResLoadToMem(IFACE_CONID,PERSON_PRO_WID,ptr);
-    for (i = pro;i < personPropertiesCount;i ++)
+    for (i = pro;i < cfg.personPropertiesCount;i ++)
     {
         if (AddItem(ASC_WID * ptr[i] + 1,ASC_HGT,&positem,&sx,&sy))
         {
@@ -547,7 +559,7 @@ void GetPersonProStr(U8 person,U8 pro,U8 *str)
 
         BIND_U8EX("personIndex", &person);
         BIND_U8EX("propertyIndex", &pro);
-        BIND_U8ARR(value, 128);
+        BIND_GBKARR(value, 128);
 
         if (CALL_HOOK() == 0) return;
     }
@@ -669,7 +681,7 @@ U8 ShowPersonProStr(U8 pro,U8 x,U8 y,U8 wid)
 {
     U8 sx,sy;
     U8 str[128];
-    U8 *ptr = personPropertiesDisplayWitdh;
+    U8 *ptr = cfg.personPropertiesDisplayWitdh;
     U8 i;
     PosItemType positem;
 
@@ -686,8 +698,7 @@ U8 ShowPersonProStr(U8 pro,U8 x,U8 y,U8 wid)
         return(0);
     }
 
-    ResItemGet(IFACE_CONID,PERSON_PRO_WID,ptr);
-    for (i = pro; i < personPropertiesCount; i++)
+    for (i = pro; i < cfg.personPropertiesCount; i++)
     {
         if (AddItem(ASC_WID * ptr[i] + 1,ASC_HGT,&positem,&sx,&sy))
         {
@@ -698,7 +709,7 @@ U8 ShowPersonProStr(U8 pro,U8 x,U8 y,U8 wid)
                 U8* value = str;
 
                 BIND_U8EX("propertyIndex", &column);
-                BIND_U8ARR(value, 128);
+                BIND_GBKARR(value, 128);
                 
                 CALL_HOOK();
             }
@@ -854,7 +865,7 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 initSelected,U8 x0,U8 y0,U8 x1,
                     }
                     break;
                 case VK_RIGHT:
-                    if (spcv[spc + 1] < personPropertiesCount)
+                    if (spcv[spc + 1] < cfg.personPropertiesCount)
                     {
                         spc += 1;
                         showflag = 1;
@@ -898,7 +909,7 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 initSelected,U8 x0,U8 y0,U8 x1,
                     if (spc != p.x || top != p.y) {
                         top = p.y;
                         if (p.x > spc) {
-                            if (spcv[spc + 1] < personPropertiesCount) {
+                            if (spcv[spc + 1] < cfg.personPropertiesCount) {
                                 spc = spc + 1;
                             }
                         } else {
@@ -968,7 +979,7 @@ void GetCityProStr(U8 city,U8 pro,U8 *str)
 
         BIND_U8EX("cityIndex", &city);
         BIND_U8EX("propertyIndex", &pro);
-        BIND_U8ARR(display, 128);
+        BIND_GBKARR(display, 128);
         if (CALL_HOOK() == 0) {
             return;
         }
@@ -1111,7 +1122,7 @@ FAR U8 ShowCityPro(U8 city)
             GamStrShowS((WK_EX - WK_SX - ASC_WID * 15) / 2 + WK_SX,WK_SY + 2,str);
             for (i = 0;i < ((WK_EY - 1 - 2 - (WK_SY + 2)) / (ASC_HGT + 1)) - 1;i ++)
             {
-                if (i >= cityPropertiesCount) break;
+                if (i >= cfg.cityPropertiesCount) break;
                 GetCityProStr(city,showtop + i,str);
                 GamStrShowS((WK_EX - WK_SX - ASC_WID * 15) / 2 + WK_SX,WK_SY + 2 + ASC_HGT + (ASC_HGT + 1) * i,str);
             }
@@ -1134,7 +1145,7 @@ FAR U8 ShowCityPro(U8 city)
                     break;
                 case VK_DOWN:
                 case VK_RIGHT:
-                    if (showtop + ((WK_EY - 1 - 2 - (WK_SY + 2)) / (ASC_HGT + 1)) - 1 < cityPropertiesCount)
+                    if (showtop + ((WK_EY - 1 - 2 - (WK_SY + 2)) / (ASC_HGT + 1)) - 1 < cfg.cityPropertiesCount)
                     {
                         showtop += ((WK_EY - 1 - 2 - (WK_SY + 2)) / (ASC_HGT + 1)) - 1;
                         showflag = 1;
