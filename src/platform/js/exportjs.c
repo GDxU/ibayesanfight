@@ -318,3 +318,9 @@ EMSCRIPTEN_KEEPALIVE
 void bayeDeleteToolInCity(U8 city, U8 tool, U8 hide) {
     DelGoods(city, tool);
 }
+
+EMSCRIPTEN_KEEPALIVE
+U8 bayeGetArmType(U8 pIndex) {
+    return GetArmType(&g_Persons[pIndex]);
+}
+
