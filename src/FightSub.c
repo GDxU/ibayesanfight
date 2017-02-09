@@ -107,7 +107,9 @@ FAR void FgtShowHlp()
     gam_clrlcd(HLP_SX + 1,HLP_SY + 1,HLP_EX - 1,HLP_EY - 1);
     gam_rect(HLP_SX,HLP_SY,HLP_EX,HLP_EY);
 
-    pbuf = gam_malloc(150);
+#define BUFFSIZE 1024
+
+    pbuf = gam_malloc(BUFFSIZE);
     if(pbuf == NULL)
         return;
     nidx = FgtGetGenIdx(g_FoucsX,g_FoucsY);
@@ -132,6 +134,19 @@ FAR void FgtShowHlp()
         PlcMidShowStr(x + 26,y + 28,tbuf);
         pic = ResLoadToCon(GEN_HEADPIC1 + g_PIdx,1,g_CBnkPtr);
         GamPicShowExS(x + 13,y + 2,24,24,idx,pic);
+
+        IF_HAS_HOOK("getFighterInfo") {
+            U8* info = pbuf;
+            U8 generalIndex = nidx;
+
+            BIND_GBKARR(info, BUFFSIZE);
+            BIND_U8(&generalIndex);
+
+            if (CALL_HOOK() == 0) {
+                goto tagShow;
+            }
+        }
+
         FgtLoadToMem2(dFgtHlpGen,pbuf);
         per = (PersonType *) (&g_Persons[idx]);
         if(MAX_LEVEL > per->Level)
@@ -154,6 +169,7 @@ FAR void FgtShowHlp()
         FgtFormatStr(pbuf,per->Arms);
         FgtLoadToMem2(dFgtState0 + pos->state,tbuf);
         gam_strcat(pbuf,tbuf);
+tagShow:
         PlcStrShowS(&big,&small,pbuf);
     }
     else
@@ -167,6 +183,8 @@ FAR void FgtShowHlp()
         c_Ey = HLP_EY - 4;
         GamStrShowS(c_Sx,c_Sy,pbuf);
     }
+
+tagOut:
     GamDelay(0, 2);
     gam_free(pbuf);
 }
