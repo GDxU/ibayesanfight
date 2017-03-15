@@ -261,6 +261,7 @@ static U8 _CommonJNAction(U8 param, U8 aim, U8 sIdx, U8 aIdx, U8 percent) {
     }
     if(arms)
     {
+        arms = arms * (U32)percent / 100;
         if(aim & 1)
         {
             bidx = TransIdxToGen1(aIdx);
@@ -273,7 +274,6 @@ static U8 _CommonJNAction(U8 param, U8 aim, U8 sIdx, U8 aIdx, U8 percent) {
             bidx = dFgtArmsH;
             arms = CountPlusSub(g_GenAtt[1].arms,arms);
         }
-        arms = arms * (U32)percent / 100;
         if(g_LookMovie)
         {
             FgtLoadToMem2(bidx,buf);
