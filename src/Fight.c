@@ -1026,6 +1026,7 @@ void FgtDrvState(void)
         IF_HAS_HOOK("battleDrivePersonState") {
             BIND_U8EX("generalIndex", &i);
             if(CALL_HOOK() == 0) {
+                CountMoveP(i);
                 update = true;
             }
         }
