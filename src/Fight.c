@@ -448,11 +448,12 @@ U8 FgtGenMove(U8 idx)
     U8	buf[20];
     JLPOS	*pos;
 
+    FgtCountPath(idx);
+
     pos = &g_GenPos[idx];
     if(NO_MOV == pos->move)		/* 被定身，不可移动 */
-        return 1;
+        goto tagRet;
 
-    FgtCountPath(idx);
     gam_memset(buf,0,20);
     FgtLoadToMem(dFgtCtMove,buf);
     FgtShowMvRng();
@@ -480,6 +481,7 @@ U8 FgtGenMove(U8 idx)
         else
             break;
     }
+tagRet:
     g_BakUpX = pos->x;
     g_BakUpY = pos->y;
     pos->x = g_FoucsX;
@@ -1005,7 +1007,7 @@ void FgtAllRight(bool *flag)
  ***********************************************************************/
 void FgtDrvState(void)
 {
-    U8	i,state,tmp;
+    U8	i,state,tmp,usehook = 0;
     U16	arms;
     bool	rec,update;
     PersonType	*per;
@@ -1025,13 +1027,13 @@ void FgtDrvState(void)
 
         IF_HAS_HOOK("battleDrivePersonState") {
             BIND_U8EX("generalIndex", &i);
+            BIND_U8(&update);
             if(CALL_HOOK() == 0) {
-                CountMoveP(i);
-                update = true;
+                usehook = 1;
             }
         }
 
-        if (!update)
+        if (!usehook)
         switch(state)
         {
             case STATE_ZC:		/* 正常 */
@@ -1044,8 +1046,7 @@ void FgtDrvState(void)
             case STATE_DS:		/* 定身 */
                 if(rec)
                 {
-                    CountMoveP(i);
-                    state = STATE_ZC;
+                    g_GenPos[i].state = STATE_ZC;
                     update = true;
                 }
                 break;
@@ -1053,7 +1054,7 @@ void FgtDrvState(void)
             case STATE_QZ:		/* 潜踪 */
                 if(!rec)
                 {
-                    state = STATE_ZC;
+                    g_GenPos[i].state = STATE_ZC;
                     update = true;
                 }
                 break;
@@ -1070,7 +1071,6 @@ void FgtDrvState(void)
         }
         if(update)
         {
-            g_GenPos[i].state = state;
             FgtSetFocus(i);
             FgtFrashGen(i,4);		/* 刷新将领 */
         }

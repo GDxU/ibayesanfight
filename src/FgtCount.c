@@ -162,6 +162,12 @@ FAR void CountMoveP(U8 i)
     PersonType *per;
 
     pos = &g_GenPos[i];
+
+    if (pos->state == STATE_DS) {
+        pos->move = 1;
+        return;
+    }
+
     i = TransIdxToGen(i);
     per = &g_Persons[i];
 
@@ -499,6 +505,7 @@ FAR void FgtCountPath(U8 idx)
     U8	i,lp,tmp,sidx;
     U8	*ap,*sptr,*aptr;
 
+    CountMoveP(idx);
     FgtGetRelief(idx);
     FgtTransMove(idx);
 
