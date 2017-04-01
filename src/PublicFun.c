@@ -629,7 +629,7 @@ FAR void PlcStrShowS(RECT *big,RECT *small,U8 *buf)
     for(i = 0;i < 4;i += 1)
     {
         ptr = PlcItemShowS(sx[i],sy[i],ex[i],ey[i],ptr);
-        if(NULL == ptr)
+        if(ptr >= buf + sLen)
             return;
     }
 }
@@ -644,34 +644,11 @@ FAR void PlcStrShowS(RECT *big,RECT *small,U8 *buf)
  ***********************************************************************/
 U8 *PlcItemShowS(U8 sx,U8 sy,U8 ex,U8 ey,U8 *buf)
 {
-    U8	*ptr,len;
-    
-    len = (ex - sx) / ASC_WID;
-    len = len * ((ey - sy) / HZ_HGT);
-    if(gam_strlen(buf) < len)
-        ptr = (U8 *)NULL;
-    else
-    {
-        ptr = strlchr(buf,len,'|');
-        if(NULL == ptr)
-        {
-            if(!len)
-                return buf;
-            else
-                ptr = buf + len;
-        }
-        else
-        {
-            *ptr = '\0';
-            ptr += 1;
-        }
-    }
     c_Sx = sx;
     c_Sy = sy;
     c_Ex = ex;
     c_Ey = ey;
-    GamStrShowS(sx,sy,buf);
-    return ptr;
+    return buf + GamStrShowS(sx,sy,buf);
 }
 /***********************************************************************
  * 说明:     从len处向左查找字符串buf中给定的字符ch，并返回指针。

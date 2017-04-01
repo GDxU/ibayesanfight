@@ -111,9 +111,9 @@ FAR	void	GamMPicShowS(U8 x,U8 y,U8 wid,U8 hgt,U8 *pic);			/* 显示mask图片到
 FAR	void	GamMPicShowV(U8 x,U8 y,U8 wid,U8 hgt,U8 *pic,U8 *vscr);		/* 显示mask图片到虚拟屏幕 */
 FAR	void	GamPicShowExS(U8 x,U8 y,U8 wid,U8 hgt,U8 idx,U8 *pic);		/* 显示图片到屏幕(功能扩展——可显示图片的部分) */
 FAR	void	GamPicShowExV(U8 x,U8 y,U8 wid,U8 hgt,U8 idx,U8 *pic,U8 *vscr);	/* 显示图片到虚拟屏幕(功能扩展——可显示图片的部分) */
-FAR	void	GamStrShowS(U8 x,U8 y,const U8 *str);					/* 显示12汉字到屏幕 */
+FAR	U32	GamStrShowS(U8 x,U8 y,const U8 *str);					/* 显示12汉字到屏幕 */
 FAR	void	GamAsciiS(U8 x,U8 y,U8 asc);					/* 显示6x12ASCII字符到屏幕 */
-FAR	void	GamStrShowV(U8 x,U8 y,U8 *str,U8 *vscr);			/* 显示12汉字到虚拟屏幕 */
+FAR	U32	GamStrShowV(U8 x,U8 y,U8 *str,U8 *vscr);			/* 显示12汉字到虚拟屏幕 */
 FAR	void	GamePictureDummy(U8 l,U8 t,U8 r,U8 b,U8* p,U8* s,U8 f);		/* 显示图片到虚拟屏幕 */
 
 FAR void GamSetResourcePath(const U8* datPath, const U8*fontPath);

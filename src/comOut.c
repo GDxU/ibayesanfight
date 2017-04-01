@@ -31,7 +31,7 @@ U32	CountHZMAddrOff(U16 Hz);
 void	GamResumeSet(U16 bakBnk);
 void	GamAscii(U8 x,U8 y,U8 asc);
 void	GamChinese(U8 x,U8 y,U16 Hz);
-void	GamStrShow(U8 x,U8 y,const U8 *buf);
+U32	GamStrShow(U8 x,U8 y,const U8 *buf);
 void	GetExcHZMCode(U16 Hz,U8 *hzmCode);
 
 /***********************************************************************
@@ -218,14 +218,16 @@ FAR void GamPicShowExV(U8 x,U8 y,U8 wid,U8 hgt,U8 idx,U8 *pic,U8 *vscr)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-FAR void GamStrShowS(U8 x,U8 y,const U8 *str)
+FAR U32 GamStrShowS(U8 x,U8 y,const U8 *str)
 {
     U16 bakBnk;
+    U32 rv;
 
     GetDataBankNumber(9,&bakBnk);
     c_VisScr=(U8 *)NULL;
-    GamStrShow(x,y,str);
+    rv = GamStrShow(x,y,str);
     GamResumeSet(bakBnk);
+    return rv;
 }
 /***********************************************************************
  * 说明:     显示12字符串到虚拟屏幕
@@ -236,14 +238,16 @@ FAR void GamStrShowS(U8 x,U8 y,const U8 *str)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-FAR void GamStrShowV(U8 x,U8 y,U8 *str,U8 *vscr)
+FAR U32 GamStrShowV(U8 x,U8 y,U8 *str,U8 *vscr)
 {
     U16 bakBnk;
+    U32 rv;
 
     GetDataBankNumber(9,&bakBnk);
     c_VisScr=vscr;
-    GamStrShow(x,y,str);
+    rv = GamStrShow(x,y,str);
     GamResumeSet(bakBnk);
+    return rv;
 }
 /***********************************************************************
  * 说明:     初始化游戏引擎所在的机型环境
@@ -275,19 +279,22 @@ void GamResumeSet(U16 bakBnk)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-void GamStrShow(U8 x,U8 y,const U8 *buf)
+U32 GamStrShow(U8 x,U8 y,const U8 *buf)
 {
-    U8	i,wid;
+    U16	i,wid;
     U16	hzCode;
 
-    for(i=0;buf[i]-0!='\0';i++)
+    if (y+HZ_HGT > c_Ey) return 0;
+
+    for(i=0; buf[i] != '\0'; i++)
     {
         hzCode=buf[i];
+
         if(hzCode=='\n')
         {
             x=c_Sx;
             y+=HZ_HGT;
-            if(y>c_Ey) return;
+            if(y>c_Ey) break;
             continue;
         }
         if(hzCode<0x80)
@@ -299,8 +306,9 @@ void GamStrShow(U8 x,U8 y,const U8 *buf)
         if(x>c_Ex)
         {
             x=c_Sx;
+            if(x + wid > c_Ex) break;
             y+=HZ_HGT;
-            if(y + HZ_HGT>c_Ey) return;
+            if(y + HZ_HGT>c_Ey) break;
         }
         if(hzCode<0x80)
         {
@@ -316,6 +324,7 @@ void GamStrShow(U8 x,U8 y,const U8 *buf)
             x+=12;
         }
     }
+    return i;
 }
 /***********************************************************************
  * 说明:     显示12*12点阵GB2312汉字
