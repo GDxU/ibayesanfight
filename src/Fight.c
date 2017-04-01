@@ -80,16 +80,25 @@ FAR U8 GamFight(void)
     FgtInit();
     if (!g_FgtOver) {
         call_hook("enterBattle", NULL);
+#define CHECK_OVER() if(g_FgtOver) break;
         while(!g_FgtOver)
         {
             call_hook("battleStage1", NULL);
-            FgtDealBout();
+            CHECK_OVER();
+            FgtDealBout(); //时间步进，检查到30天，恢复将领激活状态，变天气，检查粮草是否耗尽，驱动人物技能状态
+            CHECK_OVER();
             call_hook("battleStage2", NULL);
-            FgtDealMan();
+            CHECK_OVER();
+            FgtDealMan(); // 玩家策略
+            CHECK_OVER();
             call_hook("battleStage3", NULL);
-            FgtDealCmp();
+            CHECK_OVER();
+            FgtDealCmp(); // AI策略
+            CHECK_OVER();
             call_hook("battleStage4", NULL);
-            CountProvUse();
+            CHECK_OVER();
+            CountProvUse(); // 处理粮草消耗
+            CHECK_OVER();
             call_hook("battleStage5", NULL);
         }
         call_hook("exitBattle", NULL);
