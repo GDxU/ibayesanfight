@@ -15,6 +15,7 @@
 void bind_skill_var(ObjectDef* def);
 void bind_show_face(ObjectDef* def);
 
+DEC_U8ARR_DEF(2);
 DEC_U8ARR_DEF(5);
 DEC_U8ARR_DEF(6);
 DEC_U8ARR_DEF(8);
@@ -142,6 +143,7 @@ void bind_init(void) {
             _FIELD_RW(Arms, U16),
             _FIELD("Tool1", _ST, Equip[0], U8),
             _FIELD("Tool2", _ST, Equip[1], U8),
+            _U8ARR_FIELD(Equip, 2),
             _FIELD_RW(Age, U8),
         };
 
