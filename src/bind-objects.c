@@ -21,6 +21,8 @@ DEC_U8ARR_DEF(6);
 DEC_U8ARR_DEF(8);
 DEC_U8ARR_DEF(FGTA_MAX);
 
+DEC_U16ARR_DEF(16);
+
 static Value g_var = {0};
 static U8 g_errorString[128] = {0};
 
@@ -380,6 +382,8 @@ void bind_init(void) {
             _FIELD_RW(responseNoteOfBettle, U8),
             _FIELD_RW(aiDefenceMode, U8),
             _FIELD_RW(aiAttackMethod, U8),
+            _U16ARR_FIELD(mainMenuButtonRects, 16),
+            _U16ARR_FIELD(periodMenuButtonRects, 16),
         };
 
         static ObjectDef _obj_def = {

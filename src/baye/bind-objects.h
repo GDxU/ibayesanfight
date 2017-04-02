@@ -45,6 +45,13 @@ extern U8 g_asyncActionStringParam[1024*10];
             ValueTypeArray, n, .subdef.arrDef = &_U8_def\
         }
 
+#define _U16ARR_FIELD(field, l) {#field, {&U16_a##l##_def, offsetof(_ST, field)}}
+
+#define DEC_U16ARR_DEF(n) \
+    static ValueDef U16_a##n##_def = {\
+        ValueTypeArray, sizeof(U16)*n, .subdef.arrDef = &_U16_def\
+    }
+
 #define _BEGIN_SDEF(name) static Field name##_fields[] = {
 #define _END_SDEF(name, p) }; \
 \
