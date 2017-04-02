@@ -182,28 +182,15 @@ bool GamMainChose(void)
     U8	idx;
     U8	i,c;
 
-    Rect mainMenuButtonRects[] = {
-        {6, 45, 73, 63}, //新君登基
-        {83, 45, 151, 63}, //重返沙场
-        {6, 70, 73, 88}, //制作群组
-        {83, 71, 151, 88}, //解甲归田
-    };
-
-    Rect periodMenuButtonRects[] = {
-        {0, 24, 78, 56}, //董卓弄权
-        {0, 62, 78, 93}, //曹操崛起
-        {81, 24, 158, 56}, //赤壁之战
-        {81, 62, 158, 93}, //三国鼎立
-    };
 
     while(1)
     {
         GamClearLastMsg();
-        U8 choice = GamPicMenu(MAIN_PIC,MAIN_ICON1, mainMenuButtonRects, 4, false);
+        U8 choice = GamPicMenu(MAIN_PIC,MAIN_ICON1, g_engineConfig.mainMenuButtonRects, 4, false);
         switch(choice)
         {
             case 0:		/* 新君登基 */
-                idx = GamPicMenu(YEAR_PIC,YEAR_ICON1, periodMenuButtonRects, 4, true);
+                idx = GamPicMenu(YEAR_PIC,YEAR_ICON1, g_engineConfig.periodMenuButtonRects, 4, true);
                 if(idx == MNU_EXIT)
                     break;
                 idx = GetPeriodKings(idx + 1,g_FgtAtkRng); 	/* 设置历史时期，并获取君主队列 */
@@ -893,6 +880,18 @@ EngineConfig g_engineConfig = {
     .armsPerMoney = 10,
     .armsPerDevotion = 20,
     .maxLevel = 20,
+    .mainMenuButtonRects = {
+        {6, 45, 73, 63}, //新君登基
+        {83, 45, 151, 63}, //重返沙场
+        {6, 70, 73, 88}, //制作群组
+        {83, 71, 151, 88}, //解甲归田
+    },
+    .periodMenuButtonRects = {
+        {0, 24, 78, 56}, //董卓弄权
+        {0, 62, 78, 93}, //曹操崛起
+        {81, 24, 158, 56}, //赤壁之战
+        {81, 62, 158, 93}, //三国鼎立
+    },
 };
 
 U8 g_engineDebug = 0;

@@ -1,5 +1,6 @@
 #ifndef ATTRIBUT_H
 #define ATTRIBUT_H
+#include "touch.h"
 
 #define PERSON_MAX		250	/*最大武将数*/
 #define CITY_MAX		38	/*最大城市数*/
@@ -197,7 +198,8 @@ typedef struct {
     U8 aiAttackMethod;          // AI攻击时选择技能/普攻的算法(0原版，1优化版)
 
     U8 batlleDisableWeatherChange;    // 禁止战场天气变化
-
+    Rect mainMenuButtonRects[4];   // 主界面4个按钮的边框位置
+    Rect periodMenuButtonRects[4]; // 时期界面4个按钮的边框位置
 } EngineConfig;
 
 extern EngineConfig g_engineConfig;
