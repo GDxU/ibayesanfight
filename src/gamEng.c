@@ -182,15 +182,19 @@ bool GamMainChose(void)
     U8	idx;
     U8	i,c;
 
+    Rect mainMenuButtonRects[4];
+    Rect periodMenuButtonRects[4];
+    memcpy(&mainMenuButtonRects, g_engineConfig.mainMenuButtonRects, sizeof(mainMenuButtonRects));
+    memcpy(&periodMenuButtonRects, g_engineConfig.periodMenuButtonRects, sizeof(periodMenuButtonRects));
 
     while(1)
     {
         GamClearLastMsg();
-        U8 choice = GamPicMenu(MAIN_PIC,MAIN_ICON1, g_engineConfig.mainMenuButtonRects, 4, false);
+        U8 choice = GamPicMenu(MAIN_PIC,MAIN_ICON1, mainMenuButtonRects, 4, false);
         switch(choice)
         {
             case 0:		/* 新君登基 */
-                idx = GamPicMenu(YEAR_PIC,YEAR_ICON1, g_engineConfig.periodMenuButtonRects, 4, true);
+                idx = GamPicMenu(YEAR_PIC,YEAR_ICON1, periodMenuButtonRects, 4, true);
                 if(idx == MNU_EXIT)
                     break;
                 idx = GetPeriodKings(idx + 1,g_FgtAtkRng); 	/* 设置历史时期，并获取君主队列 */
