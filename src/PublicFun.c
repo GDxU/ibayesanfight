@@ -100,12 +100,6 @@ FAR U8 PlcMovie(U16 speid, U16 index, U8 startfrm,U8 endfrm,U8 keyflag,U8 x,U8 y
     ymount = mcount;
     while (1)
     {
-        if ((keyflag & 0x01) == 0x01)
-        {
-            keynum = gam_getkey();
-            if (keynum != 0xff)
-                return(keynum);
-        }
         for (i = 0;i <= mcount;i ++)
         {
             if (spec[i] == 1)

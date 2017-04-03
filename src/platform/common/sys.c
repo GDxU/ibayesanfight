@@ -87,7 +87,9 @@ FAR void SysAscii(U8 x,U8 y,U8 asc)
 
 FAR U8 SysGetKey(void)
 {
-    return 0xff;
+    MsgType msg;
+    GuiGetMsg(&msg);
+    return msg.param;
 }
 
 FAR U8   SysGetKeySound(void)
