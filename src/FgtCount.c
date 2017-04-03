@@ -399,7 +399,7 @@ FAR U16 CountOverAdd(U16 *a,U16 v,U16 up)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-FAR void CountSklHurt(U8 param, U16 *arms, U16 *prov)
+FAR void CountSklHurt(U8 param, U16 *arms, U16 *prov, U8 origin, U8*state)
 {
     U8	i,eTyp;
     U8	oTer,eTer;
@@ -409,6 +409,8 @@ FAR void CountSklHurt(U8 param, U16 *arms, U16 *prov)
     IF_HAS_HOOK("countSkillHurt") {
         BIND_U8EX("skillId", &param);
         BIND_U16EX("hurt", arms);
+        BIND_U8EX("origin", &origin);
+        BIND_U8(state);
         BIND_U16(prov);
 
         if (CALL_HOOK() == 0) {

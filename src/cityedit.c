@@ -22,6 +22,7 @@
 #define	CITYEDIT_C
 #include "baye/enghead.h"
 #include "touch.h"
+#include "baye/script.h"
 
 /*U8 GetCityOutPersons(U8 city,U8 *pqueue);
  U8 GetCityPersons(U8 city,U8 *pqueue);
@@ -1011,6 +1012,7 @@ FAR U8 GetCitySet(CitySetType *pos)
                     gam_clrlcd(WK_SX,WK_SY,WK_EX,WK_EY);
                     dptr = ResLoadToCon(TACTIC_ICON,1,g_CBnkPtr);
                     GamPicShowExS(WK_SX + (WK_EX - WK_SX - 84) / 2,WK_SY + (WK_EY - WK_SY - 64) / 2,84,64,0,dptr);
+                    call_hook_a("didShowMiniMap", NULL);
                     tpicflag = 1;
                     break;
             }

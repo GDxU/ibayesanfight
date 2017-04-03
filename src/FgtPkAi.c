@@ -922,8 +922,10 @@ FAR void FgtShowView(void)
     pcolor = COLOR_BLACK;
     pForce = 1;
     pSIdx = 0;
+    call_hook("didShowFightSituation", NULL);
     while(1)
     {
+
         for(idx = 0;idx < FGTA_MAX;idx += 1)
         {
             pos = (JLPOS *)&g_GenPos[idx];
@@ -990,6 +992,7 @@ FAR void FgtShowView(void)
             }
         }
         FgtViewForce(pForce,pSIdx);
+        call_hook("didRefreshFightSituation", NULL);
     }
 }
 /***********************************************************************

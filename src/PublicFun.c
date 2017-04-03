@@ -58,12 +58,13 @@ FAR U8 PlcMovie(U16 speid, U16 index, U8 startfrm,U8 endfrm,U8 keyflag,U8 x,U8 y
 
 
     srsptr = ResLoadToCon(speid,index+1,g_CBnkPtr);
-    endfrm = min(((SPERES*)srsptr)->endfrm, endfrm);
     if (NULL == srsptr)
     {
+        printf("spe %d %d not found", speid, index);
         gamTraceP(speid);
         return(0xff);
     }
+    endfrm = min(((SPERES*)srsptr)->endfrm, endfrm);
 
     count  = *(srsptr+2);
     picmax = *(srsptr+3);

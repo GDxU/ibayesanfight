@@ -40,7 +40,7 @@ FgtCount void		CountMoveP(U8 i);
 FgtCount U16		CountAtkHurt(void);
 FgtCount U16		CountPlusSub(U16 *a,U16 v);
 FgtCount U16		CountOverAdd(U16 *a,U16 v,U16 up);
-FgtCount void		CountSklHurt(U8 param,U16 *arms,U16 *prov);
+FgtCount void		CountSklHurt(U8 param,U16 *arms,U16 *prov, U8 origin, U8*state);
 FgtCount void		FgtCountPath(U8 idx);
 FgtCount void		BuiltAtkAttr(U8 idx,U8 pIdx);
 FgtCount void		CountProvUse(void);

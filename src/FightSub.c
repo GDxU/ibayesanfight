@@ -234,25 +234,23 @@ void bind_skill_var(ObjectDef* def)
 U8 FgtGetGenTer(U8 idx);
 bool FgtChkAkRng(U8 x,U8 y);
 
-static U8 _CommonJNAction(U8 param, U8 aim, U8 sIdx, U8 aIdx, U8 percent) {
+static U8 _CommonJNAction(U8 param, U8 aim, U8 sIdx, U8 aIdx, U8 originIdx) {
     U16 arms, prov, up;
     U8 bidx, state, buf[25], *ptr;
     SKILLEF	*skl = (SKILLEF	*)FgtGetJNPtr(param);
 
     BuiltAtkAttr(1, aIdx);
 
-    /* 驱动状态 */
     state = skl->state;
+    CountSklHurt(param, &arms, &prov, originIdx, &state);		/* 计算该技能的兵力和粮草伤害 */
     g_GenPos[aIdx].state = state;
     if(state == STATE_DS)		/* 定身状态时，设置将领的移动力为1 */
         g_GenPos[aIdx].move = NO_MOV;
-
-    /* 驱动通用的技能 */
-    CountSklHurt(param, &arms, &prov);		/* 计算该技能的兵力和粮草伤害 */
+    I32 rv = call_hook_a("willShowPKAnimation", NULL);
     param -= 1;
     if(dJNSpeId[param])
     {
-        if(g_LookMovie)
+        if(g_LookMovie && rv == -1)
         {
             if(dJNMode[param])
                 PlcRPicShow(SPE_BACKPIC,1,FGT_SPESX,FGT_SPESY,false);
@@ -261,7 +259,6 @@ static U8 _CommonJNAction(U8 param, U8 aim, U8 sIdx, U8 aIdx, U8 percent) {
     }
     if(arms)
     {
-        arms = arms * (U32)percent / 100;
         if(aim & 1)
         {
             bidx = TransIdxToGen1(aIdx);
@@ -367,8 +364,9 @@ U8 FgtJNAction(FGTCMD *pcmd)
         return 8;
     }
 
+    U8 _;
     /* 驱动通用的技能 */
-    CountSklHurt(param, &arms, &prov);		/* 计算该技能的兵力和粮草伤害 */
+    CountSklHurt(param, &arms, &prov, aIdx, &_);		/* 计算该技能的兵力和粮草伤害 */
 
     if (prov) {
         bidx = dFgtProvH;
@@ -390,7 +388,7 @@ U8 FgtJNAction(FGTCMD *pcmd)
         GamDelay(SHOW_DLYBASE * 5,false);
     }
 
-    arms = _CommonJNAction(param, aim, sIdx, aIdx, 100);
+    arms = _CommonJNAction(param, aim, sIdx, aIdx, aIdx);
     if ((aim & 2)) {
         for(int i = 0;i < FGTA_MAX;i += 1)
         {
@@ -413,7 +411,7 @@ U8 FgtJNAction(FGTCMD *pcmd)
             if(!FgtJNChkAim(skidx, same, i))
                 continue;
 
-            arms = add_16(arms, _CommonJNAction(param, aim, sIdx, i, 60));
+            arms = add_16(arms, _CommonJNAction(param, aim, sIdx, i, aIdx));
         }
     }
     return (FgtGetExp(arms));
@@ -479,6 +477,7 @@ U8 FgtAtkAction(U8 aIdx)
     dead = (hurt != speId);			/* dead = true 被攻击将领被击溃 */
     hurt = speId;
 
+    I32 rv = call_hook_a("willShowPKAnimation", NULL);
     /* 动画播放 */
     if(g_LookMovie)
     {
@@ -496,7 +495,8 @@ U8 FgtAtkAction(U8 aIdx)
             eFrm = sFrm + FgtSpeFrm[sType] - 1;
             speId = QIBING_SPE + sType;
         }
-        PlcMovie(speId,0,sFrm,eFrm,0,FGT_SPESX,FGT_SPESY);
+        if (rv == -1)
+            PlcMovie(speId,0,sFrm,eFrm,0,FGT_SPESX,FGT_SPESY);
         FgtAtvShowNum(FGT_SPESX + 40,FGT_SPESY + 40,hurt);
     }
     else

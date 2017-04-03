@@ -888,6 +888,7 @@ void FgtShowState()
     FgtShowStateBackground();			/* 显示背景图 */
     PlcNumShow(STA_LCX,STA_LCY,g_FgtParam.MProvender,3,g_VisScr);	/* 显示粮草 */
     FgtRPicShowV(WEATHER_PIC,g_FgtWeather,STA_TQX,STA_TQY);		/* 显示天气 */
+    call_hook("didShowFightStateBar", NULL);
 }
 /***********************************************************************
  * 说明:     检查光标所处位置是否在指定范围内的有效区域
