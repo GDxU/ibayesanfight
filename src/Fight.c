@@ -1319,7 +1319,7 @@ void FgtShowChgSpe(U8 sfrm,U8 efrm,U8 x,U8 y)
         return;
     x = FgtGetScrX(x);
     y = FgtGetScrY(y);
-    PlcMovie(STACHG_SPE,sfrm,efrm,0,x,y);
+    PlcMovie(STACHG_SPE,0,sfrm,efrm,0,x,y);
 }
 /***********************************************************************
  * 说明:     显示地图

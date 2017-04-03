@@ -38,7 +38,7 @@ U8 *strlchr(U8 *buf,U8 len,U8 ch);
  *             ------          ----------      -------------
  *             陈泽伟          2005-7-8 18:59       完成基本功能
  ***********************************************************************/
-FAR U8 PlcMovie(U16 speid,U8 startfrm,U8 endfrm,U8 keyflag,U8 x,U8 y)
+FAR U8 PlcMovie(U16 speid, U16 index, U8 startfrm,U8 endfrm,U8 keyflag,U8 x,U8 y)
 {
     U8 **dat,*srsptr;
     U8	 count;			/*桢数*/
@@ -56,7 +56,9 @@ FAR U8 PlcMovie(U16 speid,U8 startfrm,U8 endfrm,U8 keyflag,U8 x,U8 y)
     showflag = 1;
     maxdatlen = 0;
 
-    srsptr = ResLoadToCon(speid,1,g_CBnkPtr);
+
+    srsptr = ResLoadToCon(speid,index+1,g_CBnkPtr);
+    endfrm = min(((SPERES*)srsptr)->endfrm, endfrm);
     if (NULL == srsptr)
     {
         gamTraceP(speid);
@@ -513,13 +515,17 @@ FAR void PlcNumShow(U8 x,U8 y,U32 num,U8 dig,U8 *vs)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-FAR void PlcRPicShow(U16 id,U8 idx,U8 x,U8 y,U8 flag)
+FAR void PlcRPicShow(U16 id,U8 idx,U8 x,U8 y,U8 flag) {
+    PlcRPicShowEx(id, 0, idx, x, y, flag);
+}
+
+FAR void PlcRPicShowEx(U16 id, U8 item, U8 idx,U8 x,U8 y,U8 flag)
 {
     U8	*pic;
     U8	wid,high,mode;
     U16	off;
 
-    pic = ResLoadToCon(id,1,g_CBnkPtr);
+    pic = ResLoadToCon(id,item+1,g_CBnkPtr);
     if(NULL == pic)
         return;
     if(idx > pic[4])

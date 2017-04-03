@@ -324,3 +324,57 @@ U8 bayeGetArmType(U8 pIndex) {
     return GetArmType(&g_Persons[pIndex]);
 }
 
+EMSCRIPTEN_KEEPALIVE
+U8* bayeGetGBKBuffer(void) {
+    return g_asyncActionStringParam;
+}
+
+EMSCRIPTEN_KEEPALIVE
+void bayeLcdDrawImage(U16 resid, U16 item, U8 index, U8 x, U8 y, U8 flag) {
+    return PlcRPicShowEx(resid, item, index+1, x, y, flag);
+}
+
+EMSCRIPTEN_KEEPALIVE
+U32 bayeLcdDrawText(U8*text, U8 x, U8 y) {
+    return GamStrShowS(x, y, text);
+}
+
+/* 清除屏幕矩形 */
+EMSCRIPTEN_KEEPALIVE
+void bayeLcdClearRect(U8 left, U8 top, U8 right, U8 bottom) {
+    gam_clrlcd(left, top, right, bottom);
+}
+
+/* 反显屏幕 */
+EMSCRIPTEN_KEEPALIVE
+void bayeLcdRevertRect(U8 left, U8 top, U8 right, U8 bottom) {
+    gam_revlcd(left, top, right, bottom);
+}
+
+/* 画点函数 */
+EMSCRIPTEN_KEEPALIVE
+void bayeLcdDot(U8 x, U8 y, U8 color) {
+    gam_putpixel(x, y, color);
+}
+
+/* 显示直线 */
+EMSCRIPTEN_KEEPALIVE
+void bayeLcdDrawLine(U8 sx, U8 sy, U8 ex, U8 ey, U8 color) {
+    if (color) {
+        gam_line(sx, sy, ex, ey);
+    } else {
+        // TODO:
+        // gam_linec(sx, sy, ex, ey);
+        printf("clear line not implemented\n");
+    }
+}
+
+/* 显示矩形 */
+EMSCRIPTEN_KEEPALIVE
+void bayeLcdDrawRect(U8 sx, U8 sy, U8 ex, U8 ey, U8 color) {
+    if (color) {
+        gam_rect(sx, sy, ex, ey);
+    } else {
+        gam_rectc(sx, sy, ex, ey);
+    }
+}

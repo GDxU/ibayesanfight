@@ -71,7 +71,7 @@ FAR bool FgtGetMCmd(FGTCMD *pcmd)
             FgtSetFocus(jb);
             sx = FgtGetScrX(g_GenPos[jb].x);
             sy = FgtGetScrY(g_GenPos[jb].y);
-            PlcMovie(STACHG_SPE,12,17,0,sx,sy);
+            PlcMovie(STACHG_SPE,0,12,17,0,sx,sy);
         }
         return true;
     }

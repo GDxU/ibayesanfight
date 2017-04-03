@@ -1,6 +1,7 @@
 #ifndef	_ENG_HEAD_H
 #define	_ENG_HEAD_H
 
+#include "fundef.h"
 #include "consdef.h"
 #include "graph.h"
 #include "fsys.h"

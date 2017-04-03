@@ -543,10 +543,7 @@ void GamShowKing(U8 pTop)
  ***********************************************************************/
 U8 GamMovie(U16 speID)
 {
-    SPERES	*srsptr;
-
-    srsptr = (SPERES *)ResLoadToCon(speID,1,g_CBnkPtr);
-    return PlcMovie(speID,0,srsptr->endfrm,true,WK_SX,WK_SY);
+    return PlcMovie(speID,0,0,-1,true,WK_SX,WK_SY);
 }
 /***********************************************************************
  * 说明:     显示出错信息

@@ -256,7 +256,7 @@ static U8 _CommonJNAction(U8 param, U8 aim, U8 sIdx, U8 aIdx, U8 percent) {
         {
             if(dJNMode[param])
                 PlcRPicShow(SPE_BACKPIC,1,FGT_SPESX,FGT_SPESY,false);
-            PlcMovie(dJNSpeId[param],dJNSpeSFrm[param],dJNSpeEFrm[param],0,FGT_SPESX + dJNSpeSX[param],FGT_SPESY);
+            PlcMovie(dJNSpeId[param],0,dJNSpeSFrm[param],dJNSpeEFrm[param],0,FGT_SPESX + dJNSpeSX[param],FGT_SPESY);
         }
     }
     if(arms)
@@ -496,7 +496,7 @@ U8 FgtAtkAction(U8 aIdx)
             eFrm = sFrm + FgtSpeFrm[sType] - 1;
             speId = QIBING_SPE + sType;
         }
-        PlcMovie(speId,sFrm,eFrm,0,FGT_SPESX,FGT_SPESY);
+        PlcMovie(speId,0,sFrm,eFrm,0,FGT_SPESX,FGT_SPESY);
         FgtAtvShowNum(FGT_SPESX + 40,FGT_SPESY + 40,hurt);
     }
     else

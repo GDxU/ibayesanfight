@@ -13,6 +13,7 @@
 #include "baye/extern.h"
 #include "baye/sharefun.h"
 #include "baye/comm.h"
+#include "baye/enghead.h"
 #include <emscripten.h>
 
 void script_init(void)
@@ -118,6 +119,25 @@ int call_hook_a(const char* name, Value* context)
             case 6: // Choose city
                 // TODO:
                 break;
+            case 7: // delay
+            {
+                U16 count = g_asyncActionParams[0];
+                U8 flag = g_asyncActionParams[1];
+                g_asyncActionParams[0] = GamDelay(count, flag);
+                js_callback(&rv);
+                break;
+            }
+            case 8: // spe
+            {
+                U16 speid = g_asyncActionParams[0];
+                U16 index = g_asyncActionParams[1];
+                U16 x = g_asyncActionParams[2];
+                U16 y = g_asyncActionParams[3];
+                U16 flag = g_asyncActionParams[4];
+                g_asyncActionParams[0] = PlcMovie(speid, index, 0, -1, flag, x, y);
+                js_callback(&rv);
+                break;
+            }
             default:
                 break;
         }

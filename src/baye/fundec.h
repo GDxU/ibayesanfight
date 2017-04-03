@@ -5,7 +5,7 @@
 
 GamEng U8		GamRecordMan(U8 flag);
 
-PublicFun U8		PlcMovie(U16 speid,U8 startfrm,U8 endfrm,U8 keyflag,U8 x,U8 y);
+PublicFun U8		PlcMovie(U16 speid, U16 index,U8 startfrm,U8 endfrm,U8 keyflag,U8 x,U8 y);
 PublicFun U8		PlcSplMenu(RECT *pRect,U8 pIdx,U8 *buf);
 PublicFun U8		PlcExtract(U16 num);
 PublicFun U16		PlcArmsMax(U8 id);
@@ -15,7 +15,7 @@ PublicFun void		PlcMidShowStr(U8 x,U8 y,U8 *buf);
 PublicFun void		PlcStrShowS(RECT *big,RECT *small,U8 *buf);
 PublicFun void		PlcNumShow(U8 x,U8 y,U32 num,U8 dig,U8 *vs);
 PublicFun void		PlcRPicShow(U16 id,U8 idx,U8 x,U8 y,U8 flag);
-
+PublicFun void PlcRPicShowEx(U16 id, U8 item, U8 idx,U8 x,U8 y,U8 flag);
 Debug void		gamPrintNum(U8 x,U8 y, U32 num, U8 base,U8 sign);
 Debug void		gamTraceP(U32 num);
 Debug void		gamTracel(U32 num);
