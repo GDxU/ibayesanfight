@@ -75,9 +75,6 @@ FAR void GamBaYeEng(void)
         return;
     }
 
-    /* 显示游戏开始动画 */
-    GamMovie(MAIN_SPE);
-
     /* 初始化游戏变量 */
     if(GamVarInit())
     {
@@ -86,7 +83,9 @@ FAR void GamBaYeEng(void)
         GamConRst();
         return;
     }
-
+    /* 显示游戏开始动画 */
+    GamMovie(MAIN_SPE);
+    
     do
     {
         /* 获取游戏选项 */

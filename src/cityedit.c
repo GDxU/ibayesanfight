@@ -1018,7 +1018,7 @@ FAR U8 GetCitySet(CitySetType *pos)
                     tpicflag = 1;
                     break;
                 case VK_HELP:
-                    if (call_hook_a("showMainHelp", NULL)) {
+                    if (call_hook_a("showMainHelp", NULL) == 0) {
                         tpicflag = 1;
                     }
                     break;
