@@ -292,6 +292,7 @@ static U8 _CommonJNAction(U8 param, U8 aim, U8 sIdx, U8 aIdx, U8 originIdx) {
         FgtLoadToMem2(dFgtState,ptr + 8 + 4);
         GamMsgBox(buf,1);
     }
+    call_hook_a("didShowPKAnimation", NULL);
     return FgtGetExp(arms);
 }
 
@@ -511,7 +512,7 @@ U8 FgtAtkAction(U8 aIdx)
         sType = 16;
     else
         sType = 8;
-
+    call_hook_a("didShowPKAnimation", NULL);
     return (FgtGetExp(hurt) + dead * sType);
 }
 /***********************************************************************

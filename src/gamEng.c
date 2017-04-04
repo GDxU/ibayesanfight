@@ -333,10 +333,10 @@ U8 GamPicMenu(U16 picID,U16 speID, const Rect *buttonsRect, U8 buttonsCount, U8 
 void GamMakerInf(void)
 {
     gam_memset(g_VisScr,0,WK_BLEN);
-    call_hook_a("willShowAbout", NULL);
-    GamMovie(MAKER_SPE);
-    call_hook_a("didShowAbout", NULL);
-    GamDelay(5000, 2);
+    if (call_hook_a("showAbout", NULL) == -1) {
+        GamMovie(MAKER_SPE);
+        GamDelay(5000, 2);
+    }
 }
 /***********************************************************************
  * 说明:     获取玩家要扮演的君主ID
