@@ -928,6 +928,7 @@ FAR U8 GetCitySet(CitySetType *pos)
     // 头像的rect
     Rect exitButton = MakeRect(WK_SX + CITYMAP_TIL_W * SHOWMAP_WS + ((WK_EX - (WK_SX + CITYMAP_TIL_W * SHOWMAP_WS) - 24) / 2), WK_SY + 4, 24, 24);
     Rect searchButton = MakeRect(exitButton.left, exitButton.bottom+2, 24, 24);
+    Rect helpButton = MakeRect(searchButton.left, WK_EY-24, 24, 24);
 
     U8 xWhenTouchDown = 0;
     U8 yWhenTouchDown = 0;
@@ -1009,11 +1010,17 @@ FAR U8 GetCitySet(CitySetType *pos)
                     return(0xff);
                     break;
                 case VK_SEARCH:
-                    gam_clrlcd(WK_SX,WK_SY,WK_EX,WK_EY);
-                    dptr = ResLoadToCon(TACTIC_ICON,1,g_CBnkPtr);
-                    GamPicShowExS(WK_SX + (WK_EX - WK_SX - 84) / 2,WK_SY + (WK_EY - WK_SY - 64) / 2,84,64,0,dptr);
-                    call_hook_a("didShowMiniMap", NULL);
+                    if (call_hook_a("showMiniMap", NULL) == -1) {
+                        gam_clrlcd(WK_SX,WK_SY,WK_EX,WK_EY);
+                        dptr = ResLoadToCon(TACTIC_ICON,1,g_CBnkPtr);
+                        GamPicShowExS(WK_SX + (WK_EX - WK_SX - 84) / 2,WK_SY + (WK_EY - WK_SY - 64) / 2,84,64,0,dptr);
+                    }
                     tpicflag = 1;
+                    break;
+                case VK_HELP:
+                    if (call_hook_a("showMainHelp", NULL)) {
+                        tpicflag = 1;
+                    }
                     break;
             }
         } else if (VM_TOUCH == Msg.type) {
@@ -1061,6 +1068,10 @@ FAR U8 GetCitySet(CitySetType *pos)
                     } else if (touchIsPointInRect(touch.currentX, touch.currentY, searchButton)) {
                         Msg.type = VM_CHAR_FUN;
                         Msg.param = VK_SEARCH;
+                        goto tagHandleMsg;
+                    } else if (touchIsPointInRect(touch.currentX, touch.currentY, helpButton)) {
+                        Msg.type = VM_CHAR_FUN;
+                        Msg.param = VK_HELP;
                         goto tagHandleMsg;
                     }
                     break;
