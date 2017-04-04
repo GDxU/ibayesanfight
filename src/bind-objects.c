@@ -12,6 +12,8 @@
 #include "baye/comm.h"
 #include "baye/consdef.h"
 
+static U8 g_engineVersion[] = "170404";
+
 void bind_skill_var(ObjectDef* def);
 void bind_show_face(ObjectDef* def);
 
@@ -57,6 +59,7 @@ void bind_init(void) {
     bind_skill_var(def);
     bind_show_face(def);
 
+    DEFADD_GBKARR(g_engineVersion, sizeof(g_engineVersion));
     DEFADDF(c_ReFlag, U8);
     DEFADDF(c_Sx, U8);
     DEFADDF(c_Sy, U8);
