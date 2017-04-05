@@ -1144,9 +1144,15 @@ U8 ShowCityMap(CitySetType *pos)
     {
         for (h = 0;h < SHOWMAP_HS;h ++)
         {
+            if (pos->y + h >= CITYMAP_H)
+                break;
+
             count = (CITYMAP_TIL_W + 7) / 8 * CITYMAP_TIL_H * ((U16) (pos->y + h) * CITYMAP_W + pos->x);
             for (w = 0;w < SHOWMAP_WS;w ++)
             {
+                if (pos->x + w >= CITYMAP_W)
+                    break;
+
                 /*显示地图块pdptr + count*/
                 GamPicShowV(WK_SX + CITYMAP_TIL_W * w,WK_SY + CITYMAP_TIL_H * h,CITYMAP_TIL_W,CITYMAP_TIL_H,pdptr + count,g_VisScr);
                 count += (CITYMAP_TIL_W + 7) / 8 * CITYMAP_TIL_H;
@@ -1155,8 +1161,14 @@ U8 ShowCityMap(CitySetType *pos)
 
         for (h = 0;h < SHOWMAP_HS;h ++)
         {
+            if (pos->y + h >= CITYMAP_H)
+                break;
+
             for (w = 0;w < SHOWMAP_WS;w ++)
             {
+                if (pos->x + w >= CITYMAP_W)
+                    break;
+
                 if (citymap[h][w])
                 {
                     /*显示城市图标*/
