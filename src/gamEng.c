@@ -210,14 +210,14 @@ bool GamMainChose(void)
                         g_CityPos.setx = posptr[idx << 1];
                         g_CityPos.sety = posptr[(idx << 1) + 1];
                         if ((g_CityPos.setx + SHOWMAP_WS / 2) >= CITYMAP_W)
-                            g_CityPos.x = CITYMAP_W - SHOWMAP_WS;
+                            g_CityPos.x = CITYMAP_W > SHOWMAP_WS ? CITYMAP_W - SHOWMAP_WS : 0;
                         else if (g_CityPos.setx < SHOWMAP_WS / 2)
                             g_CityPos.x = 0;
                         else
                             g_CityPos.x = g_CityPos.setx - SHOWMAP_WS / 2;
 
                         if ((g_CityPos.sety + SHOWMAP_HS / 2) >= CITYMAP_H)
-                            g_CityPos.y = CITYMAP_H - SHOWMAP_HS;
+                            g_CityPos.y = CITYMAP_H > SHOWMAP_HS ? CITYMAP_H - SHOWMAP_HS : 0;
                         else if (g_CityPos.sety < SHOWMAP_HS / 2)
                             g_CityPos.y = 0;
                         else
