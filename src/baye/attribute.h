@@ -200,6 +200,7 @@ typedef struct {
     U8 batlleDisableWeatherChange;    // 禁止战场天气变化
     Rect mainMenuButtonRects[4];   // 主界面4个按钮的边框位置
     Rect periodMenuButtonRects[4]; // 时期界面4个按钮的边框位置
+    Point saveFaceListAnchor;      // 存档界面list左上角坐标
 } EngineConfig;
 
 extern EngineConfig g_engineConfig;

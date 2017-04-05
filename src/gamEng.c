@@ -580,14 +580,16 @@ FAR U8 GamRecordMan(U8 flag)
     Touch touch = {0};
     U8 itemHeight = 14;
 
+    Point anchor = g_engineConfig.saveFaceListAnchor;
+
     GamRcdIFace(count);
     idx = 0;
-    ry = WK_SY + 33;
-    U8 right = WK_SX + 31 + 95;
-    gam_revlcd(WK_SX + 31,ry, right, ry + HZ_HGT);
+    ry = anchor.y;
+    U8 right = anchor.x + 95;
+    gam_revlcd(anchor.x, ry, right, ry + HZ_HGT);
 
     Rect menuRect = {
-        .left = WK_SX + 31,
+        .left = anchor.x,
         .top = ry,
         .right = right,
         .bottom = ry + itemHeight*count,
@@ -598,7 +600,7 @@ FAR U8 GamRecordMan(U8 flag)
         GamGetMsg(&pMsg);
         if(VM_CHAR_FUN == pMsg.type)
         {
-            gam_revlcd(WK_SX + 31,ry,right,ry + HZ_HGT);
+            gam_revlcd(anchor.x, ry, right, ry + HZ_HGT);
             switch(pMsg.param)
             {
                 case VK_UP:
@@ -620,8 +622,8 @@ FAR U8 GamRecordMan(U8 flag)
                     return MNU_EXIT;
             }
             idx = idx % count;
-            ry = idx * 14 + WK_SY + 33;
-            gam_revlcd(WK_SX + 31,ry, right,ry + HZ_HGT);
+            ry = anchor.y + itemHeight*idx;
+            gam_revlcd(anchor.x, ry, right, ry + HZ_HGT);
         } else if (VM_TOUCH == pMsg.type) {
             touchUpdate(&touch, pMsg);
             if (VT_TOUCH_UP == pMsg.param) {
@@ -638,12 +640,12 @@ FAR U8 GamRecordMan(U8 flag)
                                     return idx;
                                 GamRcdIFace(count);
                             } else {
-                                gam_revlcd(WK_SX + 31,ry,right,ry + HZ_HGT);
+                                gam_revlcd(anchor.x, ry, right, ry + HZ_HGT);
                                 idx = index;
                             }
                             idx = idx % count;
-                            ry = idx * 14 + WK_SY + 33;
-                            gam_revlcd(WK_SX + 31,ry, right,ry + HZ_HGT);
+                            ry = anchor.y + itemHeight*idx;
+                            gam_revlcd(anchor.x, ry, right, ry + HZ_HGT);
                         }
                     } else {
                         return MNU_EXIT;
@@ -668,6 +670,8 @@ void GamRcdIFace(U8 count)
     U8	pbak,tbuf[10];
     U16	year;
     gam_FILE	*fp;
+
+    Point anchor = g_engineConfig.saveFaceListAnchor;
 
     PlcRPicShow(SAVE_PIC,1,WK_SX,WK_SY,true);
     pbak = g_PIdx;
@@ -698,7 +702,7 @@ void GamRcdIFace(U8 count)
             king = gam_strlen(tbuf) + 1;
             gam_memcpy(fnam + 10,tbuf,king);	/* fnam = "君主    ???年" */
         }
-        GamStrShowS(WK_SX + 31,WK_SY + 33 + idx * 14,fnam);
+        GamStrShowS(anchor.x, anchor.y + idx * 14, fnam);
     }
     g_PIdx = pbak;
 }
@@ -894,6 +898,7 @@ EngineConfig g_engineConfig = {
         {81, 24, 158, 56}, //赤壁之战
         {81, 62, 158, 93}, //三国鼎立
     },
+    .saveFaceListAnchor = { 31, 33 },
 };
 
 U8 g_engineDebug = 0;
