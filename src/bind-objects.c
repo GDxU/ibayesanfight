@@ -85,7 +85,7 @@ void bind_init(void) {
     DEFADD_U8ARR(g_VisScr, WK_BLEN);
     DEFADD_U8ARR(g_BVisScr, WK_BLEN);
 
-    DEFADD_U8ARR(g_FightMap, SCR_MAPWID*SCR_MAPHGT);
+    DEFADD_U8ARR(g_FightMap, FIGHT_MAP_BUFFER_LEN);
     DEFADD_U8ARR(g_FightPath, FGT_MRG*FGT_MRG + 25);
     DEFADD_U8ARR(g_FgtAtkRng, MAX_ATT_RANGE + 5);
 

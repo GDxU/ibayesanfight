@@ -32,6 +32,8 @@
 #define	SHOW_MX			(SCR_MAPWID / 2)        /* 当前将领屏幕地图块坐标 */
 #define	SHOW_MY			(SCR_MAPHGT / 2)        /* 当前将领屏幕地图块坐标 */
 
+#define FIGHT_MAP_BUFFER_LEN (256)  // (256/16)**2   256 is the max screen size
+
 /* 战斗特效播放坐标 */
 #define	FGT_SPESX		((SCR_WID-130) / 2)
 #define	FGT_SPESY		((SCR_HGT-64) / 2)

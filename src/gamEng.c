@@ -114,7 +114,7 @@ U8 GamVarInit(void)
     gam_memset(FIGHTERS_IDX, 0, FIGHT_ORDER_MAX);
     gam_memset((U8 *)ORDERQUEUE, 0xff, (U16)ORDER_MAX * sizeof(OrderType));
 
-    g_FightMap = gam_malloc(SCR_MAPWID*SCR_MAPHGT);		/* 50 */
+    g_FightMap = gam_malloc(FIGHT_MAP_BUFFER_LEN);		/* 50 */
     if (NULL == g_FightMap)
         return 1;
     g_FightPath = gam_malloc(FGT_MRG*FGT_MRG + 25);		/* 250 */
