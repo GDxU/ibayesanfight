@@ -12,7 +12,7 @@
 #include "baye/comm.h"
 #include "baye/consdef.h"
 
-static U8 g_engineVersion[32] = "170408";
+static U8 g_engineVersion[32] = "170408.1";
 
 void bind_skill_var(ObjectDef* def);
 void bind_show_face(ObjectDef* def);
