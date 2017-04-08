@@ -91,7 +91,7 @@ FAR void CountInitGen(void)
         if(!(i % FGT_PLAMAX))
             cnt = 0;
         g_GenPos[i].state = STATE_ZC;
-        if(TransIdxToGen(i) == 0xFF)
+        if(g_FgtParam.GenArray[i] == 0)
         {
             cnt += 1;
             g_GenPos[i].state = STATE_SW;
@@ -476,8 +476,6 @@ U16 FgtAllArms(U8 flag)
 U8 TransIdxToGen(U8 idx)
 {
     if(idx > FGTA_MAX - 1)
-        return 0xFF;
-    if(STATE_SW == g_GenPos[idx].state)
         return 0xFF;
     return (U8)(g_FgtParam.GenArray[idx] - 1);
 }

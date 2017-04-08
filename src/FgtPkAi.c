@@ -505,7 +505,7 @@ void FgtGetSklBuf(U8 gid, U8 *buf)
     IF_HAS_HOOK("getSkillIds") {
         U8* skillIds = buf;
         BIND_U8EX("generalIndex", &gid);
-        BIND_U8ARR(skillIds, sizeof(skillIds));
+        BIND_U8ARR(skillIds, 10);
         CALL_HOOK();
     }
 }

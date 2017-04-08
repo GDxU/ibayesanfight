@@ -242,6 +242,8 @@ static U8 _CommonJNAction(U8 param, U8 aim, U8 sIdx, U8 aIdx, U8 originIdx) {
     BuiltAtkAttr(1, aIdx);
 
     state = skl->state;
+    if (g_GenPos[aIdx].state == STATE_SW)
+        state = STATE_SW;
     CountSklHurt(param, &arms, &prov, originIdx, &state);		/* 计算该技能的兵力和粮草伤害 */
     g_GenPos[aIdx].state = state;
     if(state == STATE_DS)		/* 定身状态时，设置将领的移动力为1 */
@@ -281,7 +283,7 @@ static U8 _CommonJNAction(U8 param, U8 aim, U8 sIdx, U8 aIdx, U8 originIdx) {
             FgtShowSNum2((aim & 1) ? '+' : '-',aIdx,arms);
         GamDelay(SHOW_DLYBASE * 5,false);
     }
-    if(state != STATE_ZC)
+    if(state != STATE_ZC && state != STATE_SW)
     {
         up = TransIdxToGen1(aIdx);
         GetPersonName(up,buf);
@@ -394,27 +396,33 @@ U8 FgtJNAction(FGTCMD *pcmd)
         for(int i = 0;i < FGTA_MAX;i += 1)
         {
             JLPOS* pos = &g_GenPos[i];
-            U8 same, skidx = param;
-
-            if (i == aIdx) continue;
-
-            if(STATE_SW == pos->state)
+            U8 skidx = param;
+            if (i == aIdx)
+                continue;
+            if (g_FgtParam.GenArray[i] == 0)
                 continue;
 
-            if(!FgtChkAkRng(pos->x, pos->y))
-                continue;
+            if (!(aim & 4)) {
+                U8 same;
 
-            if((sIdx >= FGT_PLAMAX && i >= FGT_PLAMAX) || (sIdx < FGT_PLAMAX && i < FGT_PLAMAX))
-                same = true;
-            else
-                same = false;
-            
-            if(!FgtJNChkAim(skidx, same, i))
-                continue;
+                if(STATE_SW == pos->state)
+                    continue;
 
+                if(!FgtChkAkRng(pos->x, pos->y))
+                    continue;
+
+                if((sIdx >= FGT_PLAMAX && i >= FGT_PLAMAX) || (sIdx < FGT_PLAMAX && i < FGT_PLAMAX))
+                    same = true;
+                else
+                    same = false;
+
+                if(!FgtJNChkAim(skidx, same, i))
+                    continue;
+            }
             arms = add_16(arms, _CommonJNAction(param, aim, sIdx, i, aIdx));
         }
     }
+    FgtSetFocus(sIdx);
     return (FgtGetExp(arms));
 }
 /***********************************************************************
@@ -849,13 +857,19 @@ void FgtResumeMp(U8 idx)
  ***********************************************************************/
 void FgtShowSNum2(U8 sym,U8 idx,U16 num)
 {
-    U8	sx,sy;
+    I16	sx,sy;
     U8	tbuf[10];
     
     tbuf[0] = sym;
     gam_itoa(num,tbuf + 1,10);
     sx = FgtGetScrX(g_GenPos[idx].x);
     sy = FgtGetScrY(g_GenPos[idx].y);
+    Rect rect = {0, 0, g_screenWidth, g_screenHeight};
+    if (!touchIsPointInRect(sx, sy, rect)) {
+        FgtSetFocus(idx);
+        sx = FgtGetScrX(g_GenPos[idx].x);
+        sy = FgtGetScrY(g_GenPos[idx].y);
+    }
     GamStrShowS(sx,sy,tbuf);
 }
 /***********************************************************************
