@@ -35,18 +35,17 @@
     }
     int ind = 0;
     int x, y;
-    NSColor *color;
-    
+
+    CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
+    CGContextSetRGBFillColor(context, 0, 0, 0, 1);
+
     for (y = 0; y < SCR_H; y++) {
         for (x = 0; x < SCR_W; x++) {
             ind = BYTES_PERLINE*y + x;
             int pixel = self.buffer[ind];
             
-            if (pixel) {
-                color = [NSColor blackColor];
-            }
-            else {
-                color = [NSColor whiteColor];
+            if (!pixel) {
+                continue;
             }
             CGFloat vw = self.frame.size.width;
             CGFloat vh = self.frame.size.height;
@@ -55,8 +54,7 @@
             CGFloat ph = vh / SCR_H;
             CGFloat px = x * vw / SCR_W;
             CGFloat py = (SCR_H - 1 - y) * vh / SCR_H;
-
-            [color drawSwatchInRect:NSMakeRect(px, py, pw, ph)];
+            CGContextFillRect(context, CGRectMake (px, py, pw, ph));
         }
     }
 }
