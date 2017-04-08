@@ -1079,12 +1079,15 @@ FAR U8 GetCitySet(CitySetType *pos)
                 case VT_TOUCH_MOVE:
                 {
                     if (!touch.touched) break;
+
+                    I32 maxXMove = CITYMAP_W - SHOWMAP_WS;
+                    I32 maxYMove = CITYMAP_H - SHOWMAP_HS;
                     Point p = touchListViewCalcTopLeftForMove(&touch,
                                                               xWhenTouchDown,
-                                                              CITYMAP_W - SHOWMAP_WS,
+                                                              maxXMove > 0 ? maxXMove : 0,
                                                               CITYMAP_TIL_W,
                                                               yWhenTouchDown,
-                                                              CITYMAP_H - SHOWMAP_HS,
+                                                              maxYMove > 0 ? maxYMove : 0,
                                                               CITYMAP_TIL_W);
 
                     if (p.x != pos->x || p.y != pos->y) {
