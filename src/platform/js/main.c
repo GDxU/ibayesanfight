@@ -27,6 +27,10 @@ static void _lcd_flush_cb(char*buffer) {
 
 int main(int argc, char*argv[])
 {
+    EM_ASM({
+        if (window.bayeStart)
+            bayeStart();
+    });
     emscripten_sleep(1); // give javascript chance to run init
     GamSetResourcePath((U8*)"/rom/dat.lib", (U8*)"/rom/font.bin");
     GamSetAltLibPath((U8*)"/data/dat.lib");
@@ -36,7 +40,8 @@ int main(int argc, char*argv[])
     GamBaYeEng();
 
     EM_ASM({
-        bayeExit();
+        if (window.bayeExit)
+            bayeExit();
     });
     return 0;
 }
