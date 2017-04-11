@@ -176,7 +176,19 @@ tagShow:
     {
         /* 显示地形信息 */
         idx = FgtGetTerrain(g_FoucsX,g_FoucsY);
+        IF_HAS_HOOK("getTerrainInfo") {
+            U8* info = pbuf;
+            U8 ter = nidx;
+
+            BIND_GBKARR(info, BUFFSIZE);
+            BIND_U8(&ter);
+
+            if (CALL_HOOK() == 0) {
+                goto tagShowT;
+            }
+        }
         FgtLoadToMem2(dTerrInf0 + idx,pbuf);
+    tagShowT:
         c_Sx = HLP_SX + 4;
         c_Sy = HLP_SY + 4;
         c_Ex = HLP_EX - 4;
