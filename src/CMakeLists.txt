@@ -33,17 +33,24 @@ data-bind.c
 bind-objects.c
 touch.c
 config.c
-platform/js/fsys.c
-platform/js/sem.c
-platform/js/timer.c
-platform/js/script.c
-platform/js/sys-js.c
 platform/common/bios.c
 platform/common/gui.c
 platform/common/sys.c
 )
 
+set (bayelib_js_SRCS
+platform/js/fsys.c
+platform/js/sem.c
+platform/js/timer.c
+platform/js/script.c
+platform/js/sys-js.c
+)
+
 add_library(bayeliba ${bayelib_SRCS})
+
+if (${CMAKE_SYSTEM_NAME} STREQUAL Emscripten)
+target_sources(bayeliba PRIVATE ${bayelib_js_SRCS})
+endif(${CMAKE_SYSTEM_NAME} STREQUAL Emscripten)
 
 add_executable(baye
 platform/js/main.c
@@ -54,13 +61,15 @@ target_link_libraries(baye bayeliba)
 
 target_include_directories(baye PRIVATE . ./platform/common)
 target_include_directories(bayeliba PRIVATE . ./platform/common)
+
+
 #target_include_directories(bayeliba PRIVATE ${msgpack_SOURCE_DIR}/include)
-# -s EMTERPRETIFY_ADVISE=1 \
-set (CMAKE_C_FLAGS
-    "-s EMTERPRETIFY=1\
- -s EMTERPRETIFY_ASYNC=1 \
- -s ASSERTIONS=0 \
- -s EMTERPRETIFY_WHITELIST='@whitelist.json' \
- "
-)
+if (${CMAKE_SYSTEM_NAME} STREQUAL Emscripten)
+	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -s EMTERPRETIFY=1")
+	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -s EMTERPRETIFY_ASYNC=1")
+	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -s ASSERTIONS=0")
+	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -s EMTERPRETIFY_WHITELIST='@whitelist.json'")
+	target_link_libraries(baye "--memory-init-file 0")
+#	add_compile_options(-s EMTERPRETIFY_ADVISE=1)
+endif (${CMAKE_SYSTEM_NAME} STREQUAL Emscripten)
 
