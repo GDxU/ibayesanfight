@@ -1298,14 +1298,14 @@ FAR U16 NumOperate(U16 min,U16 max)
                 }
                 case VT_TOUCH_MOVE:
                 {
-                    I16 rng = max - min;
+                    I32 rng = max - min;
                     // x越小，粗调，x越大，微调
                     // 微调，每10px加1
                     I16 dy = touch.currentY - touch.startY;
 
-                    I16 d0 = - dy * rng / SCR_HGT;
-                    I16 d1 = - dy / 10;
-                    I16 d = d1;
+                    I32 d0 = - dy * rng / SCR_HGT;
+                    I32 d1 = - dy / 10;
+                    I32 d = d1;
                     if (abs(d0) > abs(d1)) {
                         U16 factor = SCR_WID - limitValueInRange(touch.startX, 0, SCR_WID-1) - 1;
                         if (factor < 15) factor = 0;
