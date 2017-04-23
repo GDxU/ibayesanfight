@@ -22,6 +22,7 @@ static void(*_lcd_fluch_cb)(char*buffer);
 #define DOT 1
 #define CLR 0
 static char buffer[WK_BLEN_MAX * 8];
+static char backup_buffer[WK_BLEN_MAX * 8];
 static char isLcdDirty = 0;
 
 void GamSetLcdFlushCallback(void(*lcd_fluch_cb)(char*buffer))
@@ -262,4 +263,14 @@ FAR void SysTimer1Close(void)
 FAR void SysTimer1Open(U8 times)
 {
     gam_timer_open(times);
+}
+
+FAR void SysSaveScreen()
+{
+    memcpy(backup_buffer, buffer, sizeof(buffer));
+}
+
+FAR void SysRestoreScreen()
+{
+    memcpy(buffer, backup_buffer, sizeof(buffer));
 }

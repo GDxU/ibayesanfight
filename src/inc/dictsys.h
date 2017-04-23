@@ -301,8 +301,8 @@ FAR void SysRect(U8 x1,U8 y1,U8 x2,U8 y2);
 FAR void SysFillRect(U8 x1,U8 y1,U8 x2,U8 y2);
 FAR void SysPutPixel(U8 x,U8 y,U8 data);
 
-FAR void SysSaveScreen(U8 x1,U8 y1,U8 x2,U8 y2,U8* BuffPoint);
-FAR void SysRestoreScreen(U8 x1,U8 y1,U8 x2,U8 y2,U8* BuffPoint);
+FAR void SysSaveScreen(void);
+FAR void SysRestoreScreen(void);
 FAR	void SysRestoreScreenEx();
 FAR	void SysSaveScreenEx();
 FAR void SysPicture(U8 x1,U8 y1,U8 x2,U8 y2,U8* BuffPoint , U8 flag);

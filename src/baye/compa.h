@@ -42,6 +42,9 @@ int gam_seed(void);
 #define	gam_getkey()		SysGetKey()				/* 有按键获取，无按键返回 */
 #define	gam_Picture(l,t,r,b,p)	SysPicture(l,t,r,b,p,0)	
 
+#define gam_savscr() SysSaveScreen()
+#define gam_restorescr() SysRestoreScreen()
+
 #ifndef HAVE_ITOA
 #include "itoa.h"
 #endif

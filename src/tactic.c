@@ -1198,7 +1198,6 @@ FAR U16 NumOperate(U16 min,U16 max)
 
     donum = max;
     num = 1;
-    showflag = 1;
     
     ResLoadToMem(STRING_CONST,ATRR_STR63,str);
     GamStrShowS(left, top, str);
@@ -1214,7 +1213,9 @@ FAR U16 NumOperate(U16 min,U16 max)
     U8 enlarged_col_width = SCR_WID / (maxbit + 1);
     U8 enlarged_startY = mini_startY-1;
     static U8 config_show_enlarged = 0;
-
+    showflag = config_show_enlarged ? 2 : 1;
+    
+    gam_savscr();
 
     while (1)
     {
@@ -1222,10 +1223,13 @@ FAR U16 NumOperate(U16 min,U16 max)
         {
             U8 show_enlarged = config_show_enlarged && maxbit > 0;
             tnum = donum;
-            if (show_enlarged || showflag == 2) {
-                gam_clrlcd(0, enlarged_startY, SCR_WID, enlarged_startY+ASC_HGT+2);
+            if (showflag == 2) {
+                if (show_enlarged) {
+                    gam_clrlcd(0, enlarged_startY, SCR_WID, enlarged_startY+ASC_HGT+2);
+                } else {
+                    gam_restorescr();
+                }
             }
-
 
             for (i = maxbit;(U8)(i + 1) >= 1;i --) {
                 if (show_enlarged) {
