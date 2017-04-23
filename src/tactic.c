@@ -1207,33 +1207,42 @@ FAR U16 NumOperate(U16 min,U16 max)
     GamStrShowS(left, top + ASC_HGT, str);
 
     maxbit = gam_strlen(&str[7]) - 1;
-    bit = maxbit;
+    bit = 0;
 
+    U8 mini_startX = (WK_SX + WK_EX - WK_SX  - ASC_WID * 12) / 2 + ASC_WID * 7;
+    U8 mini_startY = (WK_SY + WK_EY - WK_SY - ASC_HGT * 3) / 2 + ASC_HGT;
     U8 enlarged_col_width = SCR_WID / (maxbit + 1);
-    U8 enlarged_startY = 0;
-    static U8 show_enlarged = 0;
+    U8 enlarged_startY = mini_startY-1;
+    static U8 config_show_enlarged = 0;
+
 
     while (1)
     {
         if (showflag)
         {
-            if ((show_enlarged && maxbit > 0) || showflag == 2) {
-                gam_clrlcd(0, enlarged_startY, SCR_WID, ASC_HGT+2);
+            U8 show_enlarged = config_show_enlarged && maxbit > 0;
+            tnum = donum;
+            if (show_enlarged || showflag == 2) {
+                gam_clrlcd(0, enlarged_startY, SCR_WID, enlarged_startY+ASC_HGT+2);
             }
 
-            tnum = donum;
-            for (i = maxbit;(U8)(i + 1) >= 1;i --)
-            {
-                GamAsciiS((WK_SX + WK_EX - WK_SX  - ASC_WID * 12) / 2 + ASC_WID * 7 + ASC_WID * i,(WK_SY + WK_EY - WK_SY - ASC_HGT * 3) / 2 + ASC_HGT,(tnum % 10) + '0');
-                if (show_enlarged && maxbit > 0) {
+
+            for (i = maxbit;(U8)(i + 1) >= 1;i --) {
+                if (show_enlarged) {
                     // enlarged version
-                    gam_rect(enlarged_col_width*i, enlarged_startY, enlarged_col_width*(i+1), ASC_HGT+2);
+                    gam_rect(enlarged_col_width*i, enlarged_startY, enlarged_col_width*(i+1), enlarged_startY+ASC_HGT+2);
                     U8 x = enlarged_col_width * i + enlarged_col_width / 2 - ASC_WID/2;
                     GamAsciiS(x, enlarged_startY+1, (tnum % 10) + '0');
+
+                } else {
+                    GamAsciiS(mini_startX + ASC_WID * i, mini_startY, (tnum % 10) + '0');
                 }
                 tnum /= 10;
             }
-            gam_revlcd((WK_SX + WK_EX - WK_SX  - ASC_WID * 12) / 2 + ASC_WID * 7 + ASC_WID * bit,(WK_SY + WK_EY - WK_SY - ASC_HGT * 3) / 2 + ASC_HGT,(WK_SX + WK_EX - WK_SX  - ASC_WID * 12) / 2 + ASC_WID * 7 + ASC_WID * bit + ASC_WID - 1,(WK_SY + WK_EY - WK_SY - ASC_HGT * 3) / 2 + ASC_HGT + ASC_HGT - 1);
+
+            if (!show_enlarged) {
+                gam_revlcd(mini_startX + ASC_WID * bit, mini_startY, mini_startX + ASC_WID * bit + ASC_WID - 1, mini_startY + ASC_HGT - 1);
+            }
             showflag = 0;
         }
         
@@ -1310,7 +1319,7 @@ FAR U16 NumOperate(U16 min,U16 max)
                     }
                     // else
                     showflag = 2;
-                    show_enlarged = !show_enlarged;
+                    config_show_enlarged = !config_show_enlarged;
                     break;
                 }
                 case VT_TOUCH_MOVE:
