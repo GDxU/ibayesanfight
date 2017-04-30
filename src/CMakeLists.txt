@@ -70,6 +70,7 @@ if (${CMAKE_SYSTEM_NAME} STREQUAL Emscripten)
 	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -s ASSERTIONS=0")
 	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -s EMTERPRETIFY_WHITELIST='@whitelist.json'")
 	target_link_libraries(baye "--memory-init-file 0")
+#	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --memoryprofiler")
 #	add_compile_options(-s EMTERPRETIFY_ADVISE=1)
 endif (${CMAKE_SYSTEM_NAME} STREQUAL Emscripten)
 
