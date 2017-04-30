@@ -1206,7 +1206,7 @@ FAR U16 NumOperate(U16 min,U16 max)
     GamStrShowS(left, top + ASC_HGT, str);
 
     maxbit = gam_strlen(&str[7]) - 1;
-    bit = 0;
+    bit = maxbit;
 
     U8 mini_startX = (WK_SX + WK_EX - WK_SX  - ASC_WID * 12) / 2 + ASC_WID * 7;
     U8 mini_startY = (WK_SY + WK_EY - WK_SY - ASC_HGT * 3) / 2 + ASC_HGT;
