@@ -775,6 +775,8 @@ bool GamLoadRcd(U8 idx)
     gam_fread((U8 *)g_Persons,sizeof(PersonType),personQueueLen,fp);
     gam_fread((U8 *)g_PersonsQueue,1,personQueueLen,fp);
     gam_fread((U8 *)g_GoodsQueue,1,goodsQueueLen,fp);
+
+    if (customData) free(customData);
     customData = gam_freadall(fp);
     gam_fclose(fp);
     

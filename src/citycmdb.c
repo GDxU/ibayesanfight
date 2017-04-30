@@ -225,12 +225,12 @@ FAR U8 CityCommon(U8 city,U8 cmd)
         bind_clear_error_string();
         switch (CALL_HOOK_A()) {
             case 0:
-                return 1;
+                HOOK_RETURN(1);
             case 1:
             {
                 U8* msg = bind_get_error_string();
                 if (*msg) GamMsgBox(msg,2);
-                return 0;
+                HOOK_RETURN(0);
             }
             default:
                 break;

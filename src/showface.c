@@ -136,7 +136,7 @@ void GetGoodsProStr(U8 goods,U8 pro,U8 *str)
         BIND_U8EX("propertyIndex", &pro);
         BIND_GBKARR(value, 128);
 
-        if (CALL_HOOK() == 0) return;
+        if (CALL_HOOK() == 0) HOOK_RETURN();
     }
 
     gptr = (GOODS *) ResLoadToCon(GOODS_RESID,1,g_CBnkPtr);
@@ -561,7 +561,7 @@ void GetPersonProStr(U8 person,U8 pro,U8 *str)
         BIND_U8EX("propertyIndex", &pro);
         BIND_GBKARR(value, 128);
 
-        if (CALL_HOOK() == 0) return;
+        if (CALL_HOOK() == 0) HOOK_RETURN();
     }
 
 
@@ -981,7 +981,7 @@ void GetCityProStr(U8 city,U8 pro,U8 *str)
         BIND_U8EX("propertyIndex", &pro);
         BIND_GBKARR(display, 128);
         if (CALL_HOOK() == 0) {
-            return;
+            HOOK_RETURN();
         }
     }
 

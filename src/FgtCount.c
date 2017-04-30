@@ -208,7 +208,7 @@ FAR U16 CountAtkHurt(void)
         BIND_U16(&hurt);
         
         if (CALL_HOOK() == 0) {
-            return hurt;
+            HOOK_RETURN(hurt);
         }
     }
     /* 基本伤害 hurt = (at / df) * arms / 8 */
@@ -275,7 +275,7 @@ FAR void BuiltAtkAttr(U8 idx,U8 pIdx)
         BIND_U8EX("index", &idx);
         BIND_U8EX("generalIndex", &pIdx);
         if (CALL_HOOK() == 0) {
-            return;
+            HOOK_RETURN();
         }
     }
 
@@ -414,7 +414,7 @@ FAR void CountSklHurt(U8 param, U16 *arms, U16 *prov, U8 origin, U8*state)
         BIND_U16(prov);
 
         if (CALL_HOOK() == 0) {
-            return;
+            HOOK_RETURN();
         }
     }
 

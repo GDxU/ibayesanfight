@@ -111,7 +111,7 @@ U8 FgtGetMCmdNear(FGTCMD *pcmd)
             BIND_U8EX("sIdx", &pcmd->sIdx);
             BIND_U8EX("aIdx", &pcmd->aIdx);
 
-            if (CALL_HOOK() == 0) return i;
+            if (CALL_HOOK() == 0) HOOK_RETURN(i);
         }
         
         /* 将领移动 */

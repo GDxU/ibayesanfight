@@ -566,7 +566,7 @@ FAR U16 PlcArmsMax(U8 id) {
         BIND_U8EX("personIndex", &id);
         BIND_U32(&maxArms);
         if (CALL_HOOK() == 0) {
-            return maxArms;
+            HOOK_RETURN(maxArms);
         }
     }
     return PlcArmsMaxP(&g_Persons[id]);

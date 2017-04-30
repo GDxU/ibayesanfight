@@ -475,7 +475,7 @@ FAR U8 AddGoodsPerson(U8 goods,U8 person)
         BIND_U8(&result);
 
         if (CALL_HOOK_A() == 0 && result == 0) {
-            return 0xff;
+            HOOK_RETURN(0xff);
         }
     }
 
@@ -541,7 +541,7 @@ FAR U8 DelGoodsPerson(U8 goods,U8 person)
         BIND_U8(&result);
 
         if (CALL_HOOK_A() == 0 && result == 0) {
-            return 0;
+            HOOK_RETURN(0);
         }
     }
 
