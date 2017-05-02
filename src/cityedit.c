@@ -23,6 +23,7 @@
 #include "baye/enghead.h"
 #include "touch.h"
 #include "baye/script.h"
+#include "baye/version.h"
 
 /*U8 GetCityOutPersons(U8 city,U8 *pqueue);
  U8 GetCityPersons(U8 city,U8 *pqueue);
@@ -1018,9 +1019,13 @@ FAR U8 GetCitySet(CitySetType *pos)
                     tpicflag = 1;
                     break;
                 case VK_HELP:
-                    if (call_hook_a("showMainHelp", NULL) == 0) {
-                        tpicflag = 1;
+                    if (call_hook_a("showMainHelp", NULL) == -1) {
+                        U8 ver[64];
+                        sprintf((char*)ver, "Ver %s", BAYE_VERSION);
+                        gam_clrlcd(WK_SX,WK_SY,WK_EX,WK_EY);
+                        GamStrShowS(WK_SX, WK_SY, ver);
                     }
+                    tpicflag = 1;
                     break;
             }
         } else if (VM_TOUCH == Msg.type) {
