@@ -179,7 +179,7 @@ tagShow:
         idx = FgtGetTerrain(g_FoucsX,g_FoucsY);
         IF_HAS_HOOK("getTerrainInfo") {
             U8* info = pbuf;
-            U8 ter = nidx;
+            U8 ter = idx;
 
             BIND_GBKARR(info, BUFFSIZE);
             BIND_U8(&ter);
