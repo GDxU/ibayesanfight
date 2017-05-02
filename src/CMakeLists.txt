@@ -52,6 +52,15 @@ if (${CMAKE_SYSTEM_NAME} STREQUAL Emscripten)
 target_sources(bayeliba PRIVATE ${bayelib_js_SRCS})
 endif(${CMAKE_SYSTEM_NAME} STREQUAL Emscripten)
 
+add_custom_command(
+	OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/baye/version.h
+	COMMAND ./genver.py > ${CMAKE_CURRENT_SOURCE_DIR}/baye/version.h
+)
+
+add_custom_target(ver_header ALL DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/baye/version.h)
+
+add_dependencies(bayeliba ver_header)
+
 add_executable(baye
 platform/js/main.c
 )
