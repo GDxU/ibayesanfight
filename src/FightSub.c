@@ -143,6 +143,7 @@ FAR void FgtShowHlp()
             BIND_U8(&generalIndex);
 
             if (CALL_HOOK() == 0) {
+                HOOK_LEAVE();
                 goto tagShow;
             }
         }
@@ -184,6 +185,7 @@ tagShow:
             BIND_U8(&ter);
 
             if (CALL_HOOK() == 0) {
+                HOOK_LEAVE();
                 goto tagShowT;
             }
         }
