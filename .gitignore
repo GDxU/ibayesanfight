@@ -1,1 +1,3 @@
 *.a
+src/baye/version.h
+
