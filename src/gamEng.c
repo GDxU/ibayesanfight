@@ -117,6 +117,7 @@ U8 GamVarInit(void)
     g_FightMap = gam_malloc(FIGHT_MAP_BUFFER_LEN);		/* 50 */
     if (NULL == g_FightMap)
         return 1;
+    g_FightMapData = gam_malloc(FIGHT_MAP_DATA_LEN);
     g_FightPath = gam_malloc(FGT_MRG*FGT_MRG + 25);		/* 250 */
     if (NULL == g_FightPath)
         return 1;
@@ -162,6 +163,7 @@ U8 GamVarInit(void)
 void GamVarRst(void)
 {
     gam_free((U8 *)g_FightMap);
+    gam_free((U8 *)g_FightMapData);
     gam_free((U8 *)g_FightPath);
     gam_free((U8 *)g_FgtAtkRng);
     gam_free((U8 *)g_Persons);

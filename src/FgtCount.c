@@ -613,8 +613,7 @@ void FgtGetRelief(U8 idx)
         bh += g_MapHgt - y;
 
     /* 影射地图 */
-    ptr = ResLoadToCon(g_FgtParam.MapId,1,g_CBnkPtr);
-    ptr += 16;
+    ptr = g_FightMapData;
     moff = my;
     moff *= g_MapWid;
     moff += mx;

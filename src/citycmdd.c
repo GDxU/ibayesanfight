@@ -212,6 +212,8 @@ FAR U8 BattleDrv(OrderType *Order)
     ResItemGet(IFACE_CONID,dCityMapId,midx);
     g_FgtParam.MapId = FIGHT_MAP + midx[o];
     g_FgtParam.Way = GetDirect(o,Order->City);
+    g_FgtParam.CityIndex = o;
+
     do
     {
         ShowAttackNote(pb - 1,o);

@@ -710,6 +710,17 @@ void FgtShowCursor(void)
         FgtRPicShowV(STEP_PIC,5,x,y);
     }
 }
+
+void FgtLoadMap(void) {
+    if (call_hook("loadFightMap", NULL) == -1) {
+        /* 获取地图的基本信息 */
+        U8 *ptr = FgtLoadToCon(g_FgtParam.MapId,1);
+        g_MapWid = (U8) *ptr;
+        g_MapHgt = (U8) *(ptr+2);
+        ptr += 16;
+        memcpy(g_FightMapData, ptr, g_MapWid*g_MapHgt);
+    }
+}
 /***********************************************************************
  * 说明:     初始化战斗地图
  * 输入参数: mode-玩家战斗模式	way-进攻方向	mapid-地图id
@@ -725,21 +736,13 @@ U8 FgtIntMap(void)
     U8	tmp,way;
     U16	lp,cx,cy;
     U8	*ptr,*tptr;
-
-    /* 获取地图的基本信息 */
-    ptr = FgtLoadToCon(g_FgtParam.MapId,1);
-    if (NULL == ptr)
-    {
-        g_RunErr = MAP_LOAD_ERR;
-        return 1;
-    }
-    g_MapWid = (U8) *ptr;
-    g_MapHgt = (U8) *(ptr+2);
     /*	g_TileId = (U16) *(ptr+4);*/
     g_TileId = FIGHT_TILE;
 
-    /* 获取城池-防守方起始坐标 */
-    ptr += 16;
+    FgtLoadMap();
+
+    ptr = g_FightMapData;
+
     lp = 0;
     while(CITY_TIL != ptr[lp])	/* 注意：若地图中没城市地图块，可能造成死循环 */
         lp += 1;
@@ -1371,7 +1374,7 @@ void FgtGetMapDat(U8 x,U8 y)
     g_MapSX=x;
     g_MapSY=y;
     /* 获取要显示的地图数据指针 */
-    ptr = FgtLoadToCon(g_FgtParam.MapId,1) + MAP_HEAD_LEN;
+    ptr = g_FightMapData;
     /* 获取要显示的地图数据 */
     maptr = g_FightMap;
     count = g_MapWid;

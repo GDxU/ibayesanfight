@@ -674,11 +674,8 @@ FAR U8 FgtGetTerrain(U8 x,U8 y)
     U8	idx,*ptr;
     U16	offset;
 
-    ptr = ResLoadToCon(g_FgtParam.MapId,1,g_CBnkPtr);
-    offset = (U8) *ptr;
-    offset *= y;
-    offset += x;
-    ptr += MAP_HEAD_LEN;
+    ptr = g_FightMapData;
+    offset = g_MapWid * y + x;
     idx = ptr[offset];
     if(idx > TERN_RIVERS)
     {

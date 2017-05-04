@@ -86,6 +86,7 @@ void bind_init(void) {
     DEFADD_U8ARR(g_VisScr, WK_BLEN);
     DEFADD_U8ARR(g_BVisScr, WK_BLEN);
 
+    DEFADD_U8ARR(g_FightMapData, FIGHT_MAP_DATA_LEN);
     DEFADD_U8ARR(g_FightMap, FIGHT_MAP_BUFFER_LEN);
     DEFADD_U8ARR(g_FightPath, FGT_MRG*FGT_MRG + 25);
     DEFADD_U8ARR(g_FgtAtkRng, MAX_ATT_RANGE + 5);
@@ -332,6 +333,7 @@ void bind_init(void) {
         static Field _fields[] = {
             _FIELD_RW(Mode, U8),
             _FIELD_RW(Way, U8),
+            _FIELD_RW(CityIndex, U8),
             _FIELD_RW(MapId, U16),
             _FIELD_RW(MProvender, U16),
             _FIELD_RW(EProvender, U16),

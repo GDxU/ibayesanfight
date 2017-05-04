@@ -33,6 +33,7 @@
 #define	SHOW_MY			(SCR_MAPHGT / 2)        /* 当前将领屏幕地图块坐标 */
 
 #define FIGHT_MAP_BUFFER_LEN (256)  // (256/16)**2   256 is the max screen size
+#define FIGHT_MAP_DATA_LEN (256*256)
 
 /* 战斗特效播放坐标 */
 #define	FGT_SPESX		((SCR_WID-130) / 2)
@@ -187,7 +188,8 @@ typedef struct {
 	U16	MapId;				/* 城市战斗地图 */
 	U16	MProvender;			/* 玩家粮草 */
 	U16	EProvender;			/* 敌人粮草 */
-	U8	GenArray[FGTA_MAX];		/* 将领队列 */
+    U8	GenArray[FGTA_MAX];		/* 将领队列 */
+    U8	CityIndex;			/* 战斗城市ID */
 }FGTJK;						/* 战斗接口 */
 
 typedef	struct {

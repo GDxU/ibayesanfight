@@ -39,7 +39,8 @@ extern U8	g_RunErr;		/* 运行错误 */
 
 /*变量定义*/
 /*------------------------------------------*/
-extern U8	*g_FightMap;		/* 战斗地图缓存 */
+extern U8	*g_FightMapData;	/* 战斗地图缓存 */
+extern U8	*g_FightMap;		/* 战斗地图屏显缓存 */
 extern U8	*g_FightPath;		/* 战斗行军计算 */
 extern U8	*g_FgtAtkRng;		/* 攻击范围 */
 extern U16	g_TileId;		/* 当前地图所用tile的ID */
