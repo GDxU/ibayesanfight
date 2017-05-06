@@ -3,7 +3,7 @@
 #include "touch.h"
 
 #define PERSON_MAX		250	/*最大武将数*/
-#define CITY_MAX		38	/*最大城市数*/
+#define CITY_MAX		g_engineConfig.citiesCount	/*最大城市数*/
 #define GOODS_MAX		200	/*最大道具数*/
 #define PERSON_DEATH_AGE	90	/*武将寿命*/
 #define PERSON_APPEAR_AGE	16	/*武将出现年龄*/
@@ -201,6 +201,9 @@ typedef struct {
     Rect mainMenuButtonRects[4];   // 主界面4个按钮的边框位置
     Rect periodMenuButtonRects[4]; // 时期界面4个按钮的边框位置
     Point saveFaceListAnchor;      // 存档界面list左上角坐标
+    U8 citiesCount;     //城池个数
+    U8 cityMapWidth;    // 主地图宽
+    U8 cityMapHeight;    // 主地图高
 } EngineConfig;
 
 extern EngineConfig g_engineConfig;

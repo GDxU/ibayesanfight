@@ -903,6 +903,9 @@ EngineConfig g_engineConfig = {
         {81, 62, 158, 93}, //三国鼎立
     },
     .saveFaceListAnchor = { 31, 33 },
+    .citiesCount = 38,
+    .cityMapWidth = 12,
+    .cityMapHeight = 9,
 };
 
 U8 g_engineDebug = 0;
@@ -913,7 +916,13 @@ void GamSetDebug(U8 enabled)
 }
 
 void GamLoadEngineConfig(void) {
+    U8 buf[4];
+
     ResItemGetN(IFACE_CONID, dEngineConfig, (U8*)&g_engineConfig, sizeof(g_engineConfig));
+    ResItemGetN(IFACE_CONID, DirectP, buf, sizeof(buf));
+    if (buf[0] >= 0x08) {
+        memcpy(&g_engineConfig.citiesCount, buf+1, 3);
+    }
     FgtLoadConsts();   /* 初始化战斗参数 */
 }
 

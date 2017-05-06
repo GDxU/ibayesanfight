@@ -64,8 +64,8 @@ typedef struct CitySet
 	U8 sety;
 }CitySetType;
 
-#define CITYMAP_W	12	/*地图宽*/
-#define CITYMAP_H	9	/*地图高*/
+#define CITYMAP_W	g_engineConfig.cityMapWidth /*地图宽*/
+#define CITYMAP_H	g_engineConfig.cityMapHeight /*地图高*/
 #define CITYMAP_TIL_W	16	/*地图块大小*/
 #define CITYMAP_TIL_H	16	/*地图块大小*/
 #define CITY_ICON_W	8	/*城市图标大小*/
