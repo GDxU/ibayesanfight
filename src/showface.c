@@ -462,6 +462,18 @@ FAR void GetPersonName(U8 person,U8 *str)
 {
     U8 l = '\0';
 
+    IF_HAS_HOOK("getPersonName") {
+        U8 personIndex = person;
+        U8 name[12] = "";
+        BIND_U8(&personIndex);
+
+        BIND_GBKARR(name, sizeof(name));
+        if (CALL_HOOK() == 0) {
+            memcpy(str, name, sizeof(name));
+            HOOK_RETURN();
+        }
+    }
+
     switch (g_PIdx)
     {
         case 1:
