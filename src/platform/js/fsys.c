@@ -19,7 +19,7 @@ struct gam_FILE {
     U8 (*fclose)(gam_FILE*fp);
     U8 (*fseek)(gam_FILE*fp, U32 offset, U8 fromwhere);
     U32 (*fread)(U8*buf, U8 size, U16 count, gam_FILE*fp);
-    U32 (*fwrite)(U8 *buf, U8 size, U16 count, gam_FILE *fhandle);
+    U32 (*fwrite)(U8 *buf, U32 size, U16 count, gam_FILE *fhandle);
     U32 (*ftell)(gam_FILE*fp);
 };
 
@@ -55,7 +55,7 @@ FAR U32 gam_fread(U8 *buf, U8 size, U16 count, gam_FILE *fp)
     return fp->fread(buf, size, count, fp);
 }
 
-FAR U32 gam_fwrite(U8 *buf, U8 size, U16 count, gam_FILE *fp)
+FAR U32 gam_fwrite(U8 *buf, U32 size, U16 count, gam_FILE *fp)
 {
     return fp->fwrite(buf, size, count, fp);
 }
@@ -177,7 +177,7 @@ static U32 rom_fread(U8*buf, U8 size, U16 count, gam_FILE*fp) {
     return l/size;
 }
 
-static U32 rom_fwrite(U8 *buf, U8 size, U16 count, gam_FILE *fhandle) {
+static U32 rom_fwrite(U8 *buf, U32 size, U16 count, gam_FILE *fhandle) {
     return 0;
 }
 
@@ -318,7 +318,7 @@ static U8 sav_fclose_w(gam_FILE*fp_) {
     return 0;
 }
 
-static U32 sav_fwrite(U8 *buf, U8 size, U16 count, gam_FILE *fp_) {
+static U32 sav_fwrite(U8 *buf, U32 size, U16 count, gam_FILE *fp_) {
     sav_write_FILE*fp = (sav_write_FILE*)fp_;
 
     U32 len = size * count;

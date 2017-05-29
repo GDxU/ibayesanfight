@@ -25,7 +25,7 @@ FAR gam_FILE *gam_fopen(const U8 *fname,U8 pmode);
 FAR U8 gam_fclose(gam_FILE *fhandle);
 FAR U8 gam_fseek (gam_FILE *fhandle, U32 offset, U8 fromwhere);
 FAR U32 gam_fread(U8 *buf, U8 size, U16 count, gam_FILE *fhandle);
-FAR U32 gam_fwrite(U8 *buf, U8 size, U16 count, gam_FILE *fhandle);
+FAR U32 gam_fwrite(U8 *buf, U32 size, U16 count, gam_FILE *fhandle);
 FAR U32 gam_ftell(gam_FILE *fhandle);
 FAR U8 *gam_fload(U8 *bptr, U32 addr, gam_FILE *fhandle);
 FAR U8 *gam_freadall(gam_FILE *fhandle);

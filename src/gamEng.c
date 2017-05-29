@@ -853,8 +853,9 @@ bool GamSaveRcd(U8 idx)
     gam_fwrite((U8 *)g_Persons,sizeof(PersonType),PERSON_MAX,fp);
     gam_fwrite((U8 *)g_PersonsQueue,1,PERSON_MAX,fp);
     gam_fwrite((U8 *)g_GoodsQueue,1,GOODS_MAX,fp);
-    if (customData)
-        gam_fwrite(customData, strlen((const char*)customData), 1, fp);
+    if (customData) {
+        gam_fwrite(customData, (U32)strlen((const char*)customData), 1, fp);
+    }
     gam_fclose(fp);
     
     /* 存储第二个文件 */

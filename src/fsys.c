@@ -229,7 +229,7 @@ FAR U32 gam_fread(U8 *buf, U8 size, U16 count, gam_FILE *fhandle)
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
  ***********************************************************************/
-FAR U32 gam_fwrite(U8 *buf, U8 size, U16 count, gam_FILE *fhandle)
+FAR U32 gam_fwrite(U8 *buf, U32 size, U16 count, gam_FILE *fhandle)
 {
     U8	*ptr;
     U16	i,lp;

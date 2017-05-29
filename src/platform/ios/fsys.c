@@ -53,7 +53,7 @@ FAR U32 gam_fread(U8 *buf, U8 size, U16 count, gam_FILE *fhandle)
  * 输入参数: fname-文件名		mode-操作方式
  * 返回值  : 0-操作成功		!0-错误代码
 ***********************************************************************/
-FAR U32 gam_fwrite(U8 *buf, U8 size, U16 count, gam_FILE *fhandle)
+FAR U32 gam_fwrite(U8 *buf, U32 size, U16 count, gam_FILE *fhandle)
 {
     return (U32)fwrite(buf, size, count, (FILE*)fhandle);
 }
