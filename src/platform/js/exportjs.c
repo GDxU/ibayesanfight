@@ -18,6 +18,8 @@
 
 void gam_setcustomdata(U8*data);
 U8* gam_getcustomdata();
+void baye_init_for_js(void);
+U8 GamVarInit(void);
 
 EMSCRIPTEN_KEEPALIVE
 void bayeSendKey(int key)
@@ -39,6 +41,7 @@ void bayeSetLcdSize(int width, int height)
 {
     g_screenWidth = width;
     g_screenHeight = height;
+    SysAdjustLCDBuffer(width, height);
 }
 
 EMSCRIPTEN_KEEPALIVE
@@ -330,8 +333,8 @@ U8* bayeGetGBKBuffer(void) {
 }
 
 EMSCRIPTEN_KEEPALIVE
-void bayeLcdDrawImage(U16 resid, U16 item, U8 index, U8 x, U8 y, U8 flag) {
-    return PlcRPicShowEx(resid, item, index+1, x, y, flag);
+void bayeLcdDrawImage(U16 resid, U16 item, U8 index, U32 x, U32 y) {
+    return GamDrawImage(resid, item, index+1, x, y);
 }
 
 EMSCRIPTEN_KEEPALIVE
@@ -377,4 +380,11 @@ void bayeLcdDrawRect(U8 sx, U8 sy, U8 ex, U8 ey, U8 color) {
     } else {
         gam_rectc(sx, sy, ex, ey);
     }
+}
+
+/* 初始化全局环境 */
+EMSCRIPTEN_KEEPALIVE
+void bayeGameEnvInit(void) {
+    baye_init_for_js();
+    GamVarInit();
 }

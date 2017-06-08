@@ -306,6 +306,7 @@ FAR void SysRestoreScreen(void);
 FAR	void SysRestoreScreenEx();
 FAR	void SysSaveScreenEx();
 FAR void SysPicture(U8 x1,U8 y1,U8 x2,U8 y2,U8* BuffPoint , U8 flag);
+FAR void SysPictureEx(U32 sX, U32 sY, U32 eX, U32 eY, U8*pic , U8 flag);
 FAR void SysCircle(U8 x0,U8 y0,U8 r);
 FAR void SysFillCircle(U8 x0,U8 y0,U8 r);
 FAR void SysCalcScrBufSize(U8 x1,U8 y1,U8 x2,U8 y2,U16* byteNum);
@@ -319,6 +320,7 @@ FAR void SysPrintString12(U8 x,U8 y,U8* str);
 FAR void SysPictureFill(U8* BuffPoint);
 FAR	void SysPictureDummy(U8 x1,U8 y1,U8 x2,U8 y2,U8* pic,U8* Screen,U8 flag);
 FAR	void SysYinBiao(U8 x,U8 y,U16 Hz);
+FAR void SysAdjustLCDBuffer(int wid, int height);
 
 /*-----------------------------------------------------------------------------------------
 *			光标相关函数

@@ -21,9 +21,11 @@ static void(*_lcd_fluch_cb)(char*buffer);
 
 #define DOT 1
 #define CLR 0
-static char buffer[WK_BLEN_MAX * 8];
+static char static_buffer[WK_BLEN_MAX * 8];
 static char backup_buffer[WK_BLEN_MAX * 8];
 static char isLcdDirty = 0;
+static char *buffer = static_buffer;
+static size_t buffer_size = sizeof(static_buffer);
 
 void GamSetLcdFlushCallback(void(*lcd_fluch_cb)(char*buffer))
 {
@@ -157,7 +159,7 @@ FAR	void	SysMemInit(U16 start,U16 len)
     gam_timer2_open(3, timed_flush_lcd);
 }
 
-FAR void SysPicture(U8 sX, U8 sY, U8 eX, U8 eY, U8*pic , U8 flag)
+FAR void SysPictureEx(U32 sX, U32 sY, U32 eX, U32 eY, U8*pic , U8 flag)
 {
     int wid = eX - sX + 1;
     int hgt = eY - sY + 1;
@@ -210,6 +212,11 @@ FAR void SysPicture(U8 sX, U8 sY, U8 eX, U8 eY, U8*pic , U8 flag)
         }
     }
     logLcd();
+}
+
+FAR void SysPicture(U8 sX, U8 sY, U8 eX, U8 eY, U8*pic , U8 flag)
+{
+    SysPictureEx(sX, sY, eX, eY, pic, flag);
 }
 
 FAR void SysPutPixel(U8 x,U8 y,U8 data)
@@ -267,10 +274,21 @@ FAR void SysTimer1Open(U8 times)
 
 FAR void SysSaveScreen()
 {
-    memcpy(backup_buffer, buffer, sizeof(buffer));
+    memcpy(backup_buffer, buffer, buffer_size);
 }
 
 FAR void SysRestoreScreen()
 {
-    memcpy(buffer, backup_buffer, sizeof(buffer));
+    memcpy(buffer, backup_buffer, buffer_size);
+}
+
+FAR void SysAdjustLCDBuffer(int wid, int height)
+{
+    size_t sz = wid * height;
+    if (buffer && buffer != static_buffer) {
+        free(buffer);
+    }
+    buffer = malloc(sz);
+    memset(buffer, 0, sz);
+    buffer_size = sz;
 }
