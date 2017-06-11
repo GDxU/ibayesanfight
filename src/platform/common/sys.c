@@ -285,6 +285,12 @@ FAR void SysRestoreScreen()
 FAR void SysAdjustLCDBuffer(int wid, int height)
 {
     size_t sz = wid * height;
+
+    if (sz <= buffer_size) {
+        memset(buffer, 0, sz);
+        return;
+    }
+
     if (buffer && buffer != static_buffer) {
         free(buffer);
     }

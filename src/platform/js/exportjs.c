@@ -388,3 +388,14 @@ void bayeGameEnvInit(void) {
     baye_init_for_js();
     GamVarInit();
 }
+
+
+EMSCRIPTEN_KEEPALIVE
+void bayeSaveScreen(void) {
+    SysSaveScreen();
+}
+
+EMSCRIPTEN_KEEPALIVE
+void bayeRestoreScreen(void) {
+    SysRestoreScreen();
+}
