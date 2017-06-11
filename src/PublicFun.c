@@ -40,15 +40,15 @@ U8 *strlchr(U8 *buf,U8 len,U8 ch);
  ***********************************************************************/
 FAR U8 PlcMovie(U16 speid, U16 index, U8 startfrm,U8 endfrm,U8 keyflag,U8 x,U8 y)
 {
-    U8 **dat,*srsptr;
-    U8	 count;			/*桢数*/
-    U8	 picmax;		/*最大图片序号*/
+    U8 *dat[512],*srsptr;
+    PictureHeadType* phead;
+    U32	 count;			/*桢数*/
+    U32	 picmax;		/*最大图片序号*/
     U16 wid,high,picdatlen,maxdatlen,mode,lenspe;
-    U8 i,clsflag,showflag;
-    U8 mcount;
-    U8 keynum;
-    U8 x1,y1;
-    U8 ymount,*spem,*spec;
+    U32 i,clsflag,showflag;
+    U32 mcount;
+    U32 x1,y1;
+    U8 ymount,spem[512],spec[512];
     SPEUNIT  *spe;
 
     lenspe = 0;
@@ -69,9 +69,6 @@ FAR U8 PlcMovie(U16 speid, U16 index, U8 startfrm,U8 endfrm,U8 keyflag,U8 x,U8 y
     count  = *(srsptr+2);
     picmax = *(srsptr+3);
     srsptr+=6;
-    dat = (U8 **) SHARE_MEM;
-    spem = (U8 *) (SHARE_MEM + 2000);
-    spec = (U8 *) (SHARE_MEM + 2000 + 1000);
     spe = (SPEUNIT *) srsptr;
 
     lenspe = count;
@@ -83,9 +80,10 @@ FAR U8 PlcMovie(U16 speid, U16 index, U8 startfrm,U8 endfrm,U8 keyflag,U8 x,U8 y
     }
     for(i=0;i<picmax;i++)
     {
-        wid = *(srsptr);
-        high = *(srsptr + 2);
-        mode = *(srsptr + 5);
+        phead = (PictureHeadType*)srsptr;
+        wid = phead->wid;
+        high = phead->hig;
+        mode = phead->mask;
 
         picdatlen=wid/8;
         if(wid%8)
@@ -106,8 +104,9 @@ FAR U8 PlcMovie(U16 speid, U16 index, U8 startfrm,U8 endfrm,U8 keyflag,U8 x,U8 y
             {
                 if ((keyflag & 0x02) != 0x02)
                 {
-                    wid = *(dat[spe[i + startfrm].picIdx]);
-                    high = *(dat[spe[i + startfrm].picIdx] + 2);
+                    phead = (PictureHeadType*)dat[spe[i + startfrm].picIdx];
+                    wid = phead->wid;
+                    high = phead->hig;
                     x1 = x + spe[i + startfrm].x;
                     y1 = y + spe[i + startfrm].y;
                     if (y1 >= 0x80)
@@ -131,9 +130,10 @@ FAR U8 PlcMovie(U16 speid, U16 index, U8 startfrm,U8 endfrm,U8 keyflag,U8 x,U8 y
             {
                 if (spec[i] + 1 != 1)
                 {
-                    wid = *(dat[spe[i + startfrm].picIdx]);
-                    high = *(dat[spe[i + startfrm].picIdx] + 2);
-                    mode = *(dat[spe[i + startfrm].picIdx] + 5);
+                    phead = (PictureHeadType*)(dat[spe[i + startfrm].picIdx]);
+                    wid = phead->wid;
+                    high = phead->hig;
+                    mode = phead->mask;
                     x1 = x + spe[i + startfrm].x;
                     y1 = y + spe[i + startfrm].y;
                     if(mode==1)
@@ -148,9 +148,10 @@ FAR U8 PlcMovie(U16 speid, U16 index, U8 startfrm,U8 endfrm,U8 keyflag,U8 x,U8 y
             for (i = ymount + 1;i <= mcount;i ++)
                 if (spec[i] + 1 != 1)
                 {
-                    wid = *(dat[spe[i + startfrm].picIdx]);
-                    high = *(dat[spe[i + startfrm].picIdx] + 2);
-                    mode = *(dat[spe[i + startfrm].picIdx] + 5);
+                    phead = (PictureHeadType*)(dat[spe[i + startfrm].picIdx]);
+                    wid = phead->wid;
+                    high = phead->hig;
+                    mode = phead->mask;
                     x1 = x + spe[i + startfrm].x;
                     y1 = y + spe[i + startfrm].y;
                     if(mode==1)
@@ -586,16 +587,16 @@ FAR void GamDrawImage(U16 id, U8 item, U8 idx, U32 x, U32 y)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-FAR U16 PlcArmsMax(U8 id) {
+FAR U16 PlcArmsMax(PersonID id) {
     IF_HAS_HOOK("getMaxArms") {
         U32 maxArms = 0;
-        BIND_U8EX("personIndex", &id);
+        BIND_U16EX("personIndex", &id.pid);
         BIND_U32(&maxArms);
         if (CALL_HOOK() == 0) {
             HOOK_RETURN(maxArms);
         }
     }
-    return PlcArmsMaxP(&g_Persons[id]);
+    return PlcArmsMaxP(&g_Persons[id.pid]);
 }
 
 FAR U16 PlcArmsMaxP(PersonType* p)
@@ -698,7 +699,7 @@ U8 *strlchr(U8 *buf,U8 len,U8 ch)
     return ((U8 *)NULL);
 }
 
-U8 GamChoosePerson(U8* pqptr, U8 pcount, U8 selected)
+PersonID GamChoosePerson(PersonID* pqptr, U32 pcount, PersonID selected)
 {
     return ShowPersonControl(pqptr, pcount, selected, WK_SX + 4, WK_SY + 2, WK_EX - 4, WK_EY - 2);
 }

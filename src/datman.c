@@ -21,7 +21,7 @@
 /*本体函数声明*/
 /*------------------------------------------*/
 U32	GetResStartAddr(U16 id);
-U16	GetResItem(U32 addr,U8 idx,RCHEAD *reshead,RIDX *rIdx);
+U16	GetResItem(U32 addr,U16 idx,RCHEAD *reshead,RIDX *rIdx);
 void	ExpDataWithKey(U8 *ptr,U8 key,U16 len);
 
 /***********************************************************************
@@ -33,7 +33,7 @@ void	ExpDataWithKey(U8 *ptr,U8 key,U16 len);
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
  ***********************************************************************/
-FAR U16 ResGetItemLen(U16 ResId,U8 idx)
+FAR U16 ResGetItemLen(U16 ResId,U16 idx)
 {
     U32	addr;
     RIDX	rIdx;
@@ -45,11 +45,11 @@ FAR U16 ResGetItemLen(U16 ResId,U8 idx)
     return GetResItem(addr,idx,&reshead,&rIdx);
 }
 
-FAR U8 ResItemGet(U16 ResId,U8 idx,U8 *ptr) {
+FAR U8 ResItemGet(U16 ResId,U16 idx,U8 *ptr) {
     return ResItemGetN(ResId, idx, ptr, (U32)-1);
 }
 
-FAR U8 ResItemGetN(U16 ResId,U8 idx,U8 *ptr, U32 bufsize)
+FAR U8 ResItemGetN(U16 ResId,U16 idx,U8 *ptr, U32 bufsize)
 {
     U16	plen;
     U32	addr;
@@ -83,7 +83,7 @@ FAR U8 ResItemGetN(U16 ResId,U8 idx,U8 *ptr, U32 bufsize)
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
  ***********************************************************************/
-FAR U8 ResLoadToMem(U16 ResId,U8 idx,U8 *ptr)
+FAR U8 ResLoadToMem(U16 ResId,U16 idx,U8 *ptr)
 {
     U16	plen;
     U32	addr;
@@ -116,7 +116,7 @@ FAR U8 ResLoadToMem(U16 ResId,U8 idx,U8 *ptr)
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
  ***********************************************************************/
-FAR U8 *ResLoadToCon(U16 ResId,U8 idx,U8 *cbnk)
+FAR U8 *ResLoadToCon(U16 ResId,U16 idx,U8 *cbnk)
 {
     U8	*ptr;
     U16	tmp;
@@ -187,7 +187,7 @@ void ExpDataWithKey(U8 *ptr,U8 key,U16 len)
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
  ***********************************************************************/
-U16 GetResItem(U32 addr,U8 idx,RCHEAD *reshead,RIDX *rIdx)
+U16 GetResItem(U32 addr,U16 idx,RCHEAD *reshead,RIDX *rIdx)
 {
     gam_fseek(g_LibFp,addr,SEEK_SET);
     gam_fread((U8*)reshead,sizeof(RCHEAD),1,g_LibFp);

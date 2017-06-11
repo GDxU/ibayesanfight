@@ -67,13 +67,13 @@ extern U8  g_AutoUpdateMapXY; /* touch功能使用 */
 
 /*变量定义*/
 /*------------------------------------------*/
-extern U8 g_PlayerKing;			/*玩家君主*/
+extern PersonID g_PlayerKing;			/*玩家君主*/
 extern U16 g_YearDate;			/*当前日期*/
 extern U8 g_MonthDate;			/*当前日期*/
 extern U8 g_PIdx;			/*历史时期*/
 extern PersonType *g_Persons;		/*存放人才属性指针*/
 extern CityType g_Cities[256];	/*存放城市属性指针*/
-extern U8 g_PersonsQueue[PERSON_MAX];	/*人才队列*/
+extern PersonID* g_PersonsQueue;	/*人才队列*/
 extern U8 g_GoodsQueue[GOODS_MAX];	/*道具队列*/
 extern OrderQueueType *g_OrderHead;	/*命令队列头指针*/
 extern OrderQueueType *g_OrderEnd;	/*命令队列末指针*/
@@ -84,7 +84,10 @@ extern U8 g_FromSave;
 /*变量定义*/
 /*------------------------------------------*/
 extern U8 citymap[SHOWMAP_HS_MAX][SHOWMAP_WS_MAX];	/*当前显示城市地图*/
-extern U8 cavpdb,cavps;				/*战争俘虏临时变量*/
+extern PersonID cavpdb;
+extern U8 cavps;				/*战争俘虏临时变量*/
 
+void GamSetPersonCount(U32 count);
+U32 GamGetPersonCount(void);
 #endif	/* _VAR_MAL_ */
 #endif	/* _EXTERN_H */

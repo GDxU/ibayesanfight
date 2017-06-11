@@ -45,28 +45,28 @@
  *		----		----			-----------
  *		陈泽伟		2005-6-3 14:50	基本功能完成
  ******************************************************************************/
-FAR U8 AddPerson(U8 city,U8 person)
+FAR U8 AddPerson(U8 city,PersonID person)
 {
-    U8 i;
+    U32 i;
 
     if (city >= CITY_MAX)
         return(0);
 
-    if (person >= PERSON_MAX)
+    if (person.pid >= PERSON_COUNT)
         return(0);
 
-    for (i = PERSON_MAX - 1;i > g_Cities[city].PersonQueue;i --)
+    for (i = PERSON_COUNT - 1;i > g_Cities[city].PersonQueue.pid;i --)
     {
         g_PersonsQueue[i] = g_PersonsQueue[i - 1];
     }
 
     for (i = city + 1;i < CITY_MAX;i ++)
     {
-        g_Cities[i].PersonQueue += 1;
+        g_Cities[i].PersonQueue.pid += 1;
     }
 
-    g_PersonsQueue[g_Cities[city].PersonQueue] = person;
-    g_Cities[city].Persons += 1;
+    g_PersonsQueue[g_Cities[city].PersonQueue.pid] = person;
+    g_Cities[city].Persons.pid += 1;
 
     return(1);
 }
@@ -84,41 +84,41 @@ FAR U8 AddPerson(U8 city,U8 person)
  *		----		----			-----------
  *		陈泽伟		2005-6-3 15:41	基本功能完成
  ******************************************************************************/
-FAR U8 DelPerson(U8 city,U8 person)
+FAR U8 DelPerson(U8 city,PersonID person)
 {
-    U8 i;
-    U8 qnum;
+    U32 i;
+    U32 qnum;
     CityType *cptr;
 
     if (city >= CITY_MAX)
         return(0);
 
-    if (person >= PERSON_MAX)
+    if (person.pid >= PERSON_COUNT)
         return(0);
 
     cptr = &g_Cities[city];
 
-    qnum  = cptr->PersonQueue + cptr->Persons;
+    qnum  = cptr->PersonQueue.pid + cptr->Persons.pid;
 
-    for (i = cptr->PersonQueue;i < qnum;i ++)
+    for (i = cptr->PersonQueue.pid;i < qnum;i ++)
     {
-        if (g_PersonsQueue[i] == person)
+        if (g_PersonsQueue[i].pid == person.pid)
             break;
     }
 
     if (i >= qnum)
         return(0);
 
-    for (;i < PERSON_MAX - 1;i ++)
+    for (;i < PERSON_COUNT - 1;i ++)
     {
         g_PersonsQueue[i] = g_PersonsQueue[i + 1];
     }
 
-    cptr->Persons -= 1;
+    cptr->Persons.pid -= 1;
 
     for (i = city + 1;i < CITY_MAX;i ++)
     {
-        g_Cities[i].PersonQueue -= 1;
+        g_Cities[i].PersonQueue.pid -= 1;
     }
 
     return(1);
@@ -382,11 +382,10 @@ FAR U8 SearchRoad(U8 sc,U8 xs,U8 ys,U8 ob,U8 xo,U8 yo)
      return(0xff);
      }*/
 
-    U8 *cq;
-    U8 ccount0,ccount1;
-    U8 i,j,d;
+    U8 cq[512];
+    U32 ccount0,ccount1;
+    U32 i,j,d;
 
-    cq = SHARE_MEM + 2000;
     ccount0 = GetRoundSelfCity(sc,cq);
     if (!ccount0)
         return(0xff);
@@ -534,7 +533,7 @@ FAR U8 GetRoundSelfCity(U8 city,U8 *cqueue)
     U8 *inf;	/*inf -- 城市连接信息*/
     U8 i;
     U8 count;
-    U8 cp,cb;
+    PersonID cp,cb;
     U16 clnkcount;
 
     inf = ResLoadToCon(CITY_LINKR,1,g_CBnkPtr);
@@ -548,7 +547,7 @@ FAR U8 GetRoundSelfCity(U8 city,U8 *cqueue)
         if (inf[i])
         {
             cp = g_Cities[inf[i] - 1].Belong;
-            if (cp == cb)
+            if (cp.pid == cb.pid)
             {
                 cqueue[count] = inf[i] - 1;
                 count += 1;
@@ -576,7 +575,7 @@ FAR U8 GetRoundEnemyCity(U8 city,U8 *cqueue)
     U8 *inf;	/*inf -- 城市连接信息*/
     U8 i;
     U8 count;
-    U8 cp,cb;
+    PersonID cp,cb;
     U16 clnkcount;
 
     inf = ResLoadToCon(CITY_LINKR,1,g_CBnkPtr);
@@ -590,9 +589,9 @@ FAR U8 GetRoundEnemyCity(U8 city,U8 *cqueue)
         if (inf[i])
         {
             cp = g_Cities[inf[i] - 1].Belong;
-            if (cp && (cp != cb))
+            if (cp.pid && (cp.pid != cb.pid))
             {
-                cqueue[count] = inf[i] - 1;
+                if (cqueue) cqueue[count] = inf[i] - 1;
                 count += 1;
             }
         }
@@ -613,14 +612,14 @@ FAR U8 GetRoundEnemyCity(U8 city,U8 *cqueue)
  *		----		----			-----------
  *		陈泽伟		2005-7-25 9:48	基本功能完成
  ******************************************************************************/
-FAR U8 GetKingCitys(U8 king,U8 *cqueue)
+FAR U8 GetKingCitys(PersonID king,U8 *cqueue)
 {
     U8 c,count;
 
     count = 0;
     for (c = 0;c < CITY_MAX;c ++)
     {
-        if (g_Cities[c].Belong == (king + 1))
+        if (g_Cities[c].Belong.pid == (king.pid + 1))
         {
             cqueue[count] = c;
             count ++;
@@ -642,16 +641,16 @@ FAR U8 GetKingCitys(U8 king,U8 *cqueue)
  *		----		----			-----------
  *		陈泽伟		2005-7-23 11:06	基本功能完成
  ******************************************************************************/
-FAR U8 GetPersonCity(U8 person)
+FAR U8 GetPersonCity(PersonID person)
 {
-    U8 c,i,j;
+    U32 c,i,j;
 
     for (c = 0;c < CITY_MAX;c ++)
     {
-        j = g_Cities[c].PersonQueue;
-        for (i = 0;i < g_Cities[c].Persons;i ++,j ++)
+        j = g_Cities[c].PersonQueue.pid;
+        for (i = 0;i < g_Cities[c].Persons.pid;i ++,j ++)
         {
-            if (g_PersonsQueue[j] == person)
+            if (g_PersonsQueue[j].pid == person.pid)
             {
                 return(c);
             }
@@ -673,16 +672,16 @@ FAR U8 GetPersonCity(U8 person)
  *		----		----			-----------
  *		陈泽伟		2005/5/18 11:26AM	基本功能完成
  ******************************************************************************/
-FAR U8 GetCityPersons(U8 city,U8 *pqueue)
+FAR U32 GetCityPersons(U8 city, PersonID *pqueue)
 {
-    U8 i,count;
-    U8 p;
+    U32 i,count;
+    PersonID p;
 
     count = 0;
-    for (i = 0;i < g_Cities[city].Persons;i ++)
+    for (i = 0;i < g_Cities[city].Persons.pid;i ++)
     {
-        p = g_PersonsQueue[g_Cities[city].PersonQueue + i];
-        if (g_Persons[p].Belong == g_Cities[city].Belong)
+        p = g_PersonsQueue[g_Cities[city].PersonQueue.pid + i];
+        if (g_Persons[p.pid].Belong.pid == g_Cities[city].Belong.pid)
         {
             pqueue[count] = p;
             count += 1;
@@ -705,16 +704,16 @@ FAR U8 GetCityPersons(U8 city,U8 *pqueue)
  *		----		----			-----------
  *		陈泽伟		2005-7-4 9:18	基本功能完成
  ******************************************************************************/
-FAR U8 GetCityOutPersons(U8 city,U8 *pqueue)
+FAR U8 GetCityOutPersons(U8 city,PersonID *pqueue)
 {
     U8 i,count;
-    U8 p;
+    PersonID p;
 
     count = 0;
-    for (i = 0;i < g_Cities[city].Persons;i ++)
+    for (i = 0;i < g_Cities[city].Persons.pid;i ++)
     {
-        p = g_PersonsQueue[g_Cities[city].PersonQueue + i];
-        if (!(g_Persons[p].Belong))
+        p = g_PersonsQueue[g_Cities[city].PersonQueue.pid + i];
+        if (!(g_Persons[p.pid].Belong.pid))
         {
             pqueue[count] = p;
             count += 1;
@@ -736,16 +735,16 @@ FAR U8 GetCityOutPersons(U8 city,U8 *pqueue)
  *		----		----			-----------
  *		陈泽伟		2005-7-4 9:24	基本功能完成
  ******************************************************************************/
-FAR U8 GetCityCaptives(U8 city,U8 *pqueue)
+FAR U8 GetCityCaptives(U8 city,PersonID *pqueue)
 {
-    U8 i,count;
-    U8 p;
+    U32 i,count;
+    PersonID p;
 
     count = 0;
-    for (i = 0;i < g_Cities[city].Persons;i ++)
+    for (i = 0;i < g_Cities[city].Persons.pid;i ++)
     {
-        p = g_PersonsQueue[g_Cities[city].PersonQueue + i];
-        if (0xff == (g_Persons[p].Belong))
+        p = g_PersonsQueue[g_Cities[city].PersonQueue.pid + i];
+        if (0xffff == (g_Persons[p.pid].Belong.pid))
         {
             pqueue[count] = p;
             count += 1;
@@ -767,21 +766,21 @@ FAR U8 GetCityCaptives(U8 city,U8 *pqueue)
  *		----		----			-----------
  *		陈泽伟		2005-7-4 9:24	基本功能完成
  ******************************************************************************/
-FAR U8 GetEnemyPersons(U8 king,U8 *pqueue)
+FAR U8 GetEnemyPersons(PersonID king,PersonID *pqueue)
 {
-    U8 c,i,count;
-    U8 b,p;
+    U32 c,i,count;
+    PersonID b,p;
 
     count = 0;
     for (c = 0;c < CITY_MAX;c ++)
     {
         b = g_Cities[c].Belong;
-        if ((b != (king + 1)) && b)
+        if ((b.pid != (king.pid + 1)) && b.pid)
         {
-            for (i = 0;i < g_Cities[c].Persons;i ++)
+            for (i = 0;i < g_Cities[c].Persons.pid;i ++)
             {
-                p = g_PersonsQueue[g_Cities[c].PersonQueue + i];
-                if ((g_Persons[p].Belong == b) && ((p + 1) != b))
+                p = g_PersonsQueue[g_Cities[c].PersonQueue.pid + i];
+                if ((g_Persons[p.pid].Belong.pid == b.pid) && ((p.pid + 1) != b.pid))
                 {
                     pqueue[count] = p;
                     count += 1;
@@ -805,25 +804,25 @@ FAR U8 GetEnemyPersons(U8 king,U8 *pqueue)
  *		----		----			-----------
  *		陈泽伟		2005-7-14 17:25	基本功能完成
  ******************************************************************************/
-FAR U8 GetEnemySatraps(U8 king,U8 *squeue)
+FAR U8 GetEnemySatraps(PersonID king,PersonID *squeue)
 {
-    U8 c,count;
-    U8 b,s;
+    U32 c,count;
+    U32 b,s;
 
     count = 0;
     for (c = 0;c < CITY_MAX;c ++)
     {
-        b = g_Cities[c].Belong;
+        b = g_Cities[c].Belong.pid;
         if (!(b))
             continue;
 
-        s = g_Cities[c].SatrapId;
+        s = g_Cities[c].SatrapId.pid;
         if (!s) {
             continue;
         }
-        if ((b != (king + 1)) && (s != b))
+        if ((b != (king.pid + 1)) && (s != b))
         {
-            squeue[count] = s - 1;
+            squeue[count] = PID(s - 1);
             count += 1;
         }
     }
@@ -843,27 +842,27 @@ FAR U8 GetEnemySatraps(U8 king,U8 *squeue)
  *		----		----			-----------
  *		陈泽伟		2005-7-13 9:57	基本功能完成
  ******************************************************************************/
-FAR U8 GetEnemyKing(U8 king,U8 *kqueue)
+FAR U8 GetEnemyKing(PersonID king,PersonID *kqueue)
 {
-    U8 c,i,count;
-    U8 b;
+    U32 c,i,count;
+    U32 b;
 
     count = 0;
     for (c = 0;c < CITY_MAX;c ++)
     {
-        b = g_Cities[c].Belong;
-        if ((b) && (b != (king + 1)))
+        b = g_Cities[c].Belong.pid;
+        if ((b) && (b != (king.pid + 1)))
         {
             for (i = 0;i < count;i ++)
             {
-                if (kqueue[i] == b - 1)
+                if (kqueue[i].pid == (b - 1))
                     break;
             }
             if (i < count)
             {
                 continue;
             }
-            kqueue[count] = b - 1;
+            kqueue[count] = PID(b - 1);
             count += 1;
         }
     }
@@ -883,14 +882,14 @@ FAR U8 GetEnemyKing(U8 king,U8 *kqueue)
  *		----		----			-----------
  *		陈泽伟		2005-7-4 9:24	基本功能完成
  ******************************************************************************/
-FAR U8 GetKingPersons(U8 king,U8 *pqueue)
+FAR U8 GetKingPersons(PersonID king,PersonID *pqueue)
 {
     U8 c,count;
 
     count = 0;
     for (c = 0;c < CITY_MAX;c ++)
     {
-        if (g_Cities[c].Belong == (king + 1))
+        if (g_Cities[c].Belong.pid == (king.pid + 1))
         {
             count += GetCityPersons(c,&pqueue[count]);
         }
@@ -1127,10 +1126,11 @@ FAR U8 GetCitySet(CitySetType *pos)
 
 U8 ShowCityMap(CitySetType *pos)
 {
-    U8 *str,*astr;
-    U8 h,w,sw,sh,c;
+    SBUF str,astr;
+    U32 h,w,sw,sh;
     U8 *cdptr,*pdptr,*cicon;
     U16 count;
+    U32 c;
 
     /*取得citymap的值*/
 
@@ -1180,11 +1180,11 @@ U8 ShowCityMap(CitySetType *pos)
                 if (citymap[h][w])
                 {
                     /*显示城市图标*/
-                    if (g_Cities[citymap[h][w] - 1].Belong == (g_PlayerKing + 1))
+                    if (g_Cities[citymap[h][w] - 1].Belong.pid == (g_PlayerKing.pid + 1))
                     {
                         c = 8;
                     }
-                    else if (g_Cities[citymap[h][w] - 1].Belong)
+                    else if (g_Cities[citymap[h][w] - 1].Belong.pid)
                     {
                         c = 7;
                     }
@@ -1209,11 +1209,9 @@ U8 ShowCityMap(CitySetType *pos)
         GamMPicShowV(WK_SX + CITYMAP_TIL_W * sw + (CITYMAP_TIL_W - CITY_ICON_W) / 2,WK_SY + CITYMAP_TIL_H * sh + CITY_ICON_H,CITY_ICON_W,CITY_ICON_H,cicon,g_VisScr);
     }
 
-    str = SHARE_MEM + 3000;
-    astr = SHARE_MEM + 3400;
     gam_clrvscr(WK_SX + CITYMAP_TIL_W * SHOWMAP_WS,WK_SY,WK_EX,WK_EY,g_VisScr);
     cicon = ResLoadToCon(GEN_HEADPIC1 + g_PIdx,1,g_CBnkPtr);
-    GamPicShowExV(WK_SX + CITYMAP_TIL_W * SHOWMAP_WS + ((WK_EX - (WK_SX + CITYMAP_TIL_W * SHOWMAP_WS) - 24) / 2),WK_SY + 4,24,24,g_PlayerKing,cicon,g_VisScr);
+    GamPicShowExV(WK_SX + CITYMAP_TIL_W * SHOWMAP_WS + ((WK_EX - (WK_SX + CITYMAP_TIL_W * SHOWMAP_WS) - 24) / 2),WK_SY + 4,24,24,g_PlayerKing.pid,cicon,g_VisScr);
     cicon = ResLoadToCon(MAPFACE_ICON,1,g_CBnkPtr);
     GamPicShowExV(WK_SX + CITYMAP_TIL_W * SHOWMAP_WS + 2,WK_SY + 4 + 24 + (12 - 9) / 2 + 4,7,9,1,cicon,g_VisScr);
     c = GetKingCitys(g_PlayerKing,str);

@@ -22,7 +22,7 @@ DEC_U8ARR_DEF(2);
 DEC_U8ARR_DEF(5);
 DEC_U8ARR_DEF(6);
 DEC_U8ARR_DEF(8);
-DEC_U8ARR_DEF(FGTA_MAX);
+DEC_U16ARR_DEF(FGTA_MAX);
 
 DEC_U16ARR_DEF(16);
 DEC_U16ARR_DEF(2);
@@ -131,15 +131,15 @@ void bind_init(void) {
     DEFADDF(g_PIdx, U8);
     DEFADDF(g_AutoUpdateMapXY, U8);
 
-    DEFADD_U8ARR(&g_PersonsQueue, PERSON_MAX);
+    DEFADD_U16ARR(&g_PersonsQueue, PERSON_MAX);
     DEFADD_U8ARR(&g_GoodsQueue, GOODS_MAX);
 
 
     {
 #define _ST PersonType
         static Field _fields[] = {
-            _FIELD_RW(OldBelong, U8),
-            _FIELD_RW(Belong, U8),
+            _FIELD_RW(OldBelong, U16),
+            _FIELD_RW(Belong, U16),
             _FIELD_RW(Level, U8),
             _FIELD_RW(Force, U8),
             _FIELD_RW(IQ, U8),
@@ -176,8 +176,8 @@ void bind_init(void) {
 #define _ST CityType
         static Field _fields[] = {
             _FIELD_RW(State, U8),
-            _FIELD_RW(Belong, U8),
-            _FIELD_RW(SatrapId, U8),
+            _FIELD_RW(Belong, U16),
+            _FIELD_RW(SatrapId, U16),
             _FIELD_RW(FarmingLimit, U16),
             _FIELD_RW(Farming, U16),
             _FIELD_RW(CommerceLimit, U16),
@@ -337,7 +337,7 @@ void bind_init(void) {
             _FIELD_RW(MapId, U16),
             _FIELD_RW(MProvender, U16),
             _FIELD_RW(EProvender, U16),
-            _U8ARR_FIELD(GenArray, FGTA_MAX),
+            _U16ARR_FIELD(GenArray, FGTA_MAX),
         };
 
         static ObjectDef _obj_def = {
@@ -412,9 +412,9 @@ void bind_init(void) {
 #define _ST OrderType
         static Field _fields[] = {
             _FIELD_RW(OrderId, U8),
-            _FIELD_RW(Person, U8),
+            _FIELD_RW(Person, U16),
             _FIELD_RW(City, U8),
-            _FIELD_RW(Object, U8),
+            _FIELD_RW(Object, U16),
             _FIELD_RW(Arms, U16),
             _FIELD_RW(Food, U16),
             _FIELD_RW(Money, U16),
@@ -440,7 +440,7 @@ void bind_init(void) {
     }
 
     DEFADD_U8ARR(FIGHTERS_IDX, 30);
-    DEFADD_U8ARR(FIGHTERS, 300);
+    DEFADD_U8ARR(FIGHTERS, 600);
 }
 
 Value* bind_get_global(void) {

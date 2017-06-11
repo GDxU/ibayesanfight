@@ -159,7 +159,7 @@ FAR void GamMPicShowV(U8 x,U8 y,U8 wid,U8 hgt,U8 *pic,U8 *vscr)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-FAR void GamPicShowExS(U8 x,U8 y,U8 wid,U8 hgt,U8 idx,U8 *pic)
+FAR void GamPicShowExS(U8 x,U8 y,U8 wid,U8 hgt, U16 idx, U8 *pic)
 {
     U8	mask;
     U8	pwid,phgt;

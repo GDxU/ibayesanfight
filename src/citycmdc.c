@@ -54,10 +54,10 @@
  ******************************************************************************/
 FAR U8 ExchangeMake(U8 city)
 {
-    U8 *pqptr;
-    U8 pcount;
-    U8 pcode;
-    U8 p;
+    PersonID *pqptr;
+    U32 pcount;
+    PersonID pcode;
+    PersonID p;
     U8 mstr[15];
     U16 exc;
     OrderType order;
@@ -65,7 +65,7 @@ FAR U8 ExchangeMake(U8 city)
     CityType *cptr;
 
 
-    pqptr = SHARE_MEM;
+    pqptr = (PersonID*)SHARE_MEM;
 
     do
     {
@@ -75,11 +75,11 @@ FAR U8 ExchangeMake(U8 city)
             ShowConstStrMsg(STR_NOPERSON);
             break;
         }
-        pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+        pcode = ShowPersonControl(pqptr,pcount,PID(0),WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
 
-        if (0xff != pcode)
+        if (0xffff != pcode.pid)
         {
-            p = pqptr[pcode];
+            p = pqptr[pcode.pid];
             if (!IsManual(p,EXCHANGE))
             {
                 ShowConstStrMsg(NOTE_STR9);
@@ -111,7 +111,7 @@ FAR U8 ExchangeMake(U8 city)
             }
             pcount = PlcSplMenu(&pRect,0,mstr);
 
-            if (0xff == pcount)
+            if (0xffff == pcount)
             {
                 continue;
             }
@@ -195,14 +195,14 @@ FAR U8 ExchangeMake(U8 city)
  ******************************************************************************/
 FAR U8 TreatMake(U8 city)
 {
-    U8 *str;
-    U8 *pqptr;
-    U8 pcount;
-    U8 pcode = 0;
-    U8 p;
+    U8 str[512];
+    PersonID *pqptr;
+    U32 pcount;
+    PersonID pcode = PID(0);
+    PersonID p;
     PersonType *pptr;
 
-    pqptr = SHARE_MEM;
+    pqptr = (PersonID*)SHARE_MEM;
     pcount = GetCityPersons(city,pqptr);
     if (!pcount)
     {
@@ -227,17 +227,16 @@ FAR U8 TreatMake(U8 city)
             return(1);
         }
         pcode = ShowPersonControl(pqptr,pcount,pcode,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-        if (0xff != pcode)
+        if (0xffff != pcode.pid)
         {
-            p = pqptr[pcode];
-            pptr = &g_Persons[p];
+            p = pqptr[pcode.pid];
+            pptr = &g_Persons[p.pid];
             OrderConsumeMoney(city,TREAT);
             pptr->Thew += THREW_TREAT;
             if (pptr->Thew > 100)
                 pptr->Thew = 100;
-            if (p != g_PlayerKing)
+            if (p.pid != g_PlayerKing.pid)
             {
-                str = SHARE_MEM;
                 ResLoadToMem(STRING_CONST,P_SAY_STR40,str);
                 ShowMapClear();
                 ShowGReport(p,str);
@@ -269,18 +268,17 @@ FAR U8 TreatMake(U8 city)
  ******************************************************************************/
 FAR U8 TransportationMake(U8 city)
 {
-    U8 *pqptr;
-    U8 *str;
-    U8 pcount;
-    U8 pcode;
-    U8 p = '\0';
+    PersonID *pqptr;
+    U8 str[512];
+    U32 pcount;
+    PersonID pcode;
+    PersonID p = PID0;
     U8 ocity;
     U8 odis;
     U8 xs,ys;
     OrderType order;
 
-    str = SHARE_MEM + 3000;
-    pqptr = SHARE_MEM;
+    pqptr = (PersonID*)SHARE_MEM;
 
     pcount = 0;
     while (1)
@@ -293,11 +291,11 @@ FAR U8 TransportationMake(U8 city)
                 ShowConstStrMsg(STR_NOPERSON);
                 break;
             }
-            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-            if (0xff == pcode)
+            pcode = ShowPersonControl(pqptr,pcount,PID0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            if (0xffff == pcode.pid)
                 break;
 
-            p = pqptr[pcode];
+            p = pqptr[pcode.pid];
             if (!IsManual(p,TRANSPORTATION))
             {
                 ShowConstStrMsg(NOTE_STR9);
@@ -336,7 +334,6 @@ FAR U8 TransportationMake(U8 city)
             xs = g_CityPos.setx;
             ys = g_CityPos.sety;
 
-            str = SHARE_MEM + 3000;
             ResLoadToMem(STRING_CONST,STR_OBJ,str);
             ShowMapClear();
             ShowGReport(p,str);
@@ -348,13 +345,13 @@ FAR U8 TransportationMake(U8 city)
             }
             else if (ocity != city)
             {
-                if (!(g_Cities[ocity].Belong))
+                if (!(g_Cities[ocity].Belong.pid))
                 {
                     /*提示无人占领城池*/
                     ShowConstStrMsg(NOTE_STR5);
                     continue;
                 }
-                else if (g_Cities[ocity].Belong != g_Cities[city].Belong)
+                else if (g_Cities[ocity].Belong.pid != g_Cities[city].Belong.pid)
                 {
                     /*提示敌方城池*/
                     ShowConstStrMsg(NOTE_STR3);
@@ -381,7 +378,7 @@ FAR U8 TransportationMake(U8 city)
                     order.OrderId = TRANSPORTATION;
                     order.Person = p;
                     order.City = city;
-                    order.Object = ocity;
+                    order.Object = PID(ocity);
                     order.TimeCount = odis;
                     if (AddOrderHead(&order)) {
                         DelPerson(city,p);
@@ -415,18 +412,17 @@ FAR U8 TransportationMake(U8 city)
  ******************************************************************************/
 FAR U8 MoveMake(U8 city)
 {
-    U8 *pqptr;
-    U8 *str;
-    U8 pcount;
-    U8 pcode = 0;
-    U8 p = '\0';
-    U8 ocity;
-    U8 odis;
-    U8 xs,ys;
+    PersonID *pqptr;
+    U8 str[512];
+    U32 pcount;
+    PersonID pcode = PID0;
+    PersonID p = PID0;
+    U32 ocity;
+    U32 odis;
+    U32 xs,ys;
     OrderType order;
 
-    str = SHARE_MEM + 3000;
-    pqptr = SHARE_MEM;
+    pqptr = (PersonID*)SHARE_MEM;
 
     pcount = GetCityPersons(city,pqptr);
     if (!pcount)
@@ -439,7 +435,6 @@ FAR U8 MoveMake(U8 city)
     {// 先选城池
         xs = g_CityPos.setx;
         ys = g_CityPos.sety;
-        str = SHARE_MEM + 3000;
         ResLoadToMem(STRING_CONST,STR_OBJ,str);
         ShowMapClear();
         ShowGReport(g_PlayerKing,str);
@@ -450,11 +445,11 @@ FAR U8 MoveMake(U8 city)
         }
         else if (ocity != city)
         {
-            if (!g_Cities[ocity].Belong)
+            if (!g_Cities[ocity].Belong.pid)
             {
                 ShowConstStrMsg(NOTE_STR5);
             }
-            else if (g_Cities[ocity].Belong != g_Cities[city].Belong)
+            else if (g_Cities[ocity].Belong.pid != g_Cities[city].Belong.pid)
             {
                 /*提示敌方城池*/
                 ShowConstStrMsg(NOTE_STR3);
@@ -484,9 +479,9 @@ FAR U8 MoveMake(U8 city)
         }
         ShowMapClear();
         pcode = ShowPersonControl(pqptr,pcount,pcode,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-        if (0xff == pcode)
+        if (0xffff == pcode.pid)
             break;
-        p = pqptr[pcode];
+        p = pqptr[pcode.pid];
         if (!IsManual(p,MOVE))
         {
             ShowConstStrMsg(NOTE_STR9);
@@ -504,7 +499,7 @@ FAR U8 MoveMake(U8 city)
         order.OrderId = MOVE;
         order.Person = p;
         order.City = city;
-        order.Object = ocity;
+        order.Object = PID(ocity);
         order.TimeCount = odis;
         if (AddOrderHead(&order)) {
             DelPerson(city,p);
@@ -529,10 +524,10 @@ FAR U8 MoveMake(U8 city)
  ******************************************************************************/
 FAR U8 AlienateMake(U8 city)
 {
-    U8 *pqptr;
-    U8 pcount;
-    U8 pcode;
-    U8 pp;
+    PersonID *pqptr;
+    U32 pcount;
+    PersonID pcode;
+    PersonID pp;
     OrderType order;
 
     if (!IsMoney(city,ALIENATE))
@@ -542,7 +537,7 @@ FAR U8 AlienateMake(U8 city)
         return(1);
     }
 
-    pqptr = SHARE_MEM;
+    pqptr = (PersonID*)SHARE_MEM;
 
     do
     {
@@ -552,31 +547,31 @@ FAR U8 AlienateMake(U8 city)
             ShowConstStrMsg(STR_NOPERSON);
             break;
         }
-        pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-        if (0xff != pcode)
+        pcode = ShowPersonControl(pqptr,pcount,PID0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+        if (0xffff != pcode.pid)
         {
-            if (!IsManual(pqptr[pcode],ALIENATE))
+            if (!IsManual(pqptr[pcode.pid],ALIENATE))
             {
                 ShowConstStrMsg(NOTE_STR9);
                 continue;
             }
 
-            pp = pqptr[pcode];
+            pp = pqptr[pcode.pid];
             pcount = GetEnemyPersons(g_PlayerKing,pqptr);
-            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-            if (0xff != pcode)
+            pcode = ShowPersonControl(pqptr,pcount,PID0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            if (0xffff != pcode.pid)
             {
                 if (g_engineConfig.fixAlienateComsumeThew) {
                     OrderConsumeThew(pp, ALIENATE);
                 } else {
-                    OrderConsumeThew(pqptr[pcode],ALIENATE);
+                    OrderConsumeThew(pqptr[pcode.pid],ALIENATE);
                 }
 
                 OrderConsumeMoney(city,ALIENATE);
                 order.OrderId = ALIENATE;
                 order.Person = pp;
                 order.City = city;
-                order.Object = pqptr[pcode];
+                order.Object = pqptr[pcode.pid];
                 order.TimeCount = 10;
                 if (AddOrderHead(&order)) {
                     DelPerson(city,pp);
@@ -608,10 +603,10 @@ FAR U8 AlienateMake(U8 city)
  ******************************************************************************/
 FAR U8 CanvassMake(U8 city)
 {
-    U8 *pqptr;
-    U8 pcount;
-    U8 pcode;
-    U8 pp;
+    PersonID *pqptr;
+    U32 pcount;
+    PersonID pcode;
+    PersonID pp;
     OrderType order;
 
     if (!IsMoney(city,CANVASS))
@@ -621,7 +616,7 @@ FAR U8 CanvassMake(U8 city)
         return(1);
     }
 
-    pqptr = SHARE_MEM;
+    pqptr = (PersonID*)SHARE_MEM;
 
     do
     {
@@ -631,10 +626,10 @@ FAR U8 CanvassMake(U8 city)
             ShowConstStrMsg(STR_NOPERSON);
             break;
         }
-        pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-        if (0xff != pcode)
+        pcode = ShowPersonControl(pqptr,pcount,PID0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+        if (0xffff != pcode.pid)
         {
-            pp = pqptr[pcode];
+            pp = pqptr[pcode.pid];
             if (!IsManual(pp,CANVASS))
             {
                 ShowConstStrMsg(NOTE_STR9);
@@ -643,8 +638,8 @@ FAR U8 CanvassMake(U8 city)
 
             pcount = GetEnemyPersons(g_PlayerKing,pqptr);
             ShowMapClear();
-            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-            if (0xff != pcode)
+            pcode = ShowPersonControl(pqptr,pcount,PID0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            if (0xffff != pcode.pid)
             {
                 OrderConsumeThew(pp,CANVASS);
 
@@ -652,7 +647,7 @@ FAR U8 CanvassMake(U8 city)
                 order.OrderId = CANVASS;
                 order.Person = pp;
                 order.City = city;
-                order.Object = pqptr[pcode];
+                order.Object = pqptr[pcode.pid];
                 order.TimeCount = 10;
                 if (AddOrderHead(&order)) {
                     DelPerson(city,pp);
@@ -684,10 +679,10 @@ FAR U8 CanvassMake(U8 city)
  ******************************************************************************/
 FAR U8 CounterespiongeMake(U8 city)
 {
-    U8 *pqptr;
-    U8 pcount;
-    U8 pcode;
-    U8 pp;
+    PersonID *pqptr;
+    U32 pcount;
+    PersonID pcode;
+    PersonID pp;
     OrderType order;
 
     if (!IsMoney(city,COUNTERESPIONAGE))
@@ -697,7 +692,7 @@ FAR U8 CounterespiongeMake(U8 city)
         return(1);
     }
 
-    pqptr = SHARE_MEM;
+    pqptr = (PersonID*)SHARE_MEM;
 
     do
     {
@@ -708,10 +703,10 @@ FAR U8 CounterespiongeMake(U8 city)
             break;
         }
         ShowMapClear();
-        pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-        if (0xff != pcode)
+        pcode = ShowPersonControl(pqptr,pcount,PID0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+        if (0xffff != pcode.pid)
         {
-            pp = pqptr[pcode];
+            pp = pqptr[pcode.pid];
             if (!IsManual(pp,COUNTERESPIONAGE))
             {
                 ShowConstStrMsg(NOTE_STR9);
@@ -726,15 +721,15 @@ FAR U8 CounterespiongeMake(U8 city)
                 break;
             }
             ShowMapClear();
-            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-            if (0xff != pcode)
+            pcode = ShowPersonControl(pqptr,pcount,PID0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            if (0xffff != pcode.pid)
             {
                 OrderConsumeThew(pp,COUNTERESPIONAGE);
                 OrderConsumeMoney(city,COUNTERESPIONAGE);
                 order.OrderId = COUNTERESPIONAGE;
                 order.Person = pp;
                 order.City = city;
-                order.Object = pqptr[pcode];
+                order.Object = pqptr[pcode.pid];
                 order.TimeCount = 10;
                 if (AddOrderHead(&order)) {
                     DelPerson(city,pp);
@@ -784,10 +779,10 @@ FAR U8 RealienateMake(U8 city)
  ******************************************************************************/
 FAR U8 InduceMake(U8 city)
 {
-    U8 *pqptr;
-    U8 pcount;
-    U8 pcode;
-    U8 pp;
+    PersonID *pqptr;
+    U32 pcount;
+    PersonID pcode;
+    PersonID pp;
     OrderType order;
 
     if (!IsMoney(city,INDUCE))
@@ -797,7 +792,7 @@ FAR U8 InduceMake(U8 city)
         return(1);
     }
 
-    pqptr = SHARE_MEM;
+    pqptr = (PersonID*)SHARE_MEM;
 
     do
     {
@@ -807,10 +802,10 @@ FAR U8 InduceMake(U8 city)
             ShowConstStrMsg(STR_NOPERSON);
             break;
         }
-        pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-        if (0xff != pcode)
+        pcode = ShowPersonControl(pqptr,pcount,PID0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+        if (0xffff != pcode.pid)
         {
-            pp = pqptr[pcode];
+            pp = pqptr[pcode.pid];
             if (!IsManual(pp,INDUCE))
             {
                 ShowConstStrMsg(NOTE_STR9);
@@ -818,8 +813,8 @@ FAR U8 InduceMake(U8 city)
             }
 
             pcount = GetEnemyKing(g_PlayerKing,pqptr);
-            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-            if (0xff != pcode)
+            pcode = ShowPersonControl(pqptr,pcount,PID0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            if (0xffff != pcode.pid)
             {
                 OrderConsumeThew(pp,INDUCE);
 
@@ -827,7 +822,7 @@ FAR U8 InduceMake(U8 city)
                 order.OrderId = INDUCE;
                 order.Person = pp;
                 order.City = city;
-                order.Object = pqptr[pcode];
+                order.Object = pqptr[pcode.pid];
                 order.TimeCount = 10;
                 if (AddOrderHead(&order)) {
                     DelPerson(city,pp);
@@ -880,12 +875,12 @@ FAR U8 InduceMake(U8 city)
  ******************************************************************************/
 FAR U8 ReconnoitreMake(U8 city)
 {
-    U8 *pqptr;
-    U8 *str;
-    U8 pcount;
-    U8 pcode;
-    U8 p = '\0';
-    U8 ocity;
+    PersonID *pqptr;
+    U8 str[512];
+    U32 pcount;
+    PersonID pcode;
+    PersonID p = PID0;
+    U32 ocity;
     OrderType order;
     
     if (!IsMoney(city,RECONNOITRE))
@@ -895,7 +890,7 @@ FAR U8 ReconnoitreMake(U8 city)
         return(1);
     }
     
-    pqptr = SHARE_MEM;
+    pqptr = (PersonID*)SHARE_MEM;
     
     pcount = 0;
     while (1)
@@ -908,10 +903,10 @@ FAR U8 ReconnoitreMake(U8 city)
                 ShowConstStrMsg(STR_NOPERSON);
                 break;
             }
-            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-            if (0xff == pcode)
+            pcode = ShowPersonControl(pqptr,pcount,PID0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            if (0xffff == pcode.pid)
                 break;
-            p = pqptr[pcode];
+            p = pqptr[pcode.pid];
             if (!IsManual(p,RECONNOITRE))
             {
                 ShowConstStrMsg(NOTE_STR9);
@@ -923,8 +918,6 @@ FAR U8 ReconnoitreMake(U8 city)
         }
         else if (1 == pcount)	/*选择目标城池*/
         {
-            
-            str = SHARE_MEM + 3000;
             ResLoadToMem(STRING_CONST,STR_OBJ,str);
             ShowMapClear();
             ShowGReport(p,str);
@@ -936,7 +929,7 @@ FAR U8 ReconnoitreMake(U8 city)
             }
             else if (ocity != city)
             {
-                if (g_Cities[ocity].Belong == g_Cities[city].Belong)
+                if (g_Cities[ocity].Belong.pid == g_Cities[city].Belong.pid)
                 {
                     /*提示我方城池*/
                     ShowConstStrMsg(NOTE_STR7);
@@ -951,7 +944,7 @@ FAR U8 ReconnoitreMake(U8 city)
                     order.OrderId = RECONNOITRE;
                     order.Person = p;
                     order.City = city;
-                    order.Object = ocity;
+                    order.Object = PID(ocity);
                     order.TimeCount = 1;
                     if (AddOrderHead(&order)) {
                         DelPerson(city,p);
@@ -980,14 +973,14 @@ FAR U8 ReconnoitreMake(U8 city)
  ******************************************************************************/
 FAR U8 ConscriptionMake(U8 city)
 {
-    U8 *pqptr;
-    U8 pcount;
-    U8 pcode;
-    U8 p;
+    PersonID *pqptr;
+    U32 pcount;
+    PersonID pcode;
+    PersonID p;
     U16 arms,armsm;
     OrderType order;
     
-    pqptr = SHARE_MEM;
+    pqptr = (PersonID*)SHARE_MEM;
     pcount = GetCityPersons(city,pqptr);
     if (!pcount)
     {
@@ -1013,10 +1006,10 @@ FAR U8 ConscriptionMake(U8 city)
         do
         {
             ShowMapClear();
-            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-            if (0xff != pcode)
+            pcode = ShowPersonControl(pqptr,pcount,PID0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            if (0xffff != pcode.pid)
             {
-                p = pqptr[pcode];
+                p = pqptr[pcode.pid];
                 if (!IsManual(p,CONSCRIPTION))
                 {
                     ShowConstStrMsg(NOTE_STR9);
@@ -1078,13 +1071,13 @@ FAR U8 ConscriptionMake(U8 city)
  ******************************************************************************/
 FAR U8 DistributeMake(U8 city)
 {
-    U8 *pqptr;
-    U8 pcount;
-    U8 pcode = '\0';
-    U8 p;
+    PersonID *pqptr;
+    U32 pcount;
+    PersonID pcode = PID0;
+    PersonID p;
     U32 armys;
     
-    pqptr = SHARE_MEM;
+    pqptr = (PersonID*)SHARE_MEM;
     
     pcount = GetCityPersons(city,pqptr);
     if (!pcount)
@@ -1106,21 +1099,21 @@ FAR U8 DistributeMake(U8 city)
             /*gam_clrlcd(WK_SX,WK_SY,WK_EX,WK_EY);*/
             ShowMapClear();
             pcode = ShowPersonControl(pqptr,pcount,pcode,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-            if (0xff == pcode)
+            if (0xffff == pcode.pid)
                 break;
             
-            p = pqptr[pcode];
+            p = pqptr[pcode.pid];
             
             pcount = 1;
         }
         else if (1 == pcount)
         {
-            p = pqptr[pcode];
+            p = pqptr[pcode.pid];
             /*武将最大统率兵力*/
             armys = PlcArmsMax(p);
             /*----------------*/
-            if (armys > (g_Cities[city].MothballArms + g_Persons[p].Arms))
-                armys = g_Cities[city].MothballArms + g_Persons[p].Arms;
+            if (armys > (g_Cities[city].MothballArms + g_Persons[p.pid].Arms))
+                armys = g_Cities[city].MothballArms + g_Persons[p.pid].Arms;
 
             if (!armys)
             {
@@ -1136,8 +1129,8 @@ FAR U8 DistributeMake(U8 city)
             }
             else
             {
-                g_Cities[city].MothballArms = g_Cities[city].MothballArms + g_Persons[p].Arms - armys;
-                g_Persons[p].Arms = armys;
+                g_Cities[city].MothballArms = g_Cities[city].MothballArms + g_Persons[p.pid].Arms - armys;
+                g_Persons[p.pid].Arms = armys;
             }
             pcount = 0;
         }

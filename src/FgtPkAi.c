@@ -42,7 +42,7 @@ void FgtGetAimPos(U8 *aimx,U8 *aimy);
 U8 FgtGetNearGen(void);
 void FgtLoadToMem3(U8 idx,U8 *buf);
 void FgtViewForce(U8 pForce,U8 pSIdx);
-U8 TransIdxToGen3(U8 idx);
+PersonID TransIdxToGen3(U8 idx);
 U8 FgtStatGen(U8 flag);
 static void AdvancedCmdRng(U8 type,U8 param,U8 idx);
 
@@ -146,7 +146,7 @@ bool FgtJiNengGetAim(FGTCMD *pcmd, PersonType*per, U8 skidx, U8 idx)
     JLPOS		*pos;
     bool	same;
     U16	arms;
-    U8 id;
+    PersonID id;
 
     /* 搜索目标 */
     FgtGetCmdRng(CMD_STGM,skidx,idx);
@@ -165,7 +165,7 @@ bool FgtJiNengGetAim(FGTCMD *pcmd, PersonType*per, U8 skidx, U8 idx)
             continue;
         if(skidx == 17 || skidx == 29)
         {
-            id = g_FgtParam.GenArray[i] - 1;
+            id = PID(g_FgtParam.GenArray[i].pid - 1);
             arms = PlcArmsMax(id) >> 1;
             arms += arms >> 1;		/* arms = max * 3/4 */
             /* 若施展的计谋为恢复的，目标将领的兵力至少要损失1/4 */
@@ -194,16 +194,17 @@ bool FgtJiNengGetAim(FGTCMD *pcmd, PersonType*per, U8 skidx, U8 idx)
  ***********************************************************************/
 bool FgtJiNeng(FGTCMD *pcmd, U8 force)
 {
-    U8	id,idx,skidx;
+    U8	idx,skidx;
     U8	sklbuf[SKILL_NMAX + 1];
     U16	arms,ranv;
     PersonType	*per;
+    PersonID id;
 
     idx = pcmd->sIdx;
     if(STATE_JZ == g_GenPos[idx].state)
         return false;
     id = TransIdxToGen3(idx);
-    per = &g_Persons[id];
+    per = &g_Persons[id.pid];
     ranv = gam_rand();
 
     if (force == 0) {
@@ -480,25 +481,25 @@ void FgtGetSklBuf(U8 gid, U8 *buf)
 {
     U8	type,len;
     U8	*sklbuf,*ptr;
-    U8 id = TransIdxToGen3(gid);
+    PersonID id = TransIdxToGen3(gid);
 
     gam_memset(buf,0,SKILL_NMAX + 1);
     /* 构造技能缓冲 */
     sklbuf = buf;
     ptr = ResLoadToCon(SPE_SKLID,g_PIdx,g_CBnkPtr);
-    if(ptr[id])		/* 特有技能 */
+    if(ptr[id.pid])		/* 特有技能 */
     {
-        *sklbuf = ptr[id];
+        *sklbuf = ptr[id.pid];
         sklbuf += 1;
     }
-    if(g_Persons[id].Belong == id + 1)	/* 君主技能 */
+    if(g_Persons[id.pid].Belong.pid == id.pid + 1)	/* 君主技能 */
     {
         *sklbuf = 30;
         sklbuf += 1;
     }
     ptr = ResLoadToCon(IFACE_CONID,dFgtJNArray,g_CBnkPtr);
-    type = GetArmType(&g_Persons[id]);
-    len = ((float)dArmsJNNum[type] * g_Persons[id].Level / (MAX_LEVEL + 1)) + 1;
+    type = GetArmType(&g_Persons[id.pid]);
+    len = ((float)dArmsJNNum[type] * g_Persons[id.pid].Level / (MAX_LEVEL + 1)) + 1;
     ptr += type * SKILL_NMAX;
     gam_memcpy(sklbuf,ptr,len);
 
@@ -545,7 +546,7 @@ FAR U8 FgtJNChkAim(U8 param,U8 same,U8 aidx)
     U8	terrain,type;
     SKILLEF *skl;
 
-    type = GetArmType(&g_Persons[g_FgtParam.GenArray[aidx] - 1]);
+    type = GetArmType(&g_Persons[g_FgtParam.GenArray[aidx].pid - 1]);
     terrain = FgtGetGenTer(aidx);
     skl = (SKILLEF	*)FgtGetJNPtr(param);
     /* 检测目标兵种 */
@@ -718,13 +719,13 @@ FAR void FgtGetCmdRng(U8 type,U8 param,U8 idx)
     switch(type)
     {
         case CMD_ATK:{
-            U16 offset = ATT_RANGE * (U16)GetArmType(&g_Persons[g_FgtParam.GenArray[idx] - 1]);
+            U16 offset = ATT_RANGE * (U16)GetArmType(&g_Persons[g_FgtParam.GenArray[idx].pid - 1]);
             rngb = ATT_RANGEUNIT;
             ptr = ResLoadToCon(IFACE_CONID,dFgtAtRange,g_CBnkPtr) + offset;
 
             if (g_engineConfig.enableToolAttackRange) {
                 for (U8 i = 0; i < 2; i++) {
-                    U8 tid = g_Persons[g_FgtParam.GenArray[idx] - 1].Equip[i];
+                    U8 tid = g_Persons[g_FgtParam.GenArray[idx].pid - 1].Equip[i];
                     if (tid) {
                         U8 tind = tid - 1;
                         U16 offset = sizeof(GOODS) * tind;
@@ -1009,14 +1010,15 @@ void FgtViewForce(U8 pForce,U8 pSIdx)
     U8	i,pPCnt,pGIdx;
     U8	tmp,tbuf[20];
     U16	provender;
+    PersonID p;
     
     pGIdx = pForce * FGT_PLAMAX;
     gam_clrlcd(WK_SX + SCR_WID / 2,WK_SY,WK_EX,WK_EY);
     gam_rect(WK_SX + SCR_WID / 2,WK_SY,WK_EX,WK_EY);
     gam_line(WK_SX + SCR_WID / 2,WK_SY + HZ_HGT + 2,WK_EX,WK_SY + HZ_HGT + 2);
     gam_line(WK_SX + SCR_WID / 2,WK_SY + HZ_HGT * 2 + 4,WK_EX,WK_SY + HZ_HGT * 2 + 4);
-    i = TransIdxToGen3(pGIdx);
-    GetPersonName(g_Persons[i].Belong - 1,tbuf);
+    p = TransIdxToGen3(pGIdx);
+    GetPersonName(PID(g_Persons[p.pid].Belong.pid - 1),tbuf);
     i = gam_strlen(tbuf);
     tbuf[i] = ' ';
     FgtLoadToMem3(dArmyInf,tbuf + i);
@@ -1041,12 +1043,12 @@ void FgtViewForce(U8 pForce,U8 pSIdx)
         tmp = i + pSIdx;
         if(tmp - pGIdx >= FGT_PLAMAX)
             break;
-        tmp = g_FgtParam.GenArray[tmp];
-        if(!tmp)
+        p = g_FgtParam.GenArray[tmp];
+        if(!p.pid)
             break;
-        tmp -= 1;
-        provender = g_Persons[tmp].Arms;		
-        GetPersonName(tmp,tbuf);
+        p.pid -= 1;
+        provender = g_Persons[p.pid].Arms;
+        GetPersonName(p,tbuf);
         tmp = gam_strlen(tbuf);
         gam_memset(tbuf + tmp,' ',20 - tmp);
         gam_ltoa(provender,tbuf + 8,10);
@@ -1070,7 +1072,7 @@ U8 FgtStatGen(U8 flag)
     pSIdx = flag * FGT_PLAMAX;
     for(i = 0;i < FGT_PLAMAX;i += 1)
     {		
-        if(!g_FgtParam.GenArray[i + pSIdx])
+        if(!g_FgtParam.GenArray[i + pSIdx].pid)
             break;
     }
     return i;
@@ -1097,9 +1099,9 @@ void FgtLoadToMem3(U8 idx,U8 *buf)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-U8 TransIdxToGen3(U8 idx)
+PersonID TransIdxToGen3(U8 idx)
 {
-    return (U8)(g_FgtParam.GenArray[idx] - 1);
+    return PID(g_FgtParam.GenArray[idx].pid - 1);
 }
 
 static void AdvancedCmdRng(U8 type, U8 param, U8 idx) {
@@ -1107,13 +1109,13 @@ static void AdvancedCmdRng(U8 type, U8 param, U8 idx) {
         BuiltAtkAttr(0, idx);
 
         U8 ter = FgtGetTerrain(g_GenPos[idx].x, g_GenPos[idx].y);
-        U8 personIndex = g_FgtParam.GenArray[idx] - 1;
+        U16 personIndex = g_FgtParam.GenArray[idx].pid - 1;
         U8*range = g_FgtAtkRng+3;
         U8 rangeSize = g_FgtAtkRng[0];
         U8* skillId = &param;
 
         BIND_U8(&ter);
-        BIND_U8(&personIndex);
+        BIND_U16(&personIndex);
         BIND_U8(&type);
         BIND_U8(skillId);
         BIND_U8(&rangeSize);

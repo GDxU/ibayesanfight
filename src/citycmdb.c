@@ -365,14 +365,14 @@ FAR U8 CityCommon(U8 city,U8 cmd)
  ******************************************************************************/
 FAR U8 AssartMake(U8 city)
 {
-    U8 *pqptr;
-    U8 pcount;
-    U8 pcode;
-    U8 p;
+    PersonID *pqptr;
+    PersonID pcode;
+    PersonID p;
+    U32 pcount;
     U16 *f,fl,fa;
     OrderType order;
 
-    pqptr = SHARE_MEM;
+    pqptr = (PersonID*)SHARE_MEM;
     pcount = GetCityPersons(city,pqptr);
     if (!pcount)
     {
@@ -406,17 +406,17 @@ FAR U8 AssartMake(U8 city)
         do
         {
             ShowMapClear();
-            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-            if (0xff != pcode)
+            pcode = ShowPersonControl(pqptr,pcount,PID(0),WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            if (0xffff != pcode.pid)
             {
-                p = pqptr[pcode];
+                p = pqptr[pcode.pid];
                 if (!IsManual(p,ASSART))
                 {
                     ShowConstStrMsg(NOTE_STR9);
                     continue;
                 }
 
-                fa = g_Persons[p].IQ / 10 * (gam_rand() % 4 + 2) + (g_Persons[p].IQ >> 1);
+                fa = g_Persons[p.pid].IQ / 10 * (gam_rand() % 4 + 2) + (g_Persons[p.pid].IQ >> 1);
                 *f += fa;
                 if (*f > fl)
                 {
@@ -459,14 +459,14 @@ FAR U8 AssartMake(U8 city)
  ******************************************************************************/
 FAR U8 AccractbusinessMake(U8 city)
 {
-    U8 *pqptr;
-    U8 pcount;
-    U8 pcode;
-    U8 p;
+    PersonID *pqptr;
+    U32 pcount;
+    PersonID pcode;
+    PersonID p;
     U16 *c,cl,ca;
     OrderType order;
 
-    pqptr = SHARE_MEM;
+    pqptr = (PersonID*)SHARE_MEM;
 
     pcount = GetCityPersons(city,pqptr);
     if (!pcount)
@@ -501,10 +501,10 @@ FAR U8 AccractbusinessMake(U8 city)
         do
         {
             ShowMapClear();
-            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-            if (0xff != pcode)
+            pcode = ShowPersonControl(pqptr,pcount,PID(0),WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            if (0xffff != pcode.pid)
             {
-                p = pqptr[pcode];
+                p = pqptr[pcode.pid];
                 if (!IsManual(p,ACCRACTBUSINESS))
                 {
                     ShowConstStrMsg(NOTE_STR9);
@@ -513,7 +513,7 @@ FAR U8 AccractbusinessMake(U8 city)
                 // loong.FIXME:
                 // Old code:
                 // ca = g_Persons[p].IQ / 10 * (gam_rand() % 4 + 2) + g_Persons[p].IQ >> 1;
-                ca = g_Persons[p].IQ / 10 * (gam_rand() % 4 + 2) + (g_Persons[p].IQ >> 1);
+                ca = g_Persons[p.pid].IQ / 10 * (gam_rand() % 4 + 2) + (g_Persons[p.pid].IQ >> 1);
                 *c += ca;
                 if (*c > cl)
                 {
@@ -554,12 +554,9 @@ FAR U8 AccractbusinessMake(U8 city)
  *		----		----			-----------
  *		陈泽伟		2005-8-16 15:38	基本功能完成
  ******************************************************************************/
-void ShowDMsg(U8 city,U8 person,U8 upval,U8 flag)
+void ShowDMsg(U8 city,PersonID person,U8 upval,U8 flag)
 {
-    U8 *str,*astr;
-
-    str = SHARE_MEM + 3000;
-    astr = SHARE_MEM + 3500;
+    SBUF str,astr;
 
     switch (flag)
     {
@@ -607,14 +604,15 @@ void ShowDMsg(U8 city,U8 person,U8 upval,U8 flag)
  ******************************************************************************/
 FAR U8 SearchMake(U8 city)
 {
-    U8 *str;
-    U8 *pqptr;
-    U8 pcount;
-    U8 pcode;
-    U8 p,psay;
+    U8 str[512];
+    PersonID *pqptr;
+    U32 pcount;
+    PersonID pcode;
+    PersonID p;
+    U32 psay;
     OrderType order;
 
-    pqptr = SHARE_MEM;
+    pqptr = (PersonID*)SHARE_MEM;
 
     pcount = GetCityPersons(city,pqptr);
     if (!pcount)
@@ -640,10 +638,10 @@ FAR U8 SearchMake(U8 city)
         do
         {
             ShowMapClear();
-            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-            if (0xff != pcode)
+            pcode = ShowPersonControl(pqptr,pcount,PID(0),WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            if (0xffff != pcode.pid)
             {
-                p = pqptr[pcode];
+                p = pqptr[pcode.pid];
                 if (!IsManual(p,SEARCH))
                 {
                     ShowConstStrMsg(NOTE_STR9);
@@ -654,7 +652,7 @@ FAR U8 SearchMake(U8 city)
                 OrderConsumeMoney(city,SEARCH);
 
                 psay = gam_rand() % 3;
-                if (p == g_PlayerKing)
+                if (p.pid == g_PlayerKing.pid)
                 {
                     psay += P_SAY_STR24;
                 }
@@ -662,7 +660,6 @@ FAR U8 SearchMake(U8 city)
                 {
                     psay += P_SAY_STR21;
                 }
-                str = SHARE_MEM + 3000;
                 ResLoadToMem(STRING_CONST,psay,str);
                 ShowGReport(p,str);
 
@@ -700,13 +697,14 @@ FAR U8 SearchMake(U8 city)
  ******************************************************************************/
 FAR U8 FatherMake(U8 city)
 {
-    U8 *pqptr;
-    U8 pcount;
-    U8 pcode;
-    U8 p,rnd;
+    PersonID *pqptr;
+    U32 pcount;
+    PersonID pcode;
+    PersonID p;
+    U32 rnd;
     OrderType order;
 
-    pqptr = SHARE_MEM;
+    pqptr = (PersonID*)SHARE_MEM;
 
     pcount = GetCityPersons(city,pqptr);
     if (!pcount)
@@ -738,10 +736,10 @@ FAR U8 FatherMake(U8 city)
         do
         {
             ShowMapClear();
-            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-            if (0xff != pcode)
+            pcode = ShowPersonControl(pqptr,pcount,PID(0),WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            if (0xffff != pcode.pid)
             {
-                p = pqptr[pcode];
+                p = pqptr[pcode.pid];
                 if (!IsManual(p,STATE_NORMAL))
                 {
                     ShowConstStrMsg(NOTE_STR9);
@@ -791,16 +789,16 @@ FAR U8 FatherMake(U8 city)
  ******************************************************************************/
 FAR U8 InspectionMake(U8 city)
 {
-    U8 *pqptr;
-    U8 pcount;
-    U8 pcode;
-    U8 p;
-    U8 rnd;
+    PersonID *pqptr;
+    U32 pcount;
+    PersonID pcode;
+    PersonID p;
+    U32 rnd;
     OrderType order;
     U8 *PeopleDevotion;
     U32 *Population;
 
-    pqptr = SHARE_MEM;
+    pqptr = (PersonID*)SHARE_MEM;
 
     pcount = GetCityPersons(city,pqptr);
     if (!pcount)
@@ -826,10 +824,10 @@ FAR U8 InspectionMake(U8 city)
         do
         {
             ShowMapClear();
-            pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-            if (0xff != pcode)
+            pcode = ShowPersonControl(pqptr,pcount,PID0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            if (0xffff != pcode.pid)
             {
-                p = pqptr[pcode];
+                p = pqptr[pcode.pid];
                 if (!IsManual(p,INSPECTION))
                 {
                     ShowConstStrMsg(NOTE_STR9);
@@ -885,11 +883,11 @@ FAR U8 InspectionMake(U8 city)
  ******************************************************************************/
 FAR U8 SurrenderMake(U8 city)
 {
-    U8 *str;
-    U8 *pqptr;
-    U8 pcount;
-    U8 pcode;
-    U8 pp,p;
+    U8 str[512];
+    PersonID *pqptr;
+    U32 pcount;
+    PersonID pcode;
+    PersonID pp,p;
     OrderType order;
 
     if (g_engineConfig.fixConsumeMoney && !IsMoney(city, SURRENDER))
@@ -899,7 +897,7 @@ FAR U8 SurrenderMake(U8 city)
         return(1);
     }
 
-    pqptr = SHARE_MEM;
+    pqptr = (PersonID*)SHARE_MEM;
 
     pcount = GetCityPersons(city,pqptr);
     if (!pcount)
@@ -924,10 +922,10 @@ FAR U8 SurrenderMake(U8 city)
         }
 
         ShowMapClear();
-        pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-        if (0xff != pcode)
+        pcode = ShowPersonControl(pqptr,pcount,PID0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+        if (0xffff != pcode.pid)
         {
-            pp = pqptr[pcode];
+            pp = pqptr[pcode.pid];
             
             pcount = GetCityPersons(city,pqptr);
             if (!pcount)
@@ -938,10 +936,10 @@ FAR U8 SurrenderMake(U8 city)
             do
             {
                 ShowMapClear();
-                pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-                if (0xff != pcode)
+                pcode = ShowPersonControl(pqptr,pcount,PID0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+                if (0xffff != pcode.pid)
                 {
-                    p = pqptr[pcode];
+                    p = pqptr[pcode.pid];
                     if (!IsManual(p,SURRENDER))
                     {
                         ShowConstStrMsg(NOTE_STR9);
@@ -960,7 +958,6 @@ FAR U8 SurrenderMake(U8 city)
                     order.TimeCount = 0;
                     if (AddOrderHead(&order)) {
                         DelPerson(city,p);
-                        str = SHARE_MEM;
                         ResLoadToMem(STRING_CONST,P_SAY_STR41,str);
                         ShowMapClear();
                         ShowGReport(p,str);
@@ -993,13 +990,13 @@ FAR U8 SurrenderMake(U8 city)
  ******************************************************************************/
 FAR U8 KillMake(U8 city)
 {
-    U8 *pqptr;
-    U8 pcount;
-    U8 pcode;
+    PersonID *pqptr;
+    U32 pcount;
+    PersonID pcode;
     U8 *gptr;
-    U8 *str;
+    U8 str[512];
     
-    pqptr = SHARE_MEM;
+    pqptr = (PersonID*)SHARE_MEM;
     
     pcount = GetCityCaptives(city,pqptr);
     if (!pcount)
@@ -1007,11 +1004,11 @@ FAR U8 KillMake(U8 city)
         /*提示城中无俘虏*/
         ShowConstStrMsg(STR_NOCAPTIVES);
     }
-    pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-    if (0xff != pcode)
+    pcode = ShowPersonControl(pqptr,pcount,PID0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+    if (0xffff != pcode.pid)
     {
         /*添加处斩提示代码*/
-        gptr = g_Persons[pqptr[pcode]].Equip;
+        gptr = g_Persons[pqptr[pcode.pid].pid].Equip;
         if (gptr[0])
         {
             U16 index = AddGoods(city,gptr[0] - 1);
@@ -1022,11 +1019,10 @@ FAR U8 KillMake(U8 city)
             U16 index = AddGoods(city,gptr[1] - 1);
             SetGoodsByIndex(index-1);
         }
-        str = SHARE_MEM + 3000;
         ResLoadToMem(STRING_CONST,P_SAY_STR4 + (gam_rand() % 3),str);
         ShowMapClear();
-        ShowGReport(pqptr[pcode],str);
-        DelPerson(city,pqptr[pcode]);
+        ShowGReport(pqptr[pcode.pid],str);
+        DelPerson(city,pqptr[pcode.pid]);
     }
     
     return(1);
@@ -1047,13 +1043,13 @@ FAR U8 KillMake(U8 city)
  ******************************************************************************/
 FAR U8 BanishMake(U8 city)
 {
-    U8 *pqptr;
-    U8 pcount;
-    U8 pcode;
-    U8 p;
-    U8 rnd;
+    PersonID *pqptr;
+    U32 pcount;
+    PersonID pcode;
+    PersonID p;
+    U32 rnd;
     
-    pqptr = SHARE_MEM;
+    pqptr = (PersonID*)SHARE_MEM;
     
     pcount = GetCityPersons(city,pqptr);
     pcount += GetCityCaptives(city,&pqptr[pcount]);
@@ -1062,11 +1058,11 @@ FAR U8 BanishMake(U8 city)
         ShowConstStrMsg(STR_NOPERSON);
         return(1);
     }
-    pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-    if (0xff != pcode)
+    pcode = ShowPersonControl(pqptr,pcount,PID0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+    if (0xffff != pcode.pid)
     {	
-        p = pqptr[pcode];
-        g_Persons[p].Belong = 0;
+        p = pqptr[pcode.pid];
+        g_Persons[p.pid].Belong = PID0;
         DelPerson(city,p);
         rnd = gam_rand() % CITY_MAX;
         AddPerson(rnd,p);
@@ -1090,16 +1086,16 @@ FAR U8 BanishMake(U8 city)
  ******************************************************************************/
 FAR U8 LargessMake(U8 city)
 {
-    U8 *str;
+    SBUF str;
     U8 *gqptr;
-    U8 gcount;
-    U8 gcode;
-    U8 *pqptr;
-    U8 pcount;
-    U8 pcode;
-    U8 p;
+    U32 gcount;
+    U32 gcode;
+    PersonID *pqptr;
+    U32 pcount;
+    PersonID pcode;
+    PersonID p;
     U8 *eq;
-    U8 g,gi;
+    U32 g,gi;
 
     while (1) {
 
@@ -1115,24 +1111,24 @@ FAR U8 LargessMake(U8 city)
 
             do
             {
-                pqptr = SHARE_MEM + 2000;
+                pqptr = (PersonID*)(SHARE_MEM + 2000);
                 pcount = GetCityPersons(city,pqptr);
                 if (!pcount)
                 {
                     ShowConstStrMsg(STR_NOPERSON);
                     break;
                 }
-                pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-                if (0xff != pcode)
+                pcode = ShowPersonControl(pqptr,pcount,PID0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+                if (0xffff != pcode.pid)
                 {
                     int ret = -1;
                     
                     g = gqptr[gcode];
-                    p = pqptr[pcode];
+                    p = pqptr[pcode.pid];
 
                     IF_HAS_HOOK("willGiveTool") {
                         BIND_U8EX("cityIndex", &city);
-                        BIND_U8EX("personIndex", &pqptr[pcode]);
+                        BIND_U16EX("personIndex", &pqptr[pcode.pid].pid);
                         BIND_U8EX("toolIndex", &gqptr[gcode]);
                         ret = CALL_HOOK_A();
                     }
@@ -1141,7 +1137,7 @@ FAR U8 LargessMake(U8 city)
                         break;
                     }
 
-                    eq = g_Persons[p].Equip;
+                    eq = g_Persons[p.pid].Equip;
                     if (!(eq[0]))
                     {
                         gi = 0;
@@ -1171,15 +1167,14 @@ FAR U8 LargessMake(U8 city)
                     }
                     /*添加赏赐成功代码*/
                     DelGoods(city,g);
-                    if (p != g_PlayerKing)
+                    if (p.pid != g_PlayerKing.pid)
                     {
-                        str = SHARE_MEM + 4000;
                         ResLoadToMem(STRING_CONST,P_SAY_STR10 + (gam_rand() % 3),str);
                         ShowMapClear();
                         ShowGReport(p,str);
-                        g_Persons[p].Devotion += 8;
-                        if (g_Persons[p].Devotion > 100)
-                            g_Persons[p].Devotion = 100;
+                        g_Persons[p.pid].Devotion += 8;
+                        if (g_Persons[p.pid].Devotion > 100)
+                            g_Persons[p.pid].Devotion = 100;
                     }
                     break;
                 }

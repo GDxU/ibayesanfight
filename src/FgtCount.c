@@ -25,7 +25,7 @@
 
 /*本体函数声明*/
 /*------------------------------------------*/
-U8 TransIdxToGen(U8 idx);
+PersonID TransIdxToGen(U8 idx);
 U16 FgtAllArms(U8 flag);
 void CountBaseAttr(U8 i);
 
@@ -91,7 +91,7 @@ FAR void CountInitGen(void)
         if(!(i % FGT_PLAMAX))
             cnt = 0;
         g_GenPos[i].state = STATE_ZC;
-        if(g_FgtParam.GenArray[i] == 0)
+        if(g_FgtParam.GenArray[i].pid == 0)
         {
             cnt += 1;
             g_GenPos[i].state = STATE_SW;
@@ -117,14 +117,14 @@ FAR void CountInitGen(void)
  ***********************************************************************/
 void CountBaseAttr(U8 i)
 {
-    U8	idx;
     U16	at,df,lev,thew;
     JLPOS	*pos;
     PersonType *per;
+    PersonID p;
 
     pos = &g_GenPos[i];
-    idx = TransIdxToGen(i);
-    per = &g_Persons[idx];
+    p = TransIdxToGen(i);
+    per = &g_Persons[p.pid];
 
     at = per->Force;
     df = per->IQ;
@@ -160,6 +160,7 @@ FAR void CountMoveP(U8 i)
     GOODS	*ptr;
     JLPOS	*pos;
     PersonType *per;
+    PersonID p;
 
     pos = &g_GenPos[i];
 
@@ -168,8 +169,8 @@ FAR void CountMoveP(U8 i)
         return;
     }
 
-    i = TransIdxToGen(i);
-    per = &g_Persons[i];
+    p = TransIdxToGen(i);
+    per = &g_Persons[p.pid];
 
     arm = GetArmType(per);
     pos->move = FgtIntMove[arm];
@@ -247,16 +248,17 @@ static U16 calcAt(I8 mModu, U16 at) {
 
 FAR void BuiltAtkAttr(U8 idx,U8 pIdx)
 {
-    U8	pGen,pTer;
+    U8	pTer;
+    PersonID pGen;
     I8  mModu;
     U8	*mptr;
     JLATT	*pAtk;
     PersonType	*pTyp;
 
     pGen = TransIdxToGen(pIdx);
-    if(pGen > PERSON_MAX - 1)
+    if(pGen.pid > PERSON_COUNT - 1)
         return;
-    pTyp = (PersonType *)(&g_Persons[pGen]);
+    pTyp = (PersonType *)(&g_Persons[pGen.pid]);
     pAtk = (JLATT *)(&g_GenAtt[idx]);
     pAtk->arms = &(pTyp->Arms);
     pAtk->exp = &(pTyp->Experience);
@@ -266,8 +268,7 @@ FAR void BuiltAtkAttr(U8 idx,U8 pIdx)
     pTer = FgtGetTerrain(g_GenPos[pIdx].x,g_GenPos[pIdx].y);
     pAtk->ter = pTer;
     pAtk->bile = 0;
-    pGen = GetArmType(pTyp);
-    pAtk->armsType = pGen;
+    pAtk->armsType = GetArmType(pTyp);
     pAtk->arms = &(pTyp->Arms);
     pAtk->exp = &(pTyp->Experience);
 
@@ -281,7 +282,7 @@ FAR void BuiltAtkAttr(U8 idx,U8 pIdx)
 
     /* 获取地形影响 */
     mptr = ResLoadToCon(IFACE_CONID,dFgtLandF,g_CBnkPtr);
-    mptr += pGen * TERRAIN_MAX;
+    mptr += pAtk->armsType * TERRAIN_MAX;
     mModu = (I8)mptr[pTer];
 
     U16 atRatio = pTyp->Force;
@@ -299,8 +300,8 @@ FAR void BuiltAtkAttr(U8 idx,U8 pIdx)
         dfRatio += pTyp->Age * g_engineConfig.ratioOfDefenceToAge / 10;
     }
     
-    U16 at = (U16)(atRatio * (pTyp->Level + 10) * AtkModulus[pGen]);
-    U16 df = (U16)(dfRatio * (pTyp->Level + 10) * DfModulus[pGen]);
+    U16 at = (U16)(atRatio * (pTyp->Level + 10) * AtkModulus[pAtk->armsType]);
+    U16 df = (U16)(dfRatio * (pTyp->Level + 10) * DfModulus[pAtk->armsType]);
 
     pAtk->at = calcAt(mModu, at);
     pAtk->df = calcAt(mModu, df);
@@ -451,6 +452,7 @@ U16 FgtAllArms(U8 flag)
 {
     U8	i,idx,start;
     U16	rev;
+    PersonID p;
 
     start = flag * FGT_PLAMAX;
     rev = 0;
@@ -459,8 +461,8 @@ U16 FgtAllArms(U8 flag)
         idx = i + start;
         if(STATE_SW == g_GenPos[idx].state)
             continue;
-        idx = TransIdxToGen(idx);
-        rev += g_Persons[idx].Arms;
+        p = TransIdxToGen(idx);
+        rev += g_Persons[p.pid].Arms;
     }
     return (U16) rev;
 }
@@ -473,11 +475,11 @@ U16 FgtAllArms(U8 flag)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-U8 TransIdxToGen(U8 idx)
+PersonID TransIdxToGen(U8 idx)
 {
     if(idx > FGTA_MAX - 1)
-        return 0xFF;
-    return (U8)(g_FgtParam.GenArray[idx] - 1);
+        return PID(0xFFFF);
+    return PID(g_FgtParam.GenArray[idx].pid - 1);
 }
 
 
@@ -647,7 +649,7 @@ void FgtTransMove(U8 idx)
     U8	*mptr;
 
     /* 获取被操作的兵种 */
-    type = GetArmType(&g_Persons[g_FgtParam.GenArray[idx] - 1]);
+    type = GetArmType(&g_Persons[g_FgtParam.GenArray[idx].pid - 1]);
     mptr = ResLoadToCon(IFACE_CONID,dFgtLandR,g_CBnkPtr);
     mptr += type * FGT_TILMAX;
     /* 将地况转换成移动力消耗 */

@@ -45,7 +45,7 @@ U8 GamMovie(U16 speID);
 bool GamMainChose(void);
 void GamMakerInf(void);
 void GamShowErrInf(U8 idx);
-U8 GamGetKing(U8 num);
+PersonID GamGetKing(U32 num);
 void GamShowKing(U8 pTop);
 void GamRevCity(U8 cycnt,U8 *tbuf,U8 *pos);
 U8 GamPicMenu(U16 picID,U16 speID, const Rect *buttonsRect, U8 buttonsCount, U8 exitOnOther);
@@ -124,14 +124,11 @@ U8 GamVarInit(void)
     g_FgtAtkRng = gam_malloc(MAX_ATT_RANGE + 5);		/* 86 */
     if (NULL == g_FgtAtkRng)
         return 1;
-
-    g_Persons = (PersonType *) gam_malloc(sizeof(PersonType) * PERSON_MAX + 4);	/* 3004 */
-    if (NULL == g_Persons)
-        return 1;
+    
     g_OrderHead = (OrderQueueType *) NULL;
     g_OrderEnd = (OrderQueueType *) NULL;
 
-    g_PlayerKing = 0;
+    g_PlayerKing = PID0;
     g_CityPos.x = 0;
     g_CityPos.y = 0;
     g_CityPos.setx = 0;
@@ -182,6 +179,7 @@ bool GamMainChose(void)
     U8	*posptr;
     U8	idx;
     U8	i,c;
+    PersonID king;
 
     Rect mainMenuButtonRects[4];
     Rect periodMenuButtonRects[4];
@@ -198,15 +196,16 @@ bool GamMainChose(void)
                 idx = GamPicMenu(YEAR_PIC,YEAR_ICON1, periodMenuButtonRects, 4, true);
                 if(idx == MNU_EXIT)
                     break;
-                idx = GetPeriodKings(idx + 1,g_FgtAtkRng); 	/* 设置历史时期，并获取君主队列 */
-                idx = GamGetKing(idx);
-                if(idx == MNU_EXIT)
+                GamSetPersonCount(512);
+                idx = GetPeriodKings(idx + 1, g_PersonsQueue); 	/* 设置历史时期，并获取君主队列 */
+                king = GamGetKing(idx);
+                if(king.pid == 0xffff)
                     break;
-                g_PlayerKing = idx;				/* 设置玩家扮演的君主ID */
+                g_PlayerKing = king;				/* 设置玩家扮演的君主ID */
 
                 for (idx = 0;idx < CITY_MAX;idx ++)
                 {
-                    if (g_Cities[idx].Belong == (g_PlayerKing + 1))
+                    if (g_Cities[idx].Belong.pid == (g_PlayerKing.pid + 1))
                     {
                         posptr = ResLoadToCon(IFACE_CONID,dCityPos,g_CBnkPtr);
                         g_CityPos.setx = posptr[idx << 1];
@@ -227,15 +226,15 @@ bool GamMainChose(void)
                         break;
                     }
                 }
-                posptr = SHARE_MEM;
                 for (idx = 0;idx < CITY_MAX;idx ++)
                 {
-                    if (g_Cities[idx].Belong != (g_PlayerKing + 1))
+                    if (g_Cities[idx].Belong.pid != (g_PlayerKing.pid + 1))
                     {
-                        c = GetCityPersons(idx,posptr);
+                        PersonID* pqptr = (PersonID*)SHARE_MEM;
+                        c = GetCityPersons(idx,pqptr);
                         for (i = 0;i < c;i ++)
                         {
-                            g_Persons[posptr[i]].Arms = 800;
+                            g_Persons[pqptr[i].pid].Arms = 800;
                         }
                         ADD16(g_Cities[idx].Food, 1000);
                     }
@@ -348,7 +347,7 @@ void GamMakerInf(void)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-U8 GamGetKing(U8 num)
+PersonID GamGetKing(U32 num)
 {
     U8	*pos,tbuf[CITY_MAX];
     U8	pTop,pIdx,pSLen;
@@ -366,7 +365,7 @@ U8 GamGetKing(U8 num)
     for(pIdx = 0;pIdx < num;pIdx += 1)
     {
         pTop = pIdx * 6;
-        GetPersonName(g_FgtAtkRng[pIdx],g_FightPath + pTop);
+        GetPersonName(g_PersonsQueue[pIdx],g_FightPath + pTop);
         pSLen = gam_strlen(g_FightPath);
         if(pSLen < pTop + 6)
             gam_memset(g_FightPath + pSLen,' ',pTop + 6 - pSLen);
@@ -397,7 +396,7 @@ U8 GamGetKing(U8 num)
     GamShowKing(pTop);
     ry = (pIdx - pTop) * itemHeight + KING_SY;
     gam_revlcd(KING_SX,ry,KING_EX,ry + itemHeight);
-    cycnt = GetKingCitys(g_FgtAtkRng[pIdx],tbuf); 		/* 获取治下城市队列 */
+    cycnt = GetKingCitys(g_PersonsQueue[pIdx],tbuf); 		/* 获取治下城市队列 */
     while(1)
     {
         GamGetMsg(&pMsg);
@@ -435,9 +434,9 @@ U8 GamGetKing(U8 num)
                     }
                     break;
                 case VK_EXIT:
-                    return MNU_EXIT;
+                    return PID(0xffff);
                 case VK_ENTER:
-                    return g_FgtAtkRng[pIdx];
+                    return g_PersonsQueue[pIdx];
             }
 #define UPDATE_UI() \
             GamShowKing(pTop);\
@@ -445,7 +444,7 @@ U8 GamGetKing(U8 num)
             if (ry >= KING_SY && ry + itemHeight <= KING_SY + itemHeight*itemsPerPage) {\
                 gam_revlcd(KING_SX,ry,KING_EX,ry + itemHeight);\
             }\
-            cycnt = GetKingCitys(g_FgtAtkRng[pIdx],tbuf);	/* 获取治下城市队列 */
+            cycnt = GetKingCitys(g_PersonsQueue[pIdx],tbuf);	/* 获取治下城市队列 */
 
             UPDATE_UI();
         }
@@ -459,13 +458,13 @@ U8 GamGetKing(U8 num)
                     I16 index = touchListViewItemIndexAtPoint(touch.currentX, touch.currentY, listRect, 2, 2, pTop, num, itemHeight);
                     if (index >= 0) {
                         if (index == pIdx) {
-                            return g_FgtAtkRng[pIdx];
+                            return g_PersonsQueue[pIdx];
                         }
                         CLEAR_SEL();
                         pIdx = index;
                         UPDATE_UI();
                     } else if (touchIsPointInRect(touch.currentX, touch.currentY, exitRect)) {
-                        return MNU_EXIT;
+                        return PID(0xffff);
                     }
                     break;
                 }
@@ -668,10 +667,12 @@ FAR U8 GamRecordMan(U8 flag)
  ***********************************************************************/
 void GamRcdIFace(U8 count)
 {
-    U8	idx,king,fnam[20];
+    U8	idx,fnam[20];
     U8	pbak,tbuf[10];
     U16	year;
     gam_FILE	*fp;
+    PersonID king;
+    U8 n;
 
     Point anchor = g_engineConfig.saveFaceListAnchor;
 
@@ -686,23 +687,21 @@ void GamRcdIFace(U8 count)
             ResLoadToMem(IFACE_STRID,dNullFNam,fnam);	/* fnam = "空" */
         else
         {
-            U8 verFlag;
-            gam_fread((U8 *)&verFlag,1,1,fp);
-            if (verFlag & 0x80) {
-                gam_fread((U8 *)&g_PIdx,1,1,fp);
-            } else {
-                g_PIdx = verFlag;
-            }
-            gam_fread((U8 *)&king,1,1,fp);
+            U8 ver;
+            U16 pql;
+            gam_fread((U8 *)&ver,1,1,fp);
+            gam_fread((U8 *)&g_PIdx,1,1,fp);
+            gam_fread((U8 *)&pql,1,2,fp);
+            gam_fread((U8 *)&king,1,2,fp);
             gam_fread((U8 *)&year,1,2,fp);
             gam_fclose(fp);
             ResLoadToMem(IFACE_STRID,dRecordInf,fnam);
             GetPersonName(king,tbuf);
-            king = gam_strlen(tbuf);
-            gam_memcpy(fnam,tbuf,king);		/* fnam = "君主       年" */
+            n = gam_strlen(tbuf);
+            gam_memcpy(fnam,tbuf,n);		/* fnam = "君主       年" */
             gam_itoa(year,tbuf,10);
-            king = gam_strlen(tbuf) + 1;
-            gam_memcpy(fnam + 10,tbuf,king);	/* fnam = "君主    ???年" */
+            n = gam_strlen(tbuf) + 1;
+            gam_memcpy(fnam + 10,tbuf,n);	/* fnam = "君主    ???年" */
         }
         GamStrShowS(anchor.x, anchor.y + idx * 14, fnam);
     }
@@ -721,7 +720,6 @@ bool GamLoadRcd(U8 idx)
 {
     U8	tbuf[20];
     gam_FILE	*fp;
-    U8 verFlag = 0;
 
     ResLoadToMem(IFACE_STRID,dReading,tbuf);
     GamMsgBox(tbuf,0);
@@ -737,37 +735,18 @@ bool GamLoadRcd(U8 idx)
         return false;
     }
 
-    gam_fread((U8 *)&verFlag,1,1,fp);
 
     U8 version = 0;
 
     U16 goodsQueueLen = GOODS_MAX;
     U16 orderQueueLen = ORDER_MAX;
-    U16 personQueueLen = PERSON_MAX;
+    U16 personQueueLen = PERSON_COUNT;
 
-    if (verFlag & 0x80) {
-        version = verFlag;
-    }
-
-    if (version == 0) {
-        g_PIdx = verFlag;
-    } else {
-        gam_fread((U8 *)&g_PIdx,1,1,fp);
-    }
-
-    if (version < 0x80) {
-        goodsQueueLen = 33;
-    }
-
-    if (version < 0x81) {
-        orderQueueLen = 100;
-    }
-
-    if (version < 0x82) {
-        personQueueLen = 200;
-    }
-
-    gam_fread((U8 *)&g_PlayerKing,1,1,fp);
+    gam_fread((U8 *)&version,1,1,fp);
+    gam_fread((U8 *)&g_PIdx,1,1,fp);
+    gam_fread((U8 *)&personQueueLen,1,2,fp);
+    GamSetPersonCount(personQueueLen);
+    gam_fread((U8 *)&g_PlayerKing,1,2,fp);
     gam_fread((U8 *)&g_YearDate,2,1,fp);
     gam_fread((U8 *)&g_LookEnemy,1,1,fp);
     gam_fread((U8 *)&g_LookMovie,1,1,fp);
@@ -775,7 +754,7 @@ bool GamLoadRcd(U8 idx)
     gam_fread((U8 *)&g_MonthDate,1,1,fp);
     gam_fread((U8 *)&g_CityPos,sizeof(CitySetType),1,fp);
     gam_fread((U8 *)g_Persons,sizeof(PersonType),personQueueLen,fp);
-    gam_fread((U8 *)g_PersonsQueue,1,personQueueLen,fp);
+    gam_fread((U8 *)g_PersonsQueue,sizeof(PersonID),personQueueLen,fp);
     gam_fread((U8 *)g_GoodsQueue,1,goodsQueueLen,fp);
 
     if (customData) free(customData);
@@ -797,12 +776,10 @@ bool GamLoadRcd(U8 idx)
     gam_fread((U8 *)ORDERQUEUE,sizeof(OrderType), orderQueueLen, fp);
     gam_fread((U8 *)g_Cities,sizeof(CityType),CITY_MAX,fp);
 
-    if (version >= 0x83) {
-        int seed = 0;
-        gam_fread((U8 *)&seed,sizeof(seed), 1, fp);
-        if (g_engineConfig.disableSL) {
-            gam_srand(seed);
-        }
+    int seed = 0;
+    gam_fread((U8 *)&seed,sizeof(seed), 1, fp);
+    if (g_engineConfig.disableSL) {
+        gam_srand(seed);
     }
     
     gam_fclose(fp);
@@ -840,18 +817,20 @@ bool GamSaveRcd(U8 idx)
         return false;
     }
     
-    U8 verFlag = 0x83;
-    gam_fwrite((U8 *)&verFlag,1,1,fp);
+    U8 ver = 0x93;
+    U16 pcount = GamGetPersonCount();
+    gam_fwrite((U8 *)&ver,1,1,fp);
     gam_fwrite((U8 *)&g_PIdx,1,1,fp);
-    gam_fwrite((U8 *)&g_PlayerKing,1,1,fp);
+    gam_fwrite((U8 *)&pcount,1,2,fp);
+    gam_fwrite((U8 *)&g_PlayerKing,1,2,fp);
     gam_fwrite((U8 *)&g_YearDate,2,1,fp);
     gam_fwrite((U8 *)&g_LookEnemy,1,1,fp);
     gam_fwrite((U8 *)&g_LookMovie,1,1,fp);
     gam_fwrite((U8 *)&g_MoveSpeed,1,1,fp);
     gam_fwrite((U8 *)&g_MonthDate,1,1,fp);
     gam_fwrite((U8 *)&g_CityPos,sizeof(CitySetType),1,fp);
-    gam_fwrite((U8 *)g_Persons,sizeof(PersonType),PERSON_MAX,fp);
-    gam_fwrite((U8 *)g_PersonsQueue,1,PERSON_MAX,fp);
+    gam_fwrite((U8 *)g_Persons,sizeof(PersonType),pcount,fp);
+    gam_fwrite((U8 *)g_PersonsQueue,sizeof(PersonID),pcount,fp);
     gam_fwrite((U8 *)g_GoodsQueue,1,GOODS_MAX,fp);
     if (customData) {
         gam_fwrite(customData, (U32)strlen((const char*)customData), 1, fp);

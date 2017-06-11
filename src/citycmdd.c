@@ -38,15 +38,15 @@
  ******************************************************************************/
 FAR U8 BattleMake(U8 city)
 {
-    U8 fpptr[10];
-    U8 *pqptr;
-    U8 *str;
-    U8 pcount;
-    U8 pcode = 0;
-    U8 ocity;
-    U8 odis;
-    U8 xs,ys;
-    U8 i;
+    PersonID fpptr[10];
+    PersonID *pqptr;
+    U8 str[512];
+    U32 pcount;
+    PersonID pcode = PID(0);
+    U32 ocity;
+    U32 odis;
+    U32 xs,ys;
+    U32 i;
     OrderType order;
 
     if (!IsMoney(city,BATTLE))
@@ -66,7 +66,7 @@ FAR U8 BattleMake(U8 city)
     xs = g_CityPos.setx;
     ys = g_CityPos.sety;
 
-    pqptr = SHARE_MEM;
+    pqptr = (PersonID*)SHARE_MEM;
 
     pcount = GetCityPersons(city,pqptr);
     if (!pcount)
@@ -79,14 +79,14 @@ FAR U8 BattleMake(U8 city)
     {
         /*gam_clrlcd(WK_SX,WK_SY,WK_EX,WK_EY);*/
         ShowMapClear();
-        if (pcode >= pcount) {
-            pcode = pcount-1;
+        if (pcode.pid >= pcount) {
+            pcode.pid = pcount-1;
         }
         pcode = ShowPersonControl(pqptr,pcount,pcode,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-        if (0xff != pcode)
+        if (0xffff != pcode.pid)
         {
-            fpptr[i] = pqptr[pcode] + 1;
-            DelPerson(city,pqptr[pcode]);
+            fpptr[i] = PID(pqptr[pcode.pid].pid + 1);
+            DelPerson(city,pqptr[pcode.pid]);
         }
         else
         {
@@ -103,7 +103,7 @@ FAR U8 BattleMake(U8 city)
         {
             for (i --;(U8)(i + 1) >= 1;i --)
             {
-                AddPerson(city,fpptr[i] - 1);
+                AddPerson(city,PID(fpptr[i].pid - 1));
             }
         }
         else
@@ -111,22 +111,21 @@ FAR U8 BattleMake(U8 city)
 
             while (1)
             {
-                str = SHARE_MEM;
                 ResLoadToMem(STRING_CONST,STR_OBJ,str);
                 ShowMapClear();
-                ShowGReport(fpptr[0] - 1,str);
+                ShowGReport(PID(fpptr[0].pid - 1),str);
                 ocity = GetCitySet(&g_CityPos);
                 if (0xff == ocity)
                 {
                     for (i --;(U8)(i + 1) >= 1;i --)
                     {
-                        AddPerson(city,fpptr[i] - 1);
+                        AddPerson(city,PID(fpptr[i].pid - 1));
                     }
                     break;
                 }
                 else if (ocity != city)
                 {
-                    if (g_Cities[ocity].Belong == g_Cities[city].Belong)
+                    if (g_Cities[ocity].Belong.pid == g_Cities[city].Belong.pid)
                     {
                         /*提示我方城池*/
                         ShowConstStrMsg(NOTE_STR7);
@@ -146,12 +145,12 @@ FAR U8 BattleMake(U8 city)
                             OrderConsumeMoney(city,BATTLE);
                             order.OrderId = BATTLE;
                             order.City = city;
-                            order.Object = ocity;
+                            order.Object = PID(ocity);
                             order.TimeCount = odis;
                             if (!AddFightOrder(&order,fpptr)) {
                                 for (i --;(U8)(i + 1) >= 1;i --)
                                 {
-                                    AddPerson(city,fpptr[i] - 1);
+                                    AddPerson(city,PID(fpptr[i].pid - 1));
                                 }
                             }
                             break;
@@ -186,28 +185,30 @@ FAR U8 BattleMake(U8 city)
  ******************************************************************************/
 FAR U8 BattleDrv(OrderType *Order)
 {
-    U8 *pqptr;
+    PersonID *pqptr;
     U16 clen;
-    U8 pcount,fcount,t;
-    U8 pcode;
-    U8 i;
-    U8 *ptr,*fpptr,*midx;
-    U8 o,ob,pb;
+    U32 pcount,fcount;
+    PersonID pcode, t;
+    U32 i;
+    U8 *fgtidx,*midx;
+    PersonID *fighters;
+    U32 o;
+    PersonID ob,pb;
+    PersonID *genArray;
 
-    pqptr = SHARE_MEM;
+    pqptr = (PersonID*)SHARE_MEM;
     midx = SHARE_MEM;
-    fpptr = FIGHTERS_IDX;
-    fpptr[Order->Person] = 0;
-    fpptr = FIGHTERS;
-    clen = 10;
-    clen *= Order->Person;
-    fpptr = FIGHTERS;
-    fpptr = &fpptr[clen];
-    ptr = g_FgtParam.GenArray;
-    gam_memset(ptr,0,20);
-    o = Order->Object;
+    fgtidx = FIGHTERS_IDX;
+    fgtidx[Order->Person.pid] = 0;
+    clen = 10*sizeof(PersonID);
+    clen *= Order->Person.pid;
+    fighters = (PersonID*)FIGHTERS;
+    fighters = &fighters[clen];
+    genArray = g_FgtParam.GenArray;
+    gam_memset(genArray,0,20*sizeof(PersonID));
+    o = Order->Object.pid;
     ob = g_Cities[o].Belong;
-    pb = g_Persons[fpptr[0] - 1].Belong;
+    pb = g_Persons[fighters[0].pid - 1].Belong;
 
     ResItemGet(IFACE_CONID,dCityMapId,midx);
     g_FgtParam.MapId = FIGHT_MAP + midx[o];
@@ -216,18 +217,18 @@ FAR U8 BattleDrv(OrderType *Order)
 
     do
     {
-        ShowAttackNote(pb - 1,o);
-        if (ob == (g_PlayerKing + 1))
+        ShowAttackNote(PID(pb.pid - 1),o);
+        if (ob.pid == (g_PlayerKing.pid + 1))
         {
-            if (pb == (g_PlayerKing + 1))
+            if (pb.pid == (g_PlayerKing.pid + 1))
             {
                 /*城池已被我军战领*/
                 for (i = 0;i < 10;i ++)
                 {
-                    if (fpptr[i])
-                        AddPerson(o,fpptr[i] - 1);
+                    if (fighters[i].pid)
+                        AddPerson(o,PID(fighters[i].pid - 1));
                 }
-                ShowFightWinNote(pb - 1);
+                ShowFightWinNote(PID(pb.pid - 1));
                 break;
             }
             /*添加进入战斗代码*/
@@ -240,42 +241,42 @@ FAR U8 BattleDrv(OrderType *Order)
                 pcount = GetCityPersons(o,pqptr);
                 /*gam_clrlcd(WK_SX,WK_SY,WK_EX,WK_EY);*/
                 ShowMapClear();
-                pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-                if (0xff != pcode)
+                pcode = ShowPersonControl(pqptr,pcount,PID0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+                if (0xffff != pcode.pid)
                 {
-                    ptr[i] = pqptr[pcode] + 1;
-                    DelPerson(o,pqptr[pcode]);
+                    genArray[i] = PID(pqptr[pcode.pid].pid + 1);
+                    DelPerson(o,pqptr[pcode.pid]);
                 }
                 else
                 {
                     break;
                 }
             }
-            gam_memcpy(&ptr[10],fpptr,10);
+            gam_memcpy(&genArray[10], fighters, 10*sizeof(PersonID));
             GamFight();
         }
-        else if (pb == (g_PlayerKing + 1))
+        else if (pb.pid == (g_PlayerKing.pid + 1))
         {
-            if (!ob)
+            if (!ob.pid)
             {
                 for (i = 0;i < 10;i ++)
                 {
-                    if (fpptr[i])
-                        AddPerson(o,fpptr[i] - 1);
+                    if (fighters[i].pid)
+                        AddPerson(o,PID(fighters[i].pid - 1));
                 }
                 g_Cities[o].Belong = pb;
-                ShowFightWinNote(pb - 1);
+                ShowFightWinNote(PID(pb.pid - 1));
                 break;
             }
 
-            if (ob == (g_PlayerKing + 1))
+            if (ob.pid == (g_PlayerKing.pid + 1))
             {
                 /*城池已被我军战领*/
                 for (i = 0;i < 10;i ++)
                 {
-                    if (fpptr[i])
-                        AddPerson(o,fpptr[i] - 1);
-                    ShowFightWinNote(pb - 1);
+                    if (fighters[i].pid)
+                        AddPerson(o,PID(fighters[i].pid - 1));
+                    ShowFightWinNote(PID(pb.pid - 1));
                 }
                 break;
             }
@@ -283,7 +284,7 @@ FAR U8 BattleDrv(OrderType *Order)
             g_FgtParam.Mode = FGT_AT;
             g_FgtParam.MProvender = Order->Food;
             g_FgtParam.EProvender = g_Cities[o].Food;
-            gam_memcpy(ptr,fpptr,10);
+            gam_memcpy(genArray, fighters, 10*sizeof(PersonID));
 
             pcount = GetCityPersons(o,pqptr);
             if (pcount)
@@ -294,13 +295,13 @@ FAR U8 BattleDrv(OrderType *Order)
                     for (i = fcount + 1;i < pcount;i ++)
                     {
                         /*添加武将兵力排序*/
-                        if (g_Persons[pqptr[fcount]].Arms < g_Persons[pqptr[i]].Arms)
+                        if (g_Persons[pqptr[fcount].pid].Arms < g_Persons[pqptr[i].pid].Arms)
                         {
                             t = pqptr[i];
                             pqptr[i] = pqptr[fcount];
                             pqptr[fcount] = t;
                         }
-                        if (!g_Persons[pqptr[pcount - 1]].Arms)
+                        if (!g_Persons[pqptr[pcount - 1].pid].Arms)
                             pcount -= 1;
                     }
                 }
@@ -308,7 +309,7 @@ FAR U8 BattleDrv(OrderType *Order)
                 if (!pcount)
                 {
                     /*没有可出征武将*/
-                    ptr[10] = pqptr[0] + 1;
+                    genArray[10] = PID(pqptr[0].pid + 1);
                     DelPerson(o,pqptr[0]);
                 }
                 else
@@ -321,7 +322,7 @@ FAR U8 BattleDrv(OrderType *Order)
                     for (i = 0;i < pcount;i ++)
                     {
                         DelPerson(o,pqptr[i]);
-                        ptr[10 + i] = pqptr[i] + 1;
+                        genArray[10 + i] = PID(pqptr[i].pid + 1);
                     }
                 }
             }
@@ -332,29 +333,29 @@ FAR U8 BattleDrv(OrderType *Order)
         }
         else
         {
-            if (!ob)
+            if (!ob.pid)
             {
                 for (i = 0;i < 10;i ++)
                 {
-                    if (fpptr[i])
-                        AddPerson(o,fpptr[i] - 1);
+                    if (fighters[i].pid)
+                        AddPerson(o,PID(fighters[i].pid - 1));
                 }
                 g_Cities[o].Belong = pb;
-                ShowFightWinNote(pb - 1);
+                ShowFightWinNote(PID(pb.pid - 1));
                 break;
             }
 
-            if (ob == pb)
+            if (ob.pid == pb.pid)
             {
                 for (i = 0;i < 10;i ++)
                 {
-                    if (fpptr[i])
-                        AddPerson(o,fpptr[i] - 1);
+                    if (fighters[i].pid)
+                        AddPerson(o,PID(fighters[i].pid - 1));
                 }
-                ShowFightWinNote(pb - 1);
+                ShowFightWinNote(PID(pb.pid - 1));
                 break;
             }
-            gam_memcpy(ptr,fpptr,10);
+            gam_memcpy(genArray, fighters, 10*sizeof(PersonID));
 
             pcount = GetCityPersons(o,pqptr);
             if (pcount)
@@ -365,13 +366,13 @@ FAR U8 BattleDrv(OrderType *Order)
                     for (i = fcount + 1;i < pcount;i ++)
                     {
                         /*添加武将兵力排序*/
-                        if (g_Persons[pqptr[fcount]].Arms < g_Persons[pqptr[i]].Arms)
+                        if (g_Persons[pqptr[fcount].pid].Arms < g_Persons[pqptr[i].pid].Arms)
                         {
                             t = pqptr[i];
                             pqptr[i] = pqptr[fcount];
                             pqptr[fcount] = t;
                         }
-                        if (!g_Persons[pqptr[pcount - 1]].Arms)
+                        if (!g_Persons[pqptr[pcount - 1].pid].Arms)
                             pcount -= 1;
                     }
                 }
@@ -379,7 +380,7 @@ FAR U8 BattleDrv(OrderType *Order)
                 if (!pcount)
                 {
                     /*没有可出征武将*/
-                    ptr[10] = pqptr[0];
+                    genArray[10] = pqptr[0];
                     DelPerson(o,pqptr[0]);
                 }
                 else
@@ -392,7 +393,7 @@ FAR U8 BattleDrv(OrderType *Order)
                     for (i = 0;i < pcount;i ++)
                     {
                         DelPerson(o,pqptr[i]);
-                        ptr[10 + i] = pqptr[i] + 1;
+                        genArray[10 + i] = PID(pqptr[i].pid + 1);
                     }
                 }
             }
@@ -401,7 +402,7 @@ FAR U8 BattleDrv(OrderType *Order)
             g_FgtParam.MProvender = Order->Food;
             g_FgtParam.EProvender = g_Cities[o].Food;
             /*ShowAttackMsg(pb - 1,o);*/
-            ShowFightNote(pb - 1,ob - 1);
+            ShowFightNote(PID(pb.pid - 1),PID(ob.pid - 1));
 
             GamFight();
 
@@ -428,61 +429,59 @@ FAR U8 BattleDrv(OrderType *Order)
  ******************************************************************************/
 FAR U8 FightResultDeal(U8 city,U8 result)
 {
-    U8 *str,*astr;
-    U8 cking;
-    U8 i;
-    U8 *ptr;
-    U8 *pqptr;
+    U8 str[512], astr[512];
+    PersonID cking, ii;
+    U32 i;
+    PersonID *ptr;
+    PersonID *pqptr;
     CityType *cptr;
 
     ptr = g_FgtParam.GenArray;
-    pqptr = SHARE_MEM;
-    cking = 0xff;
+    pqptr = (PersonID*)SHARE_MEM;
+    cking = PID(0xffff);
     cavps = 0;
     switch (result)
     {
         case FGT_WON:
             for (i = 0;i < 10;i ++)
             {
-                if (ptr[i])
+                if (ptr[i].pid)
                 {
-                    AddPerson(city,ptr[i] - 1);
+                    AddPerson(city,PID(ptr[i].pid - 1));
                 }
             }
             /*if (FGT_AUTO != g_FgtParam.Mode)*/
-            ShowFightWinNote(g_Persons[ptr[0] - 1].Belong - 1);
+            ShowFightWinNote(PID(g_Persons[ptr[0].pid - 1].Belong.pid - 1));
             if (FGT_AT == g_FgtParam.Mode || FGT_AUTO == g_FgtParam.Mode)
             {
-                cking = BeOccupied(ptr[0] - 1,city);
+                cking = BeOccupied(PID(ptr[0].pid - 1),city);
 
             }
-            i = TheLoserDeal(city,&ptr[10]);
-            if (0xff != i)
-                cking = i;
+            ii = TheLoserDeal(city,&ptr[10]);
+            if (0xffff != ii.pid)
+                cking = ii;
             break;
         case FGT_LOSE:
             for (i = 10;i < 20;i ++)
             {
-                if (ptr[i])
+                if (ptr[i].pid)
                 {
-                    AddPerson(city,ptr[i] - 1);
+                    AddPerson(city,PID(ptr[i].pid - 1));
                 }
             }
             if (FGT_DF == g_FgtParam.Mode)
             {
-                cking = BeOccupied(ptr[10] - 1,city);
+                cking = BeOccupied(PID(ptr[10].pid - 1),city);
             }
-            i = TheLoserDeal(city,ptr);
-            if (0xff != i)
-                cking = i;
+            ii = TheLoserDeal(city,ptr);
+            if (0xffff != ii.pid)
+                cking = ii;
 
             if (FGT_AUTO != g_FgtParam.Mode)
             {
                 ShowFightLossNote();
                 if (cavps)
                 {
-                    str = SHARE_MEM;
-                    astr = SHARE_MEM + 400;
                     if (cavps > 1)
                     {
                         cavps = 2;
@@ -495,7 +494,7 @@ FAR U8 FightResultDeal(U8 city,U8 result)
             }
             else
             {
-                ShowFightWinNote(g_Persons[ptr[10] - 1].Belong - 1);
+                ShowFightWinNote(PID(g_Persons[ptr[10].pid - 1].Belong.pid - 1));
             }
 
             break;
@@ -506,7 +505,7 @@ FAR U8 FightResultDeal(U8 city,U8 result)
     cptr->Money = cptr->Money - cptr->Money / 20;
     cptr->PeopleDevotion = cptr->PeopleDevotion - cptr->PeopleDevotion / 10;
 
-    if (0xff != cking)
+    if (0xffff != cking.pid)
     {
         /*添加另立新君代码*/
         KingOverDeal(cking);
@@ -534,29 +533,27 @@ FAR U8 FightResultDeal(U8 city,U8 result)
  *		----		----			-----------
  *		陈泽伟		2005-8-19 15:43	基本功能完成
  ******************************************************************************/
-U8 TheLoserDeal(U8 city,U8 *lqueue)
+PersonID TheLoserDeal(U8 city,PersonID *lqueue)
 {
-    U8 *str,*astr;
+    SBUF str,astr;
     U8 i;
     U8 *gptr;
-    U8 cking;
+    PersonID cking;
+    PersonID p;
     U8 rnd;
-    U8 p;
     PersonType *pptr;
 
-    cking = 0xff;
-    str = SHARE_MEM + 3000;
-    astr = SHARE_MEM + 3400;
+    cking = PID(0xffff);
     for (i = 0;i < 10;i ++)
     {
-        if (lqueue[i])
+        if (lqueue[i].pid)
         {
-            p = lqueue[i] - 1;
-            pptr = &g_Persons[p];
+            p = PID(lqueue[i].pid - 1);
+            pptr = &g_Persons[p.pid];
             rnd = gam_rand() % 100;
             if (rnd > pptr->IQ)
             {
-                if (pptr->Belong == lqueue[i])
+                if (pptr->Belong.pid == lqueue[i].pid)
                     cking = p;
                 HoldCaptive(p,city);
             }
@@ -565,7 +562,7 @@ U8 TheLoserDeal(U8 city,U8 *lqueue)
                 /*添加逃跑代码*/
                 if (!LostEscape(p,city))
                 {
-                    if (pptr->Belong == lqueue[i])
+                    if (pptr->Belong.pid == lqueue[i].pid)
                         cking = p;
 
                     if (rnd)
@@ -612,13 +609,13 @@ U8 TheLoserDeal(U8 city,U8 *lqueue)
  *		----		----			-----------
  *		陈泽伟		2005-7-27 9:32	基本功能完成
  ******************************************************************************/
-void HoldCaptive(U8 person,U8 city)
+void HoldCaptive(PersonID person,U8 city)
 {
     PersonType *pptr;
 
-    pptr = &g_Persons[person];
+    pptr = &g_Persons[person.pid];
     pptr->OldBelong = pptr->Belong;
-    pptr->Belong = 0xff;
+    pptr->Belong = PID(0xffff);
     pptr->Arms = 0;
     cavpdb = person;
     cavps += 1;
@@ -638,14 +635,14 @@ void HoldCaptive(U8 person,U8 city)
  *		----		----			-----------
  *		陈泽伟		2005-7-27 9:47	基本功能完成
  ******************************************************************************/
-U8 LostEscape(U8 person,U8 city)
+U8 LostEscape(PersonID person,U8 city)
 {
     U8 rnd;
     U8 pcount;
     U8 *cqptr;
 
     cqptr = SHARE_MEM;
-    pcount = GetKingCitys(g_Persons[person].Belong - 1,cqptr);
+    pcount = GetKingCitys(PID(g_Persons[person.pid].Belong.pid - 1),cqptr);
     if (pcount)
     {
         rnd = gam_rand() % pcount;
@@ -668,33 +665,33 @@ U8 LostEscape(U8 person,U8 city)
  *		----		----			-----------
  *		陈泽伟		2005-7-27 9:52	基本功能完成
  ******************************************************************************/
-U8 BeOccupied(U8 person,U8 city)
+PersonID BeOccupied(PersonID person,U8 city)
 {
-    U8 i,pcount,rev;
-    U8 p;
-    U8 *pqptr;
+    U32 i,pcount;
+    PersonID p, rev;
+    PersonID *pqptr;
     PersonType *pptr;
 
-    pqptr = SHARE_MEM;
+    pqptr = (PersonID*)SHARE_MEM;
     pcount = GetCityPersons(city,pqptr);
-    g_Cities[city].Belong = g_Persons[person].Belong;
-    g_Cities[city].SatrapId = person + 1;
-    rev = 0xff;
+    g_Cities[city].Belong = g_Persons[person.pid].Belong;
+    g_Cities[city].SatrapId = PID(person.pid + 1);
+    rev = PID(0xffff);
     for (i = 0;i < pcount;i ++)
     {
         p = pqptr[i];
-        pptr = &g_Persons[p];
+        pptr = &g_Persons[p.pid];
 
-        if (pptr->Belong == (p + 1))
+        if (pptr->Belong.pid == (p.pid + 1))
         {
             rev = p;
             cavpdb = p;
             cavps += 1;
-            pptr->Belong = 0xff;
+            pptr->Belong.pid = 0xffff;
         }
         else
         {
-            pptr->Belong = 0;
+            pptr->Belong = PID0;
         }
         /*pptr->Id = pptr->Belong;*/
         pptr->Arms = 0;
@@ -715,49 +712,51 @@ U8 BeOccupied(U8 person,U8 city)
  *		----		----			-----------
  *		陈泽伟		2005/5/18 11:26AM	基本功能完成
  ******************************************************************************/
-FAR void KingOverDeal(U8 king)
+FAR void KingOverDeal(PersonID king)
 {
-    U8 i;
-    U8 *cqptr,*pqptr;
-    U8 ccount,pcount,pcode;
+    U32 i;
+    U8 *cqptr;
+    PersonID *pqptr;
+    PersonID pcode;
+    U32 ccount,pcount;
 
     KingDeadNote(king);
     cqptr = SHARE_MEM;
-    pqptr = cqptr + CITY_MAX;
+    pqptr = (PersonID*)(cqptr + CITY_MAX);
     ccount = GetKingCitys(king,cqptr);
     if (ccount)
     {
         pcount = GetKingPersons(king,pqptr);
         if (pcount)
         {
-            if (king == g_PlayerKing)
+            if (king.pid == g_PlayerKing.pid)
             {
                 /*提示君主遭劫，拥立新君*/
                 ShowConstStrMsg(STR_MAKENEWKING);
                 do
                 {
-                    pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-                } while (0xff == pcode);
-                g_PlayerKing = pqptr[pcode];
+                    pcode = ShowPersonControl(pqptr,pcount,PID0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+                } while (0xffff == pcode.pid);
+                g_PlayerKing = pqptr[pcode.pid];
             }
             else
             {
-                pcode = 0;
+                pcode = PID0;
                 for (i = 1;i < pcount;i ++)
                 {
-                    if (g_Persons[pqptr[pcode]].IQ < g_Persons[pqptr[i]].IQ)
-                        pcode = i;
+                    if (g_Persons[pqptr[pcode.pid].pid].IQ < g_Persons[pqptr[i].pid].IQ)
+                        pcode = PID(i);
                 }
             }
-            NewKingNote(pqptr[pcode]);
-            g_Persons[pqptr[pcode]].Devotion = 100;
+            NewKingNote(pqptr[pcode.pid]);
+            g_Persons[pqptr[pcode.pid].pid].Devotion = 100;
             for (i = 0;i < ccount;i ++)
             {
-                g_Cities[cqptr[i]].Belong = pqptr[pcode] + 1;
+                g_Cities[cqptr[i]].Belong.pid = pqptr[pcode.pid].pid + 1;
             }
             for (i = 0;i < pcount;i ++)
             {
-                g_Persons[pqptr[i]].Belong = pqptr[pcode] + 1;
+                g_Persons[pqptr[i].pid].Belong.pid = pqptr[pcode.pid].pid + 1;
             }
         }
         else
@@ -766,7 +765,7 @@ FAR void KingOverDeal(U8 king)
             WeightOverNote(king);
             for (i = 0;i < ccount;i ++)
             {
-                g_Cities[cqptr[i]].Belong = 0;
+                g_Cities[cqptr[i]].Belong = PID0;
             }
         }
     }
@@ -790,13 +789,10 @@ FAR void KingOverDeal(U8 king)
  *		----		----			-----------
  *		陈泽伟		2005/5/18 11:26AM	基本功能完成
  ******************************************************************************/
-void KingDeadNote(U8 king)
+void KingDeadNote(PersonID king)
 {
-    U8 *str,*sbuf;
+    SBUF str,sbuf;
 
-
-    str = SHARE_MEM + 3000;
-    sbuf = SHARE_MEM + 3400;
     ResLoadToMem(STRING_CONST,STR_KING,str);
     GetPersonName(king,sbuf);
     gam_strcat(str,sbuf);
@@ -818,12 +814,10 @@ void KingDeadNote(U8 king)
  *		----		----			-----------
  *		陈泽伟		2005/5/18 11:26AM	基本功能完成
  ******************************************************************************/
-FAR void NewKingNote(U8 king)
+FAR void NewKingNote(PersonID king)
 {
-    U8 *str,*sbuf;
+    SBUF str,sbuf;
     
-    str = SHARE_MEM + 3000;
-    sbuf = SHARE_MEM + 3400;
     GetPersonName(king,str);
     ResLoadToMem(STRING_CONST,STR_BEKING,sbuf);
     gam_strcat(str,sbuf);
@@ -843,12 +837,10 @@ FAR void NewKingNote(U8 king)
  *		----		----			-----------
  *		陈泽伟		2005/5/18 11:26AM	基本功能完成
  ******************************************************************************/
-FAR void BeNewKingNote(U8 king)
+FAR void BeNewKingNote(PersonID king)
 {
-    U8 *str,*sbuf;
+    SBUF str,sbuf;
     
-    str = SHARE_MEM + 3000;
-    sbuf = SHARE_MEM + 3400;
     GetPersonName(king,str);
     ResLoadToMem(STRING_CONST,STR_BEKINGED,sbuf);
     gam_strcat(str,sbuf);
@@ -868,12 +860,10 @@ FAR void BeNewKingNote(U8 king)
  *		----		----			-----------
  *		陈泽伟		2005/5/18 11:26AM	基本功能完成
  ******************************************************************************/
-FAR void WeightOverNote(U8 king)
+FAR void WeightOverNote(PersonID king)
 {
-    U8 *str,*sbuf;
+    SBUF str,sbuf;
     
-    str = SHARE_MEM + 3000;
-    sbuf = SHARE_MEM + 3400;
     GetPersonName(king,str);
     ResLoadToMem(STRING_CONST,STR_OVER,sbuf);
     gam_strcat(str,sbuf);
@@ -893,11 +883,9 @@ FAR void WeightOverNote(U8 king)
  *		----		----			-----------
  *		陈泽伟		2005/5/18 11:26AM	基本功能完成
  ******************************************************************************/
-FAR void WonPersonNoet(U8 person)
+FAR void WonPersonNoet(PersonID person)
 {
-    U8 *str;
-    
-    str = SHARE_MEM + 3000;
+    SBUF str;
     ResLoadToMem(STRING_CONST,STR_WONP,str);
     ShowGReport(person,str);
 }
@@ -1048,9 +1036,9 @@ FAR U8 AddOrderEnd(OrderType *Order)
  *		----		----			-----------
  *		陈泽伟		2005-6-4 8:51	基本功能完成
  ******************************************************************************/
-FAR U8 AddFightOrder(OrderType *Order,U8 *Fighters)
+FAR U8 AddFightOrder(OrderType *Order,PersonID *Fighters)
 {
-    U8 i;
+    U32 i;
     U8 *fiptr,*fptr;
     U16 clen;
     
@@ -1059,13 +1047,13 @@ FAR U8 AddFightOrder(OrderType *Order,U8 *Fighters)
     {
         if (!fiptr[i])
         {
-            Order->Person = i;
+            Order->Person.pid = i;
             if (AddOrderEnd(Order)) {
                 fiptr[i] = 1;
                 fptr = FIGHTERS;
-                clen = 10;
+                clen = 10*sizeof(PersonID);
                 clen *= i;
-                gam_memcpy(&fptr[clen],Fighters,10);
+                gam_memcpy(&fptr[clen],Fighters,10*sizeof(PersonID));
                 return(1);
             }
         }

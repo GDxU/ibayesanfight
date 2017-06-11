@@ -72,6 +72,8 @@ extern U8 g_asyncActionStringParam[1024*10];
 #define DEFADD_GBKARR(name, n) ObjectDef_addFieldGBKArray(def, #name, name, n);
 #define DEFADDF(name, t) ObjectDef_addFieldF(def, #name, ValueType##t, &name, 0, 0)
 
+#define DEFADD_U16ARR(name, n) ObjectDef_addFieldArray(def, #name, ValueTypeU16, name, n);
+
 #define HOOK_showSkill "showSkill"
 
 #endif /* bind_objects_h */

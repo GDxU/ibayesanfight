@@ -33,7 +33,7 @@ U8 FgtGetExp(U16 hurt);
 U8 FgtDrvWeiG(U8 aIdx);
 void FgtShowSNum(U8 sym,U8 idx,U16 num);
 void FgtGetMapDat(U8 x,U8 y);
-U8 TransIdxToGen1(U8 idx);
+PersonID TransIdxToGen1(U8 idx);
 U8 FgtAtkAction(U8 aIdx);
 U8 FgtJNAction(FGTCMD *pcmd);
 U8 FgtLoadToMem2(U8 idx,U8 *buf);
@@ -115,6 +115,8 @@ FAR void FgtShowHlp()
     nidx = FgtGetGenIdx(g_FoucsX,g_FoucsY);
     if(0xFF != nidx)
     {
+        PersonID p;
+
         pos = &g_GenPos[nidx];
         /* 显示将领信息 */
         x = HLP_EX - 52;
@@ -129,8 +131,8 @@ FAR void FgtShowHlp()
         small.ex = x + 50;
         small.ey = y + 42;
         BuiltAtkAttr(0,nidx);
-        idx = TransIdxToGen1(nidx);
-        GetPersonName(idx,tbuf);
+        p = TransIdxToGen1(nidx);
+        GetPersonName(p,tbuf);
         PlcMidShowStr(x + 26,y + 28,tbuf);
         pic = ResLoadToCon(GEN_HEADPIC1 + g_PIdx,1,g_CBnkPtr);
         GamPicShowExS(x + 13,y + 2,24,24,idx,pic);
@@ -277,8 +279,7 @@ static U8 _CommonJNAction(U8 param, U8 aim, U8 sIdx, U8 aIdx, U8 originIdx) {
     {
         if(aim & 1)
         {
-            bidx = TransIdxToGen1(aIdx);
-            up = PlcArmsMax(bidx);
+            up = PlcArmsMax(TransIdxToGen1(aIdx));
             bidx = dFgtArmsA;
             arms = CountOverAdd(g_GenAtt[1].arms,arms,up);
         }
@@ -299,8 +300,7 @@ static U8 _CommonJNAction(U8 param, U8 aim, U8 sIdx, U8 aIdx, U8 originIdx) {
     }
     if(state != STATE_ZC && state != STATE_SW)
     {
-        up = TransIdxToGen1(aIdx);
-        GetPersonName(up,buf);
+        GetPersonName(TransIdxToGen1(aIdx),buf);
         up = gam_strlen(buf);
         ptr = buf + up;
         FgtLoadToMem2(dFgtInSta,ptr);
@@ -413,7 +413,7 @@ U8 FgtJNAction(FGTCMD *pcmd)
             U8 skidx = param;
             if (i == aIdx)
                 continue;
-            if (g_FgtParam.GenArray[i] == 0)
+            if (g_FgtParam.GenArray[i].pid == 0)
                 continue;
 
             if (!(aim & 4)) {
@@ -640,9 +640,10 @@ FAR U8 FgtGenPIdx(U8 i)
 {
     U8	idx,state;
     JLPOS	*pos;
+    PersonID p;
 
     pos = &g_GenPos[i];
-    idx = TransIdxToGen1(i);
+    p = TransIdxToGen1(i);
     state = pos->state;
 
     if(state == STATE_SZ || state == STATE_HL)
@@ -651,7 +652,7 @@ FAR U8 FgtGenPIdx(U8 i)
         idx = 12;
     else
     {
-        idx = GetArmType(&g_Persons[idx]);
+        idx = GetArmType(&g_Persons[p.pid]);
         idx <<= 1;
     }
     /* 敌人的将领面向左 */
@@ -850,9 +851,10 @@ void FgtResumeMp(U8 idx)
 {
     U8	maxmp;
     PersonType *per;
+    PersonID p;
 
-    maxmp = TransIdxToGen1(idx);
-    per = &g_Persons[maxmp];
+    p = TransIdxToGen1(idx);
+    per = &g_Persons[p.pid];
     maxmp = (U8)(((U16)(per->IQ) * 80 / 100 + (PlcExtract(per->Force) >> 1) + per->Level) * per->Thew / 100);
     if(g_GenPos[idx].mp < maxmp)
         g_GenPos[idx].mp += 1;
@@ -922,9 +924,9 @@ FAR U8 FgtCheckIdx(void)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-U8 TransIdxToGen1(U8 idx)
+PersonID TransIdxToGen1(U8 idx)
 {
-    return (U8)(g_FgtParam.GenArray[idx] - 1);
+    return PID(g_FgtParam.GenArray[idx].pid - 1);
 }
 /***********************************************************************
  * 说明:     资源管理函数的本体调用

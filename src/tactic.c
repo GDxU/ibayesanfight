@@ -80,9 +80,9 @@ U8 PlayerTactic(void)
         }
         else
         {
-            if (g_Cities[cset].Belong != (g_PlayerKing + 1))
+            if (g_Cities[cset].Belong.pid != (g_PlayerKing.pid + 1))
             {
-                if (g_Cities[cset].Belong)
+                if (g_Cities[cset].Belong.pid)
                 {
                     ShowConstStrMsg(NOTE_STR3);
                 }
@@ -129,21 +129,21 @@ U8 PlayerTactic(void)
 
 void ComputerTactic(void)
 {
-    U8 i;
-    U8 rnd;
+    U32 i;
+    U32 rnd;
     U8 TacticOddsIH[6],TacticOddsD[6];
-    U8 b;
     CityType *cptr;
+    PersonID b;
 
     ResItemGetN(IFACE_CONID,KingTacticOddsIH,TacticOddsIH, sizeof(TacticOddsIH));
     ResItemGetN(IFACE_CONID,KingTacticOddsD,TacticOddsD, sizeof(TacticOddsD));
 
     if (g_engineConfig.aiLevelUpSpeed) {
-        for (i = 0; i < PERSON_MAX; i++)
+        for (i = 0; i < PERSON_COUNT; i++)
         {
             rnd = gam_rand() % 100;
             if (rnd < g_engineConfig.aiLevelUpSpeed) {
-                if (g_Persons[i].Belong != g_PlayerKing+1)
+                if (g_Persons[i].Belong.pid != g_PlayerKing.pid+1)
                 {
                     LevelUp(&g_Persons[i]);
                 }
@@ -156,9 +156,9 @@ void ComputerTactic(void)
         cptr = &g_Cities[i];
         cptr->State = STATE_NORMAL;
         b = cptr->Belong;
-        if (!(b))
+        if (!(b.pid))
             continue;
-        if (b == (g_PlayerKing + 1))
+        if (b.pid == (g_PlayerKing.pid + 1))
             continue;
 
         cptr->AvoidCalamity += 1;
@@ -171,12 +171,12 @@ void ComputerTactic(void)
             cptr->Money /= 2;
         /*添加电脑策略代码*/
         rnd = gam_rand() % 100;
-        if (TacticOddsIH[g_Persons[b - 1].Character] > rnd)			/*执行内政、协调策略*/
+        if (TacticOddsIH[g_Persons[b.pid - 1].Character] > rnd)			/*执行内政、协调策略*/
         {
             ComputerTacticInterior(i);
             ComputerTacticHarmonize(i);
         }
-        else if (TacticOddsD[g_Persons[b - 1].Character] > rnd)		/*执行外交策略*/
+        else if (TacticOddsD[g_Persons[b.pid - 1].Character] > rnd)		/*执行外交策略*/
         {
             ComputerTacticDiplomatism(i);
         }
@@ -202,9 +202,9 @@ void ComputerTactic(void)
  ******************************************************************************/
 void ComputerTacticInterior(U8 city)
 {
-    U8 *pqptr;
-    U8 i,rnd;
-    U8 pcount;
+    PersonID *pqptr;
+    U32 i,rnd;
+    U32 pcount;
     OrderType order;
     U16 *c,cl,ca;
     U16 *f,fl,fa;
@@ -222,7 +222,7 @@ void ComputerTacticInterior(U8 city)
     PeopleDevotion = &cptr->PeopleDevotion;
     Population = &cptr->Population;
 
-    pqptr = SHARE_MEM;
+    pqptr = (PersonID*)SHARE_MEM;
     pcount = GetCityPersons(city,pqptr);
     for (i = 0;i < pcount;i ++)
     {
@@ -267,7 +267,7 @@ void ComputerTacticInterior(U8 city)
 
         order.Person = pqptr[i];
         order.City = city;
-        order.Object = city;
+        order.Object = PID(city);
         order.TimeCount = 0;
         if (AddOrderHead(&order)) {
             DelPerson(city,pqptr[i]);
@@ -290,13 +290,13 @@ void ComputerTacticInterior(U8 city)
  ******************************************************************************/
 void ComputerTacticDiplomatism(U8 city)
 {
-    U8 *pqptr,*eqptr;
-    U8 i,rnd;
-    U8 pcount,ecount;
+    PersonID *pqptr,*eqptr;
+    U32 i,rnd;
+    U32 pcount,ecount;
     OrderType order;
 
-    pqptr = SHARE_MEM;
-    eqptr = SHARE_MEM + PERSON_MAX;
+    pqptr = (PersonID*)SHARE_MEM;
+    eqptr = pqptr + PERSON_COUNT;
     pcount = GetCityPersons(city,pqptr);
     for (i = 0;i < pcount;i ++)
     {
@@ -313,19 +313,9 @@ void ComputerTacticDiplomatism(U8 city)
                 if (ecount)
                 {
                     rnd = gam_rand() % ecount;
-                    if (g_Persons[eqptr[rnd]].OldBelong != g_PlayerKing + 1)
-                    {
-                        g_Persons[eqptr[rnd]].Belong = g_Cities[city].Belong;
-                        continue;
-                    }
-                    DelPerson(city,eqptr[rnd]);
+                    g_Persons[eqptr[rnd].pid].Belong = g_Cities[city].Belong;
                 }
-                else
-                {
-                    continue;
-                }
-                order.OrderId = NOP;
-                break;
+                continue;
             case 1:		/*处斩*/
                 /*ecount = GetCityCaptives(city,eqptr);*/
                 if (ecount)
@@ -348,7 +338,7 @@ void ComputerTacticDiplomatism(U8 city)
                 continue;
                 break;
             case 3:		/*离间*/
-                ecount = GetEnemyPersons(city,eqptr);
+                ecount = GetEnemyPersons(g_Cities[city].Belong,eqptr);
                 if (ecount)
                 {
                     rnd = gam_rand() % ecount;
@@ -361,7 +351,7 @@ void ComputerTacticDiplomatism(U8 city)
                 order.OrderId = ALIENATE;
                 break;
             case 4:		/*招揽*/
-                ecount = GetEnemyPersons(city,eqptr);
+                ecount = GetEnemyPersons(g_Cities[city].Belong,eqptr);
                 if (ecount)
                 {
                     rnd = gam_rand() % ecount;
@@ -374,7 +364,7 @@ void ComputerTacticDiplomatism(U8 city)
                 order.OrderId = CANVASS;
                 break;
             case 5:		/*策反*/
-                ecount = GetEnemySatraps(city,eqptr);
+                ecount = GetEnemySatraps(g_Cities[city].Belong,eqptr);
                 if (ecount)
                 {
                     rnd = gam_rand() % ecount;
@@ -387,7 +377,7 @@ void ComputerTacticDiplomatism(U8 city)
                 order.OrderId = COUNTERESPIONAGE;
                 break;
             case 6:		/*劝降*/
-                ecount = GetEnemyKing(city,eqptr);
+                ecount = GetEnemyKing(g_Cities[city].Belong,eqptr);
                 if (ecount)
                 {
                     rnd = gam_rand() % ecount;
@@ -428,16 +418,17 @@ void ComputerTacticDiplomatism(U8 city)
  ******************************************************************************/
 void ComputerTacticHarmonize(U8 city)
 {
-    U8 *pqptr,*cqptr,*eqptr;
-    U8 i,j,c,rnd;
-    U8 pcount,ccount,ecount;
+    U8 *cqptr;
+    PersonID *pqptr,*eqptr;
+    U32 i,j,c,rnd;
+    U32 pcount,ccount,ecount;
     OrderType order;
     CityType *cptr;
 
     cptr = &g_Cities[city];
-    pqptr = SHARE_MEM;
-    cqptr = SHARE_MEM + PERSON_MAX;
-    eqptr = SHARE_MEM + PERSON_MAX + CITY_MAX;
+    pqptr = (PersonID*)SHARE_MEM;
+    eqptr = pqptr + PERSON_COUNT;
+    cqptr = (U8*)(eqptr + PERSON_COUNT);
     pcount = GetCityPersons(city,pqptr);
     for (i = 0;i < pcount;i ++)
     {
@@ -470,14 +461,14 @@ void ComputerTacticHarmonize(U8 city)
                 {
                     continue;
                 }
-                ccount = GetKingCitys(cptr->Belong - 1,cqptr);
+                ccount = GetKingCitys(PID(cptr->Belong.pid - 1),cqptr);
                 if (ccount < 2)
                 {
                     continue;
                 }
                 for (c = 0,j = 0;j < ccount;j ++)
                 {
-                    ecount = GetRoundEnemyCity(cqptr[j],eqptr);
+                    ecount = GetRoundEnemyCity(cqptr[j], NULL);
                     if (ecount)
                     {
                         c = j;
@@ -488,7 +479,7 @@ void ComputerTacticHarmonize(U8 city)
                         }
                     }
                 }
-                order.Object = cqptr[c];
+                order.Object = PID(cqptr[c]);
                 order.OrderId = MOVE;
                 break;
             case 6:
@@ -520,20 +511,21 @@ void ComputerTacticHarmonize(U8 city)
  ******************************************************************************/
 void ComputerTacticArmament(U8 city)
 {
-    U8 *pqptr,*cqptr,fp[10];
-    U8 i,j,rnd;
-    U8 pcount,fpcount,fcount,t;
+    U8 *cqptr;
+    PersonID *pqptr, fp[10];
+    U32 i,j,rnd;
+    U32 pcount,fpcount,fcount;
     OrderType order;
     PersonType *pptr;
 
-    pqptr = SHARE_MEM;
-    cqptr = SHARE_MEM + PERSON_MAX;
+    pqptr = (PersonID*)SHARE_MEM;
+    cqptr = (U8*)(pqptr + PERSON_COUNT);
     pcount = GetCityPersons(city,pqptr);
     if (!pcount)
         return;
     
-    U8 pind = pqptr[gam_rand() % pcount];
-    pptr = &g_Persons[pind];
+    PersonID pind = pqptr[gam_rand() % pcount];
+    pptr = &g_Persons[pind.pid];
 
     if (g_engineConfig.aiLevelUpSpeed == 0 && !(g_MonthDate % 3))
     {
@@ -575,6 +567,9 @@ void ComputerTacticArmament(U8 city)
                 continue;
                 break;
             case 7:		/*出征*/
+            {
+                PersonID* pqptr;
+
                 if (i >= 1)
                     continue;
 
@@ -588,28 +583,30 @@ void ComputerTacticArmament(U8 city)
                     continue;
                 /*rnd = gam_rand() % fcount;
                  order.Object = cqptr[rnd];*/
-                order.Object = GetWeekCity(fcount,cqptr);
-                fpcount = GetCityPersons(city,cqptr);
+                order.Object = PID(GetWeekCity(fcount,cqptr));
+                fpcount = GetCityPersons(city,pqptr);
                 if (fpcount)
                 {
+                    PersonID t;
+
                     fcount = 0;
                     for (fcount = 0;fcount < fpcount - 1;fcount ++)
                     {
                         for (j = fcount + 1;j < fpcount;j ++)
                         {
                             /*添加武将兵力排序*/
-                            if (g_Persons[cqptr[fcount]].Arms < g_Persons[cqptr[j]].Arms)
+                            if (g_Persons[pqptr[fcount].pid].Arms < g_Persons[pqptr[j].pid].Arms)
                             {
-                                t = cqptr[j];
-                                cqptr[j] = cqptr[fcount];
-                                cqptr[fcount] = t;
+                                t = pqptr[j];
+                                pqptr[j] = pqptr[fcount];
+                                pqptr[fcount] = t;
                             }
-                            if (!g_Persons[cqptr[pcount - 1]].Arms)
+                            if (!g_Persons[pqptr[pcount - 1].pid].Arms)
                                 fpcount -= 1;
                         }
                     }
 
-                    if (g_Persons[cqptr[0]].Arms < 1000)
+                    if (g_Persons[pqptr[0].pid].Arms < 1000)
                     {
                         continue;
                     }
@@ -622,7 +619,7 @@ void ComputerTacticArmament(U8 city)
                     {
                         /*添加出征命今生成代码*/
                         order.OrderId = BATTLE;
-                        gam_memset(fp,0,10);
+                        gam_memset(fp,0,10*sizeof(PersonID));
                         fpcount -= 1;
                         if (fpcount > 10)
                         {
@@ -630,7 +627,7 @@ void ComputerTacticArmament(U8 city)
                         }
                         for (j = 0;j < fpcount;j ++)
                         {
-                            fp[j] = cqptr[j] + 1;
+                            fp[j] = PID(pqptr[j].pid + 1);
                         }
                         /*order.Person = fpcount;*/
                         order.City = city;
@@ -639,7 +636,7 @@ void ComputerTacticArmament(U8 city)
                         if (AddFightOrder(&order,fp)) {
                             for (j = 0;j < fpcount;j ++)
                             {
-                                DelPerson(city,cqptr[j]);
+                                DelPerson(city,pqptr[j]);
                             }
                         }
                         return;
@@ -647,6 +644,7 @@ void ComputerTacticArmament(U8 city)
                 }
                 continue;
                 break;
+            }
             case 8:
                 continue;
                 break;
@@ -781,9 +779,8 @@ FAR U8 GameDevDrv(void)
  ******************************************************************************/
 U8 IsWin(void)
 {
-    U8 *ptr;
-
-    ptr = SHARE_MEM;
+    PersonID *ptr;
+    ptr = (PersonID*)SHARE_MEM;
     if (GetEnemyKing(g_PlayerKing,ptr))
         return(0);
     else
@@ -830,21 +827,21 @@ U8 IsLoss(void)
  ******************************************************************************/
 void SetCitySatrap(void)
 {
-    U8 c;
-    U8 i,pq,ps;
-    U8 k,sp;
+    U32 c;
+    U32 i,pq,ps;
+    U32 k,sp;
 
     for (c = 0;c < CITY_MAX;c ++)
     {
-        k = g_Cities[c].Belong;
+        k = g_Cities[c].Belong.pid;
         if (k)
         {
             sp = 0;
-            pq = g_Cities[c].PersonQueue;
-            for (i = 0;i < g_Cities[c].Persons;i ++)
+            pq = g_Cities[c].PersonQueue.pid;
+            for (i = 0;i < g_Cities[c].Persons.pid;i ++)
             {
-                ps = g_PersonsQueue[pq + i];
-                if (g_Persons[ps].Belong == k)
+                ps = g_PersonsQueue[pq + i].pid;
+                if (g_Persons[ps].Belong.pid == k)
                 {
                     if (k == ps + 1)
                     {
@@ -863,10 +860,10 @@ void SetCitySatrap(void)
                     }
                 }
             }
-            g_Cities[c].SatrapId = sp;
+            g_Cities[c].SatrapId.pid = sp;
         }
         else
-            g_Cities[c].SatrapId = 0;
+            g_Cities[c].SatrapId = PID0;
     }
 }
 
@@ -884,7 +881,7 @@ void SetCitySatrap(void)
  *		----		----			-----------
  *		陈泽伟		2005-7-28 19:27	基本功能完成
  ******************************************************************************/
-FAR U8 GetPeriodKings(U8 period,U8 *kings)
+FAR U32 GetPeriodKings(U8 period,PersonID *kings)
 {
     LoadPeriod(period);
     return(GetAllKing(kings));
@@ -903,27 +900,27 @@ FAR U8 GetPeriodKings(U8 period,U8 *kings)
  *		----		----			-----------
  *		陈泽伟		2005-7-28 19:28	基本功能完成
  ******************************************************************************/
-U8 GetAllKing(U8 *kings)
+U32 GetAllKing(PersonID *kings)
 {
     U8 c,i,count;
-    U8 b;
+    U32 b;
 
     count = 0;
     for (c = 0;c < CITY_MAX;c ++)
     {
-        b = g_Cities[c].Belong;
+        b = g_Cities[c].Belong.pid;
         if (b)
         {
             for (i = 0;i < count;i ++)
             {
-                if (kings[i] == b - 1)
+                if (kings[i].pid == b - 1)
                     break;
             }
             if (i < count)
             {
                 continue;
             }
-            kings[count] = b - 1;
+            kings[count].pid = b - 1;
             count += 1;
         }
     }
@@ -1037,7 +1034,7 @@ U8* loadPersons(PersonType*person, U8*raw, U16 length)
 
 void LoadPeriod(U8 period)
 {
-    U8 i;
+    U32 i;
     U8 *ptr;
     
     ptr = ResLoadToCon(CITY_RESID,period,g_CBnkPtr);
@@ -1045,10 +1042,12 @@ void LoadPeriod(U8 period)
     g_YearDate = *((U16 *) ptr);
     
     U16 length = ResGetItemLen(GENERAL_RESID, period);
+    U16 pcount = length / sizeof(PersonType);
+    GamSetPersonCount(pcount);
     ptr = ResLoadToCon(GENERAL_RESID,period,g_CBnkPtr);
     loadPersons(g_Persons, ptr, length);
     
-    ResItemGetN(GENERAL_QUEUE, period, g_PersonsQueue, PERSON_MAX);
+    ResItemGetN(GENERAL_QUEUE, period, (U8*)g_PersonsQueue, sizeof(PersonID)*pcount);
     ResItemGetN(GOODS_QUEUE, period, g_GoodsQueue, GOODS_MAX);
     
     gam_memset(FIGHTERS_IDX,0,FIGHT_ORDER_MAX);
@@ -1058,11 +1057,11 @@ void LoadPeriod(U8 period)
     
     for (i = 0;i < CITY_MAX;i ++)
         g_Cities[i].State = 0;
-    for (i = 0;i < PERSON_MAX;i ++)
+    for (i = 0;i < PERSON_COUNT;i ++)
     {
         g_Persons[i].Thew = 100;
         g_Persons[i].Arms = 100;
-        g_Persons[i].OldBelong = 0;
+        g_Persons[i].OldBelong = PID0;
     }
     
     g_MonthDate = 1;
@@ -1358,14 +1357,12 @@ FAR U16 NumOperate(U16 min,U16 max)
  ******************************************************************************/
 void ShowTacticNote(void)
 {
-    U8 *str,*astr;
-    U8 *kq;
-    U8 i,kc;
+    U8 str[512], astr[512];
+    PersonID *kq;
+    U32 i,kc;
     
     ShowMapClear();
-    kq = SHARE_MEM;
-    str = SHARE_MEM + 2000;
-    astr = SHARE_MEM + 2500;
+    kq = (PersonID*)SHARE_MEM;
     kc = GetEnemyKing(g_PlayerKing,kq);
     for (i = 0;i < kc;i ++)
     {

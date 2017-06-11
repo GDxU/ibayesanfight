@@ -2,7 +2,8 @@
 #define ATTRIBUT_H
 #include "touch.h"
 
-#define PERSON_MAX		250	/*最大武将数*/
+#define PERSON_MAX		2000	/*最大武将数*/
+#define PERSON_COUNT	GamGetPersonCount()	/*武将数*/
 #define CITY_MAX		g_engineConfig.citiesCount	/*最大城市数*/
 #define GOODS_MAX		200	/*最大道具数*/
 #define PERSON_DEATH_AGE	90	/*武将寿命*/
@@ -120,8 +121,8 @@ typedef struct {
 
 typedef struct Person				/*人才属性 (12 Bytes) */
 {
-	U8 OldBelong;		/*编号*/
-	U8 Belong;			/*归属*/
+	PersonID OldBelong;		/*编号*/
+	PersonID Belong;			/*归属*/
 	U8 Level;			/*等级*/
 	U8 Force;			/*武力*/
 	U8 IQ;				/*智力*/
@@ -138,8 +139,8 @@ typedef struct Person				/*人才属性 (12 Bytes) */
 typedef struct City				/*城市属性(30 Bytes)*/
 {
 	U8 State;
-	U8 Belong;			/*归属*/
-	U8 SatrapId;			/*太守编号*/
+	PersonID Belong;			/*归属*/
+	PersonID SatrapId;			/*太守编号*/
 	U16 FarmingLimit;		/*农业上限*/
 	U16 Farming;			/*农业开发度*/
 	U16 CommerceLimit;		/*商业上限*/
@@ -151,11 +152,17 @@ typedef struct City				/*城市属性(30 Bytes)*/
 	U16 Money;			/*金钱*/
 	U16 Food;			/*粮食*/
 	U16 MothballArms;		/*后备兵力*/
-	U8 PersonQueue;			/*人才队列*/
-	U8 Persons;			/*人才数*/
+	PersonID PersonQueue;			/*人才队列*/
+	PersonID Persons;			/*人才数*/
 	U8 ToolQueue;			/*道具队列*/
 	U8 Tools;			/*道具数*/
 }CityType;
+
+typedef struct {
+    U8 birth;
+    PersonID bole;
+    U8 city;
+} SearchCondition;
 
 
 typedef struct {

@@ -70,9 +70,9 @@
 typedef struct OrderStruct	/*命令结构*/
 {
 	U8 OrderId;		/*命令编号*/
-	U8 Person;		/*执行武将*/
+	PersonID Person;		/*执行武将*/
 	U8 City;		/*所在城市*/
-	U8 Object;		/*目标*/
+	PersonID Object;		/*目标*/
 	U16 Arms;		/*士兵数量*/
 	U16 Food;		/*粮食数量*/
 	U16 Money;		/*金钱数量*/

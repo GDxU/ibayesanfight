@@ -188,7 +188,7 @@ typedef struct {
 	U16	MapId;				/* 城市战斗地图 */
 	U16	MProvender;			/* 玩家粮草 */
 	U16	EProvender;			/* 敌人粮草 */
-    U8	GenArray[FGTA_MAX];		/* 将领队列 */
+    PersonID	GenArray[FGTA_MAX];		/* 将领队列 */
     U8	CityIndex;			/* 战斗城市ID */
 }FGTJK;						/* 战斗接口 */
 

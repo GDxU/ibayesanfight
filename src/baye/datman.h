@@ -22,11 +22,11 @@ typedef struct {
 /*------------------------
   函数
   ------------------------*/
-FAR U16 ResGetItemLen(U16 ResId,U8 idx);
-FAR U8 *ResLoadToCon(U16 ResId,U8 idx,U8 *cbnk);
-FAR U8 ResLoadToMem(U16 ResId,U8 idx,U8 *ptr);
-FAR U8 ResItemGet(U16 ResId,U8 idx,U8 *ptr);
-FAR U8 ResItemGetN(U16 ResId,U8 idx,U8 *ptr, U32 bufsize);
+FAR U16 ResGetItemLen(U16 ResId,U16 idx);
+FAR U8 *ResLoadToCon(U16 ResId,U16 idx,U8 *cbnk);
+FAR U8 ResLoadToMem(U16 ResId,U16 idx,U8 *ptr);
+FAR U8 ResItemGet(U16 ResId,U16 idx,U8 *ptr);
+FAR U8 ResItemGetN(U16 ResId,U16 idx,U8 *ptr, U32 bufsize);
 FAR U8 *ResLoadStringWithId(U16 ResId);
 
 #endif	/* _RESOURCE_H */

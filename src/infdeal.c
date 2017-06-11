@@ -41,11 +41,12 @@
  ******************************************************************************/
 FAR U8 CitiesUpDataDate(void)
 {
-    U8 i,j,c,s,rnd;
-    U8 *pqptr;
+    U32 i,j,s,rnd;
+    PersonID *pqptr;
     U16 df,as,*food;
     U32 *Population;
     CityType *cptr;
+    U32 c;
 
     if (6 == g_MonthDate || 10 == g_MonthDate)
     {
@@ -57,18 +58,18 @@ FAR U8 CitiesUpDataDate(void)
         RevenueMoney();
     }
 
-    for (i = 0;i < PERSON_MAX;i ++)
+    for (i = 0;i < PERSON_COUNT;i ++)
     {
         g_Persons[i].Thew += THREW_RENEW;
         if (g_Persons[i].Thew > 100)
             g_Persons[i].Thew = 100;
     }
 
-    pqptr = SHARE_MEM;
+    pqptr = (PersonID*)SHARE_MEM;
     for (i = 0;i < CITY_MAX;i ++)
     {
         cptr = &g_Cities[i];
-        if (cptr->Belong)
+        if (cptr->Belong.pid)
         {
             if (!(g_MonthDate % 3))
             {
@@ -88,7 +89,7 @@ FAR U8 CitiesUpDataDate(void)
             c = GetCityPersons(i,pqptr);
             for (j = 0;j < c;j ++)
             {
-                as = g_Persons[pqptr[j]].Arms;
+                as = g_Persons[pqptr[j].pid].Arms;
                 switch (g_Cities[i].State)
                 {
                     case STATE_NORMAL:	/*正常*/
@@ -105,7 +106,7 @@ FAR U8 CitiesUpDataDate(void)
                         break;
                 }
                 df += as;
-                g_Persons[pqptr[j]].Arms = as;
+                g_Persons[pqptr[j].pid].Arms = as;
             }
             if (g_engineConfig.ratioOfFoodToArmsPerMouth) {
                 df /= g_engineConfig.ratioOfFoodToArmsPerMouth;
@@ -122,20 +123,20 @@ FAR U8 CitiesUpDataDate(void)
             {
                 for (j = 0;j < c;j ++)
                 {
-                    g_Persons[pqptr[j]].Arms /= 2;
+                    g_Persons[pqptr[j].pid].Arms /= 2;
                 }
                 *food = 0;
                 /*闹饥荒*/
                 s = cptr->State;;
                 cptr->State = STATE_FAMINE;
-                if ((STATE_FAMINE != s) && (cptr->Belong == g_PlayerKing + 1))
+                if ((STATE_FAMINE != s) && (cptr->Belong.pid == g_PlayerKing.pid + 1))
                     ReportCalamity(i);
             }
             c = GetCityCaptives(i,pqptr);
             for (j = 0;j < c;j ++)
             {
-                if (g_Persons[pqptr[j]].OldBelong == cptr->Belong)
-                    g_Persons[pqptr[j]].Belong = cptr->Belong;
+                if (g_Persons[pqptr[j].pid].OldBelong.pid == cptr->Belong.pid)
+                    g_Persons[pqptr[j].pid].Belong = cptr->Belong;
             }
         }
     }
@@ -160,12 +161,12 @@ FAR U8 RandEvents(void)
     U8 i;
     U8 *state;
     U8 rnd;
-    U8 ccb;
+    PersonID ccb;
 
     for (i = 0;i < CITY_MAX;i ++)
     {
         ccb = g_Cities[i].Belong;
-        if (ccb)
+        if (ccb.pid)
         {
             state = &g_Cities[i].State;
             rnd = gam_rand() % 100;
@@ -190,7 +191,7 @@ FAR U8 RandEvents(void)
                                 break;
                             default:continue;break;/*无灾害*/
                         }
-                        if ((STATE_NORMAL != *state) && (ccb == g_PlayerKing + 1))
+                        if ((STATE_NORMAL != *state) && (ccb.pid == g_PlayerKing.pid + 1))
                         {
                             ReportCalamity(i);
                         }
@@ -350,17 +351,17 @@ void HarvestryFood(void)
  ******************************************************************************/
 FAR U8 GoodsUpDatadate(void)
 {
-    U8 *ginf;	/* -- 道具信息指针*/
+    SearchCondition *ginf;	/* -- 道具信息指针*/
     U8 g;
     U16 t;
     U16 l = ResGetItemLen(GOODS_CON, g_PIdx);
-    ginf = ResLoadToCon(GOODS_CON,g_PIdx,g_CBnkPtr);
+    ginf = (SearchCondition*)ResLoadToCon(GOODS_CON,g_PIdx,g_CBnkPtr);
 
     for (g = 0,t = 0;t < l;g ++,t += 3)
     {
-        if (ginf[t] == g_YearDate)
+        if (ginf[t].birth == g_YearDate)
         {
-            if (!AddGoods(ginf[t + 2],g))
+            if (!AddGoods(ginf[t + 2].city,g))
                 return(0);
         }
     }
@@ -382,26 +383,27 @@ FAR U8 GoodsUpDatadate(void)
  ******************************************************************************/
 FAR U8 PersonUpDatadate(void)
 {
-    U8 *pinf;	/* -- 武将信息指针*/
-    U8 c,p;
+    SearchCondition *pinf;	/* -- 武将信息指针*/
+    U32 c;
     U16 t;
+    U32 p;
 
-    if (!g_engineConfig.disableAgeGrow && 1 == g_MonthDate)
+    if (1 == g_MonthDate)
     {
-        for (p = 0;p < PERSON_MAX;p ++)
+        for (p = 0;p < PERSON_COUNT;p ++)
         {
             g_Persons[p].Age += 1;
         }
     }
 
     U16 l = ResGetItemLen(GENERAL_CON, g_PIdx);
-    pinf = ResLoadToCon(GENERAL_CON,g_PIdx,g_CBnkPtr);
+    pinf = (SearchCondition*)ResLoadToCon(GENERAL_CON,g_PIdx,g_CBnkPtr);
 
-    for (p = 0,t = 0;p < PERSON_MAX && t < l;p ++,t += 3)
+    for (p = 0,t = 0;p < PERSON_COUNT && t < l;p ++,t += 3)
     {
-        if ((pinf[t] + PERSON_APPEAR_AGE) == g_YearDate)
+        if ((pinf[t].birth + PERSON_APPEAR_AGE) == g_YearDate)
         {
-            c = pinf[t + 2];
+            c = pinf[t + 2].city;
 
             if (!c)
             {
@@ -412,7 +414,7 @@ FAR U8 PersonUpDatadate(void)
                 c -= 1;
             }
 
-            if (!AddPerson(c,p))
+            if (!AddPerson(c,PID(p)))
                 return(0);
 
             if (!g_engineConfig.disableAgeGrow) {
@@ -458,7 +460,7 @@ FAR U8 PersonUpDatadate(void)
  *		----		----			-----------
  *		陈泽伟		2005/5/18 11:26AM	基本功能完成
  ******************************************************************************/
-FAR U8 AddGoodsPerson(U8 goods,U8 person)
+FAR U8 AddGoodsPerson(U8 goods,PersonID person)
 {
     GOODS *gptr;
 
@@ -466,11 +468,11 @@ FAR U8 AddGoodsPerson(U8 goods,U8 person)
     U8 arm = gptr[goods].arm;
 
     IF_HAS_HOOK("giveTool") {
-        U8* personIndex = &person;
+        U16 personIndex = person.pid;
         U8* toolIndex = &goods;
         U8 result = 0;
 
-        BIND_U8(personIndex);
+        BIND_U16(&personIndex);
         BIND_U8(toolIndex);
         BIND_U8(&result);
 
@@ -485,30 +487,30 @@ FAR U8 AddGoodsPerson(U8 goods,U8 person)
             case 0:
                 break;
             case 1:		/*水兵*/
-                g_Persons[person].ArmsType = ARM_SHUIJUN;
+                g_Persons[person.pid].ArmsType = ARM_SHUIJUN;
                 break;
             case 2:		/*玄兵*/
-                if (g_Persons[person].IQ > 105)
+                if (g_Persons[person.pid].IQ > 105)
                 {
-                    g_Persons[person].ArmsType = ARM_XUANBING;
+                    g_Persons[person.pid].ArmsType = ARM_XUANBING;
                     break;
                 }
                 return(0xff);
             case 3:		/*极兵*/
-                if (g_Persons[person].Force > 105)
+                if (g_Persons[person.pid].Force > 105)
                 {
-                    g_Persons[person].ArmsType = ARM_JIBING;
+                    g_Persons[person.pid].ArmsType = ARM_JIBING;
                     break;
                 }
                 return(0xff);
             default:
-                g_Persons[person].ArmsType = arm-4;
+                g_Persons[person.pid].ArmsType = arm-4;
                 break;
         }
     }
 
-    g_Persons[person].Force += gptr[goods].at;
-    g_Persons[person].IQ += gptr[goods].iq;
+    g_Persons[person.pid].Force += gptr[goods].at;
+    g_Persons[person.pid].IQ += gptr[goods].iq;
     return(gptr[goods].useflag);
 }
 
@@ -525,18 +527,18 @@ FAR U8 AddGoodsPerson(U8 goods,U8 person)
  *		----		----			-----------
  *		陈泽伟		2005/5/18 11:26AM	基本功能完成
  ******************************************************************************/
-FAR U8 DelGoodsPerson(U8 goods,U8 person)
+FAR U8 DelGoodsPerson(U8 goods,PersonID person)
 {
     GOODS *gptr;
 
     gptr = (GOODS *) ResLoadToCon(GOODS_RESID,1,g_CBnkPtr);
 
     IF_HAS_HOOK("takeOffTool") {
-        U8* personIndex = &person;
+        U16 personIndex = person.pid;
         U8* toolIndex = &goods;
         U8 result = 0;
 
-        BIND_U8(personIndex);
+        BIND_U16(&personIndex);
         BIND_U8(toolIndex);
         BIND_U8(&result);
 
@@ -545,8 +547,8 @@ FAR U8 DelGoodsPerson(U8 goods,U8 person)
         }
     }
 
-    g_Persons[person].Force -= gptr[goods].at;
-    g_Persons[person].IQ -= gptr[goods].iq;
+    g_Persons[person.pid].Force -= gptr[goods].at;
+    g_Persons[person.pid].IQ -= gptr[goods].iq;
     return 1;
 }
 
@@ -585,10 +587,8 @@ FAR void ShowConstStrMsg(U8 idx)
  ******************************************************************************/
 /*FAR void ShowAttackMsg(U8 fs,U8 co)
  {
-	U8 *str,*buf;
+	SBUF str,buf;
 
-	str = SHARE_MEM + 300;
-	buf = SHARE_MEM + 340;
 	if (fs == g_PlayerKing)
 	{
  ResLoadToMem(STRING_CONST,STR_OURS,str);
@@ -619,13 +619,13 @@ FAR void ShowConstStrMsg(U8 idx)
  *		----		----			-----------
  *		陈泽伟		2005-8-5 10:38	基本功能完成
  ******************************************************************************/
-FAR void ShowPersonHead(U8 x,U8 y,U8 id)
+FAR void ShowPersonHead(U8 x,U8 y, PersonID id)
 {
     U8 *pic,tbuf[14];
     /*gam_rect(x,y,x + 50,y + 40);*/
     pic = ResLoadToCon(GEN_HEADPIC1 + g_PIdx,1,g_CBnkPtr);
-    GamPicShowExS(x + 13,y + 2,24,24,id,pic);
-    GetPersonName(id,tbuf);
+    GamPicShowExS(x + 13,y + 2,24,24,id.pid,pic);
+    GetPersonName(id, tbuf);
     PlcMidShowStr(x + 26,y + 28,tbuf);
 }
 
@@ -642,7 +642,7 @@ FAR void ShowPersonHead(U8 x,U8 y,U8 id)
  *		----		----			-----------
  *		陈泽伟		2005-8-11 14:26	基本功能完成
  ******************************************************************************/
-FAR void ShowGReport(U8 person,U8 *str)
+FAR void ShowGReport(PersonID person, U8 *str)
 {
     RECT	big,small;
 
@@ -657,7 +657,7 @@ FAR void ShowGReport(U8 person,U8 *str)
     small.ex = WK_SX + 8 + 54;
     small.ey = WK_EY - 4 - 44 - 4 + 4 + 44;
 
-    ShowPersonHead(WK_SX + 8,WK_EY - 4 - 44 - 4 + 4,person);
+    ShowPersonHead(WK_SX + 8,WK_EY - 4 - 44 - 4 + 4, person);
     PlcStrShowS(&big,&small,str);
     GamDelay(300, 2);
 }
@@ -789,12 +789,13 @@ FAR U8 GetCityDispGoods(U8 city,U8 *gqueue)
  *		----		----			-----------
  *		陈泽伟		2005-8-19 16:15	基本功能完成
  ******************************************************************************/
-FAR U8 GetPersonsCount(U8 king)
+FAR U32 GetPersonsCount(PersonID king)
 {
-    U8 i,j,count;
+    U8 i,j;
     U16 fpc;
     U8 *fp;
     OrderType *op;
+    U32 count;
     
     count = 0;
     op = (OrderType *) ORDERQUEUE;
@@ -803,12 +804,12 @@ FAR U8 GetPersonsCount(U8 king)
         if (0xff == op[i].OrderId)
             continue;
         
-        if (g_Cities[op[i].City].Belong != king + 1)
+        if (g_Cities[op[i].City].Belong.pid != king.pid + 1)
             continue;
         
         if (BATTLE == op[i].OrderId)
         {
-            fpc = op[i].Person;
+            fpc = op[i].Person.pid;
             fpc *= 10;
             fp = FIGHTERS +  fpc;
             for (j = 0;j < 10;j ++)
@@ -823,7 +824,7 @@ FAR U8 GetPersonsCount(U8 king)
         }
     }
     fp = SHARE_MEM;
-    count += GetKingPersons(king,fp);
+    count += GetKingPersons(king,(PersonID*)fp);
     return(count);
 }
 
@@ -875,15 +876,12 @@ FAR U8 GetDirect(U8 sc,U8 oc)
  ******************************************************************************/
 FAR void ReportCalamity(U8 city)
 {
-    U8 *rstr,*astr;
-    U8 p;
+    SBUF rstr,astr;
+    U32 p;
     
-    p = g_Cities[city].SatrapId;
+    p = g_Cities[city].SatrapId.pid;
     if (p)
     {
-        rstr = SHARE_MEM + 3000;
-        astr = SHARE_MEM + 3400;
-        
         GetCityName(city,rstr);
         ResLoadToMem(STRING_CONST,STR_RP1,astr);
         gam_strcat(rstr,astr);
@@ -892,19 +890,19 @@ FAR void ReportCalamity(U8 city)
         ResLoadToMem(STRING_CONST,STR_RP2,astr);
         gam_strcat(rstr,astr);
         ShowMapClear();
-        ShowGReport(p - 1,rstr);
+        ShowGReport(PID(p - 1),rstr);
     }
 }
 
-FAR void ShowDialog(U8 commander, U8 reporter,U8 *str)
+FAR void ShowDialog(PersonID commander, PersonID reporter,U8 *str)
 {
-    U8 belong = g_Persons[commander].Belong;
-    if (belong && belong - 1 == g_PlayerKing) {
+    U32 belong = g_Persons[commander.pid].Belong.pid;
+    if (belong && belong - 1 == g_PlayerKing.pid) {
         ShowGReport(reporter, str);
     }
 }
 
-FAR void ShowDialogRandom(U8 commander, U8 reporter, U8 **str, U8 count)
+FAR void ShowDialogRandom(PersonID commander, PersonID reporter, U8 **str, U8 count)
 {
     U8 rnd = gam_rand() % count;
     ShowDialog(commander, reporter, str[rnd]);

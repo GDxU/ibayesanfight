@@ -57,7 +57,7 @@ void FgtMapUnitShow(U8 tx,U8 ty,U8 flag);
 void FgtShowGetExp(U8 exp);
 void FgtShowChgSpe(U8 sfrm,U8 efrm,U8 x,U8 y);
 void FgtChkAtkEnd(void);
-U8 TransIdxToGen2(U8 idx);
+PersonID TransIdxToGen2(U8 idx);
 void FgtLoadToMem(U8 idx,U8 *buf);
 U8 *FgtLoadToCon(U16 ResId,U8 idx);
 void FgtShowFrame(void);
@@ -211,14 +211,13 @@ void FgtDealMan(void)
  ***********************************************************************/
 void FgtGetPCmd(FGTCMD *pcmd)
 {
-    U8	idx,sIdx,aIdx = 0;
+    U8	idx,aIdx = 0;
     U8	lflag,type,param = 0;
     U8	*buf;
     RECT	pRect;
 
     lflag = true;
     idx = pcmd->sIdx;
-    sIdx = TransIdxToGen2(idx);
     type = 0;
     buf = gam_malloc(100);
     while(lflag)
@@ -1020,10 +1019,11 @@ void FgtAllRight(bool *flag)
  ***********************************************************************/
 void FgtDrvState(void)
 {
-    U8	i,state,tmp,usehook = 0;
+    U8	i,state,usehook = 0;
     U16	arms;
     bool	rec,update;
     PersonType	*per;
+    PersonID tmp;
 
     if(g_FgtOver)
         return;
@@ -1033,7 +1033,7 @@ void FgtDrvState(void)
         if(STATE_SW == state)
             continue;
         tmp = TransIdxToGen2(i);
-        per = &g_Persons[tmp];
+        per = &g_Persons[tmp.pid];
         rec = (gam_rand() % 60) < (per->IQ >> 1);
         arms = per->Arms;
         update = false;
@@ -1270,10 +1270,11 @@ void FgtShowGetExp(U8 exp)
  ***********************************************************************/
 void FgtChkAtkEnd(void)
 {
-    U8	i,tmp,idx;
+    U8	i,idx;
     U8	x,y,*buf;
     PersonType	*per;
     JLPOS		*pos;
+    PersonID p;
 
     buf = SHARE_MEM;
     for(i = 0;i < FGTA_MAX; i += 1)
@@ -1281,8 +1282,8 @@ void FgtChkAtkEnd(void)
         pos = &g_GenPos[i];
         if(STATE_SW == pos->state)
             continue;
-        tmp = TransIdxToGen2(i);
-        per = &g_Persons[tmp];
+        p = TransIdxToGen2(i);
+        per = &g_Persons[p.pid];
         x = pos->x;
         y = pos->y;
         idx = gam_rand() % 3;
@@ -1294,7 +1295,7 @@ void FgtChkAtkEnd(void)
             LevelUp(per);
             FgtShowChgSpe(0,5,x,y);
             FgtLoadToMem(dFgtLevUp0 + idx,buf);
-            ShowGReport(tmp,buf);
+            ShowGReport(p,buf);
         }
         /* 死的 */
         if(!pos->hp || !per->Arms)
@@ -1303,7 +1304,7 @@ void FgtChkAtkEnd(void)
             pos->state = STATE_SW;
             FgtShowChgSpe(6,11,x,y);
             FgtLoadToMem(dFgtDead0 + idx,buf);
-            ShowGReport(tmp,buf);
+            ShowGReport(p,buf);
         }
     }
 }
@@ -1411,8 +1412,9 @@ void FgtShowInf(void)
     }
     else
     {
-        idx = TransIdxToGen2(idx);
-        GetPersonName(idx,sbuf);
+        PersonID p;
+        p = TransIdxToGen2(idx);
+        GetPersonName(p,sbuf);
     }
     FgtStrShowV(STA_XXX,STA_XXY,sbuf);
 #if	(GAM_VER == GAM_DEBUG_MODE)
@@ -1476,9 +1478,9 @@ void FgtChkEnd(U8 flag)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-U8 TransIdxToGen2(U8 idx)
+PersonID TransIdxToGen2(U8 idx)
 {
-    return (U8)(g_FgtParam.GenArray[idx] - 1);
+    return PID(g_FgtParam.GenArray[idx].pid - 1);
 }
 /***********************************************************************
  * 说明:     资源管理函数的本体调用

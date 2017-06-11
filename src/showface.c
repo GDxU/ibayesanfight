@@ -458,14 +458,14 @@ FAR void GetGoodsName(U8 goods,U8 *str)
  *		----		----			-----------
  *		陈泽伟		2005-6-10 10:16	基本功能完成
  ******************************************************************************/
-FAR void GetPersonName(U8 person,U8 *str)
+FAR void GetPersonName(PersonID person,U8 *str)
 {
     U8 l = '\0';
 
     IF_HAS_HOOK("getPersonName") {
-        U8 personIndex = person;
+        U16 personIndex = person.pid;
         U8 name[12] = "";
-        BIND_U8(&personIndex);
+        BIND_U16(&personIndex);
 
         BIND_GBKARR(name, sizeof(name));
         if (CALL_HOOK() == 0) {
@@ -489,7 +489,7 @@ FAR void GetPersonName(U8 person,U8 *str)
             l = GENERAL_NAME4;
             break;
     }
-    ResLoadToMem(l,person + 1,str);
+    ResLoadToMem(l,person.pid + 1,str);
     /***********************************************************/
     /*dptr = ResLoadToCon(GENERAL_NAME,g_PIdx,g_CBnkPtr);
      pnt = person;
@@ -512,7 +512,7 @@ FAR void GetPersonName(U8 person,U8 *str)
  *		----		----			-----------
  *		陈泽伟		2005/5/18 11:26AM	基本功能完成
  ******************************************************************************/
-void ShowPersonPro(U8 person,U8 pro,U8 x,U8 y,U8 wid)
+void ShowPersonPro(PersonID person,U8 pro,U8 x,U8 y,U8 wid)
 {
     U8 sx,sy;
     U8 str[128];
@@ -561,15 +561,15 @@ void ShowPersonPro(U8 person,U8 pro,U8 x,U8 y,U8 wid)
  *		----		----			-----------
  *		陈泽伟		2005/5/18 11:26AM	基本功能完成
  ******************************************************************************/
-void GetPersonProStr(U8 person,U8 pro,U8 *str)
+void GetPersonProStr(PersonID person,U8 pro,U8 *str)
 {
     U8 idx = '\0';
-    U8 b;
+    PersonID b;
 
     IF_HAS_HOOK("getPersonPropertyValue") {
         U8* value = str;
 
-        BIND_U8EX("personIndex", &person);
+        BIND_U16EX("personIndex", &person);
         BIND_U8EX("propertyIndex", &pro);
         BIND_GBKARR(value, 128);
 
@@ -577,21 +577,21 @@ void GetPersonProStr(U8 person,U8 pro,U8 *str)
     }
 
 
-    b = g_Persons[person].Belong;
+    b = g_Persons[person.pid].Belong;
     switch (pro)
     {
         case 0:		/*归属*/
-            if (0xff == b)
+            if (0xffff == b.pid)
             {
                 ResLoadToMem(STRING_CONST,ATRR_STR69,str);
             }
-            else if (b == person + 1)
+            else if (b.pid == person.pid + 1)
             {
                 ResLoadToMem(STRING_CONST,ATRR_STR68,str);
             }
-            else if (b)
+            else if (b.pid)
             {
-                GetPersonName(b - 1,str);
+                GetPersonName(PID(b.pid - 1),str);
             }
             else
             {
@@ -602,22 +602,22 @@ void GetPersonProStr(U8 person,U8 pro,U8 *str)
             GetCityName(GetPersonCity(person),str);
             break;
         case 2:		/*等级*/
-            gam_itoa(g_Persons[person].Level,str,10);
+            gam_itoa(g_Persons[person.pid].Level,str,10);
             break;
         case 3:		/*武力*/
-            gam_itoa(g_Persons[person].Force,str,10);
+            gam_itoa(g_Persons[person.pid].Force,str,10);
             break;
         case 4:		/*智力*/
-            gam_itoa(g_Persons[person].IQ,str,10);
+            gam_itoa(g_Persons[person.pid].IQ,str,10);
             break;
         case 5:		/*忠诚*/
-            if (b == (person + 1))
+            if (b.pid == (person.pid + 1))
             {
                 ResLoadToMem(STRING_CONST,ATRR_STR71,str);
             }
-            else if (b)
+            else if (b.pid)
             {
-                gam_itoa(g_Persons[person].Devotion,str,10);
+                gam_itoa(g_Persons[person.pid].Devotion,str,10);
             }
             else
             {
@@ -626,14 +626,14 @@ void GetPersonProStr(U8 person,U8 pro,U8 *str)
 
             break;
         case 6:		/*经验*/
-            gam_itoa(g_Persons[person].Experience,str,10);
+            gam_itoa(g_Persons[person.pid].Experience,str,10);
             break;
         case 7:		/*体力*/
-            gam_itoa(g_Persons[person].Thew,str,10);
+            gam_itoa(g_Persons[person.pid].Thew,str,10);
             break;
         case 8:		/*兵种*/
         {
-            switch (GetArmType(&g_Persons[person]))
+            switch (GetArmType(&g_Persons[person.pid]))
             {
                 case 0:
                     idx = ATRR_STR11;
@@ -658,20 +658,20 @@ void GetPersonProStr(U8 person,U8 pro,U8 *str)
             break;
         }
         case 9:		/*兵力*/
-            gam_itoa(g_Persons[person].Arms,str,10);
+            gam_itoa(g_Persons[person.pid].Arms,str,10);
             break;
         case 10:		/*年龄*/
-            gam_itoa(g_Persons[person].Age,str,10);
+            gam_itoa(g_Persons[person.pid].Age,str,10);
             break;
         case 11:		/*道具一*/
             str[0] = 0;
-            if (g_Persons[person].Equip[0])
-                GetGoodsName(g_Persons[person].Equip[0] - 1,str);
+            if (g_Persons[person.pid].Equip[0])
+                GetGoodsName(g_Persons[person.pid].Equip[0] - 1,str);
             break;
         case 12:		/*道具二*/
             str[0] = 0;
-            if (g_Persons[person].Equip[1])
-                GetGoodsName(g_Persons[person].Equip[1] - 1,str);
+            if (g_Persons[person.pid].Equip[1])
+                GetGoodsName(g_Persons[person.pid].Equip[1] - 1,str);
             break;
     }
 }
@@ -753,9 +753,9 @@ U8 ShowPersonProStr(U8 pro,U8 x,U8 y,U8 wid)
  *		----		----			-----------
  *		陈泽伟		2005/5/18 11:26AM	基本功能完成
  ******************************************************************************/
-FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 initSelected,U8 x0,U8 y0,U8 x1,U8 y1)
+FAR PersonID ShowPersonControl(PersonID *person,U8 pcount,PersonID initSelected,U8 x0,U8 y0,U8 x1,U8 y1)
 {
-    U8 i,showflag,count,top,set;
+    U32 i,showflag,count,top,set;
     U8 spc,spcv[7];
     U8 wid;
     GMType Msg;
@@ -764,7 +764,7 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 initSelected,U8 x0,U8 y0,U8 x1,
     U8 leftWhenTouchDown = 0;
 
     if (!pcount)
-        return(0xff);
+        return(PID(0xffff));
 
     /*gam_clrlcd(x0,y0,x1,y1);*/
 
@@ -788,9 +788,9 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 initSelected,U8 x0,U8 y0,U8 x1,
     y0 += 1;
     x1 -= 1;
 
-    top = initSelected;
+    top = initSelected.pid;
     top = limitValueInRange(top, 0, pcount-count);
-    set = initSelected;
+    set = initSelected.pid;
     set = limitValueInRange(set, 0, pcount-1);
     spc = 0;
     spcv[0] = 0;
@@ -884,9 +884,9 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 initSelected,U8 x0,U8 y0,U8 x1,
                     }
                     break;
                 case VK_ENTER:
-                    return(set);
+                    return(PID(set));
                 case VK_EXIT:
-                    return(0xff);
+                    return(PID(0xffff));
             }
         } else if (VM_TOUCH == Msg.type) {
             touchUpdate(&touch, Msg);
@@ -906,9 +906,9 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 initSelected,U8 x0,U8 y0,U8 x1,
                     I16 index = touchListViewItemIndexAtPoint(touch.currentX, touch.currentY, menuRect, 1+ASC_HGT, 1, top, pcount, ASC_HGT);
                     if (index < 0)
                     {
-                        return 0xff;
+                        return PID(0xffff);
                     }
-                    return index;
+                    return PID(index);
                 }
                 case VT_TOUCH_MOVE:
                 {
@@ -937,7 +937,7 @@ FAR U8 ShowPersonControl(U8 *person,U8 pcount,U8 initSelected,U8 x0,U8 y0,U8 x1,
         }
     }
 
-    return(0xff);
+    return PID(0xffff);
 }
 
 
@@ -1001,9 +1001,9 @@ void GetCityProStr(U8 city,U8 pro,U8 *str)
     {
         case 0:		/*归属*/
             ResLoadToMem(STRING_CONST,ATRR_STR1,str);
-            if (g_Cities[city].Belong)
+            if (g_Cities[city].Belong.pid)
             {
-                GetPersonName(g_Cities[city].Belong - 1,&str[5]);
+                GetPersonName(PID(g_Cities[city].Belong.pid - 1),&str[5]);
             }
             else
             {
@@ -1012,9 +1012,9 @@ void GetCityProStr(U8 city,U8 pro,U8 *str)
             break;
         case 1:		/*太守*/
             ResLoadToMem(STRING_CONST,ATRR_STR2,str);
-            if (g_Cities[city].SatrapId)
+            if (g_Cities[city].SatrapId.pid)
             {
-                GetPersonName(g_Cities[city].SatrapId - 1,&str[5]);
+                GetPersonName(PID(g_Cities[city].SatrapId.pid - 1),&str[5]);
             }
             else
             {

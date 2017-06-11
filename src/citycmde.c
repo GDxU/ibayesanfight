@@ -39,14 +39,14 @@
  ******************************************************************************/
 FAR U8 ConfiscateMake(U8 city)
 {
-    U8 *pqptr;
-    U8 *str;
-    U8 pcount;
-    U8 pcode = 0;
-    U8 p,g,c;
+    PersonID *pqptr;
+    U8 str[512];
+    U32 pcount;
+    PersonID pcode = PID0, p;
+    U32 g,c;
     U8 gq[3],*gptr;
 
-    pqptr = SHARE_MEM;
+    pqptr = (PersonID*)SHARE_MEM;
     do
     {
         pcount = GetCityPersons(city,pqptr);
@@ -58,11 +58,11 @@ FAR U8 ConfiscateMake(U8 city)
         /*gam_clrlcd(WK_SX,WK_SY,WK_EX,WK_EY);*/
         ShowMapClear();
         pcode = ShowPersonControl(pqptr,pcount,pcode,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-        if (0xff != pcode)
+        if (0xffff != pcode.pid)
         {
-            p = pqptr[pcode];
+            p = pqptr[pcode.pid];
             c = 0;
-            gptr = g_Persons[p].Equip;
+            gptr = g_Persons[p.pid].Equip;
             if (!gptr[0])
             {
                 gptr[0] = gptr[1];
@@ -94,7 +94,7 @@ FAR U8 ConfiscateMake(U8 city)
 
                     IF_HAS_HOOK("willTakeOffTool") {
                         BIND_U8EX("cityIndex", &city);
-                        BIND_U8EX("personIndex", &p);
+                        BIND_U16EX("personIndex", &p);
                         BIND_U8EX("toolIndex", &gq[g]);
                         ret = CALL_HOOK_A();
                     }
@@ -104,16 +104,15 @@ FAR U8 ConfiscateMake(U8 city)
                     }
 
                     /*添加没收成功代码*/
-                    if (p != g_PlayerKing)
+                    if (p.pid != g_PlayerKing.pid)
                     {
-                        str = SHARE_MEM + 3000;
                         ResLoadToMem(STRING_CONST,P_SAY_STR7 + (gam_rand() % 3),str);
                         ShowMapClear();
                         ShowGReport(p,str);
-                        if (g_Persons[p].Devotion < 20)
-                            g_Persons[p].Devotion = 0;
+                        if (g_Persons[p.pid].Devotion < 20)
+                            g_Persons[p.pid].Devotion = 0;
                         else
-                            g_Persons[p].Devotion -= 20;
+                            g_Persons[p.pid].Devotion -= 20;
                     }
                     if (DelGoodsPerson(gq[g],p)) {
                         gptr[g] = 0;
@@ -152,14 +151,14 @@ FAR U8 ConfiscateMake(U8 city)
  ******************************************************************************/
 FAR U8 DepredateMake(U8 city)
 {
-    U8 *str;
-    U8 *pqptr;
-    U8 pcount;
-    U8 pcode;
-    U8 p;
+    U8 str[512];
+    PersonID *pqptr;
+    U32 pcount;
+    PersonID pcode;
+    PersonID p;
     OrderType order;
 
-    pqptr = SHARE_MEM;
+    pqptr = (PersonID*)SHARE_MEM;
 
     do
     {
@@ -169,10 +168,10 @@ FAR U8 DepredateMake(U8 city)
             ShowConstStrMsg(STR_NOPERSON);
             break;
         }
-        pcode = ShowPersonControl(pqptr,pcount,0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-        if (0xff != pcode)
+        pcode = ShowPersonControl(pqptr,pcount,PID0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+        if (0xffff != pcode.pid)
         {
-            p = pqptr[pcode];
+            p = pqptr[pcode.pid];
             if (!IsManual(p,CONSCRIPTION))
             {
                 ShowConstStrMsg(NOTE_STR9);
@@ -180,7 +179,6 @@ FAR U8 DepredateMake(U8 city)
             }
             OrderConsumeThew(p,CONSCRIPTION);
 
-            str = SHARE_MEM + 3000;
             ResLoadToMem(STRING_CONST,P_SAY_STR27,str);
             ShowGReport(p,str);
 
@@ -212,15 +210,13 @@ FAR U8 DepredateMake(U8 city)
  *		----		----			-----------
  *		陈泽伟		2005-8-23 11:00	基本功能完成
  ******************************************************************************/
-FAR void ShowAttackNote(U8 ap,U8 city)
+FAR void ShowAttackNote(PersonID ap,U8 city)
 {
-    U8 *str,*buf;
+    SBUF str,buf;
 
     ShowFightNoteFace(0);
 
-    str = SHARE_MEM + 3000;
-    buf = SHARE_MEM + 3400;
-    if (ap == g_PlayerKing)
+    if (ap.pid == g_PlayerKing.pid)
     {
         ResLoadToMem(STRING_CONST,STR_OURS,str);
     }
@@ -250,14 +246,12 @@ FAR void ShowAttackNote(U8 ap,U8 city)
  *		----		----			-----------
  *		陈泽伟		2005-8-23 11:19	基本功能完成
  ******************************************************************************/
-FAR void ShowFightNote(U8 ap,U8 bc)
+FAR void ShowFightNote(PersonID ap,PersonID bc)
 {
-    U8 *str,*buf;
+    SBUF str,buf;
 
     ShowFightNoteFace(1);
 
-    str = SHARE_MEM + 3000;
-    buf = SHARE_MEM + 3400;
     GetPersonName(ap,str);
     ResLoadToMem(STRING_CONST,STR_FIGHT_NOTE1,buf);
     gam_strcat(str,buf);
@@ -282,16 +276,13 @@ FAR void ShowFightNote(U8 ap,U8 bc)
  *		----		----			-----------
  *		陈泽伟		2005-8-23 11:27	基本功能完成
  ******************************************************************************/
-FAR void ShowFightWinNote(U8 wp)
+FAR void ShowFightWinNote(PersonID wp)
 {
-    U8 *str,*buf;
+    SBUF str,buf;
 
     ShowFightNoteFace(2);
 
-    str = SHARE_MEM + 3000;
-    buf = SHARE_MEM + 3400;
-
-    if (wp == g_PlayerKing)
+    if (wp.pid == g_PlayerKing.pid)
     {
         ResLoadToMem(STRING_CONST,STR_OURS,str);
     }
@@ -320,12 +311,9 @@ FAR void ShowFightWinNote(U8 wp)
  ******************************************************************************/
 FAR void ShowFightLossNote(void)
 {
-    U8 *str,*buf;
+    SBUF str,buf;
 
     ShowFightNoteFace(3);
-
-    str = SHARE_MEM + 3000;
-    buf = SHARE_MEM + 3400;
 
     ResLoadToMem(STRING_CONST,STR_OURS,str);
 
@@ -437,14 +425,14 @@ FAR void OrderConsumeMoney(U8 city,U8 order)
  *		----		----			-----------
  *		陈泽伟		2005-7-28 20:18	基本功能完成
  ******************************************************************************/
-FAR U8 IsManual(U8 person,U8 order)
+FAR U8 IsManual(PersonID person,U8 order)
 {
     U8 *ptr;
     
     if (g_engineDebug) return 1;
 
     ptr = ResLoadToCon(IFACE_CONID,ConsumeThew,g_CBnkPtr);
-    if (g_Persons[person].Thew >= ptr[order])
+    if (g_Persons[person.pid].Thew >= ptr[order])
         return(1);
     else
         return(0);
@@ -463,15 +451,15 @@ FAR U8 IsManual(U8 person,U8 order)
  *		----		----			-----------
  *		陈泽伟		2005-7-28 20:18	基本功能完成
  ******************************************************************************/
-FAR void OrderConsumeThew(U8 person,U8 order)
+FAR void OrderConsumeThew(PersonID person,U8 order)
 {
     U8 *ptr;
     
     ptr = ResLoadToCon(IFACE_CONID,ConsumeThew,g_CBnkPtr);
     if (g_engineConfig.fixOverFlow16) {
-        ADD16(g_Persons[person].Thew, -ptr[order]);
+        ADD16(g_Persons[person.pid].Thew, -ptr[order]);
     } else {
-        g_Persons[person].Thew -= ptr[order];
+        g_Persons[person.pid].Thew -= ptr[order];
     }
 }
 
@@ -491,7 +479,8 @@ FAR void OrderConsumeThew(U8 person,U8 order)
 FAR U8 GetWeekCity(U8 count,U8 *cqueue)
 {
     U8 c,i,cw = '\0';
-    U8 p,o;
+    PersonID p;
+    U8 o;
     U16 armst,armsw;
     CityType *cptr;
     OrderType *inode;
@@ -502,12 +491,12 @@ FAR U8 GetWeekCity(U8 count,U8 *cqueue)
     {
         cptr = &g_Cities[cqueue[c]];
         armst = 0;
-        for (i = 0;i < cptr->Persons;i ++)
+        for (i = 0;i < cptr->Persons.pid;i ++)
         {
-            p = g_PersonsQueue[cptr->PersonQueue + i];
-            if (g_Persons[p].Belong == cptr->Belong)
+            p = g_PersonsQueue[cptr->PersonQueue.pid + i];
+            if (g_Persons[p.pid].Belong.pid == cptr->Belong.pid)
             {
-                armst += g_Persons[p].Arms;
+                armst += g_Persons[p.pid].Arms;
             }
         }
         for (i = 0;i < ORDER_MAX;i ++)
@@ -518,7 +507,7 @@ FAR U8 GetWeekCity(U8 count,U8 *cqueue)
             
             if ((o != MOVE) && (o != BATTLE) && inode[i].City == cqueue[c])
             {
-                armst += g_Persons[inode[i].Person].Arms;
+                armst += g_Persons[inode[i].Person.pid].Arms;
             }
         }
         if (armsw > armst)

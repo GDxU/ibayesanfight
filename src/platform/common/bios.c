@@ -38,7 +38,7 @@ static void _shm_init()
     _BVS_PTR = malloc(MAX_SCR_BUF_LEN);
     _SHARE_MEM = malloc(20240);
     _FIGHTERS_IDX = malloc(30);
-    _FIGHTERS = malloc(300);
+    _FIGHTERS = malloc(600);
     _ORDERQUEUE = malloc(sizeof(OrderType) * ORDER_MAX);
 }
 

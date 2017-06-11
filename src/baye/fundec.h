@@ -8,7 +8,7 @@ GamEng U8		GamRecordMan(U8 flag);
 PublicFun U8		PlcMovie(U16 speid, U16 index,U8 startfrm,U8 endfrm,U8 keyflag,U8 x,U8 y);
 PublicFun U8		PlcSplMenu(RECT *pRect,U8 pIdx,U8 *buf);
 PublicFun U8		PlcExtract(U16 num);
-PublicFun U16		PlcArmsMax(U8 id);
+PublicFun U16		PlcArmsMax(PersonID id);
 PublicFun U16		PlcArmsMaxP(PersonType* p);
 PublicFun void		PlcGraMsgBox(U8 *buf,U8 delay,U8 line);
 PublicFun void		PlcMidShowStr(U8 x,U8 y,U8 *buf);
