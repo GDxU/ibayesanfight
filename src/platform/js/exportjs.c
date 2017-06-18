@@ -399,3 +399,8 @@ EMSCRIPTEN_KEEPALIVE
 void bayeRestoreScreen(void) {
     SysRestoreScreen();
 }
+
+EMSCRIPTEN_KEEPALIVE
+U16 bayeGetPersonCount(void) {
+    return GamGetPersonCount();
+}

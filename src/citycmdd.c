@@ -79,14 +79,14 @@ FAR U8 BattleMake(U8 city)
     {
         /*gam_clrlcd(WK_SX,WK_SY,WK_EX,WK_EY);*/
         ShowMapClear();
-        if (pcode.pid >= pcount) {
-            pcode.pid = pcount-1;
+        if (pcode >= pcount) {
+            pcode = pcount-1;
         }
         pcode = ShowPersonControl(pqptr,pcount,pcode,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-        if (0xffff != pcode.pid)
+        if (0xffff != pcode)
         {
-            fpptr[i] = PID(pqptr[pcode.pid].pid + 1);
-            DelPerson(city,pqptr[pcode.pid]);
+            fpptr[i] = PID(pqptr[pcode] + 1);
+            DelPerson(city,pqptr[pcode]);
         }
         else
         {
@@ -103,7 +103,7 @@ FAR U8 BattleMake(U8 city)
         {
             for (i --;(U8)(i + 1) >= 1;i --)
             {
-                AddPerson(city,PID(fpptr[i].pid - 1));
+                AddPerson(city,PID(fpptr[i] - 1));
             }
         }
         else
@@ -113,19 +113,19 @@ FAR U8 BattleMake(U8 city)
             {
                 ResLoadToMem(STRING_CONST,STR_OBJ,str);
                 ShowMapClear();
-                ShowGReport(PID(fpptr[0].pid - 1),str);
+                ShowGReport(PID(fpptr[0] - 1),str);
                 ocity = GetCitySet(&g_CityPos);
                 if (0xff == ocity)
                 {
                     for (i --;(U8)(i + 1) >= 1;i --)
                     {
-                        AddPerson(city,PID(fpptr[i].pid - 1));
+                        AddPerson(city,PID(fpptr[i] - 1));
                     }
                     break;
                 }
                 else if (ocity != city)
                 {
-                    if (g_Cities[ocity].Belong.pid == g_Cities[city].Belong.pid)
+                    if (g_Cities[ocity].Belong == g_Cities[city].Belong)
                     {
                         /*提示我方城池*/
                         ShowConstStrMsg(NOTE_STR7);
@@ -150,7 +150,7 @@ FAR U8 BattleMake(U8 city)
                             if (!AddFightOrder(&order,fpptr)) {
                                 for (i --;(U8)(i + 1) >= 1;i --)
                                 {
-                                    AddPerson(city,PID(fpptr[i].pid - 1));
+                                    AddPerson(city,PID(fpptr[i] - 1));
                                 }
                             }
                             break;
@@ -199,16 +199,16 @@ FAR U8 BattleDrv(OrderType *Order)
     pqptr = (PersonID*)SHARE_MEM;
     midx = SHARE_MEM;
     fgtidx = FIGHTERS_IDX;
-    fgtidx[Order->Person.pid] = 0;
+    fgtidx[Order->Person] = 0;
     clen = 10*sizeof(PersonID);
-    clen *= Order->Person.pid;
+    clen *= Order->Person;
     fighters = (PersonID*)FIGHTERS;
     fighters = &fighters[clen];
     genArray = g_FgtParam.GenArray;
     gam_memset(genArray,0,20*sizeof(PersonID));
-    o = Order->Object.pid;
+    o = Order->Object;
     ob = g_Cities[o].Belong;
-    pb = g_Persons[fighters[0].pid - 1].Belong;
+    pb = g_Persons[fighters[0] - 1].Belong;
 
     ResItemGet(IFACE_CONID,dCityMapId,midx);
     g_FgtParam.MapId = FIGHT_MAP + midx[o];
@@ -217,18 +217,18 @@ FAR U8 BattleDrv(OrderType *Order)
 
     do
     {
-        ShowAttackNote(PID(pb.pid - 1),o);
-        if (ob.pid == (g_PlayerKing.pid + 1))
+        ShowAttackNote(PID(pb - 1),o);
+        if (ob == (g_PlayerKing + 1))
         {
-            if (pb.pid == (g_PlayerKing.pid + 1))
+            if (pb == (g_PlayerKing + 1))
             {
                 /*城池已被我军战领*/
                 for (i = 0;i < 10;i ++)
                 {
-                    if (fighters[i].pid)
-                        AddPerson(o,PID(fighters[i].pid - 1));
+                    if (fighters[i])
+                        AddPerson(o,PID(fighters[i] - 1));
                 }
-                ShowFightWinNote(PID(pb.pid - 1));
+                ShowFightWinNote(PID(pb - 1));
                 break;
             }
             /*添加进入战斗代码*/
@@ -242,10 +242,10 @@ FAR U8 BattleDrv(OrderType *Order)
                 /*gam_clrlcd(WK_SX,WK_SY,WK_EX,WK_EY);*/
                 ShowMapClear();
                 pcode = ShowPersonControl(pqptr,pcount,PID0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-                if (0xffff != pcode.pid)
+                if (0xffff != pcode)
                 {
-                    genArray[i] = PID(pqptr[pcode.pid].pid + 1);
-                    DelPerson(o,pqptr[pcode.pid]);
+                    genArray[i] = PID(pqptr[pcode] + 1);
+                    DelPerson(o,pqptr[pcode]);
                 }
                 else
                 {
@@ -255,28 +255,28 @@ FAR U8 BattleDrv(OrderType *Order)
             gam_memcpy(&genArray[10], fighters, 10*sizeof(PersonID));
             GamFight();
         }
-        else if (pb.pid == (g_PlayerKing.pid + 1))
+        else if (pb == (g_PlayerKing + 1))
         {
-            if (!ob.pid)
+            if (!ob)
             {
                 for (i = 0;i < 10;i ++)
                 {
-                    if (fighters[i].pid)
-                        AddPerson(o,PID(fighters[i].pid - 1));
+                    if (fighters[i])
+                        AddPerson(o,PID(fighters[i] - 1));
                 }
                 g_Cities[o].Belong = pb;
-                ShowFightWinNote(PID(pb.pid - 1));
+                ShowFightWinNote(PID(pb - 1));
                 break;
             }
 
-            if (ob.pid == (g_PlayerKing.pid + 1))
+            if (ob == (g_PlayerKing + 1))
             {
                 /*城池已被我军战领*/
                 for (i = 0;i < 10;i ++)
                 {
-                    if (fighters[i].pid)
-                        AddPerson(o,PID(fighters[i].pid - 1));
-                    ShowFightWinNote(PID(pb.pid - 1));
+                    if (fighters[i])
+                        AddPerson(o,PID(fighters[i] - 1));
+                    ShowFightWinNote(PID(pb - 1));
                 }
                 break;
             }
@@ -295,13 +295,13 @@ FAR U8 BattleDrv(OrderType *Order)
                     for (i = fcount + 1;i < pcount;i ++)
                     {
                         /*添加武将兵力排序*/
-                        if (g_Persons[pqptr[fcount].pid].Arms < g_Persons[pqptr[i].pid].Arms)
+                        if (g_Persons[pqptr[fcount]].Arms < g_Persons[pqptr[i]].Arms)
                         {
                             t = pqptr[i];
                             pqptr[i] = pqptr[fcount];
                             pqptr[fcount] = t;
                         }
-                        if (!g_Persons[pqptr[pcount - 1].pid].Arms)
+                        if (!g_Persons[pqptr[pcount - 1]].Arms)
                             pcount -= 1;
                     }
                 }
@@ -309,7 +309,7 @@ FAR U8 BattleDrv(OrderType *Order)
                 if (!pcount)
                 {
                     /*没有可出征武将*/
-                    genArray[10] = PID(pqptr[0].pid + 1);
+                    genArray[10] = PID(pqptr[0] + 1);
                     DelPerson(o,pqptr[0]);
                 }
                 else
@@ -322,7 +322,7 @@ FAR U8 BattleDrv(OrderType *Order)
                     for (i = 0;i < pcount;i ++)
                     {
                         DelPerson(o,pqptr[i]);
-                        genArray[10 + i] = PID(pqptr[i].pid + 1);
+                        genArray[10 + i] = PID(pqptr[i] + 1);
                     }
                 }
             }
@@ -333,26 +333,26 @@ FAR U8 BattleDrv(OrderType *Order)
         }
         else
         {
-            if (!ob.pid)
+            if (!ob)
             {
                 for (i = 0;i < 10;i ++)
                 {
-                    if (fighters[i].pid)
-                        AddPerson(o,PID(fighters[i].pid - 1));
+                    if (fighters[i])
+                        AddPerson(o,PID(fighters[i] - 1));
                 }
                 g_Cities[o].Belong = pb;
-                ShowFightWinNote(PID(pb.pid - 1));
+                ShowFightWinNote(PID(pb - 1));
                 break;
             }
 
-            if (ob.pid == pb.pid)
+            if (ob == pb)
             {
                 for (i = 0;i < 10;i ++)
                 {
-                    if (fighters[i].pid)
-                        AddPerson(o,PID(fighters[i].pid - 1));
+                    if (fighters[i])
+                        AddPerson(o,PID(fighters[i] - 1));
                 }
-                ShowFightWinNote(PID(pb.pid - 1));
+                ShowFightWinNote(PID(pb - 1));
                 break;
             }
             gam_memcpy(genArray, fighters, 10*sizeof(PersonID));
@@ -366,13 +366,13 @@ FAR U8 BattleDrv(OrderType *Order)
                     for (i = fcount + 1;i < pcount;i ++)
                     {
                         /*添加武将兵力排序*/
-                        if (g_Persons[pqptr[fcount].pid].Arms < g_Persons[pqptr[i].pid].Arms)
+                        if (g_Persons[pqptr[fcount]].Arms < g_Persons[pqptr[i]].Arms)
                         {
                             t = pqptr[i];
                             pqptr[i] = pqptr[fcount];
                             pqptr[fcount] = t;
                         }
-                        if (!g_Persons[pqptr[pcount - 1].pid].Arms)
+                        if (!g_Persons[pqptr[pcount - 1]].Arms)
                             pcount -= 1;
                     }
                 }
@@ -393,7 +393,7 @@ FAR U8 BattleDrv(OrderType *Order)
                     for (i = 0;i < pcount;i ++)
                     {
                         DelPerson(o,pqptr[i]);
-                        genArray[10 + i] = PID(pqptr[i].pid + 1);
+                        genArray[10 + i] = PID(pqptr[i] + 1);
                     }
                 }
             }
@@ -402,7 +402,7 @@ FAR U8 BattleDrv(OrderType *Order)
             g_FgtParam.MProvender = Order->Food;
             g_FgtParam.EProvender = g_Cities[o].Food;
             /*ShowAttackMsg(pb - 1,o);*/
-            ShowFightNote(PID(pb.pid - 1),PID(ob.pid - 1));
+            ShowFightNote(PID(pb - 1),PID(ob - 1));
 
             GamFight();
 
@@ -445,36 +445,36 @@ FAR U8 FightResultDeal(U8 city,U8 result)
         case FGT_WON:
             for (i = 0;i < 10;i ++)
             {
-                if (ptr[i].pid)
+                if (ptr[i])
                 {
-                    AddPerson(city,PID(ptr[i].pid - 1));
+                    AddPerson(city,PID(ptr[i] - 1));
                 }
             }
             /*if (FGT_AUTO != g_FgtParam.Mode)*/
-            ShowFightWinNote(PID(g_Persons[ptr[0].pid - 1].Belong.pid - 1));
+            ShowFightWinNote(PID(g_Persons[ptr[0] - 1].Belong - 1));
             if (FGT_AT == g_FgtParam.Mode || FGT_AUTO == g_FgtParam.Mode)
             {
-                cking = BeOccupied(PID(ptr[0].pid - 1),city);
+                cking = BeOccupied(PID(ptr[0] - 1),city);
 
             }
             ii = TheLoserDeal(city,&ptr[10]);
-            if (0xffff != ii.pid)
+            if (0xffff != ii)
                 cking = ii;
             break;
         case FGT_LOSE:
             for (i = 10;i < 20;i ++)
             {
-                if (ptr[i].pid)
+                if (ptr[i])
                 {
-                    AddPerson(city,PID(ptr[i].pid - 1));
+                    AddPerson(city,PID(ptr[i] - 1));
                 }
             }
             if (FGT_DF == g_FgtParam.Mode)
             {
-                cking = BeOccupied(PID(ptr[10].pid - 1),city);
+                cking = BeOccupied(PID(ptr[10] - 1),city);
             }
             ii = TheLoserDeal(city,ptr);
-            if (0xffff != ii.pid)
+            if (0xffff != ii)
                 cking = ii;
 
             if (FGT_AUTO != g_FgtParam.Mode)
@@ -494,7 +494,7 @@ FAR U8 FightResultDeal(U8 city,U8 result)
             }
             else
             {
-                ShowFightWinNote(PID(g_Persons[ptr[10].pid - 1].Belong.pid - 1));
+                ShowFightWinNote(PID(g_Persons[ptr[10] - 1].Belong - 1));
             }
 
             break;
@@ -505,7 +505,7 @@ FAR U8 FightResultDeal(U8 city,U8 result)
     cptr->Money = cptr->Money - cptr->Money / 20;
     cptr->PeopleDevotion = cptr->PeopleDevotion - cptr->PeopleDevotion / 10;
 
-    if (0xffff != cking.pid)
+    if (0xffff != cking)
     {
         /*添加另立新君代码*/
         KingOverDeal(cking);
@@ -546,14 +546,14 @@ PersonID TheLoserDeal(U8 city,PersonID *lqueue)
     cking = PID(0xffff);
     for (i = 0;i < 10;i ++)
     {
-        if (lqueue[i].pid)
+        if (lqueue[i])
         {
-            p = PID(lqueue[i].pid - 1);
-            pptr = &g_Persons[p.pid];
+            p = PID(lqueue[i] - 1);
+            pptr = &g_Persons[p];
             rnd = gam_rand() % 100;
             if (rnd > pptr->IQ)
             {
-                if (pptr->Belong.pid == lqueue[i].pid)
+                if (pptr->Belong == lqueue[i])
                     cking = p;
                 HoldCaptive(p,city);
             }
@@ -562,7 +562,7 @@ PersonID TheLoserDeal(U8 city,PersonID *lqueue)
                 /*添加逃跑代码*/
                 if (!LostEscape(p,city))
                 {
-                    if (pptr->Belong.pid == lqueue[i].pid)
+                    if (pptr->Belong == lqueue[i])
                         cking = p;
 
                     if (rnd)
@@ -613,7 +613,7 @@ void HoldCaptive(PersonID person,U8 city)
 {
     PersonType *pptr;
 
-    pptr = &g_Persons[person.pid];
+    pptr = &g_Persons[person];
     pptr->OldBelong = pptr->Belong;
     pptr->Belong = PID(0xffff);
     pptr->Arms = 0;
@@ -642,7 +642,7 @@ U8 LostEscape(PersonID person,U8 city)
     U8 *cqptr;
 
     cqptr = SHARE_MEM;
-    pcount = GetKingCitys(PID(g_Persons[person.pid].Belong.pid - 1),cqptr);
+    pcount = GetKingCitys(PID(g_Persons[person].Belong - 1),cqptr);
     if (pcount)
     {
         rnd = gam_rand() % pcount;
@@ -674,20 +674,20 @@ PersonID BeOccupied(PersonID person,U8 city)
 
     pqptr = (PersonID*)SHARE_MEM;
     pcount = GetCityPersons(city,pqptr);
-    g_Cities[city].Belong = g_Persons[person.pid].Belong;
-    g_Cities[city].SatrapId = PID(person.pid + 1);
+    g_Cities[city].Belong = g_Persons[person].Belong;
+    g_Cities[city].SatrapId = PID(person + 1);
     rev = PID(0xffff);
     for (i = 0;i < pcount;i ++)
     {
         p = pqptr[i];
-        pptr = &g_Persons[p.pid];
+        pptr = &g_Persons[p];
 
-        if (pptr->Belong.pid == (p.pid + 1))
+        if (pptr->Belong == (p + 1))
         {
             rev = p;
             cavpdb = p;
             cavps += 1;
-            pptr->Belong.pid = 0xffff;
+            pptr->Belong = 0xffff;
         }
         else
         {
@@ -729,34 +729,34 @@ FAR void KingOverDeal(PersonID king)
         pcount = GetKingPersons(king,pqptr);
         if (pcount)
         {
-            if (king.pid == g_PlayerKing.pid)
+            if (king == g_PlayerKing)
             {
                 /*提示君主遭劫，拥立新君*/
                 ShowConstStrMsg(STR_MAKENEWKING);
                 do
                 {
                     pcode = ShowPersonControl(pqptr,pcount,PID0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-                } while (0xffff == pcode.pid);
-                g_PlayerKing = pqptr[pcode.pid];
+                } while (0xffff == pcode);
+                g_PlayerKing = pqptr[pcode];
             }
             else
             {
                 pcode = PID0;
                 for (i = 1;i < pcount;i ++)
                 {
-                    if (g_Persons[pqptr[pcode.pid].pid].IQ < g_Persons[pqptr[i].pid].IQ)
+                    if (g_Persons[pqptr[pcode]].IQ < g_Persons[pqptr[i]].IQ)
                         pcode = PID(i);
                 }
             }
-            NewKingNote(pqptr[pcode.pid]);
-            g_Persons[pqptr[pcode.pid].pid].Devotion = 100;
+            NewKingNote(pqptr[pcode]);
+            g_Persons[pqptr[pcode]].Devotion = 100;
             for (i = 0;i < ccount;i ++)
             {
-                g_Cities[cqptr[i]].Belong.pid = pqptr[pcode.pid].pid + 1;
+                g_Cities[cqptr[i]].Belong = pqptr[pcode] + 1;
             }
             for (i = 0;i < pcount;i ++)
             {
-                g_Persons[pqptr[i].pid].Belong.pid = pqptr[pcode.pid].pid + 1;
+                g_Persons[pqptr[i]].Belong = pqptr[pcode] + 1;
             }
         }
         else
@@ -1047,7 +1047,7 @@ FAR U8 AddFightOrder(OrderType *Order,PersonID *Fighters)
     {
         if (!fiptr[i])
         {
-            Order->Person.pid = i;
+            Order->Person = i;
             if (AddOrderEnd(Order)) {
                 fiptr[i] = 1;
                 fptr = FIGHTERS;

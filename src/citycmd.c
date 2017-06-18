@@ -142,8 +142,8 @@ U8 SearchDrv(OrderType *Order)
     pqptr = (PersonID*)SHARE_MEM;
     pss = gam_rand() % 4;
     person = Order->Person;
-    pb = g_Persons[person.pid].Belong;
-    iq = g_Persons[person.pid].IQ;
+    pb = g_Persons[person].Belong;
+    iq = g_Persons[person].IQ;
 
     if (g_engineDebug) pss = 1;
 
@@ -165,15 +165,15 @@ U8 SearchDrv(OrderType *Order)
                         {
                             sp = gam_rand() % pcount;
                             p = pqptr[sp];
-                            count = p.pid;
+                            count = p;
                             infp = (SearchCondition*)ResLoadToCon(GENERAL_CON,g_PIdx,g_CBnkPtr);
-                            fo = infp[count].bole.pid;
+                            fo = infp[count].bole;
                             rnd = 0;
-                            if (fo - 1 == person.pid)
+                            if (fo - 1 == person)
                             {
                                 rnd = 1;
-                                g_Persons[p.pid].Belong = pb;
-                                g_Persons[p.pid].Devotion = 70 + gam_rand() % 30;
+                                g_Persons[p].Belong = pb;
+                                g_Persons[p].Devotion = 70 + gam_rand() % 30;
 
                                 /*搜索到武将*/
                             }
@@ -183,8 +183,8 @@ U8 SearchDrv(OrderType *Order)
                                 if (rnd < iq)
                                 {
                                     rnd = 1;
-                                    g_Persons[p.pid].Belong = pb;
-                                    g_Persons[p.pid].Devotion = 70 + gam_rand() % 30;
+                                    g_Persons[p].Belong = pb;
+                                    g_Persons[p].Devotion = 70 + gam_rand() % 30;
                                 }
                                 else
                                 {
@@ -192,7 +192,7 @@ U8 SearchDrv(OrderType *Order)
                                 }
                             }
 
-                            if (pb.pid == g_PlayerKing.pid + 1)
+                            if (pb == g_PlayerKing + 1)
                             {
                                 pss = 1;
                                 if (!rnd)
@@ -232,13 +232,13 @@ U8 SearchDrv(OrderType *Order)
                             p = pqptr[sp];
                             count = p;
                             infp = (SearchCondition*)ResLoadToCon(GOODS_CON,g_PIdx,g_CBnkPtr);
-                            fo = infp[count].bole.pid;
+                            fo = infp[count].bole;
                             /*rnd = 0;*/
-                            if (!fo || (fo - 1 == person.pid))
+                            if (!fo || (fo - 1 == person))
                             {
                                 /*搜索到道具*/
                                 /*rnd = 1;*/
-                                if (pb.pid == g_PlayerKing.pid + 1)
+                                if (pb == g_PlayerKing + 1)
                                 {
                                     ResLoadToMem(STRING_CONST,STR_GETGOODS,str);
                                     GetGoodsName(p,astr);
@@ -281,7 +281,7 @@ U8 SearchDrv(OrderType *Order)
             }
             break;
     }
-    while (pb.pid == g_PlayerKing.pid + 1)
+    while (pb == g_PlayerKing + 1)
     {
         if (1 == pss)
             break;
@@ -367,11 +367,11 @@ U8 SurrenderDrv(OrderType *Order)
 
     p = Order->Person;
     ob = Order->Object;
-    pptr = &g_Persons[ob.pid];
+    pptr = &g_Persons[ob];
     flag = 0;
     do
     {
-        if (pptr->Belong.pid == g_Persons[p.pid].Belong.pid)
+        if (pptr->Belong == g_Persons[p].Belong)
         {
             AddPerson(Order->City,p);
             return(1);
@@ -381,7 +381,7 @@ U8 SurrenderDrv(OrderType *Order)
             goto tagSuccess;
         }
 
-        rade = g_Persons[p.pid].IQ - pptr->IQ;
+        rade = g_Persons[p].IQ - pptr->IQ;
         rade += 50;
         randint = gam_rand() % 100;
         if (randint > rade)
@@ -421,12 +421,12 @@ U8 SurrenderDrv(OrderType *Order)
 
     tagSuccess:
         /*添加招降成功代码*/
-        pptr->Belong = g_Persons[p.pid].Belong;
+        pptr->Belong = g_Persons[p].Belong;
         pptr->Devotion = 40 + gam_rand() % 40;
         flag = 1;
     }while (0);
 
-    if (g_Persons[p.pid].Belong.pid == g_PlayerKing.pid + 1)
+    if (g_Persons[p].Belong == g_PlayerKing + 1)
     {
         if (flag)
         {
@@ -487,13 +487,13 @@ U8 TransportationDrv(OrderType *Order)
         ob = Order->Object;
 
         if (g_engineConfig.fixOverFlow16) {
-            ADD16(g_Cities[ob.pid].Food, Order->Food);
-            ADD16(g_Cities[ob.pid].Money, Order->Money);
-            ADD16(g_Cities[ob.pid].MothballArms, Order->Arms);
+            ADD16(g_Cities[ob].Food, Order->Food);
+            ADD16(g_Cities[ob].Money, Order->Money);
+            ADD16(g_Cities[ob].MothballArms, Order->Arms);
         } else {
-            g_Cities[ob.pid].Food += Order->Food;
-            g_Cities[ob.pid].Money += Order->Money;
-            g_Cities[ob.pid].MothballArms += Order->Arms;
+            g_Cities[ob].Food += Order->Food;
+            g_Cities[ob].Money += Order->Money;
+            g_Cities[ob].MothballArms += Order->Arms;
         }
         rpi = STR_RP9;
     }
@@ -528,15 +528,15 @@ U8 MoveDrv(OrderType *Order)
     PersonID *b;
     U32 ob;
 
-    ob = Order->Object.pid;
+    ob = Order->Object;
     b = &g_Cities[ob].Belong;
-    pb = g_Persons[Order->Person.pid].Belong;
-    if (!(*b).pid)
+    pb = g_Persons[Order->Person].Belong;
+    if (!(*b))
     {
         *b = pb;
         /*g_Cities[ob].SatrapId = Order->Person + 1;*/
     }
-    else if ((*b).pid != pb.pid)
+    else if ((*b) != pb)
     {
         ob = Order->City;
     }
@@ -588,17 +588,17 @@ U8 AlienateDrv(OrderType *Order)
 
     do
     {
-        rade = g_Persons[Order->Person.pid].IQ - g_Persons[ob.pid].IQ;
+        rade = g_Persons[Order->Person].IQ - g_Persons[ob].IQ;
         rade += 50;
         randint = gam_rand() % 100;
         if (randint > rade)
             break;
 
         randint = gam_rand() % 100;
-        if (randint < g_Persons[ob.pid].Devotion)
+        if (randint < g_Persons[ob].Devotion)
             break;
 
-        switch (g_Persons[ob.pid].Character)
+        switch (g_Persons[ob].Character)
         {
             case CHARACTER_LOYALISM:
                 rade = ALIENATE_LOYALISM;
@@ -622,11 +622,11 @@ U8 AlienateDrv(OrderType *Order)
 
 
         /*添加离间成功代码*/
-        if (g_Persons[ob.pid].Devotion > 4)
-            g_Persons[ob.pid].Devotion -= 4;
+        if (g_Persons[ob].Devotion > 4)
+            g_Persons[ob].Devotion -= 4;
         else
-            g_Persons[ob.pid].Devotion = 0;
-        U8 devo = g_Persons[ob.pid].Devotion;
+            g_Persons[ob].Devotion = 0;
+        U8 devo = g_Persons[ob].Devotion;
         U8 ind = 0;
         if (devo > 80) {
             ind = 0;
@@ -642,7 +642,7 @@ U8 AlienateDrv(OrderType *Order)
     }while (0);
 
     {
-        U8 devo = g_Persons[ob.pid].Devotion;
+        U8 devo = g_Persons[ob].Devotion;
         U8 ind = 0;
         if (devo > 80) {
             ind = 0;
@@ -682,16 +682,16 @@ U8 CanvassDrv(OrderType *Order)
     p = Order->Person;
     do
     {
-        rade = g_Persons[p.pid].IQ - g_Persons[o.pid].IQ;
+        rade = g_Persons[p].IQ - g_Persons[o].IQ;
         randint = gam_rand() % 100;
         if ((randint + 100) > (rade + 100))
             break;
 
         randint = gam_rand() % 100;
-        if (randint < g_Persons[o.pid].Devotion)
+        if (randint < g_Persons[o].Devotion)
             break;
 
-        switch (g_Persons[o.pid].Character)
+        switch (g_Persons[o].Character)
         {
             case CHARACTER_LOYALISM:
                 rade = CANVASS_LOYALISM;
@@ -719,8 +719,8 @@ U8 CanvassDrv(OrderType *Order)
         /*添加招揽成功代码*/
         DelPerson(c,o);
         AddPerson(Order->City,o);
-        g_Persons[o.pid].Belong = g_Persons[p.pid].Belong;
-        g_Persons[o.pid].Devotion = 40 + gam_rand() % 40;
+        g_Persons[o].Belong = g_Persons[p].Belong;
+        g_Persons[o].Devotion = 40 + gam_rand() % 40;
         {
             static const char* dialogs[] = {
                 /* 良禽择木而栖，贤臣择主而仕 */
@@ -778,17 +778,17 @@ U8 CounterespiongeDrv(OrderType *Order)
     o = Order->Object;
     do
     {
-        rade = g_Persons[Order->Person.pid].IQ - g_Persons[o.pid].IQ;
+        rade = g_Persons[Order->Person].IQ - g_Persons[o].IQ;
         rade += 50;
         randint = gam_rand() % 100;
         if (randint > rade)
             break;
 
         randint = gam_rand() % 100;
-        if (randint < g_Persons[o.pid].Devotion)
+        if (randint < g_Persons[o].Devotion)
             break;
 
-        switch (g_Persons[o.pid].Character)
+        switch (g_Persons[o].Character)
         {
             case CHARACTER_LOYALISM:
                 rade = COUNTERESPIONGE_LOYALISM;
@@ -814,13 +814,13 @@ U8 CounterespiongeDrv(OrderType *Order)
         if (0xff == c)
             break;
         /*添加策反成功代码*/
-        g_Persons[o.pid].Belong = PID(o.pid + 1);
+        g_Persons[o].Belong = PID(o + 1);
         pqptr = (PersonID*)SHARE_MEM;
         pcount = GetCityPersons(c,pqptr);
-        g_Cities[c].Belong = PID(o.pid + 1);
+        g_Cities[c].Belong = PID(o + 1);
         for (i = 0;i < pcount;i ++)
         {
-            g_Persons[pqptr[i].pid].Belong = PID(o.pid + 1);
+            g_Persons[pqptr[i]].Belong = PID(o + 1);
         }
         {
             static const char* dialogs[] = {
@@ -896,15 +896,15 @@ U8 InduceDrv(OrderType *Order)
     cqptr = SHARE_MEM;
     do
     {
-        if (o.pid == g_PlayerKing.pid)
+        if (o == g_PlayerKing)
             break;
-        pb = g_Persons[p.pid].Belong;
-        if (pb.pid == g_PlayerKing.pid + 1 && g_engineDebug)
+        pb = g_Persons[p].Belong;
+        if (pb == g_PlayerKing + 1 && g_engineDebug)
             goto suc;
-        if (GetKingCitys(PID(pb.pid - 1),cqptr) < (GetKingCitys(PID(g_Persons[o.pid].Belong.pid - 1),cqptr) * 2))
+        if (GetKingCitys(PID(pb - 1),cqptr) < (GetKingCitys(PID(g_Persons[o].Belong - 1),cqptr) * 2))
             break;
 
-        rade = g_Persons[p.pid].IQ - g_Persons[o.pid].IQ;
+        rade = g_Persons[p].IQ - g_Persons[o].IQ;
         rade += 50;
         randint = gam_rand() % 100;
         if (randint > rade)
@@ -914,7 +914,7 @@ U8 InduceDrv(OrderType *Order)
          if (randint < g_Persons[Order->Object].Devotion)
          break;*/
 
-        switch (g_Persons[o.pid].Character)
+        switch (g_Persons[o].Character)
         {
             case CHARACTER_PEACE:
                 rade = PERSUADE_PEACE;
@@ -946,7 +946,7 @@ U8 InduceDrv(OrderType *Order)
             g_Cities[cqptr[i]].Belong = pb;
             for (j = 0;j < pcount;j ++)
             {
-                g_Persons[pqptr[j].pid].Belong = pb;
+                g_Persons[pqptr[j]].Belong = pb;
             }
         }
 
@@ -954,21 +954,21 @@ U8 InduceDrv(OrderType *Order)
         for (i = 0;i < PERSON_COUNT;i ++)
         {
             PersonID belong = g_Persons[i].Belong;
-            if (!belong.pid) continue;
+            if (!belong) continue;
 
-            belong.pid -= 1;
-            if (belong.pid == o.pid) {
-                if (belong.pid == i) {
+            belong -= 1;
+            if (belong == o) {
+                if (belong == i) {
                     g_Persons[i].Belong = pb;
                 } else {
-                    g_Persons[i].Belong.pid = 0;
+                    g_Persons[i].Belong = 0;
                 }
             }
         }
         wf = 1;
     }while (0);
 
-    if (pb.pid == g_PlayerKing.pid + 1)
+    if (pb == g_PlayerKing + 1)
     {
         if (wf)
         {
@@ -987,7 +987,7 @@ U8 InduceDrv(OrderType *Order)
         GetPersonName(o,str);
         ResLoadToMem(STRING_CONST,STR_INDUCENOTE,astr);
         gam_strcat(str,astr);
-        GetPersonName(PID(pb.pid - 1),astr);
+        GetPersonName(PID(pb - 1),astr);
         gam_strcat(str,astr);
         GamMsgBox(str,2);
     }
@@ -1076,7 +1076,7 @@ U8 DepredateDrv(OrderType *Order)
     cptr->PeopleDevotion /= 2;
     cptr->Farming /= 2;
     cptr->Commerce /= 2;
-    valf = g_Persons[Order->Person.pid].IQ + g_Persons[Order->Person.pid].Force;
+    valf = g_Persons[Order->Person].IQ + g_Persons[Order->Person].Force;
     valm = valf * 2;
     valf *= 5;
     if (g_engineConfig.fixOverFlow16) {
@@ -1086,7 +1086,7 @@ U8 DepredateDrv(OrderType *Order)
         cptr->Food += valf;
         cptr->Money += valm;
     }
-    if (g_Persons[Order->Person.pid].Belong.pid == g_PlayerKing.pid + 1)
+    if (g_Persons[Order->Person].Belong == g_PlayerKing + 1)
     {
         ResLoadToMem(STRING_CONST,P_SAY_STR28,str);
         gam_itoa(valm,astr,10);

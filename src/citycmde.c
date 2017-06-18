@@ -58,11 +58,11 @@ FAR U8 ConfiscateMake(U8 city)
         /*gam_clrlcd(WK_SX,WK_SY,WK_EX,WK_EY);*/
         ShowMapClear();
         pcode = ShowPersonControl(pqptr,pcount,pcode,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-        if (0xffff != pcode.pid)
+        if (0xffff != pcode)
         {
-            p = pqptr[pcode.pid];
+            p = pqptr[pcode];
             c = 0;
-            gptr = g_Persons[p.pid].Equip;
+            gptr = g_Persons[p].Equip;
             if (!gptr[0])
             {
                 gptr[0] = gptr[1];
@@ -104,15 +104,15 @@ FAR U8 ConfiscateMake(U8 city)
                     }
 
                     /*添加没收成功代码*/
-                    if (p.pid != g_PlayerKing.pid)
+                    if (p != g_PlayerKing)
                     {
                         ResLoadToMem(STRING_CONST,P_SAY_STR7 + (gam_rand() % 3),str);
                         ShowMapClear();
                         ShowGReport(p,str);
-                        if (g_Persons[p.pid].Devotion < 20)
-                            g_Persons[p.pid].Devotion = 0;
+                        if (g_Persons[p].Devotion < 20)
+                            g_Persons[p].Devotion = 0;
                         else
-                            g_Persons[p.pid].Devotion -= 20;
+                            g_Persons[p].Devotion -= 20;
                     }
                     if (DelGoodsPerson(gq[g],p)) {
                         gptr[g] = 0;
@@ -169,9 +169,9 @@ FAR U8 DepredateMake(U8 city)
             break;
         }
         pcode = ShowPersonControl(pqptr,pcount,PID0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-        if (0xffff != pcode.pid)
+        if (0xffff != pcode)
         {
-            p = pqptr[pcode.pid];
+            p = pqptr[pcode];
             if (!IsManual(p,CONSCRIPTION))
             {
                 ShowConstStrMsg(NOTE_STR9);
@@ -216,7 +216,7 @@ FAR void ShowAttackNote(PersonID ap,U8 city)
 
     ShowFightNoteFace(0);
 
-    if (ap.pid == g_PlayerKing.pid)
+    if (ap == g_PlayerKing)
     {
         ResLoadToMem(STRING_CONST,STR_OURS,str);
     }
@@ -282,7 +282,7 @@ FAR void ShowFightWinNote(PersonID wp)
 
     ShowFightNoteFace(2);
 
-    if (wp.pid == g_PlayerKing.pid)
+    if (wp == g_PlayerKing)
     {
         ResLoadToMem(STRING_CONST,STR_OURS,str);
     }
@@ -432,7 +432,7 @@ FAR U8 IsManual(PersonID person,U8 order)
     if (g_engineDebug) return 1;
 
     ptr = ResLoadToCon(IFACE_CONID,ConsumeThew,g_CBnkPtr);
-    if (g_Persons[person.pid].Thew >= ptr[order])
+    if (g_Persons[person].Thew >= ptr[order])
         return(1);
     else
         return(0);
@@ -457,9 +457,9 @@ FAR void OrderConsumeThew(PersonID person,U8 order)
     
     ptr = ResLoadToCon(IFACE_CONID,ConsumeThew,g_CBnkPtr);
     if (g_engineConfig.fixOverFlow16) {
-        ADD16(g_Persons[person.pid].Thew, -ptr[order]);
+        ADD16(g_Persons[person].Thew, -ptr[order]);
     } else {
-        g_Persons[person.pid].Thew -= ptr[order];
+        g_Persons[person].Thew -= ptr[order];
     }
 }
 
@@ -491,12 +491,12 @@ FAR U8 GetWeekCity(U8 count,U8 *cqueue)
     {
         cptr = &g_Cities[cqueue[c]];
         armst = 0;
-        for (i = 0;i < cptr->Persons.pid;i ++)
+        for (i = 0;i < cptr->Persons;i ++)
         {
-            p = g_PersonsQueue[cptr->PersonQueue.pid + i];
-            if (g_Persons[p.pid].Belong.pid == cptr->Belong.pid)
+            p = g_PersonsQueue[cptr->PersonQueue + i];
+            if (g_Persons[p].Belong == cptr->Belong)
             {
-                armst += g_Persons[p.pid].Arms;
+                armst += g_Persons[p].Arms;
             }
         }
         for (i = 0;i < ORDER_MAX;i ++)
@@ -507,7 +507,7 @@ FAR U8 GetWeekCity(U8 count,U8 *cqueue)
             
             if ((o != MOVE) && (o != BATTLE) && inode[i].City == cqueue[c])
             {
-                armst += g_Persons[inode[i].Person.pid].Arms;
+                armst += g_Persons[inode[i].Person].Arms;
             }
         }
         if (armsw > armst)

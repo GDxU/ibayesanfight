@@ -463,7 +463,7 @@ FAR void GetPersonName(PersonID person,U8 *str)
     U8 l = '\0';
 
     IF_HAS_HOOK("getPersonName") {
-        U16 personIndex = person.pid;
+        U16 personIndex = person;
         U8 name[12] = "";
         BIND_U16(&personIndex);
 
@@ -489,7 +489,7 @@ FAR void GetPersonName(PersonID person,U8 *str)
             l = GENERAL_NAME4;
             break;
     }
-    ResLoadToMem(l,person.pid + 1,str);
+    ResLoadToMem(l,person + 1,str);
     /***********************************************************/
     /*dptr = ResLoadToCon(GENERAL_NAME,g_PIdx,g_CBnkPtr);
      pnt = person;
@@ -577,21 +577,21 @@ void GetPersonProStr(PersonID person,U8 pro,U8 *str)
     }
 
 
-    b = g_Persons[person.pid].Belong;
+    b = g_Persons[person].Belong;
     switch (pro)
     {
         case 0:		/*归属*/
-            if (0xffff == b.pid)
+            if (0xffff == b)
             {
                 ResLoadToMem(STRING_CONST,ATRR_STR69,str);
             }
-            else if (b.pid == person.pid + 1)
+            else if (b == person + 1)
             {
                 ResLoadToMem(STRING_CONST,ATRR_STR68,str);
             }
-            else if (b.pid)
+            else if (b)
             {
-                GetPersonName(PID(b.pid - 1),str);
+                GetPersonName(PID(b - 1),str);
             }
             else
             {
@@ -602,22 +602,22 @@ void GetPersonProStr(PersonID person,U8 pro,U8 *str)
             GetCityName(GetPersonCity(person),str);
             break;
         case 2:		/*等级*/
-            gam_itoa(g_Persons[person.pid].Level,str,10);
+            gam_itoa(g_Persons[person].Level,str,10);
             break;
         case 3:		/*武力*/
-            gam_itoa(g_Persons[person.pid].Force,str,10);
+            gam_itoa(g_Persons[person].Force,str,10);
             break;
         case 4:		/*智力*/
-            gam_itoa(g_Persons[person.pid].IQ,str,10);
+            gam_itoa(g_Persons[person].IQ,str,10);
             break;
         case 5:		/*忠诚*/
-            if (b.pid == (person.pid + 1))
+            if (b == (person + 1))
             {
                 ResLoadToMem(STRING_CONST,ATRR_STR71,str);
             }
-            else if (b.pid)
+            else if (b)
             {
-                gam_itoa(g_Persons[person.pid].Devotion,str,10);
+                gam_itoa(g_Persons[person].Devotion,str,10);
             }
             else
             {
@@ -626,14 +626,14 @@ void GetPersonProStr(PersonID person,U8 pro,U8 *str)
 
             break;
         case 6:		/*经验*/
-            gam_itoa(g_Persons[person.pid].Experience,str,10);
+            gam_itoa(g_Persons[person].Experience,str,10);
             break;
         case 7:		/*体力*/
-            gam_itoa(g_Persons[person.pid].Thew,str,10);
+            gam_itoa(g_Persons[person].Thew,str,10);
             break;
         case 8:		/*兵种*/
         {
-            switch (GetArmType(&g_Persons[person.pid]))
+            switch (GetArmType(&g_Persons[person]))
             {
                 case 0:
                     idx = ATRR_STR11;
@@ -658,20 +658,20 @@ void GetPersonProStr(PersonID person,U8 pro,U8 *str)
             break;
         }
         case 9:		/*兵力*/
-            gam_itoa(g_Persons[person.pid].Arms,str,10);
+            gam_itoa(g_Persons[person].Arms,str,10);
             break;
         case 10:		/*年龄*/
-            gam_itoa(g_Persons[person.pid].Age,str,10);
+            gam_itoa(g_Persons[person].Age,str,10);
             break;
         case 11:		/*道具一*/
             str[0] = 0;
-            if (g_Persons[person.pid].Equip[0])
-                GetGoodsName(g_Persons[person.pid].Equip[0] - 1,str);
+            if (g_Persons[person].Equip[0])
+                GetGoodsName(g_Persons[person].Equip[0] - 1,str);
             break;
         case 12:		/*道具二*/
             str[0] = 0;
-            if (g_Persons[person.pid].Equip[1])
-                GetGoodsName(g_Persons[person.pid].Equip[1] - 1,str);
+            if (g_Persons[person].Equip[1])
+                GetGoodsName(g_Persons[person].Equip[1] - 1,str);
             break;
     }
 }
@@ -788,9 +788,9 @@ FAR PersonID ShowPersonControl(PersonID *person,U8 pcount,PersonID initSelected,
     y0 += 1;
     x1 -= 1;
 
-    top = initSelected.pid;
+    top = initSelected;
     top = limitValueInRange(top, 0, pcount-count);
-    set = initSelected.pid;
+    set = initSelected;
     set = limitValueInRange(set, 0, pcount-1);
     spc = 0;
     spcv[0] = 0;
@@ -1001,9 +1001,9 @@ void GetCityProStr(U8 city,U8 pro,U8 *str)
     {
         case 0:		/*归属*/
             ResLoadToMem(STRING_CONST,ATRR_STR1,str);
-            if (g_Cities[city].Belong.pid)
+            if (g_Cities[city].Belong)
             {
-                GetPersonName(PID(g_Cities[city].Belong.pid - 1),&str[5]);
+                GetPersonName(PID(g_Cities[city].Belong - 1),&str[5]);
             }
             else
             {
@@ -1012,9 +1012,9 @@ void GetCityProStr(U8 city,U8 pro,U8 *str)
             break;
         case 1:		/*太守*/
             ResLoadToMem(STRING_CONST,ATRR_STR2,str);
-            if (g_Cities[city].SatrapId.pid)
+            if (g_Cities[city].SatrapId)
             {
-                GetPersonName(PID(g_Cities[city].SatrapId.pid - 1),&str[5]);
+                GetPersonName(PID(g_Cities[city].SatrapId - 1),&str[5]);
             }
             else
             {

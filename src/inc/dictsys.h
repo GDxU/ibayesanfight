@@ -52,14 +52,12 @@ typedef unsigned int __attribute__((aligned(1))) U32;
 
 typedef U8 SBUF[1024];
 
-typedef struct {
-    U16 pid;
-} PersonID;
+typedef U16 PersonID;
 
-#define PID0 toPid(0)
-#define PID(n) toPid(n)
+#define PID0 0
+#define PID(n) (n)
 
-static inline PersonID toPid(U16 pid) { return (PersonID){ pid }; }
+//static inline PersonID toPid(U16 pid) { return (PersonID){ pid }; }
 
 #define		TRUE		1
 #define		true		1

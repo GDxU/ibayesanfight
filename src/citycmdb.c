@@ -407,16 +407,16 @@ FAR U8 AssartMake(U8 city)
         {
             ShowMapClear();
             pcode = ShowPersonControl(pqptr,pcount,PID(0),WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-            if (0xffff != pcode.pid)
+            if (0xffff != pcode)
             {
-                p = pqptr[pcode.pid];
+                p = pqptr[pcode];
                 if (!IsManual(p,ASSART))
                 {
                     ShowConstStrMsg(NOTE_STR9);
                     continue;
                 }
 
-                fa = g_Persons[p.pid].IQ / 10 * (gam_rand() % 4 + 2) + (g_Persons[p.pid].IQ >> 1);
+                fa = g_Persons[p].IQ / 10 * (gam_rand() % 4 + 2) + (g_Persons[p].IQ >> 1);
                 *f += fa;
                 if (*f > fl)
                 {
@@ -502,9 +502,9 @@ FAR U8 AccractbusinessMake(U8 city)
         {
             ShowMapClear();
             pcode = ShowPersonControl(pqptr,pcount,PID(0),WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-            if (0xffff != pcode.pid)
+            if (0xffff != pcode)
             {
-                p = pqptr[pcode.pid];
+                p = pqptr[pcode];
                 if (!IsManual(p,ACCRACTBUSINESS))
                 {
                     ShowConstStrMsg(NOTE_STR9);
@@ -513,7 +513,7 @@ FAR U8 AccractbusinessMake(U8 city)
                 // loong.FIXME:
                 // Old code:
                 // ca = g_Persons[p].IQ / 10 * (gam_rand() % 4 + 2) + g_Persons[p].IQ >> 1;
-                ca = g_Persons[p.pid].IQ / 10 * (gam_rand() % 4 + 2) + (g_Persons[p.pid].IQ >> 1);
+                ca = g_Persons[p].IQ / 10 * (gam_rand() % 4 + 2) + (g_Persons[p].IQ >> 1);
                 *c += ca;
                 if (*c > cl)
                 {
@@ -639,9 +639,9 @@ FAR U8 SearchMake(U8 city)
         {
             ShowMapClear();
             pcode = ShowPersonControl(pqptr,pcount,PID(0),WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-            if (0xffff != pcode.pid)
+            if (0xffff != pcode)
             {
-                p = pqptr[pcode.pid];
+                p = pqptr[pcode];
                 if (!IsManual(p,SEARCH))
                 {
                     ShowConstStrMsg(NOTE_STR9);
@@ -652,7 +652,7 @@ FAR U8 SearchMake(U8 city)
                 OrderConsumeMoney(city,SEARCH);
 
                 psay = gam_rand() % 3;
-                if (p.pid == g_PlayerKing.pid)
+                if (p == g_PlayerKing)
                 {
                     psay += P_SAY_STR24;
                 }
@@ -737,9 +737,9 @@ FAR U8 FatherMake(U8 city)
         {
             ShowMapClear();
             pcode = ShowPersonControl(pqptr,pcount,PID(0),WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-            if (0xffff != pcode.pid)
+            if (0xffff != pcode)
             {
-                p = pqptr[pcode.pid];
+                p = pqptr[pcode];
                 if (!IsManual(p,STATE_NORMAL))
                 {
                     ShowConstStrMsg(NOTE_STR9);
@@ -825,9 +825,9 @@ FAR U8 InspectionMake(U8 city)
         {
             ShowMapClear();
             pcode = ShowPersonControl(pqptr,pcount,PID0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-            if (0xffff != pcode.pid)
+            if (0xffff != pcode)
             {
-                p = pqptr[pcode.pid];
+                p = pqptr[pcode];
                 if (!IsManual(p,INSPECTION))
                 {
                     ShowConstStrMsg(NOTE_STR9);
@@ -923,9 +923,9 @@ FAR U8 SurrenderMake(U8 city)
 
         ShowMapClear();
         pcode = ShowPersonControl(pqptr,pcount,PID0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-        if (0xffff != pcode.pid)
+        if (0xffff != pcode)
         {
-            pp = pqptr[pcode.pid];
+            pp = pqptr[pcode];
             
             pcount = GetCityPersons(city,pqptr);
             if (!pcount)
@@ -937,9 +937,9 @@ FAR U8 SurrenderMake(U8 city)
             {
                 ShowMapClear();
                 pcode = ShowPersonControl(pqptr,pcount,PID0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-                if (0xffff != pcode.pid)
+                if (0xffff != pcode)
                 {
-                    p = pqptr[pcode.pid];
+                    p = pqptr[pcode];
                     if (!IsManual(p,SURRENDER))
                     {
                         ShowConstStrMsg(NOTE_STR9);
@@ -1005,10 +1005,10 @@ FAR U8 KillMake(U8 city)
         ShowConstStrMsg(STR_NOCAPTIVES);
     }
     pcode = ShowPersonControl(pqptr,pcount,PID0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-    if (0xffff != pcode.pid)
+    if (0xffff != pcode)
     {
         /*添加处斩提示代码*/
-        gptr = g_Persons[pqptr[pcode.pid].pid].Equip;
+        gptr = g_Persons[pqptr[pcode]].Equip;
         if (gptr[0])
         {
             U16 index = AddGoods(city,gptr[0] - 1);
@@ -1021,8 +1021,8 @@ FAR U8 KillMake(U8 city)
         }
         ResLoadToMem(STRING_CONST,P_SAY_STR4 + (gam_rand() % 3),str);
         ShowMapClear();
-        ShowGReport(pqptr[pcode.pid],str);
-        DelPerson(city,pqptr[pcode.pid]);
+        ShowGReport(pqptr[pcode],str);
+        DelPerson(city,pqptr[pcode]);
     }
     
     return(1);
@@ -1059,10 +1059,10 @@ FAR U8 BanishMake(U8 city)
         return(1);
     }
     pcode = ShowPersonControl(pqptr,pcount,PID0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-    if (0xffff != pcode.pid)
+    if (0xffff != pcode)
     {	
-        p = pqptr[pcode.pid];
-        g_Persons[p.pid].Belong = PID0;
+        p = pqptr[pcode];
+        g_Persons[p].Belong = PID0;
         DelPerson(city,p);
         rnd = gam_rand() % CITY_MAX;
         AddPerson(rnd,p);
@@ -1119,16 +1119,16 @@ FAR U8 LargessMake(U8 city)
                     break;
                 }
                 pcode = ShowPersonControl(pqptr,pcount,PID0,WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-                if (0xffff != pcode.pid)
+                if (0xffff != pcode)
                 {
                     int ret = -1;
                     
                     g = gqptr[gcode];
-                    p = pqptr[pcode.pid];
+                    p = pqptr[pcode];
 
                     IF_HAS_HOOK("willGiveTool") {
                         BIND_U8EX("cityIndex", &city);
-                        BIND_U16EX("personIndex", &pqptr[pcode.pid].pid);
+                        BIND_U16EX("personIndex", &pqptr[pcode]);
                         BIND_U8EX("toolIndex", &gqptr[gcode]);
                         ret = CALL_HOOK_A();
                     }
@@ -1137,7 +1137,7 @@ FAR U8 LargessMake(U8 city)
                         break;
                     }
 
-                    eq = g_Persons[p.pid].Equip;
+                    eq = g_Persons[p].Equip;
                     if (!(eq[0]))
                     {
                         gi = 0;
@@ -1167,14 +1167,14 @@ FAR U8 LargessMake(U8 city)
                     }
                     /*添加赏赐成功代码*/
                     DelGoods(city,g);
-                    if (p.pid != g_PlayerKing.pid)
+                    if (p != g_PlayerKing)
                     {
                         ResLoadToMem(STRING_CONST,P_SAY_STR10 + (gam_rand() % 3),str);
                         ShowMapClear();
                         ShowGReport(p,str);
-                        g_Persons[p.pid].Devotion += 8;
-                        if (g_Persons[p.pid].Devotion > 100)
-                            g_Persons[p.pid].Devotion = 100;
+                        g_Persons[p].Devotion += 8;
+                        if (g_Persons[p].Devotion > 100)
+                            g_Persons[p].Devotion = 100;
                     }
                     break;
                 }

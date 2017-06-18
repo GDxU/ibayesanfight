@@ -1033,7 +1033,7 @@ void FgtDrvState(void)
         if(STATE_SW == state)
             continue;
         tmp = TransIdxToGen2(i);
-        per = &g_Persons[tmp.pid];
+        per = &g_Persons[tmp];
         rec = (gam_rand() % 60) < (per->IQ >> 1);
         arms = per->Arms;
         update = false;
@@ -1283,7 +1283,7 @@ void FgtChkAtkEnd(void)
         if(STATE_SW == pos->state)
             continue;
         p = TransIdxToGen2(i);
-        per = &g_Persons[p.pid];
+        per = &g_Persons[p];
         x = pos->x;
         y = pos->y;
         idx = gam_rand() % 3;
@@ -1480,7 +1480,7 @@ void FgtChkEnd(U8 flag)
  ***********************************************************************/
 PersonID TransIdxToGen2(U8 idx)
 {
-    return PID(g_FgtParam.GenArray[idx].pid - 1);
+    return PID(g_FgtParam.GenArray[idx] - 1);
 }
 /***********************************************************************
  * 说明:     资源管理函数的本体调用

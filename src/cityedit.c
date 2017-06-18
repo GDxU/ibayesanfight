@@ -52,21 +52,21 @@ FAR U8 AddPerson(U8 city,PersonID person)
     if (city >= CITY_MAX)
         return(0);
 
-    if (person.pid >= PERSON_COUNT)
+    if (person >= PERSON_COUNT)
         return(0);
 
-    for (i = PERSON_COUNT - 1;i > g_Cities[city].PersonQueue.pid;i --)
+    for (i = PERSON_COUNT - 1;i > g_Cities[city].PersonQueue;i --)
     {
         g_PersonsQueue[i] = g_PersonsQueue[i - 1];
     }
 
     for (i = city + 1;i < CITY_MAX;i ++)
     {
-        g_Cities[i].PersonQueue.pid += 1;
+        g_Cities[i].PersonQueue += 1;
     }
 
-    g_PersonsQueue[g_Cities[city].PersonQueue.pid] = person;
-    g_Cities[city].Persons.pid += 1;
+    g_PersonsQueue[g_Cities[city].PersonQueue] = person;
+    g_Cities[city].Persons += 1;
 
     return(1);
 }
@@ -93,16 +93,16 @@ FAR U8 DelPerson(U8 city,PersonID person)
     if (city >= CITY_MAX)
         return(0);
 
-    if (person.pid >= PERSON_COUNT)
+    if (person >= PERSON_COUNT)
         return(0);
 
     cptr = &g_Cities[city];
 
-    qnum  = cptr->PersonQueue.pid + cptr->Persons.pid;
+    qnum  = cptr->PersonQueue + cptr->Persons;
 
-    for (i = cptr->PersonQueue.pid;i < qnum;i ++)
+    for (i = cptr->PersonQueue;i < qnum;i ++)
     {
-        if (g_PersonsQueue[i].pid == person.pid)
+        if (g_PersonsQueue[i] == person)
             break;
     }
 
@@ -114,11 +114,11 @@ FAR U8 DelPerson(U8 city,PersonID person)
         g_PersonsQueue[i] = g_PersonsQueue[i + 1];
     }
 
-    cptr->Persons.pid -= 1;
+    cptr->Persons -= 1;
 
     for (i = city + 1;i < CITY_MAX;i ++)
     {
-        g_Cities[i].PersonQueue.pid -= 1;
+        g_Cities[i].PersonQueue -= 1;
     }
 
     return(1);
@@ -547,7 +547,7 @@ FAR U8 GetRoundSelfCity(U8 city,U8 *cqueue)
         if (inf[i])
         {
             cp = g_Cities[inf[i] - 1].Belong;
-            if (cp.pid == cb.pid)
+            if (cp == cb)
             {
                 cqueue[count] = inf[i] - 1;
                 count += 1;
@@ -589,7 +589,7 @@ FAR U8 GetRoundEnemyCity(U8 city,U8 *cqueue)
         if (inf[i])
         {
             cp = g_Cities[inf[i] - 1].Belong;
-            if (cp.pid && (cp.pid != cb.pid))
+            if (cp && (cp != cb))
             {
                 if (cqueue) cqueue[count] = inf[i] - 1;
                 count += 1;
@@ -619,7 +619,7 @@ FAR U8 GetKingCitys(PersonID king,U8 *cqueue)
     count = 0;
     for (c = 0;c < CITY_MAX;c ++)
     {
-        if (g_Cities[c].Belong.pid == (king.pid + 1))
+        if (g_Cities[c].Belong == (king + 1))
         {
             cqueue[count] = c;
             count ++;
@@ -647,10 +647,10 @@ FAR U8 GetPersonCity(PersonID person)
 
     for (c = 0;c < CITY_MAX;c ++)
     {
-        j = g_Cities[c].PersonQueue.pid;
-        for (i = 0;i < g_Cities[c].Persons.pid;i ++,j ++)
+        j = g_Cities[c].PersonQueue;
+        for (i = 0;i < g_Cities[c].Persons;i ++,j ++)
         {
-            if (g_PersonsQueue[j].pid == person.pid)
+            if (g_PersonsQueue[j] == person)
             {
                 return(c);
             }
@@ -678,10 +678,10 @@ FAR U32 GetCityPersons(U8 city, PersonID *pqueue)
     PersonID p;
 
     count = 0;
-    for (i = 0;i < g_Cities[city].Persons.pid;i ++)
+    for (i = 0;i < g_Cities[city].Persons;i ++)
     {
-        p = g_PersonsQueue[g_Cities[city].PersonQueue.pid + i];
-        if (g_Persons[p.pid].Belong.pid == g_Cities[city].Belong.pid)
+        p = g_PersonsQueue[g_Cities[city].PersonQueue + i];
+        if (g_Persons[p].Belong == g_Cities[city].Belong)
         {
             pqueue[count] = p;
             count += 1;
@@ -710,10 +710,10 @@ FAR U8 GetCityOutPersons(U8 city,PersonID *pqueue)
     PersonID p;
 
     count = 0;
-    for (i = 0;i < g_Cities[city].Persons.pid;i ++)
+    for (i = 0;i < g_Cities[city].Persons;i ++)
     {
-        p = g_PersonsQueue[g_Cities[city].PersonQueue.pid + i];
-        if (!(g_Persons[p.pid].Belong.pid))
+        p = g_PersonsQueue[g_Cities[city].PersonQueue + i];
+        if (!(g_Persons[p].Belong))
         {
             pqueue[count] = p;
             count += 1;
@@ -741,10 +741,10 @@ FAR U8 GetCityCaptives(U8 city,PersonID *pqueue)
     PersonID p;
 
     count = 0;
-    for (i = 0;i < g_Cities[city].Persons.pid;i ++)
+    for (i = 0;i < g_Cities[city].Persons;i ++)
     {
-        p = g_PersonsQueue[g_Cities[city].PersonQueue.pid + i];
-        if (0xffff == (g_Persons[p.pid].Belong.pid))
+        p = g_PersonsQueue[g_Cities[city].PersonQueue + i];
+        if (0xffff == (g_Persons[p].Belong))
         {
             pqueue[count] = p;
             count += 1;
@@ -775,12 +775,12 @@ FAR U8 GetEnemyPersons(PersonID king,PersonID *pqueue)
     for (c = 0;c < CITY_MAX;c ++)
     {
         b = g_Cities[c].Belong;
-        if ((b.pid != (king.pid + 1)) && b.pid)
+        if ((b != (king + 1)) && b)
         {
-            for (i = 0;i < g_Cities[c].Persons.pid;i ++)
+            for (i = 0;i < g_Cities[c].Persons;i ++)
             {
-                p = g_PersonsQueue[g_Cities[c].PersonQueue.pid + i];
-                if ((g_Persons[p.pid].Belong.pid == b.pid) && ((p.pid + 1) != b.pid))
+                p = g_PersonsQueue[g_Cities[c].PersonQueue + i];
+                if ((g_Persons[p].Belong == b) && ((p + 1) != b))
                 {
                     pqueue[count] = p;
                     count += 1;
@@ -812,15 +812,15 @@ FAR U8 GetEnemySatraps(PersonID king,PersonID *squeue)
     count = 0;
     for (c = 0;c < CITY_MAX;c ++)
     {
-        b = g_Cities[c].Belong.pid;
+        b = g_Cities[c].Belong;
         if (!(b))
             continue;
 
-        s = g_Cities[c].SatrapId.pid;
+        s = g_Cities[c].SatrapId;
         if (!s) {
             continue;
         }
-        if ((b != (king.pid + 1)) && (s != b))
+        if ((b != (king + 1)) && (s != b))
         {
             squeue[count] = PID(s - 1);
             count += 1;
@@ -850,12 +850,12 @@ FAR U8 GetEnemyKing(PersonID king,PersonID *kqueue)
     count = 0;
     for (c = 0;c < CITY_MAX;c ++)
     {
-        b = g_Cities[c].Belong.pid;
-        if ((b) && (b != (king.pid + 1)))
+        b = g_Cities[c].Belong;
+        if ((b) && (b != (king + 1)))
         {
             for (i = 0;i < count;i ++)
             {
-                if (kqueue[i].pid == (b - 1))
+                if (kqueue[i] == (b - 1))
                     break;
             }
             if (i < count)
@@ -889,7 +889,7 @@ FAR U8 GetKingPersons(PersonID king,PersonID *pqueue)
     count = 0;
     for (c = 0;c < CITY_MAX;c ++)
     {
-        if (g_Cities[c].Belong.pid == (king.pid + 1))
+        if (g_Cities[c].Belong == (king + 1))
         {
             count += GetCityPersons(c,&pqueue[count]);
         }
@@ -1180,11 +1180,11 @@ U8 ShowCityMap(CitySetType *pos)
                 if (citymap[h][w])
                 {
                     /*显示城市图标*/
-                    if (g_Cities[citymap[h][w] - 1].Belong.pid == (g_PlayerKing.pid + 1))
+                    if (g_Cities[citymap[h][w] - 1].Belong == (g_PlayerKing + 1))
                     {
                         c = 8;
                     }
-                    else if (g_Cities[citymap[h][w] - 1].Belong.pid)
+                    else if (g_Cities[citymap[h][w] - 1].Belong)
                     {
                         c = 7;
                     }
@@ -1211,7 +1211,7 @@ U8 ShowCityMap(CitySetType *pos)
 
     gam_clrvscr(WK_SX + CITYMAP_TIL_W * SHOWMAP_WS,WK_SY,WK_EX,WK_EY,g_VisScr);
     cicon = ResLoadToCon(GEN_HEADPIC1 + g_PIdx,1,g_CBnkPtr);
-    GamPicShowExV(WK_SX + CITYMAP_TIL_W * SHOWMAP_WS + ((WK_EX - (WK_SX + CITYMAP_TIL_W * SHOWMAP_WS) - 24) / 2),WK_SY + 4,24,24,g_PlayerKing.pid,cicon,g_VisScr);
+    GamPicShowExV(WK_SX + CITYMAP_TIL_W * SHOWMAP_WS + ((WK_EX - (WK_SX + CITYMAP_TIL_W * SHOWMAP_WS) - 24) / 2),WK_SY + 4,24,24,g_PlayerKing,cicon,g_VisScr);
     cicon = ResLoadToCon(MAPFACE_ICON,1,g_CBnkPtr);
     GamPicShowExV(WK_SX + CITYMAP_TIL_W * SHOWMAP_WS + 2,WK_SY + 4 + 24 + (12 - 9) / 2 + 4,7,9,1,cicon,g_VisScr);
     c = GetKingCitys(g_PlayerKing,str);

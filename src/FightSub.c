@@ -413,7 +413,7 @@ U8 FgtJNAction(FGTCMD *pcmd)
             U8 skidx = param;
             if (i == aIdx)
                 continue;
-            if (g_FgtParam.GenArray[i].pid == 0)
+            if (g_FgtParam.GenArray[i] == 0)
                 continue;
 
             if (!(aim & 4)) {
@@ -652,7 +652,7 @@ FAR U8 FgtGenPIdx(U8 i)
         idx = 12;
     else
     {
-        idx = GetArmType(&g_Persons[p.pid]);
+        idx = GetArmType(&g_Persons[p]);
         idx <<= 1;
     }
     /* 敌人的将领面向左 */
@@ -854,7 +854,7 @@ void FgtResumeMp(U8 idx)
     PersonID p;
 
     p = TransIdxToGen1(idx);
-    per = &g_Persons[p.pid];
+    per = &g_Persons[p];
     maxmp = (U8)(((U16)(per->IQ) * 80 / 100 + (PlcExtract(per->Force) >> 1) + per->Level) * per->Thew / 100);
     if(g_GenPos[idx].mp < maxmp)
         g_GenPos[idx].mp += 1;
@@ -926,7 +926,7 @@ FAR U8 FgtCheckIdx(void)
  ***********************************************************************/
 PersonID TransIdxToGen1(U8 idx)
 {
-    return PID(g_FgtParam.GenArray[idx].pid - 1);
+    return PID(g_FgtParam.GenArray[idx] - 1);
 }
 /***********************************************************************
  * 说明:     资源管理函数的本体调用

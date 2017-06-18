@@ -91,7 +91,7 @@ FAR void CountInitGen(void)
         if(!(i % FGT_PLAMAX))
             cnt = 0;
         g_GenPos[i].state = STATE_ZC;
-        if(g_FgtParam.GenArray[i].pid == 0)
+        if(g_FgtParam.GenArray[i] == 0)
         {
             cnt += 1;
             g_GenPos[i].state = STATE_SW;
@@ -124,7 +124,7 @@ void CountBaseAttr(U8 i)
 
     pos = &g_GenPos[i];
     p = TransIdxToGen(i);
-    per = &g_Persons[p.pid];
+    per = &g_Persons[p];
 
     at = per->Force;
     df = per->IQ;
@@ -170,7 +170,7 @@ FAR void CountMoveP(U8 i)
     }
 
     p = TransIdxToGen(i);
-    per = &g_Persons[p.pid];
+    per = &g_Persons[p];
 
     arm = GetArmType(per);
     pos->move = FgtIntMove[arm];
@@ -256,9 +256,9 @@ FAR void BuiltAtkAttr(U8 idx,U8 pIdx)
     PersonType	*pTyp;
 
     pGen = TransIdxToGen(pIdx);
-    if(pGen.pid > PERSON_COUNT - 1)
+    if(pGen > PERSON_COUNT - 1)
         return;
-    pTyp = (PersonType *)(&g_Persons[pGen.pid]);
+    pTyp = (PersonType *)(&g_Persons[pGen]);
     pAtk = (JLATT *)(&g_GenAtt[idx]);
     pAtk->arms = &(pTyp->Arms);
     pAtk->exp = &(pTyp->Experience);
@@ -462,7 +462,7 @@ U16 FgtAllArms(U8 flag)
         if(STATE_SW == g_GenPos[idx].state)
             continue;
         p = TransIdxToGen(idx);
-        rev += g_Persons[p.pid].Arms;
+        rev += g_Persons[p].Arms;
     }
     return (U16) rev;
 }
@@ -479,7 +479,7 @@ PersonID TransIdxToGen(U8 idx)
 {
     if(idx > FGTA_MAX - 1)
         return PID(0xFFFF);
-    return PID(g_FgtParam.GenArray[idx].pid - 1);
+    return PID(g_FgtParam.GenArray[idx] - 1);
 }
 
 
@@ -649,7 +649,7 @@ void FgtTransMove(U8 idx)
     U8	*mptr;
 
     /* 获取被操作的兵种 */
-    type = GetArmType(&g_Persons[g_FgtParam.GenArray[idx].pid - 1]);
+    type = GetArmType(&g_Persons[g_FgtParam.GenArray[idx] - 1]);
     mptr = ResLoadToCon(IFACE_CONID,dFgtLandR,g_CBnkPtr);
     mptr += type * FGT_TILMAX;
     /* 将地况转换成移动力消耗 */

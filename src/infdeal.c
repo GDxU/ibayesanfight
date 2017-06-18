@@ -69,7 +69,7 @@ FAR U8 CitiesUpDataDate(void)
     for (i = 0;i < CITY_MAX;i ++)
     {
         cptr = &g_Cities[i];
-        if (cptr->Belong.pid)
+        if (cptr->Belong)
         {
             if (!(g_MonthDate % 3))
             {
@@ -89,7 +89,7 @@ FAR U8 CitiesUpDataDate(void)
             c = GetCityPersons(i,pqptr);
             for (j = 0;j < c;j ++)
             {
-                as = g_Persons[pqptr[j].pid].Arms;
+                as = g_Persons[pqptr[j]].Arms;
                 switch (g_Cities[i].State)
                 {
                     case STATE_NORMAL:	/*正常*/
@@ -106,7 +106,7 @@ FAR U8 CitiesUpDataDate(void)
                         break;
                 }
                 df += as;
-                g_Persons[pqptr[j].pid].Arms = as;
+                g_Persons[pqptr[j]].Arms = as;
             }
             if (g_engineConfig.ratioOfFoodToArmsPerMouth) {
                 df /= g_engineConfig.ratioOfFoodToArmsPerMouth;
@@ -123,20 +123,20 @@ FAR U8 CitiesUpDataDate(void)
             {
                 for (j = 0;j < c;j ++)
                 {
-                    g_Persons[pqptr[j].pid].Arms /= 2;
+                    g_Persons[pqptr[j]].Arms /= 2;
                 }
                 *food = 0;
                 /*闹饥荒*/
                 s = cptr->State;;
                 cptr->State = STATE_FAMINE;
-                if ((STATE_FAMINE != s) && (cptr->Belong.pid == g_PlayerKing.pid + 1))
+                if ((STATE_FAMINE != s) && (cptr->Belong == g_PlayerKing + 1))
                     ReportCalamity(i);
             }
             c = GetCityCaptives(i,pqptr);
             for (j = 0;j < c;j ++)
             {
-                if (g_Persons[pqptr[j].pid].OldBelong.pid == cptr->Belong.pid)
-                    g_Persons[pqptr[j].pid].Belong = cptr->Belong;
+                if (g_Persons[pqptr[j]].OldBelong == cptr->Belong)
+                    g_Persons[pqptr[j]].Belong = cptr->Belong;
             }
         }
     }
@@ -166,7 +166,7 @@ FAR U8 RandEvents(void)
     for (i = 0;i < CITY_MAX;i ++)
     {
         ccb = g_Cities[i].Belong;
-        if (ccb.pid)
+        if (ccb)
         {
             state = &g_Cities[i].State;
             rnd = gam_rand() % 100;
@@ -191,7 +191,7 @@ FAR U8 RandEvents(void)
                                 break;
                             default:continue;break;/*无灾害*/
                         }
-                        if ((STATE_NORMAL != *state) && (ccb.pid == g_PlayerKing.pid + 1))
+                        if ((STATE_NORMAL != *state) && (ccb == g_PlayerKing + 1))
                         {
                             ReportCalamity(i);
                         }
@@ -468,7 +468,7 @@ FAR U8 AddGoodsPerson(U8 goods,PersonID person)
     U8 arm = gptr[goods].arm;
 
     IF_HAS_HOOK("giveTool") {
-        U16 personIndex = person.pid;
+        U16 personIndex = person;
         U8* toolIndex = &goods;
         U8 result = 0;
 
@@ -487,30 +487,30 @@ FAR U8 AddGoodsPerson(U8 goods,PersonID person)
             case 0:
                 break;
             case 1:		/*水兵*/
-                g_Persons[person.pid].ArmsType = ARM_SHUIJUN;
+                g_Persons[person].ArmsType = ARM_SHUIJUN;
                 break;
             case 2:		/*玄兵*/
-                if (g_Persons[person.pid].IQ > 105)
+                if (g_Persons[person].IQ > 105)
                 {
-                    g_Persons[person.pid].ArmsType = ARM_XUANBING;
+                    g_Persons[person].ArmsType = ARM_XUANBING;
                     break;
                 }
                 return(0xff);
             case 3:		/*极兵*/
-                if (g_Persons[person.pid].Force > 105)
+                if (g_Persons[person].Force > 105)
                 {
-                    g_Persons[person.pid].ArmsType = ARM_JIBING;
+                    g_Persons[person].ArmsType = ARM_JIBING;
                     break;
                 }
                 return(0xff);
             default:
-                g_Persons[person.pid].ArmsType = arm-4;
+                g_Persons[person].ArmsType = arm-4;
                 break;
         }
     }
 
-    g_Persons[person.pid].Force += gptr[goods].at;
-    g_Persons[person.pid].IQ += gptr[goods].iq;
+    g_Persons[person].Force += gptr[goods].at;
+    g_Persons[person].IQ += gptr[goods].iq;
     return(gptr[goods].useflag);
 }
 
@@ -534,7 +534,7 @@ FAR U8 DelGoodsPerson(U8 goods,PersonID person)
     gptr = (GOODS *) ResLoadToCon(GOODS_RESID,1,g_CBnkPtr);
 
     IF_HAS_HOOK("takeOffTool") {
-        U16 personIndex = person.pid;
+        U16 personIndex = person;
         U8* toolIndex = &goods;
         U8 result = 0;
 
@@ -547,8 +547,8 @@ FAR U8 DelGoodsPerson(U8 goods,PersonID person)
         }
     }
 
-    g_Persons[person.pid].Force -= gptr[goods].at;
-    g_Persons[person.pid].IQ -= gptr[goods].iq;
+    g_Persons[person].Force -= gptr[goods].at;
+    g_Persons[person].IQ -= gptr[goods].iq;
     return 1;
 }
 
@@ -624,7 +624,7 @@ FAR void ShowPersonHead(U8 x,U8 y, PersonID id)
     U8 *pic,tbuf[14];
     /*gam_rect(x,y,x + 50,y + 40);*/
     pic = ResLoadToCon(GEN_HEADPIC1 + g_PIdx,1,g_CBnkPtr);
-    GamPicShowExS(x + 13,y + 2,24,24,id.pid,pic);
+    GamPicShowExS(x + 13,y + 2,24,24,id,pic);
     GetPersonName(id, tbuf);
     PlcMidShowStr(x + 26,y + 28,tbuf);
 }
@@ -804,12 +804,12 @@ FAR U32 GetPersonsCount(PersonID king)
         if (0xff == op[i].OrderId)
             continue;
         
-        if (g_Cities[op[i].City].Belong.pid != king.pid + 1)
+        if (g_Cities[op[i].City].Belong != king + 1)
             continue;
         
         if (BATTLE == op[i].OrderId)
         {
-            fpc = op[i].Person.pid;
+            fpc = op[i].Person;
             fpc *= 10;
             fp = FIGHTERS +  fpc;
             for (j = 0;j < 10;j ++)
@@ -879,7 +879,7 @@ FAR void ReportCalamity(U8 city)
     SBUF rstr,astr;
     U32 p;
     
-    p = g_Cities[city].SatrapId.pid;
+    p = g_Cities[city].SatrapId;
     if (p)
     {
         GetCityName(city,rstr);
@@ -896,8 +896,8 @@ FAR void ReportCalamity(U8 city)
 
 FAR void ShowDialog(PersonID commander, PersonID reporter,U8 *str)
 {
-    U32 belong = g_Persons[commander.pid].Belong.pid;
-    if (belong && belong - 1 == g_PlayerKing.pid) {
+    U32 belong = g_Persons[commander].Belong;
+    if (belong && belong - 1 == g_PlayerKing) {
         ShowGReport(reporter, str);
     }
 }

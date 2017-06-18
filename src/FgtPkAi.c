@@ -165,7 +165,7 @@ bool FgtJiNengGetAim(FGTCMD *pcmd, PersonType*per, U8 skidx, U8 idx)
             continue;
         if(skidx == 17 || skidx == 29)
         {
-            id = PID(g_FgtParam.GenArray[i].pid - 1);
+            id = PID(g_FgtParam.GenArray[i] - 1);
             arms = PlcArmsMax(id) >> 1;
             arms += arms >> 1;		/* arms = max * 3/4 */
             /* 若施展的计谋为恢复的，目标将领的兵力至少要损失1/4 */
@@ -204,7 +204,7 @@ bool FgtJiNeng(FGTCMD *pcmd, U8 force)
     if(STATE_JZ == g_GenPos[idx].state)
         return false;
     id = TransIdxToGen3(idx);
-    per = &g_Persons[id.pid];
+    per = &g_Persons[id];
     ranv = gam_rand();
 
     if (force == 0) {
@@ -487,19 +487,19 @@ void FgtGetSklBuf(U8 gid, U8 *buf)
     /* 构造技能缓冲 */
     sklbuf = buf;
     ptr = ResLoadToCon(SPE_SKLID,g_PIdx,g_CBnkPtr);
-    if(ptr[id.pid])		/* 特有技能 */
+    if(ptr[id])		/* 特有技能 */
     {
-        *sklbuf = ptr[id.pid];
+        *sklbuf = ptr[id];
         sklbuf += 1;
     }
-    if(g_Persons[id.pid].Belong.pid == id.pid + 1)	/* 君主技能 */
+    if(g_Persons[id].Belong == id + 1)	/* 君主技能 */
     {
         *sklbuf = 30;
         sklbuf += 1;
     }
     ptr = ResLoadToCon(IFACE_CONID,dFgtJNArray,g_CBnkPtr);
-    type = GetArmType(&g_Persons[id.pid]);
-    len = ((float)dArmsJNNum[type] * g_Persons[id.pid].Level / (MAX_LEVEL + 1)) + 1;
+    type = GetArmType(&g_Persons[id]);
+    len = ((float)dArmsJNNum[type] * g_Persons[id].Level / (MAX_LEVEL + 1)) + 1;
     ptr += type * SKILL_NMAX;
     gam_memcpy(sklbuf,ptr,len);
 
@@ -546,7 +546,7 @@ FAR U8 FgtJNChkAim(U8 param,U8 same,U8 aidx)
     U8	terrain,type;
     SKILLEF *skl;
 
-    type = GetArmType(&g_Persons[g_FgtParam.GenArray[aidx].pid - 1]);
+    type = GetArmType(&g_Persons[g_FgtParam.GenArray[aidx] - 1]);
     terrain = FgtGetGenTer(aidx);
     skl = (SKILLEF	*)FgtGetJNPtr(param);
     /* 检测目标兵种 */
@@ -719,13 +719,13 @@ FAR void FgtGetCmdRng(U8 type,U8 param,U8 idx)
     switch(type)
     {
         case CMD_ATK:{
-            U16 offset = ATT_RANGE * (U16)GetArmType(&g_Persons[g_FgtParam.GenArray[idx].pid - 1]);
+            U16 offset = ATT_RANGE * (U16)GetArmType(&g_Persons[g_FgtParam.GenArray[idx] - 1]);
             rngb = ATT_RANGEUNIT;
             ptr = ResLoadToCon(IFACE_CONID,dFgtAtRange,g_CBnkPtr) + offset;
 
             if (g_engineConfig.enableToolAttackRange) {
                 for (U8 i = 0; i < 2; i++) {
-                    U8 tid = g_Persons[g_FgtParam.GenArray[idx].pid - 1].Equip[i];
+                    U8 tid = g_Persons[g_FgtParam.GenArray[idx] - 1].Equip[i];
                     if (tid) {
                         U8 tind = tid - 1;
                         U16 offset = sizeof(GOODS) * tind;
@@ -1018,7 +1018,7 @@ void FgtViewForce(U8 pForce,U8 pSIdx)
     gam_line(WK_SX + SCR_WID / 2,WK_SY + HZ_HGT + 2,WK_EX,WK_SY + HZ_HGT + 2);
     gam_line(WK_SX + SCR_WID / 2,WK_SY + HZ_HGT * 2 + 4,WK_EX,WK_SY + HZ_HGT * 2 + 4);
     p = TransIdxToGen3(pGIdx);
-    GetPersonName(PID(g_Persons[p.pid].Belong.pid - 1),tbuf);
+    GetPersonName(PID(g_Persons[p].Belong - 1),tbuf);
     i = gam_strlen(tbuf);
     tbuf[i] = ' ';
     FgtLoadToMem3(dArmyInf,tbuf + i);
@@ -1044,10 +1044,10 @@ void FgtViewForce(U8 pForce,U8 pSIdx)
         if(tmp - pGIdx >= FGT_PLAMAX)
             break;
         p = g_FgtParam.GenArray[tmp];
-        if(!p.pid)
+        if(!p)
             break;
-        p.pid -= 1;
-        provender = g_Persons[p.pid].Arms;
+        p -= 1;
+        provender = g_Persons[p].Arms;
         GetPersonName(p,tbuf);
         tmp = gam_strlen(tbuf);
         gam_memset(tbuf + tmp,' ',20 - tmp);
@@ -1072,7 +1072,7 @@ U8 FgtStatGen(U8 flag)
     pSIdx = flag * FGT_PLAMAX;
     for(i = 0;i < FGT_PLAMAX;i += 1)
     {		
-        if(!g_FgtParam.GenArray[i + pSIdx].pid)
+        if(!g_FgtParam.GenArray[i + pSIdx])
             break;
     }
     return i;
@@ -1101,7 +1101,7 @@ void FgtLoadToMem3(U8 idx,U8 *buf)
  ***********************************************************************/
 PersonID TransIdxToGen3(U8 idx)
 {
-    return PID(g_FgtParam.GenArray[idx].pid - 1);
+    return PID(g_FgtParam.GenArray[idx] - 1);
 }
 
 static void AdvancedCmdRng(U8 type, U8 param, U8 idx) {
@@ -1109,7 +1109,7 @@ static void AdvancedCmdRng(U8 type, U8 param, U8 idx) {
         BuiltAtkAttr(0, idx);
 
         U8 ter = FgtGetTerrain(g_GenPos[idx].x, g_GenPos[idx].y);
-        U16 personIndex = g_FgtParam.GenArray[idx].pid - 1;
+        U16 personIndex = g_FgtParam.GenArray[idx] - 1;
         U8*range = g_FgtAtkRng+3;
         U8 rangeSize = g_FgtAtkRng[0];
         U8* skillId = &param;

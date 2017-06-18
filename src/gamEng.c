@@ -199,13 +199,13 @@ bool GamMainChose(void)
                 GamSetPersonCount(512);
                 idx = GetPeriodKings(idx + 1, g_PersonsQueue); 	/* 设置历史时期，并获取君主队列 */
                 king = GamGetKing(idx);
-                if(king.pid == 0xffff)
+                if(king == 0xffff)
                     break;
                 g_PlayerKing = king;				/* 设置玩家扮演的君主ID */
 
                 for (idx = 0;idx < CITY_MAX;idx ++)
                 {
-                    if (g_Cities[idx].Belong.pid == (g_PlayerKing.pid + 1))
+                    if (g_Cities[idx].Belong == (g_PlayerKing + 1))
                     {
                         posptr = ResLoadToCon(IFACE_CONID,dCityPos,g_CBnkPtr);
                         g_CityPos.setx = posptr[idx << 1];
@@ -228,13 +228,13 @@ bool GamMainChose(void)
                 }
                 for (idx = 0;idx < CITY_MAX;idx ++)
                 {
-                    if (g_Cities[idx].Belong.pid != (g_PlayerKing.pid + 1))
+                    if (g_Cities[idx].Belong != (g_PlayerKing + 1))
                     {
                         PersonID* pqptr = (PersonID*)SHARE_MEM;
                         c = GetCityPersons(idx,pqptr);
                         for (i = 0;i < c;i ++)
                         {
-                            g_Persons[pqptr[i].pid].Arms = 800;
+                            g_Persons[pqptr[i]].Arms = 800;
                         }
                         ADD16(g_Cities[idx].Food, 1000);
                     }

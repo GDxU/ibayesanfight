@@ -590,13 +590,13 @@ FAR void GamDrawImage(U16 id, U8 item, U8 idx, U32 x, U32 y)
 FAR U16 PlcArmsMax(PersonID id) {
     IF_HAS_HOOK("getMaxArms") {
         U32 maxArms = 0;
-        BIND_U16EX("personIndex", &id.pid);
+        BIND_U16EX("personIndex", &id);
         BIND_U32(&maxArms);
         if (CALL_HOOK() == 0) {
             HOOK_RETURN(maxArms);
         }
     }
-    return PlcArmsMaxP(&g_Persons[id.pid]);
+    return PlcArmsMaxP(&g_Persons[id]);
 }
 
 FAR U16 PlcArmsMaxP(PersonType* p)
