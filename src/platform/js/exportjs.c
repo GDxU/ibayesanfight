@@ -202,11 +202,11 @@ ValueDef* ValueDef_get_array_subdef(ValueDef*def) {
 }
 
 EMSCRIPTEN_KEEPALIVE
-FAR const U8* bayeGetPersonName(U8 personIndex)
+FAR const U8* bayeGetPersonName(U32 personIndex)
 {
     static U8 name[32] = {0};
     name[0] = 0;
-    GetPersonName(personIndex, name);
+    GetPersonName(PID(personIndex), name);
     return name;
 }
 
@@ -302,8 +302,8 @@ U32 bayeFgtGetGenTer(U8 index) {
 }
 
 EMSCRIPTEN_KEEPALIVE
-void bayePutPersonInCity(U8 city, U8 person) {
-    AddPerson(city, person);
+void bayePutPersonInCity(U8 city, U32 person) {
+    AddPerson(city, PID(person));
 }
 
 EMSCRIPTEN_KEEPALIVE
@@ -313,8 +313,8 @@ void bayePutToolInCity(U8 city, U8 tool, U8 hide) {
 
 
 EMSCRIPTEN_KEEPALIVE
-void bayeDeletePersonInCity(U8 city, U8 person) {
-    DelPerson(city, person);
+void bayeDeletePersonInCity(U8 city, U32 person) {
+    DelPerson(city, PID(person));
 }
 
 EMSCRIPTEN_KEEPALIVE

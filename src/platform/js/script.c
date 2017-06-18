@@ -85,7 +85,7 @@ int call_hook_a(const char* name, Value* context)
                 js_callback(&rv);
                 break;
             case 2: // say
-                ShowGReport(g_asyncActionParams[0], g_asyncActionStringParam);
+                ShowGReport(PID(g_asyncActionParams[0]), g_asyncActionStringParam);
                 js_callback(&rv);
                 break;
             case 3: // menu
@@ -101,10 +101,10 @@ int call_hook_a(const char* name, Value* context)
             }
             case 4: // Choose person
             {
-                U16 count = g_asyncActionParams[0];
-                U16 init = g_asyncActionParams[1];
-                g_asyncActionParams[0] = GamChoosePerson(g_asyncActionStringParam, count, init);
-                js_callback(&rv);
+//                U16 count = g_asyncActionParams[0];
+//                U16 init = g_asyncActionParams[1];
+//                g_asyncActionParams[0] = GamChoosePerson(g_asyncActionStringParam, count, init);
+//                js_callback(&rv);
                 break;
             }
             case 5: // Choose tool
