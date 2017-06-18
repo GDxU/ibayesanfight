@@ -1041,7 +1041,7 @@ void LoadPeriod(U8 period)
     ptr = loadCities(g_Cities, ptr);
     g_YearDate = *((U16 *) ptr);
     
-    U16 length = ResGetItemLen(GENERAL_RESID, period);
+    U32 length = ResGetItemLen(GENERAL_RESID, period);
     U16 pcount = length / sizeof(PersonType);
     GamSetPersonCount(pcount);
     ptr = ResLoadToCon(GENERAL_RESID,period,g_CBnkPtr);

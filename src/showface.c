@@ -753,7 +753,7 @@ U8 ShowPersonProStr(U8 pro,U8 x,U8 y,U8 wid)
  *		----		----			-----------
  *		陈泽伟		2005/5/18 11:26AM	基本功能完成
  ******************************************************************************/
-FAR PersonID ShowPersonControl(PersonID *person,U8 pcount,PersonID initSelected,U8 x0,U8 y0,U8 x1,U8 y1)
+FAR PersonID ShowPersonControl(PersonID *person,U32 pcount,PersonID initSelected,U8 x0,U8 y0,U8 x1,U8 y1)
 {
     U32 i,showflag,count,top,set;
     U8 spc,spcv[7];

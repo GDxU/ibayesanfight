@@ -45,7 +45,7 @@ U8 GamMovie(U16 speID);
 bool GamMainChose(void);
 void GamMakerInf(void);
 void GamShowErrInf(U8 idx);
-PersonID GamGetKing(U32 num);
+PersonID GamGetKing(PersonID*kings, U32 num);
 void GamShowKing(U8 pTop);
 void GamRevCity(U8 cycnt,U8 *tbuf,U8 *pos);
 U8 GamPicMenu(U16 picID,U16 speID, const Rect *buttonsRect, U8 buttonsCount, U8 exitOnOther);
@@ -180,6 +180,7 @@ bool GamMainChose(void)
     U8	idx;
     U8	i,c;
     PersonID king;
+    PersonID kings[1024];
 
     Rect mainMenuButtonRects[4];
     Rect periodMenuButtonRects[4];
@@ -196,9 +197,8 @@ bool GamMainChose(void)
                 idx = GamPicMenu(YEAR_PIC,YEAR_ICON1, periodMenuButtonRects, 4, true);
                 if(idx == MNU_EXIT)
                     break;
-                GamSetPersonCount(512);
-                idx = GetPeriodKings(idx + 1, g_PersonsQueue); 	/* 设置历史时期，并获取君主队列 */
-                king = GamGetKing(idx);
+                idx = GetPeriodKings(idx + 1, kings); 	/* 设置历史时期，并获取君主队列 */
+                king = GamGetKing(kings, idx);
                 if(king == 0xffff)
                     break;
                 g_PlayerKing = king;				/* 设置玩家扮演的君主ID */
@@ -347,7 +347,7 @@ void GamMakerInf(void)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-PersonID GamGetKing(U32 num)
+PersonID GamGetKing(PersonID*kings, U32 num)
 {
     U8	*pos,tbuf[CITY_MAX];
     U8	pTop,pIdx,pSLen;
@@ -365,7 +365,7 @@ PersonID GamGetKing(U32 num)
     for(pIdx = 0;pIdx < num;pIdx += 1)
     {
         pTop = pIdx * 6;
-        GetPersonName(g_PersonsQueue[pIdx],g_FightPath + pTop);
+        GetPersonName(kings[pIdx],g_FightPath + pTop);
         pSLen = gam_strlen(g_FightPath);
         if(pSLen < pTop + 6)
             gam_memset(g_FightPath + pSLen,' ',pTop + 6 - pSLen);
@@ -396,7 +396,7 @@ PersonID GamGetKing(U32 num)
     GamShowKing(pTop);
     ry = (pIdx - pTop) * itemHeight + KING_SY;
     gam_revlcd(KING_SX,ry,KING_EX,ry + itemHeight);
-    cycnt = GetKingCitys(g_PersonsQueue[pIdx],tbuf); 		/* 获取治下城市队列 */
+    cycnt = GetKingCitys(kings[pIdx],tbuf); 		/* 获取治下城市队列 */
     while(1)
     {
         GamGetMsg(&pMsg);
@@ -436,7 +436,7 @@ PersonID GamGetKing(U32 num)
                 case VK_EXIT:
                     return PID(0xffff);
                 case VK_ENTER:
-                    return g_PersonsQueue[pIdx];
+                    return kings[pIdx];
             }
 #define UPDATE_UI() \
             GamShowKing(pTop);\
@@ -444,7 +444,7 @@ PersonID GamGetKing(U32 num)
             if (ry >= KING_SY && ry + itemHeight <= KING_SY + itemHeight*itemsPerPage) {\
                 gam_revlcd(KING_SX,ry,KING_EX,ry + itemHeight);\
             }\
-            cycnt = GetKingCitys(g_PersonsQueue[pIdx],tbuf);	/* 获取治下城市队列 */
+            cycnt = GetKingCitys(kings[pIdx],tbuf);	/* 获取治下城市队列 */
 
             UPDATE_UI();
         }
@@ -458,7 +458,7 @@ PersonID GamGetKing(U32 num)
                     I16 index = touchListViewItemIndexAtPoint(touch.currentX, touch.currentY, listRect, 2, 2, pTop, num, itemHeight);
                     if (index >= 0) {
                         if (index == pIdx) {
-                            return g_PersonsQueue[pIdx];
+                            return kings[pIdx];
                         }
                         CLEAR_SEL();
                         pIdx = index;

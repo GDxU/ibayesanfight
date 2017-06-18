@@ -21,7 +21,7 @@
 /*本体函数声明*/
 /*------------------------------------------*/
 U32	GetResStartAddr(U16 id);
-U16	GetResItem(U32 addr,U16 idx,RCHEAD *reshead,RIDX *rIdx);
+U32	GetResItem(U32 addr,U16 idx,RCHEAD *reshead,RIDX *rIdx);
 void	ExpDataWithKey(U8 *ptr,U8 key,U16 len);
 
 /***********************************************************************
@@ -33,7 +33,7 @@ void	ExpDataWithKey(U8 *ptr,U8 key,U16 len);
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
  ***********************************************************************/
-FAR U16 ResGetItemLen(U16 ResId,U16 idx)
+FAR U32 ResGetItemLen(U16 ResId,U16 idx)
 {
     U32	addr;
     RIDX	rIdx;
@@ -144,10 +144,8 @@ FAR U8 *ResLoadToCon(U16 ResId,U16 idx,U8 *cbnk)
             ptr+=sizeof(RCHEAD);
         else
         {
-            tmp=idx;
-            tmp<<=2;
-            tmp+=sizeof(RCHEAD);
-            ptr+=(U16) *((U16*)(ptr+tmp));
+            tmp = sizeof(RCHEAD) + sizeof(RIDX) * idx;
+            ptr += ((RIDX*)(ptr+tmp))->offset;
         }
     }
     return ptr;
@@ -187,7 +185,7 @@ void ExpDataWithKey(U8 *ptr,U8 key,U16 len)
  *             ------          ----------      -------------
  *             高国军          2005.5.18       完成基本功能
  ***********************************************************************/
-U16 GetResItem(U32 addr,U16 idx,RCHEAD *reshead,RIDX *rIdx)
+U32 GetResItem(U32 addr,U16 idx,RCHEAD *reshead,RIDX *rIdx)
 {
     gam_fseek(g_LibFp,addr,SEEK_SET);
     gam_fread((U8*)reshead,sizeof(RCHEAD),1,g_LibFp);
@@ -200,12 +198,12 @@ U16 GetResItem(U32 addr,U16 idx,RCHEAD *reshead,RIDX *rIdx)
         rIdx->offset = idx - 1;
         rIdx->offset *= reshead->ItmLen;
         rIdx->offset += sizeof(RCHEAD);
-        rIdx->rlen=(U16)(reshead->ItmLen);
+        rIdx->rlen=reshead->ItmLen;
     }
     else
     {
-        addr=idx-1;
-        addr<<=2;
+        addr = idx-1;
+        addr *= sizeof(RIDX);
         gam_fseek(g_LibFp,addr,SEEK_CUR);
         gam_fread((U8 *)rIdx,sizeof(RIDX),1,g_LibFp);
     }

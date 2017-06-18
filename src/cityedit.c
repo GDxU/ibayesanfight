@@ -882,9 +882,9 @@ FAR U8 GetEnemyKing(PersonID king,PersonID *kqueue)
  *		----		----			-----------
  *		陈泽伟		2005-7-4 9:24	基本功能完成
  ******************************************************************************/
-FAR U8 GetKingPersons(PersonID king,PersonID *pqueue)
+FAR U32 GetKingPersons(PersonID king,PersonID *pqueue)
 {
-    U8 c,count;
+    U32 c,count;
 
     count = 0;
     for (c = 0;c < CITY_MAX;c ++)

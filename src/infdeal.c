@@ -354,7 +354,7 @@ FAR U8 GoodsUpDatadate(void)
     SearchCondition *ginf;	/* -- 道具信息指针*/
     U8 g;
     U16 t;
-    U16 l = ResGetItemLen(GOODS_CON, g_PIdx);
+    U32 l = ResGetItemLen(GOODS_CON, g_PIdx);
     ginf = (SearchCondition*)ResLoadToCon(GOODS_CON,g_PIdx,g_CBnkPtr);
 
     for (g = 0,t = 0;t < l;g ++,t += 3)
@@ -396,7 +396,7 @@ FAR U8 PersonUpDatadate(void)
         }
     }
 
-    U16 l = ResGetItemLen(GENERAL_CON, g_PIdx);
+    U32 l = ResGetItemLen(GENERAL_CON, g_PIdx);
     pinf = (SearchCondition*)ResLoadToCon(GENERAL_CON,g_PIdx,g_CBnkPtr);
 
     for (p = 0,t = 0;p < PERSON_COUNT && t < l;p ++,t += 3)

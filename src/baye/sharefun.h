@@ -23,7 +23,7 @@ CITYEDIT_C U8 GetCitySet(CitySetType *pos);
 CITYEDIT_C U8 ShowCityMap(CitySetType *pos);
 CITYEDIT_C void ShowMapClear(void);
 CITYEDIT_C U8 GetRoundEnemyCity(U8 city,U8 *cqueue);
-CITYEDIT_C U8 GetKingPersons(PersonID king,PersonID *pqueue);
+CITYEDIT_C U32 GetKingPersons(PersonID king,PersonID *pqueue);
 CITYEDIT_C U16 GetFood(U16 min,U16 max);
 CITYEDIT_C U16 GetMoney(U16 min,U16 max);
 CITYEDIT_C U16 GetArmy(U16 min,U16 max);
@@ -128,7 +128,7 @@ SHOWFACE_C void GetPersonName(PersonID person,U8 *str);
 SHOWFACE_C void ShowPersonPro(PersonID person,U8 pro,U8 x,U8 y,U8 wid);
 SHOWFACE_C void GetPersonProStr(PersonID person,U8 pro,U8 *str);
 SHOWFACE_C U8 ShowPersonProStr(U8 pro,U8 x,U8 y,U8 wid);
-SHOWFACE_C PersonID ShowPersonControl(PersonID *person,U8 pcount,PersonID initSelected,U8 x0,U8 y0,U8 x1,U8 y1);
+SHOWFACE_C PersonID ShowPersonControl(PersonID *person,U32 pcount,PersonID initSelected,U8 x0,U8 y0,U8 x1,U8 y1);
 SHOWFACE_C void ShowDateTime(void);
 SHOWFACE_C void GetGoodsName(U8 goods,U8 *str);
 /*SHOWFACE_C U8 MenuComm(MenuType *menu);*/
