@@ -47,6 +47,8 @@ void bind_init(void) {
     static ObjectDef* def = NULL;
     static ValueDef vref;
 
+    GamSetPersonCount(PERSON_MAX);
+
     if (def == NULL) {
         def = ObjectDef_new();
     }
@@ -131,7 +133,7 @@ void bind_init(void) {
     DEFADDF(g_PIdx, U8);
     DEFADDF(g_AutoUpdateMapXY, U8);
 
-    DEFADD_U16ARR(&g_PersonsQueue, PERSON_MAX);
+    DEFADD_U16ARR(g_PersonsQueue, PERSON_MAX);
     DEFADD_U8ARR(&g_GoodsQueue, GOODS_MAX);
 
 

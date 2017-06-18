@@ -520,15 +520,17 @@ FAR void PlcRPicShowEx(U16 id, U8 item, U8 idx,U8 x,U8 y,U8 flag)
     U8	*pic;
     U8	wid,high,mode;
     U16	off;
+    PictureHeadType* p;
 
     pic = ResLoadToCon(id,item+1,g_CBnkPtr);
     if(NULL == pic)
         return;
-    if(idx > pic[4])
+    p = (PictureHeadType*)pic;
+    if(idx > p->count)
         return;
-    wid = pic[0];
-    high = pic[2];
-    mode = pic[5] & 0x01;
+    wid = p->wid;
+    high = p->hig;
+    mode = p->mask & 0x01;
     off = wid >> 3;
     if(wid & 0x07)
         off += 1;

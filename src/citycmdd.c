@@ -74,7 +74,7 @@ FAR U8 BattleMake(U8 city)
         ShowConstStrMsg(STR_NOFIGHTER);
         return(1);
     }
-    gam_memset(fpptr,0,10);
+    gam_memset(fpptr,0,10*sizeof(PersonID));
     for (i = 0;i < 10;i ++)
     {
         /*gam_clrlcd(WK_SX,WK_SY,WK_EX,WK_EY);*/

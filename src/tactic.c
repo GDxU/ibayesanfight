@@ -568,7 +568,7 @@ void ComputerTacticArmament(U8 city)
                 break;
             case 7:		/*出征*/
             {
-                PersonID* pqptr;
+                PersonID* pqptr = ((PersonID*)SHARE_MEM) + PERSON_MAX;
 
                 if (i >= 1)
                     continue;

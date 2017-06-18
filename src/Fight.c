@@ -1399,7 +1399,8 @@ void FgtGetMapDat(U8 x,U8 y)
  ***********************************************************************/
 void FgtShowInf(void)
 {
-    U8	idx,buf[40],sbuf[5];
+    U32	idx;
+    SBUF buf, sbuf;
     
     gam_clrvscr(STA_XXX,STA_XXY,STA_XXX + HZ_WID * 4,STA_XXY + HZ_HGT,g_VisScr);
     idx = FgtGetGenIdx(g_FoucsX,g_FoucsY);

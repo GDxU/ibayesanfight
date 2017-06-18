@@ -126,7 +126,6 @@ U8 SearchDrv(OrderType *Order)
 {
     SBUF str;
     SBUF astr;
-    PersonID *pqptr;
     SearchCondition *infp;
     U32 sp;
     PersonID person, pb;
@@ -139,7 +138,6 @@ U8 SearchDrv(OrderType *Order)
     U16 count;
 
     ShowMapClear();
-    pqptr = (PersonID*)SHARE_MEM;
     pss = gam_rand() % 4;
     person = Order->Person;
     pb = g_Persons[person].Belong;
@@ -157,6 +155,7 @@ U8 SearchDrv(OrderType *Order)
             if (g_engineDebug) rnd = gam_rand() % 2;
             if (rnd < iq)
             {
+                PersonID *pqptr = (PersonID*)SHARE_MEM;
                 switch (rnd % 2)
                 {
                     case 0:
@@ -222,7 +221,7 @@ U8 SearchDrv(OrderType *Order)
                         }
                         break;
                     case 1: {
-                        U8 *pqptr;
+                        U8 *pqptr = SHARE_MEM;
                         U8 p;
 
                         pcount = GetCityDispGoods(Order->City,pqptr);
