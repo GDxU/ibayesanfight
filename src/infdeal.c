@@ -352,7 +352,7 @@ void HarvestryFood(void)
 FAR U8 GoodsUpDatadate(void)
 {
     SearchCondition *ginf;	/* -- 道具信息指针*/
-    U8 g;
+    U32 g;
     U16 t;
     U32 l = ResGetItemLen(GOODS_CON, g_PIdx);
     ginf = (SearchCondition*)ResLoadToCon(GOODS_CON,g_PIdx,g_CBnkPtr);
@@ -361,8 +361,7 @@ FAR U8 GoodsUpDatadate(void)
     {
         if (ginf[t].birth == g_YearDate)
         {
-            if (!AddGoods(ginf[t + 2].city,g))
-                return(0);
+            AddGoods(ginf[t + 2].city,TID(g));
         }
     }
     return 1;
@@ -460,7 +459,7 @@ FAR U8 PersonUpDatadate(void)
  *		----		----			-----------
  *		陈泽伟		2005/5/18 11:26AM	基本功能完成
  ******************************************************************************/
-FAR U8 AddGoodsPerson(U8 goods,PersonID person)
+FAR U8 AddGoodsPerson(ToolID goods,PersonID person)
 {
     GOODS *gptr;
 
@@ -469,11 +468,11 @@ FAR U8 AddGoodsPerson(U8 goods,PersonID person)
 
     IF_HAS_HOOK("giveTool") {
         U16 personIndex = person;
-        U8* toolIndex = &goods;
+        U16 toolIndex = goods;
         U8 result = 0;
 
         BIND_U16(&personIndex);
-        BIND_U8(toolIndex);
+        BIND_U16(&toolIndex);
         BIND_U8(&result);
 
         if (CALL_HOOK_A() == 0 && result == 0) {
@@ -527,7 +526,7 @@ FAR U8 AddGoodsPerson(U8 goods,PersonID person)
  *		----		----			-----------
  *		陈泽伟		2005/5/18 11:26AM	基本功能完成
  ******************************************************************************/
-FAR U8 DelGoodsPerson(U8 goods,PersonID person)
+FAR U8 DelGoodsPerson(ToolID goods,PersonID person)
 {
     GOODS *gptr;
 
@@ -535,11 +534,11 @@ FAR U8 DelGoodsPerson(U8 goods,PersonID person)
 
     IF_HAS_HOOK("takeOffTool") {
         U16 personIndex = person;
-        U8* toolIndex = &goods;
+        U16 toolIndex = goods;
         U8 result = 0;
 
         BIND_U16(&personIndex);
-        BIND_U8(toolIndex);
+        BIND_U16(&toolIndex);
         BIND_U8(&result);
 
         if (CALL_HOOK_A() == 0 && result == 0) {
@@ -675,17 +674,17 @@ FAR void ShowGReport(PersonID person, U8 *str)
  *		----		----			-----------
  *		陈泽伟		2005-8-19 11:22	基本功能完成
  ******************************************************************************/
-FAR void SetGoods(U8 city, U8 goods)
+FAR void SetGoods(U8 city, ToolID goods)
 {
-    U8 qc;
-    U8 i = g_Cities[city].ToolQueue;
+    U32 qc;
+    U32 i = g_Cities[city].ToolQueue;
 
     qc = i + g_Cities[city].Tools;
     for (;i < qc;i++)
     {
-        if ((g_GoodsQueue[i] & 0x7f) == goods && !(g_GoodsQueue[i] & 0x80))
+        if ((g_GoodsQueue[i] & 0x7fff) == goods && !(g_GoodsQueue[i] & 0x8000))
         {
-            g_GoodsQueue[i] |= 0x80;
+            g_GoodsQueue[i] |= 0x8000;
             break;
         }
     }
@@ -704,11 +703,11 @@ FAR void SetGoods(U8 city, U8 goods)
  *		----		----			-----------
  *		陈泽伟		2005-8-19 11:22	基本功能完成
  ******************************************************************************/
-FAR void SetGoodsByIndex(U8 index) {
+FAR void SetGoodsByIndex(ToolID index) {
 
-    if (index == 0xff) return;
+    if (index == 0xffff) return;
 
-    g_GoodsQueue[index] |= 0x80;
+    g_GoodsQueue[index] |= 0x8000;
 }
 
 
@@ -725,22 +724,22 @@ FAR void SetGoodsByIndex(U8 index) {
  *		----		----			-----------
  *		陈泽伟		2005-8-19 11:36	基本功能完成
  ******************************************************************************/
-FAR U8 GetCityPGoods(U8 city,U8 *gqueue)
+FAR ToolID GetCityPGoods(U8 city,ToolID *gqueue)
 {
-    U8 i,j;
-    U8 count;
+    U32 i,j;
+    U32 count;
     
     count = 0;
     j = g_Cities[city].ToolQueue;
     for (i = 0;i < g_Cities[city].Tools;i ++,j ++)
     {
-        if (g_GoodsQueue[j] & 0x80)
+        if (g_GoodsQueue[j] & 0x8000)
         {
-            gqueue[count] = g_GoodsQueue[j] & 0x7f;
+            gqueue[count] = TID(g_GoodsQueue[j] & 0x7fff);
             count += 1;
         }
     }
-    return(count);
+    return TID(count);
 }
 
 
@@ -757,22 +756,22 @@ FAR U8 GetCityPGoods(U8 city,U8 *gqueue)
  *		----		----			-----------
  *		陈泽伟		2005-8-19 11:38	基本功能完成
  ******************************************************************************/
-FAR U8 GetCityDispGoods(U8 city,U8 *gqueue)
+FAR ToolID GetCityDispGoods(U8 city,ToolID *gqueue)
 {
-    U8 i,j;
-    U8 count;
+    U32 i,j;
+    U32 count;
     
     count = 0;
     j = g_Cities[city].ToolQueue;
     for (i = 0;i < g_Cities[city].Tools;i ++,j ++)
     {
-        if (!(g_GoodsQueue[j] & 0x80))
+        if (!(g_GoodsQueue[j] & 0x8000))
         {
             gqueue[count] = g_GoodsQueue[j];
             count += 1;
         }
     }
-    return(count);
+    return TID(count);
 }
 
 

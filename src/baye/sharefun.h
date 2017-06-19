@@ -5,9 +5,9 @@
 
 CITYEDIT_C U8 AddPerson(U8 city,PersonID person);
 CITYEDIT_C U8 DelPerson(U8 city,PersonID person);
-CITYEDIT_C U8 AddGoods(U8 city,U8 goods);
-CITYEDIT_C U8 AddGoodsEx(U8 city, U8 goods, U8 found);
-CITYEDIT_C U8 DelGoods(U8 city,U8 goods);
+CITYEDIT_C ToolID AddGoods(U8 city,ToolID goods);
+CITYEDIT_C ToolID AddGoodsEx(U8 city, ToolID goods, U8 found);
+CITYEDIT_C U8 DelGoods(U8 city,ToolID goods);
 CITYEDIT_C U8 ClearOrderQueue(void);
 CITYEDIT_C U8 SearchRoad(U8 sc,U8 xs,U8 ys,U8 ob,U8 xo,U8 yo);
 CITYEDIT_C U8 AttackCityRoad(U8 sc,U8 xs,U8 ys,U8 ob,U8 xo,U8 yo);
@@ -120,17 +120,17 @@ CITYCMDE_C U8 GetWeekCity(U8 count,U8 *cqueue);
 #define GOODS_PROP_COUNT 5
 #define PERSON_PROP_COUNT 13
 
-SHOWFACE_C void ShowGoodsPro(U8 goods,U8 pro,U8 x,U8 y,U8 wid);
-SHOWFACE_C void GetGoodsProStr(U8 goods,U8 pro,U8 *str);
+SHOWFACE_C void ShowGoodsPro(ToolID goods,U8 pro,U8 x,U8 y,U8 wid);
+SHOWFACE_C void GetGoodsProStr(ToolID goods,U8 pro,U8 *str);
 SHOWFACE_C U8 ShowGoodsProStr(U8 pro,U8 x,U8 y,U8 wid);
-SHOWFACE_C U8 ShowGoodsControl(U8 *goods,U8 gcount, U8 init, U8 x0,U8 y0,U8 x1,U8 y1);
+SHOWFACE_C ToolID ShowGoodsControl(ToolID *goods,ToolID gcount, ToolID init, U8 x0,U8 y0,U8 x1,U8 y1);
 SHOWFACE_C void GetPersonName(PersonID person,U8 *str);
 SHOWFACE_C void ShowPersonPro(PersonID person,U8 pro,U8 x,U8 y,U8 wid);
 SHOWFACE_C void GetPersonProStr(PersonID person,U8 pro,U8 *str);
 SHOWFACE_C U8 ShowPersonProStr(U8 pro,U8 x,U8 y,U8 wid);
 SHOWFACE_C PersonID ShowPersonControl(PersonID *person,U32 pcount,PersonID initSelected,U8 x0,U8 y0,U8 x1,U8 y1);
 SHOWFACE_C void ShowDateTime(void);
-SHOWFACE_C void GetGoodsName(U8 goods,U8 *str);
+SHOWFACE_C void GetGoodsName(ToolID goods,U8 *str);
 /*SHOWFACE_C U8 MenuComm(MenuType *menu);*/
 SHOWFACE_C void GetCityName(U8 city,U8 *str);
 SHOWFACE_C void GetCityProStr(U8 city,U8 pro,U8 *str);
@@ -168,18 +168,18 @@ INFDEAL_C void RevenueMoney(void);
 INFDEAL_C void HarvestryFood(void);
 INFDEAL_C U8 PersonUpDatadate(void);
 INFDEAL_C U8 GoodsUpDatadate(void);
-INFDEAL_C U8 AddGoodsPerson(U8 goods,PersonID person);
-INFDEAL_C U8 DelGoodsPerson(U8 goods,PersonID person);
+INFDEAL_C U8 AddGoodsPerson(ToolID goods,PersonID person);
+INFDEAL_C U8 DelGoodsPerson(ToolID goods,PersonID person);
 INFDEAL_C void ShowConstStrMsg(U8 idx);
 /*INFDEAL_C void ShowAttackMsg(U8 fs,U8 co);*/
 INFDEAL_C void ShowPersonHead(U8 x,U8 y, PersonID id);
 INFDEAL_C void ShowGReport(PersonID person,U8 *str);
 FAR void ShowDialog(PersonID commander, PersonID reporter,U8 *str);
 FAR void ShowDialogRandom(PersonID commander, PersonID reporter, U8 **str, U8 count);
-INFDEAL_C void SetGoods(U8 city, U8 goods);
-INFDEAL_C void SetGoodsByIndex(U8 goods);
-INFDEAL_C U8 GetCityPGoods(U8 city,U8 *gqueue);
-INFDEAL_C U8 GetCityDispGoods(U8 city,U8 *gqueue);
+INFDEAL_C void SetGoods(U8 city, ToolID goods);
+INFDEAL_C void SetGoodsByIndex(ToolID goods);
+INFDEAL_C ToolID GetCityPGoods(U8 city,ToolID *gqueue);
+INFDEAL_C ToolID GetCityDispGoods(U8 city,ToolID *gqueue);
 INFDEAL_C U32 GetPersonsCount(PersonID king);
 INFDEAL_C U8 GetDirect(U8 sc,U8 oc);
 INFDEAL_C void ReportCalamity(U8 city);

@@ -1048,7 +1048,8 @@ void LoadPeriod(U8 period)
     loadPersons(g_Persons, ptr, length);
     
     ResItemGetN(GENERAL_QUEUE, period, (U8*)g_PersonsQueue, sizeof(PersonID)*pcount);
-    ResItemGetN(GOODS_QUEUE, period, g_GoodsQueue, GOODS_MAX);
+    
+    ResItemGetN(GOODS_QUEUE, period, (U8*)g_GoodsQueue, GOODS_MAX);
     
     gam_memset(FIGHTERS_IDX,0,FIGHT_ORDER_MAX);
     gam_memset((U8 *)ORDERQUEUE,0xff,(U16)ORDER_MAX * sizeof(OrderType));
@@ -1382,7 +1383,7 @@ U8 GetArmType(PersonType* p)
     U8 armType = p->ArmsType;
 
     for (int i = 0; i < 2; i++) {
-        U8 tid = p->Equip[i];
+        ToolID tid = p->Equip[i];
         if (tid) {
             GOODS *tool = (GOODS *)(ResLoadToCon(GOODS_RESID, 1, g_CBnkPtr) + (U16)(tid - 1) * sizeof(GOODS));
             if (tool == NULL) continue;

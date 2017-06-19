@@ -725,10 +725,10 @@ FAR void FgtGetCmdRng(U8 type,U8 param,U8 idx)
 
             if (g_engineConfig.enableToolAttackRange) {
                 for (U8 i = 0; i < 2; i++) {
-                    U8 tid = g_Persons[g_FgtParam.GenArray[idx] - 1].Equip[i];
+                    ToolID tid = g_Persons[g_FgtParam.GenArray[idx] - 1].Equip[i];
                     if (tid) {
-                        U8 tind = tid - 1;
-                        U16 offset = sizeof(GOODS) * tind;
+                        U32 tind = tid - 1;
+                        U32 offset = sizeof(GOODS) * tind;
                         GOODS *tool = (GOODS *)(ResLoadToCon(GOODS_RESID, 1, g_CBnkPtr) + offset);
                         if (tool->changeAttackRange) {
                             bits_to_bytes(tool_rng_data, tool->atRange, TOOL_ATT_RANGEUNIT, TOOL_ATT_RANGEUNIT, 1);

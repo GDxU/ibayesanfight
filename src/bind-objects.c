@@ -47,8 +47,6 @@ void bind_init(void) {
     static ObjectDef* def = NULL;
     static ValueDef vref;
 
-    GamSetPersonCount(PERSON_MAX);
-
     if (def == NULL) {
         def = ObjectDef_new();
     }

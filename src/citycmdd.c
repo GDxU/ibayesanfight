@@ -537,7 +537,7 @@ PersonID TheLoserDeal(U8 city,PersonID *lqueue)
 {
     SBUF str,astr;
     U8 i;
-    U8 *gptr;
+    ToolID *gptr;
     PersonID cking;
     PersonID p;
     U8 rnd;
@@ -574,13 +574,13 @@ PersonID TheLoserDeal(U8 city,PersonID *lqueue)
                     gptr = pptr->Equip;
                     if (gptr[0])
                     {
-                        U8 index = AddGoods(city,gptr[0] - 1);
-                        SetGoodsByIndex(index-1);
+                        ToolID index = AddGoods(city,TID(gptr[0] - 1));
+                        SetGoodsByIndex(TID(index-1));
                     }
                     if (gptr[1])
                     {
-                        U8 index = AddGoods(city,gptr[1] - 1);
-                        SetGoodsByIndex(index-1);
+                        ToolID index = AddGoods(city,TID(gptr[1] - 1));
+                        SetGoodsByIndex(TID(index-1));
                     }
                     if (FGT_AUTO != g_FgtParam.Mode)
                     {

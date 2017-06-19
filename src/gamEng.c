@@ -163,7 +163,6 @@ void GamVarRst(void)
     gam_free((U8 *)g_FightMapData);
     gam_free((U8 *)g_FightPath);
     gam_free((U8 *)g_FgtAtkRng);
-    gam_free((U8 *)g_Persons);
 }
 /***********************************************************************
  * 说明:     驱动玩家在主菜单中的选择

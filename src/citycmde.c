@@ -43,8 +43,9 @@ FAR U8 ConfiscateMake(U8 city)
     U8 str[512];
     U32 pcount;
     PersonID pcode = PID0, p;
-    U32 g,c;
-    U8 gq[3],*gptr;
+    ToolID g;
+    ToolID gq[3],*gptr;
+    U16 c;
 
     pqptr = (PersonID*)SHARE_MEM;
     do
@@ -66,7 +67,7 @@ FAR U8 ConfiscateMake(U8 city)
             if (!gptr[0])
             {
                 gptr[0] = gptr[1];
-                gptr[1] = 0;
+                gptr[1] = TID(0);
             }
             else
             {
@@ -77,14 +78,14 @@ FAR U8 ConfiscateMake(U8 city)
             {
                 c += 1;
             }
-            gq[0] = gptr[0] - 1;
-            gq[1] = gptr[1] - 1;
+            gq[0] = TID(gptr[0] - 1);
+            gq[1] = TID(gptr[1] - 1);
             if (c)
             {
                 /*gam_clrlcd(WK_SX,WK_SY,WK_EX,WK_EY);*/
                 ShowMapClear();
-                g = ShowGoodsControl(gq, c, 0, WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-                if (0xff == g)
+                g = ShowGoodsControl(gq, TID(c), TID(0), WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+                if (0xffff == g)
                 {
                     continue;
                 }
@@ -95,7 +96,7 @@ FAR U8 ConfiscateMake(U8 city)
                     IF_HAS_HOOK("willTakeOffTool") {
                         BIND_U8EX("cityIndex", &city);
                         BIND_U16EX("personIndex", &p);
-                        BIND_U8EX("toolIndex", &gq[g]);
+                        BIND_U16EX("toolIndex", &gq[g]);
                         ret = CALL_HOOK_A();
                     }
 
@@ -115,9 +116,9 @@ FAR U8 ConfiscateMake(U8 city)
                             g_Persons[p].Devotion -= 20;
                     }
                     if (DelGoodsPerson(gq[g],p)) {
-                        gptr[g] = 0;
-                        U8 index = AddGoods(city,gq[g]);
-                        SetGoodsByIndex(index - 1);
+                        gptr[g] = TID(0);
+                        ToolID index = AddGoods(city,gq[g]);
+                        SetGoodsByIndex(TID(index - 1));
                     }
                 }
             }

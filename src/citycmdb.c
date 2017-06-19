@@ -993,8 +993,8 @@ FAR U8 KillMake(U8 city)
     PersonID *pqptr;
     U32 pcount;
     PersonID pcode;
-    U8 *gptr;
-    U8 str[512];
+    ToolID *gptr;
+    SBUF str;
     
     pqptr = (PersonID*)SHARE_MEM;
     
@@ -1011,13 +1011,13 @@ FAR U8 KillMake(U8 city)
         gptr = g_Persons[pqptr[pcode]].Equip;
         if (gptr[0])
         {
-            U16 index = AddGoods(city,gptr[0] - 1);
-            SetGoodsByIndex(index - 1);
+            ToolID index = AddGoods(city,TID(gptr[0] - 1));
+            SetGoodsByIndex(TID(index - 1));
         }
         if (gptr[1])
         {
-            U16 index = AddGoods(city,gptr[1] - 1);
-            SetGoodsByIndex(index-1);
+            ToolID index = AddGoods(city,TID(gptr[1] - 1));
+            SetGoodsByIndex(TID(index-1));
         }
         ResLoadToMem(STRING_CONST,P_SAY_STR4 + (gam_rand() % 3),str);
         ShowMapClear();
@@ -1087,24 +1087,25 @@ FAR U8 BanishMake(U8 city)
 FAR U8 LargessMake(U8 city)
 {
     SBUF str;
-    U8 *gqptr;
-    U32 gcount;
-    U32 gcode;
+    ToolID *gqptr;
+    ToolID gcount;
+    ToolID gcode;
     PersonID *pqptr;
     U32 pcount;
     PersonID pcode;
     PersonID p;
-    U8 *eq;
-    U32 g,gi;
+    ToolID *eq;
+    ToolID g;
+    U8 gi;
 
     while (1) {
 
-        gqptr = SHARE_MEM;
+        gqptr = (ToolID*)SHARE_MEM;
         gcount = GetCityPGoods(city,gqptr);
         if (gcount)
         {
-            gcode = ShowGoodsControl(gqptr, gcount, 0, WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
-            if (0xff == gcode)
+            gcode = ShowGoodsControl(gqptr, gcount, TID(0), WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
+            if (0xffff == gcode)
             {
                 return(1);
             }
@@ -1129,7 +1130,7 @@ FAR U8 LargessMake(U8 city)
                     IF_HAS_HOOK("willGiveTool") {
                         BIND_U8EX("cityIndex", &city);
                         BIND_U16EX("personIndex", &pqptr[pcode]);
-                        BIND_U8EX("toolIndex", &gqptr[gcode]);
+                        BIND_U16EX("toolIndex", &gqptr[gcode]);
                         ret = CALL_HOOK_A();
                     }
 
@@ -1155,7 +1156,7 @@ FAR U8 LargessMake(U8 city)
                     switch (AddGoodsPerson(g,p))
                     {
                         case 0:
-                            eq[gi] = g + 1;
+                            eq[gi] = TID(g + 1);
                             break;
                         case 1:
                             break;

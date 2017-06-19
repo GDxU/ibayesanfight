@@ -135,7 +135,7 @@ U8 SearchDrv(OrderType *Order)
     U32 pcount;
     U32 rnd = '\0';
     U32 pss;
-    U16 count;
+    U32 count;
 
     ShowMapClear();
     pss = gam_rand() % 4;
@@ -221,8 +221,8 @@ U8 SearchDrv(OrderType *Order)
                         }
                         break;
                     case 1: {
-                        U8 *pqptr = SHARE_MEM;
-                        U8 p;
+                        ToolID *pqptr = (ToolID*)SHARE_MEM;
+                        ToolID p, pcount;
 
                         pcount = GetCityDispGoods(Order->City,pqptr);
                         if (pcount)

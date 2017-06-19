@@ -77,10 +77,10 @@ PersonID g_PlayerKing;		/*玩家君主*/
 U16 g_YearDate;			/*当前日期*/
 U8 g_MonthDate;			/*当前日期*/
 U8 g_PIdx;			/*历史时期*/
-PersonType *g_Persons = NULL;		/*存放人才属性指针*/
+PersonType g_Persons[PERSON_MAX];		/*存放人才属性指针*/
 CityType g_Cities[256];	/*存放城市属性指针*/
-PersonID* g_PersonsQueue = NULL;	/*人才队列*/
-U8 g_GoodsQueue[GOODS_MAX];	/*道具队列*/
+PersonID g_PersonsQueue[PERSON_MAX];	/*人才队列*/
+ToolID g_GoodsQueue[GOODS_MAX];	/*道具队列*/
 OrderQueueType *g_OrderHead;	/*命令队列头指针*/
 OrderQueueType *g_OrderEnd;	/*命令队列末指针*/
 CitySetType g_CityPos;		/*当前城市地图显示位置结构*/
@@ -99,10 +99,6 @@ static U32 pq_len = 0;
 
 void GamSetPersonCount(U32 count)
 {
-    if (count > pq_len) {
-        g_Persons = realloc(g_Persons, sizeof(*g_Persons) * count + 4);
-        g_PersonsQueue = realloc(g_PersonsQueue, sizeof(*g_PersonsQueue) * count);
-    }
     pq_len = count;
 }
 

@@ -71,10 +71,10 @@ extern PersonID g_PlayerKing;			/*玩家君主*/
 extern U16 g_YearDate;			/*当前日期*/
 extern U8 g_MonthDate;			/*当前日期*/
 extern U8 g_PIdx;			/*历史时期*/
-extern PersonType *g_Persons;		/*存放人才属性指针*/
+extern PersonType g_Persons[PERSON_MAX];		/*存放人才属性指针*/
 extern CityType g_Cities[256];	/*存放城市属性指针*/
-extern PersonID* g_PersonsQueue;	/*人才队列*/
-extern U8 g_GoodsQueue[GOODS_MAX];	/*道具队列*/
+extern PersonID g_PersonsQueue[PERSON_MAX];	/*人才队列*/
+extern ToolID g_GoodsQueue[GOODS_MAX];	/*道具队列*/
 extern OrderQueueType *g_OrderHead;	/*命令队列头指针*/
 extern OrderQueueType *g_OrderEnd;	/*命令队列末指针*/
 extern CitySetType g_CityPos;		/*当前城市地图显示位置结构*/

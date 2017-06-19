@@ -137,20 +137,20 @@ FAR U8 DelPerson(U8 city,PersonID person)
  *		----		----			-----------
  *		陈泽伟		2005-6-3 14:50	基本功能完成
  ******************************************************************************/
-FAR U8 AddGoods(U8 city,U8 goods) {
+FAR ToolID AddGoods(U8 city,ToolID goods) {
     return AddGoodsEx(city, goods, 0);
 }
 
-FAR U8 AddGoodsEx(U8 city, U8 goods, U8 found)
+FAR ToolID AddGoodsEx(U8 city, ToolID goods, U8 found)
 {
-    U8 i;
-    U8 qnum;
+    U32 i;
+    U32 qnum;
 
     if (city >= CITY_MAX)
-        return(0);
+        return TID(0);
 
     if (goods >= GOODS_MAX)
-        return(0);
+        return TID(0);
 
     qnum  = g_Cities[city].ToolQueue + g_Cities[city].Tools;
 
@@ -160,7 +160,7 @@ FAR U8 AddGoodsEx(U8 city, U8 goods, U8 found)
     }
 
     if (found) {
-        goods |= 0x80;
+        goods |= 0x8000;
     }
     g_GoodsQueue[qnum] = goods;
     g_Cities[city].Tools += 1;
@@ -170,7 +170,7 @@ FAR U8 AddGoodsEx(U8 city, U8 goods, U8 found)
         g_Cities[i].ToolQueue += 1;
     }
 
-    return(qnum + 1);
+    return TID(qnum + 1);
 }
 
 /******************************************************************************
@@ -186,10 +186,10 @@ FAR U8 AddGoodsEx(U8 city, U8 goods, U8 found)
  *		----		----			-----------
  *		陈泽伟		2005-6-3 15:41	基本功能完成
  ******************************************************************************/
-FAR U8 DelGoods(U8 city,U8 goods)
+FAR U8 DelGoods(U8 city,ToolID goods)
 {
-    U8 i;
-    U8 qnum;
+    U32 i;
+    U32 qnum;
     CityType *cptr;
 
 

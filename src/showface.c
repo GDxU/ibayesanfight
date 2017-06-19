@@ -74,7 +74,7 @@ void bind_show_face(ObjectDef* global_def)
  *		----		----			-----------
  *		陈泽伟		2005/5/18 11:26AM	基本功能完成
  ******************************************************************************/
-void ShowGoodsPro(U8 goods,U8 pro,U8 x,U8 y,U8 wid)
+void ShowGoodsPro(ToolID goods,U8 pro,U8 x,U8 y,U8 wid)
 {
     U8 sx,sy;
     U8 str[128];
@@ -124,15 +124,15 @@ void ShowGoodsPro(U8 goods,U8 pro,U8 x,U8 y,U8 wid)
  *		----		----			-----------
  *		陈泽伟		2005-7-28 14:57	基本功能完成
  ******************************************************************************/
-void GetGoodsProStr(U8 goods,U8 pro,U8 *str)
+void GetGoodsProStr(ToolID goods,U8 pro,U8 *str)
 {
-    U8 idx = '\0';
+    U32 idx = '\0';
     GOODS *gptr;
 
     str[0] = 0;
     IF_HAS_HOOK("getToolPropertyValue") {
         U8* value = str;
-        BIND_U8EX("toolIndex", &goods);
+        BIND_U16EX("toolIndex", &goods);
         BIND_U8EX("propertyIndex", &pro);
         BIND_GBKARR(value, 128);
 
@@ -262,9 +262,9 @@ U8 ShowGoodsProStr(U8 pro,U8 x,U8 y,U8 wid)
  *		----		----			-----------
  *		陈泽伟		2005/5/18 11:26AM	基本功能完成
  ******************************************************************************/
-FAR U8 ShowGoodsControl(U8 *goods,U8 gcount, U8 init, U8 x0,U8 y0,U8 x1,U8 y1)
+FAR ToolID ShowGoodsControl(ToolID *goods,ToolID gcount, ToolID init, U8 x0,U8 y0,U8 x1,U8 y1)
 {
-    U8 i,showflag,count,top,set;
+    U32 i,showflag,count,top,set;
     U8 spc,spcv[6];
     U8 wid;
     GMType Msg;
@@ -273,7 +273,7 @@ FAR U8 ShowGoodsControl(U8 *goods,U8 gcount, U8 init, U8 x0,U8 y0,U8 x1,U8 y1)
     U8 leftWhenTouchDown = 0;
 
     if (!gcount)
-        return(0xff);
+        return TID(0xffff);
 
     /*gam_clrlcd(x0,y0,x1,y1);*/
 
@@ -366,9 +366,9 @@ FAR U8 ShowGoodsControl(U8 *goods,U8 gcount, U8 init, U8 x0,U8 y0,U8 x1,U8 y1)
                     }
                     break;
                 case VK_ENTER:
-                    return(set);
+                    return TID(set);
                 case VK_EXIT:
-                    return(0xff);
+                    return TID(0xffff);
             }
         } else if (VM_TOUCH == Msg.type) {
             touchUpdate(&touch, Msg);
@@ -388,9 +388,9 @@ FAR U8 ShowGoodsControl(U8 *goods,U8 gcount, U8 init, U8 x0,U8 y0,U8 x1,U8 y1)
                     I16 index = touchListViewItemIndexAtPoint(touch.currentX, touch.currentY, menuRect, 1+ASC_HGT, 1, top, gcount, ASC_HGT);
                     if (index < 0)
                     {
-                        return 0xff;
+                        return TID(0xffff);
                     }
-                    return index;
+                    return TID(index);
                 }
                 case VT_TOUCH_MOVE:
                 {
@@ -418,7 +418,7 @@ FAR U8 ShowGoodsControl(U8 *goods,U8 gcount, U8 init, U8 x0,U8 y0,U8 x1,U8 y1)
         }
     }
 
-    return(0xff);
+    return TID(0xffff);
 }
 
 
@@ -435,7 +435,7 @@ FAR U8 ShowGoodsControl(U8 *goods,U8 gcount, U8 init, U8 x0,U8 y0,U8 x1,U8 y1)
  *		----		----			-----------
  *		陈泽伟		2005-7-28 14:45	基本功能完成
  ******************************************************************************/
-FAR void GetGoodsName(U8 goods,U8 *str)
+FAR void GetGoodsName(ToolID goods,U8 *str)
 {
     /*GOODS *gptr;
 
@@ -666,12 +666,12 @@ void GetPersonProStr(PersonID person,U8 pro,U8 *str)
         case 11:		/*道具一*/
             str[0] = 0;
             if (g_Persons[person].Equip[0])
-                GetGoodsName(g_Persons[person].Equip[0] - 1,str);
+                GetGoodsName(TID(g_Persons[person].Equip[0] - 1),str);
             break;
         case 12:		/*道具二*/
             str[0] = 0;
             if (g_Persons[person].Equip[1])
-                GetGoodsName(g_Persons[person].Equip[1] - 1,str);
+                GetGoodsName(TID(g_Persons[person].Equip[1] - 1),str);
             break;
     }
 }

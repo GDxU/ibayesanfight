@@ -53,10 +53,14 @@ typedef unsigned int __attribute__((aligned(1))) U32;
 typedef U8 SBUF[1024];
 
 typedef U16 PersonID;
+typedef U16 ToolID;
 
 #define PID0 0
 #define PID(n) (n)
 
+#define TID(n) (n)
+
+//static inline ToolID toTid(U16 tid) { return (ToolID){ tid }; }
 //static inline PersonID toPid(U16 pid) { return (PersonID){ pid }; }
 
 #define		TRUE		1

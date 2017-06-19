@@ -5,7 +5,7 @@
 #define PERSON_MAX		2000	/*最大武将数*/
 #define PERSON_COUNT	GamGetPersonCount()	/*武将数*/
 #define CITY_MAX		g_engineConfig.citiesCount	/*最大城市数*/
-#define GOODS_MAX		200	/*最大道具数*/
+#define GOODS_MAX		2000	/*最大道具数*/
 #define PERSON_DEATH_AGE	90	/*武将寿命*/
 #define PERSON_APPEAR_AGE	16	/*武将出现年龄*/
 
@@ -108,7 +108,7 @@
 #define THREW_TREAT		50	/*宴请恢复体力*/
 
 typedef struct {
-	U8	idx;			/* 道具序号 */
+	U8	idx_;			/* 道具序号 */
 	U8	useflag;		/* 使用标志：是被使用还是被装备*/
 	U8	atRange[30];		/* 攻击范围数据 */
     U8  changeAttackRange; 	/* 是否改变攻击范围 */
@@ -132,7 +132,7 @@ typedef struct Person				/*人才属性 (12 Bytes) */
 	U8 Thew;			/*体力*/
 	U8 ArmsType;			/*兵种*/
 	U16 Arms;			/*兵力*/
-	U8 Equip[2];			/*装备*/
+	ToolID Equip[2];			/*装备*/
 	U8 Age;				/*年龄*/
 }PersonType;
 
@@ -154,8 +154,8 @@ typedef struct City				/*城市属性(30 Bytes)*/
 	U16 MothballArms;		/*后备兵力*/
 	PersonID PersonQueue;			/*人才队列*/
 	PersonID Persons;			/*人才数*/
-	U8 ToolQueue;			/*道具队列*/
-	U8 Tools;			/*道具数*/
+	ToolID ToolQueue;			/*道具队列*/
+	ToolID Tools;			/*道具数*/
 }CityType;
 
 typedef struct {

@@ -176,10 +176,11 @@ FAR void CountMoveP(U8 i)
     pos->move = FgtIntMove[arm];
     for(lp = 0; lp < 2; lp += 1)
     {	/* 累加马匹移动力 */
-        i = per->Equip[lp];
-        if(!i)
+        ToolID t;
+        t = per->Equip[lp];
+        if(!t)
             continue;
-        ptr = (GOODS *)(ResLoadToCon(GOODS_RESID,1,g_CBnkPtr) + (U16)(i - 1) * sizeof(GOODS));
+        ptr = (GOODS *)(ResLoadToCon(GOODS_RESID,1,g_CBnkPtr) + (U16)(t - 1) * sizeof(GOODS));
         if(NULL == ptr)
             continue;
         if(ptr->move != 0)
