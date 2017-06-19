@@ -44,7 +44,7 @@ void FgtShowInf(void);
 void FgtGetPCmd(FGTCMD *pcmd);
 U8 FgtExeCmd(FGTCMD *pcmd);
 void FgtGetMPos(U8 idx,RECT *pRect);
-U8 FgtCmdAimGet(U8 type,U8 param,U8 idx);
+U8 FgtCmdAimGet(U8 type,SkillID param,U8 idx);
 void FgtShowAtRng(void);
 void FgtCmdBack(bool *flag);
 bool FgtChkRng(void);
@@ -211,15 +211,14 @@ void FgtDealMan(void)
  ***********************************************************************/
 void FgtGetPCmd(FGTCMD *pcmd)
 {
-    U8	idx,aIdx = 0;
-    U8	lflag,type,param = 0;
-    U8	*buf;
+    U32	idx,aIdx = 0;
+    U32	lflag,type,param = 0;
     RECT	pRect;
+    SBUF buf;
 
     lflag = true;
     idx = pcmd->sIdx;
     type = 0;
-    buf = gam_malloc(100);
     while(lflag)
     {
         /* 选择命令 */
@@ -234,33 +233,31 @@ void FgtGetPCmd(FGTCMD *pcmd)
         {
             case CMD_LOOK:
                 FgtShowHlp();
-                param = MNU_EXIT;
+                param = 0xFFFF;
                 break;
             case CMD_STGM:
                 if(g_GenPos[idx].state == STATE_JZ)
                 {
                     /* 若当前将领为禁咒状态，就直接break */
-                    param = MNU_EXIT;
+                    param = 0xFFFF;
                     break;
                 }
-                param = FgtGetJNIdx(idx,&pRect,buf);
+                param = FgtGetJNIdx(idx,&pRect);
                 break;
             case CMD_REST:
             case MNU_EXIT:
-                gam_free(buf);
                 return;
         }
-        if(param != MNU_EXIT)
+        if(param != 0xFFFF)
         {
-            FgtGetCmdRng(type,param,idx);
-            aIdx = FgtCmdAimGet(type,param,idx);
-            if(aIdx != MNU_EXIT)
+            FgtGetCmdRng(type,SID(param),idx);
+            aIdx = FgtCmdAimGet(type,SID(param),idx);
+            if(aIdx != 0xFF)
                 lflag = false;
         }
     }
     pcmd->param = param;
     pcmd->aIdx = aIdx;
-    gam_free(buf);
 }
 /***********************************************************************
  * 说明:     获取命令执行的对象
@@ -271,7 +268,7 @@ void FgtGetPCmd(FGTCMD *pcmd)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-U8 FgtCmdAimGet(U8 type,U8 param,U8 idx)
+U8 FgtCmdAimGet(U8 type,SkillID param,U8 idx)
 {
     U8	pidx,same;
     U8	naim[10],err[10];

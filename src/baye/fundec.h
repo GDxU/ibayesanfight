@@ -28,7 +28,7 @@ Fight void		FgtFrashGen(U8 idx,U8 cnt);
 
 FightSub U8		FgtGenPIdx(U8 i);
 FightSub U8		FgtMainMenu(void);
-FightSub U8		*FgtGetJNPtr(U8 param);
+FightSub SKILLEF*FgtGetJNPtr(SkillID param);
 FightSub U8		FgtGetTerrain(U8 x,U8 y);
 FightSub U8		FgtGetGenIdx(U8 x,U8 y);
 FightSub U8		FgtDrvCmd(FGTCMD *pcmd);
@@ -41,7 +41,7 @@ FgtCount void		CountMoveP(U8 i);
 FgtCount U16		CountAtkHurt(void);
 FgtCount U16		CountPlusSub(U16 *a,U16 v);
 FgtCount U16		CountOverAdd(U16 *a,U16 v,U16 up);
-FgtCount void		CountSklHurt(U8 param,U16 *arms,U16 *prov, U8 origin, U8*state);
+FgtCount void		CountSklHurt(SkillID param,U16 *arms,U16 *prov, U8 origin, U8*state);
 FgtCount void		FgtCountPath(U8 idx);
 FgtCount void		BuiltAtkAttr(U8 idx,U8 pIdx);
 FgtCount void		CountProvUse(void);
@@ -50,10 +50,10 @@ FgtCount void		FgtCountWon(void);
 
 
 
-FgtPkAi U8		FgtGetJNIdx(U8 idx,RECT *pRect,U8 *buf);
+FgtPkAi SkillID		FgtGetJNIdx(U8 idx,RECT *pRect);
 FgtPkAi bool		FgtGetMCmd(FGTCMD *pcmd);
-FgtPkAi U8		FgtJNChkAim(U8 param,U8 same,U8 aidx);
-FgtPkAi void		FgtGetCmdRng(U8 type,U8 param,U8 idx);
+FgtPkAi U8		FgtJNChkAim(SkillID param,U8 same,U8 aidx);
+FgtPkAi void		FgtGetCmdRng(U8 type,SkillID sklid,U8 idx);
 FgtPkAi void		FgtShowMvRng(void);
 FgtPkAi void		FgtShowView(void);
 

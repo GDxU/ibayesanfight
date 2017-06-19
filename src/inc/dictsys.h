@@ -54,13 +54,16 @@ typedef U8 SBUF[1024];
 
 typedef U16 PersonID;
 typedef U16 ToolID;
+typedef U16 SkillID;
 
 #define PID0 0
 #define PID(n) (n)
 
 #define TID(n) (n)
+#define SID(n) (n)
 
 //static inline ToolID toTid(U16 tid) { return (ToolID){ tid }; }
+//static inline SkillID toSid(U16 tid) { return (SkillID){ tid }; }
 //static inline PersonID toPid(U16 pid) { return (PersonID){ pid }; }
 
 #define		TRUE		1

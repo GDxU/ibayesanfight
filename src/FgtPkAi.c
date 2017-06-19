@@ -30,9 +30,9 @@ U8 FgtGetMCmdNear(FGTCMD *pcmd);
 bool FgtJiNeng(FGTCMD *pcmd, U8 force);
 bool FgtAtkCmd(FGTCMD *pcmd);
 void FgtCmpMove(U8 idx);
-void FgtMakeSklNam(U8 *buf);
-void FgtGetSklBuf(U8 gid,U8 *buf);
-U8 FgtCanUse(U8 param,U8 idx);
+void FgtMakeSklNam(SBUF sbuf, SkillID *sklbuf);
+void FgtGetSklBuf(U8 gid,SkillID *buf);
+U8 FgtCanUse(SkillID param,U8 idx);
 bool FgtChkAkRng(U8 x,U8 y);
 U8 FgtCntInterval(U8 x1,U8 y1,U8 x2,U8 y2);
 U8 FgtGetGenTer(U8 idx);
@@ -44,7 +44,7 @@ void FgtLoadToMem3(U8 idx,U8 *buf);
 void FgtViewForce(U8 pForce,U8 pSIdx);
 PersonID TransIdxToGen3(U8 idx);
 U8 FgtStatGen(U8 flag);
-static void AdvancedCmdRng(U8 type,U8 param,U8 idx);
+static void AdvancedCmdRng(U8 type,SkillID param,U8 idx);
 
 /***********************************************************************
  * 说明:     获取计算机控制方的战斗命令
@@ -107,7 +107,7 @@ U8 FgtGetMCmdNear(FGTCMD *pcmd)
 
         IF_HAS_HOOK("aiFightCommand") {
             BIND_U8EX("type", &pcmd->type);
-            BIND_U8EX("skillId", &pcmd->param);
+            BIND_U16EX("skillId", &pcmd->param);
             BIND_U8EX("sIdx", &pcmd->sIdx);
             BIND_U8EX("aIdx", &pcmd->aIdx);
 
@@ -140,7 +140,7 @@ U8 FgtGetMCmdNear(FGTCMD *pcmd)
     return i;
 }
 
-bool FgtJiNengGetAim(FGTCMD *pcmd, PersonType*per, U8 skidx, U8 idx)
+bool FgtJiNengGetAim(FGTCMD *pcmd, PersonType*per, SkillID skidx, U8 idx)
 {
     U8 i;
     JLPOS		*pos;
@@ -195,10 +195,11 @@ bool FgtJiNengGetAim(FGTCMD *pcmd, PersonType*per, U8 skidx, U8 idx)
 bool FgtJiNeng(FGTCMD *pcmd, U8 force)
 {
     U8	idx,skidx;
-    U8	sklbuf[SKILL_NMAX + 1];
+    SkillID sklbuf[SKILL_NMAX + 1];
     U16	arms,ranv;
     PersonType	*per;
     PersonID id;
+    SkillID sklid;
 
     idx = pcmd->sIdx;
     if(STATE_JZ == g_GenPos[idx].state)
@@ -226,11 +227,11 @@ bool FgtJiNeng(FGTCMD *pcmd, U8 force)
     if (force == 0 && g_engineConfig.aiAttackMethod == 0) {
         /* 获取要施展的技能 */
         skidx = ranv % gam_strlen(sklbuf);
-        skidx = sklbuf[skidx];
+        sklid = sklbuf[skidx];
         /* 自己是否符合施展的条件 */
-        if(FgtCanUse(skidx,idx))
+        if(FgtCanUse(sklid,idx))
             return false;
-        return FgtJiNengGetAim(pcmd, per, skidx, idx);
+        return FgtJiNengGetAim(pcmd, per, sklid, idx);
     } else {
         /* 查找最佳技能 */
         U8 count = gam_strlen(sklbuf);
@@ -239,9 +240,9 @@ bool FgtJiNeng(FGTCMD *pcmd, U8 force)
             U16 rand = gam_rand() % (count * count);
             U8 ind = sqrt32(rand) % count;
 
-            skidx = sklbuf[ind];
-            if(skidx != 30 && FgtCanUse(skidx,idx) == 0) {
-                if (FgtJiNengGetAim(pcmd, per, skidx, idx)) {
+            sklid = sklbuf[ind];
+            if(sklid != 30 && FgtCanUse(sklid,idx) == 0) {
+                if (FgtJiNengGetAim(pcmd, per, sklid, idx)) {
                     return true;
                 }
             }
@@ -268,7 +269,7 @@ bool FgtAtkCmd(FGTCMD *pcmd)
     U16	hurt;
 
     idx = pcmd->sIdx;
-    FgtGetCmdRng(CMD_ATK,0,idx);
+    FgtGetCmdRng(CMD_ATK,SID(0),idx);
     BuiltAtkAttr(0,idx);
     FgtGetHurtMax(&hurt,&aidx);
     /* 产生攻击的命令 */
@@ -389,13 +390,16 @@ void FgtCmpMove(U8 idx)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-FAR U8 FgtGetJNIdx(U8 idx,RECT *pRect,U8 *buf)
+FAR SkillID FgtGetJNIdx(U8 idx,RECT *pRect)
 {
-    U8	rngb,param,inf[10];
+    U8	rngb,inf[10];
+    SkillID param;
+    SkillID buf[SKILL_NMAX + 1];
+    SBUF sbuf;
 
     FgtGetSklBuf(idx, buf);
-    FgtMakeSklNam(buf);
-    rngb = gam_strlen(buf + SKILL_NMAX + 1) / SKILL_NAMELEN;
+    FgtMakeSklNam(sbuf, buf);
+    rngb = gam_strlen(sbuf) / SKILL_NAMELEN;
     pRect->sx += 4;
     pRect->ex += 4;
     if(pRect->ex > WK_EX - SKILL_NAMELEN * ASC_WID - 4)
@@ -409,11 +413,13 @@ FAR U8 FgtGetJNIdx(U8 idx,RECT *pRect,U8 *buf)
         pRect->ey = pRect->sy + rngb * HZ_HGT;
     while(1)
     {
+        U32 idx;
+
         rngb = 0;
-        param = PlcSplMenu(pRect,0,buf+SKILL_NMAX + 1);
-        if(MNU_EXIT == param)
-            break;
-        param = buf[param];
+        idx = PlcSplMenu(pRect,0,sbuf);
+        if(MNU_EXIT == idx)
+            return SID(0xFFFF);
+        param = buf[idx];
         rngb = FgtCanUse(param,idx);
         if(!rngb) break;
         FgtLoadToMem3(rngb,inf);
@@ -430,7 +436,7 @@ FAR U8 FgtGetJNIdx(U8 idx,RECT *pRect,U8 *buf)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-U8 FgtCanUse(U8 param,U8 idx)
+U8 FgtCanUse(SkillID param,U8 idx)
 {
     U8	terrain;
     SKILLEF	*skl;
@@ -438,7 +444,7 @@ U8 FgtCanUse(U8 param,U8 idx)
 
     pos = &g_GenPos[idx];
     terrain = FgtGetGenTer(idx);
-    skl = (SKILLEF	*)FgtGetJNPtr(param);
+    skl = FgtGetJNPtr(param);
     if(skl->useMp > pos->mp)
         return dFgtMpErr;		/*技能点不足*/
     if(!skl->oland[terrain])
@@ -477,16 +483,16 @@ void bind_skill_num(ObjectDef*def)
 }
 
 
-void FgtGetSklBuf(U8 gid, U8 *buf)
+void FgtGetSklBuf(U8 gid, SkillID*buf)
 {
-    U8	type,len;
-    U8	*sklbuf,*ptr;
+    U32	type,len;
+    SkillID	*sklbuf,*ptr;
     PersonID id = TransIdxToGen3(gid);
 
     gam_memset(buf,0,SKILL_NMAX + 1);
     /* 构造技能缓冲 */
     sklbuf = buf;
-    ptr = ResLoadToCon(SPE_SKLID,g_PIdx,g_CBnkPtr);
+    ptr = (SkillID*)ResLoadToCon(SPE_SKLID,g_PIdx,g_CBnkPtr);
     if(ptr[id])		/* 特有技能 */
     {
         *sklbuf = ptr[id];
@@ -494,19 +500,22 @@ void FgtGetSklBuf(U8 gid, U8 *buf)
     }
     if(g_Persons[id].Belong == id + 1)	/* 君主技能 */
     {
-        *sklbuf = 30;
+        *sklbuf = SID(30);
         sklbuf += 1;
     }
-    ptr = ResLoadToCon(IFACE_CONID,dFgtJNArray,g_CBnkPtr);
+    U8* jnptr = ResLoadToCon(IFACE_CONID,dFgtJNArray,g_CBnkPtr);
     type = GetArmType(&g_Persons[id]);
     len = ((float)dArmsJNNum[type] * g_Persons[id].Level / (MAX_LEVEL + 1)) + 1;
-    ptr += type * SKILL_NMAX;
-    gam_memcpy(sklbuf,ptr,len);
+    jnptr += type * SKILL_NMAX;
+
+    for (U8 i = 0; i < len; i++) {
+        sklbuf[i] = jnptr[i];
+    }
 
     IF_HAS_HOOK("getSkillIds") {
-        U8* skillIds = buf;
+        SkillID* skillIds = buf;
         BIND_U8EX("generalIndex", &gid);
-        BIND_U8ARR(skillIds, 10);
+        BIND_U16ARR(skillIds, 10);
         CALL_HOOK();
     }
 }
@@ -519,14 +528,16 @@ void FgtGetSklBuf(U8 gid, U8 *buf)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-void FgtMakeSklNam(U8 *buf)
+void FgtMakeSklNam(SBUF sbuf, SkillID *sklbuf)
 {
-    U8	i,tmp,*ptr;
+    U32	i;
+    U8*ptr;
+    SkillID tmp;
 
-    ptr = buf + SKILL_NMAX + 1;
+    ptr = sbuf;
     for(i = 0;i < SKILL_NMAX;i += 1)
     {
-        tmp = buf[i];
+        tmp = sklbuf[i];
         if(!tmp) break;
         ResLoadToMem(SKL_NAMID,tmp,ptr);
         ptr += SKILL_NAMELEN;
@@ -541,7 +552,7 @@ void FgtMakeSklNam(U8 *buf)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-FAR U8 FgtJNChkAim(U8 param,U8 same,U8 aidx)
+FAR U8 FgtJNChkAim(SkillID param,U8 same,U8 aidx)
 {
     U8	terrain,type;
     SKILLEF *skl;
@@ -654,7 +665,7 @@ void FgtGetAtkRng(U8 idx,U8 x,U8 y)
     pos->x = x;
     pos->y = y;
     BuiltAtkAttr(0,idx);
-    FgtGetCmdRng(CMD_ATK,0,idx);
+    FgtGetCmdRng(CMD_ATK,SID(0),idx);
     pos->x = bakx;
     pos->y = baky;
 }
@@ -711,7 +722,7 @@ static void convert(U8*data, U8 from, U8 to) {
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-FAR void FgtGetCmdRng(U8 type,U8 param,U8 idx)
+FAR void FgtGetCmdRng(U8 type,SkillID sklid,U8 idx)
 {
     U8 rngb = 0,*ptr;
     U8 tool_rng_data[TOOL_ATT_RANGEUNIT*TOOL_ATT_RANGEUNIT] = {0};
@@ -747,7 +758,7 @@ FAR void FgtGetCmdRng(U8 type,U8 param,U8 idx)
              rngb = ATT_RANGEUNIT;
              break;*/
         case CMD_STGM: {
-            U16 offset = (U16)(param - 1) * SKILL_RANGE;
+            U32 offset = (sklid - 1) * SKILL_RANGE;
             rngb = SKILL_RANGEUNIT;
             ptr = ResLoadToCon(SKL_RNGID, 1, g_CBnkPtr) + offset;
             break;
@@ -764,7 +775,7 @@ FAR void FgtGetCmdRng(U8 type,U8 param,U8 idx)
 //        g_FgtAtkRng[0] = rngb;
 //        g_FgtAtkRng[1] = (U8)(g_GenPos[idx].x - (rngb >> 1));
 //        g_FgtAtkRng[2] = (U8)(g_GenPos[idx].y - (rngb >> 1));
-        AdvancedCmdRng(type, param, idx);
+        AdvancedCmdRng(type, sklid, idx);
     }
 }
 /***********************************************************************
@@ -1104,7 +1115,7 @@ PersonID TransIdxToGen3(U8 idx)
     return PID(g_FgtParam.GenArray[idx] - 1);
 }
 
-static void AdvancedCmdRng(U8 type, U8 param, U8 idx) {
+static void AdvancedCmdRng(U8 type, SkillID param, U8 idx) {
     IF_HAS_HOOK("calcAttackRange") {
         BuiltAtkAttr(0, idx);
 
@@ -1112,12 +1123,12 @@ static void AdvancedCmdRng(U8 type, U8 param, U8 idx) {
         U16 personIndex = g_FgtParam.GenArray[idx] - 1;
         U8*range = g_FgtAtkRng+3;
         U8 rangeSize = g_FgtAtkRng[0];
-        U8* skillId = &param;
+        SkillID* skillId = &param;
 
         BIND_U8(&ter);
         BIND_U16(&personIndex);
         BIND_U8(&type);
-        BIND_U8(skillId);
+        BIND_U16(skillId);
         BIND_U8(&rangeSize);
         BIND_U8ARR(range, TOOL_ATT_RANGE);
 

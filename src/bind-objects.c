@@ -76,9 +76,12 @@ void bind_init(void) {
         BIND_U8(&g_asyncActionID);
         ObjectDef_addFieldArray_DEF(g_asyncActionParams, ValueTypeU32, 32);
         DEFADD_GBKARR(g_asyncActionStringParam, sizeof(g_asyncActionStringParam));
-        
+
         U8* g_asyncActionStringParamArray = g_asyncActionStringParam;
         DEFADD_U8ARR(g_asyncActionStringParamArray, sizeof(g_asyncActionStringParam));
+
+        U16* g_asyncActionU16ParamArray = (U16*)g_asyncActionStringParam;
+        DEFADD_U8ARR(g_asyncActionU16ParamArray, sizeof(g_asyncActionStringParam)/sizeof(U16));
     }
 
     DEFADD_GBKARR(g_errorString, sizeof(g_errorString));
@@ -268,7 +271,7 @@ void bind_init(void) {
 #undef _ST
         static ValueDef arrdef = { .type=ValueTypeArray, .size=0, .subdef.arrDef=&_value_def };
         static Field arrfield = {"g_Skills", {.def=&arrdef, .offset=0}};
-        arrdef.size = _value_def.size * 255; // TODO
+        arrdef.size = _value_def.size * 2000; // TODO
         arrfield.value.offset = (U32)ResLoadToCon(SKL_RESID, 1, g_CBnkPtr);
         ObjectDef_addField(def, &arrfield);
     }

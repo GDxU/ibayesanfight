@@ -236,7 +236,7 @@ typedef	struct {
 
 typedef	struct {
 	U8	type;				/* 命令类型 */
-	U8	param;				/* 命令参数 */
+    U16 param;				/* 命令参数 */
 	U8	sIdx;				/* 命令执行者脚标(GenArray[sIdx]) */
 	U8	aIdx;				/* 命令结果承受者脚标(GenArray[aIdx]) */
 }FGTCMD;					/* 战斗命令结构体 */

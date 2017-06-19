@@ -108,6 +108,7 @@ void ObjectDef_addFieldGBKArray(ObjectDef* def, const char*name, void* ptr, U32 
 #define BIND_U16(name) ObjectDef_addFieldU16(def, #name, name)
 
 #define BIND_U8ARR(name, len) ObjectDef_addFieldArray_DEF(name, ValueTypeU8, len)
+#define BIND_U16ARR(name, len) ObjectDef_addFieldArray_DEF(name, ValueTypeU16, len)
 #define BIND_GBKARR(name, len) ObjectDef_addFieldGBKArray(def, #name, name, len)
 
 #define HOOK_RETURN(args...) {HOOK_LEAVE(); return args; }

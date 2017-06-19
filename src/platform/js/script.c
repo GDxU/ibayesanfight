@@ -101,17 +101,17 @@ int call_hook_a(const char* name, Value* context)
             }
             case 4: // Choose person
             {
-//                U16 count = g_asyncActionParams[0];
-//                U16 init = g_asyncActionParams[1];
-//                g_asyncActionParams[0] = GamChoosePerson(g_asyncActionStringParam, count, init);
-//                js_callback(&rv);
+                U16 count = g_asyncActionParams[0];
+                U16 init = g_asyncActionParams[1];
+                g_asyncActionParams[0] = GamChoosePerson((U16*)g_asyncActionStringParam, count, init);
+                js_callback(&rv);
                 break;
             }
             case 5: // Choose tool
             {
                 U16 count = g_asyncActionParams[0];
                 U16 init = g_asyncActionParams[1];
-                g_asyncActionParams[0] = ShowGoodsControl(g_asyncActionStringParam,
+                g_asyncActionParams[0] = ShowGoodsControl((U16*)g_asyncActionStringParam,
                                                           count, init, WK_SX + 4,WK_SY + 2,WK_EX - 4,WK_EY - 2);
                 js_callback(&rv);
                 break;

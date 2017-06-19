@@ -29,8 +29,8 @@
 /* 其他功能函数 */
 void FgtAtvShowNum(U8 x,U8 y,U16 number);
 void FgtFormatStr(U8 *buf,U16 num);
-U8 FgtGetExp(U16 hurt);
-U8 FgtDrvWeiG(U8 aIdx);
+U32 FgtGetExp(U16 hurt);
+U32 FgtDrvWeiG(U8 aIdx);
 void FgtShowSNum(U8 sym,U8 idx,U16 num);
 void FgtGetMapDat(U8 x,U8 y);
 PersonID TransIdxToGen1(U8 idx);
@@ -250,7 +250,7 @@ void bind_skill_var(ObjectDef* def)
 U8 FgtGetGenTer(U8 idx);
 bool FgtChkAkRng(U8 x,U8 y);
 
-static U8 _CommonJNAction(U8 param, U8 aim, U8 sIdx, U8 aIdx, U8 originIdx) {
+static U8 _CommonJNAction(SkillID param, U8 aim, U8 sIdx, U8 aIdx, U8 originIdx) {
     U16 arms, prov, up;
     U8 bidx, state, buf[25], *ptr;
     SKILLEF	*skl = (SKILLEF	*)FgtGetJNPtr(param);
@@ -314,16 +314,17 @@ static U8 _CommonJNAction(U8 param, U8 aim, U8 sIdx, U8 aIdx, U8 originIdx) {
 
 U8 FgtJNAction(FGTCMD *pcmd)
 {
-    U8	param,sIdx,aIdx;
+    U8	sIdx,aIdx;
     U8	aim,bidx,buf[25];
     U8	rnd,success = 0xff;
     U16	arms,prov = 0,*provp;
     SKILLEF	*skl;
+    SkillID param;
 
-    param = pcmd->param;
+    param = SID(pcmd->param);
     sIdx = pcmd->sIdx;
     aIdx = pcmd->aIdx;
-    skl = (SKILLEF	*)FgtGetJNPtr(param);
+    skl = FgtGetJNPtr(param);
 
     if (!g_engineDebug) {
         g_GenPos[sIdx].mp -= skl->useMp;
@@ -334,7 +335,7 @@ U8 FgtJNAction(FGTCMD *pcmd)
     IF_HAS_HOOK("showSkill") {
         U8 ter = FgtGetGenTer(sIdx);
         BIND_U8(&ter);
-        BIND_U8EX("skillId", &pcmd->param);
+        BIND_U16EX("skillId", &pcmd->param);
         BIND_U8EX("result", &success);
         CALL_HOOK();
     }
@@ -368,9 +369,9 @@ U8 FgtJNAction(FGTCMD *pcmd)
     }
     else if(param == 27)	/* 围攻 */
     {
-        param = FgtDrvWeiG(aIdx);
+        U32 exp = FgtDrvWeiG(aIdx);
         BuiltAtkAttr(0,sIdx);		/* 恢复技能施展者的战斗变量 */
-        return param;
+        return exp;
     }
     else if(param == 30)	/* 侦察 */
     {
@@ -410,7 +411,7 @@ U8 FgtJNAction(FGTCMD *pcmd)
         for(int i = 0;i < FGTA_MAX;i += 1)
         {
             JLPOS* pos = &g_GenPos[i];
-            U8 skidx = param;
+            SkillID skidx = param;
             if (i == aIdx)
                 continue;
             if (g_FgtParam.GenArray[i] == 0)
@@ -449,10 +450,10 @@ U8 FgtJNAction(FGTCMD *pcmd)
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
 const U8 dJNWGModu[] = {0xFF,0,0,0xFF,1,0,0,1};
-U8 FgtDrvWeiG(U8 aIdx)
+U32 FgtDrvWeiG(U8 aIdx)
 {
-    U8	i,exp,deltax,deltay;
-    U8	sx,sy;
+    U32	i,exp,deltax,deltay;
+    U32	sx,sy;
 
     i = 0;
     exp = 0;
@@ -609,9 +610,9 @@ void FgtFormatStr(U8 *buf,U16 num)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-U8 FgtGetExp(U16 hurt)
+U32 FgtGetExp(U16 hurt)
 {
-    U8	exp,lec;
+    U32	exp,lec;
 
     lec = *g_GenAtt[0].level - *g_GenAtt[1].level;		/* 等级差 */
     exp = PlcExtract(hurt) >> 2;
@@ -625,7 +626,7 @@ U8 FgtGetExp(U16 hurt)
             exp = 0;
     }
     exp += 2;
-    return (exp % FGT_EXPMAX);
+    return exp;
 }
 /***********************************************************************
  * 说明:     获取当前将领在地图上显示的图块序号
@@ -708,15 +709,13 @@ FAR U8 FgtGetTerrain(U8 x,U8 y)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-FAR U8 *FgtGetJNPtr(U8 param)
+FAR SKILLEF *FgtGetJNPtr(SkillID param)
 {
-    U8	*ptr;
     U16	poff;
 
     poff = sizeof(SKILLEF);
     poff *= param - 1;
-    ptr = ResLoadToCon(SKL_RESID,1,g_CBnkPtr) + poff;
-    return ptr;
+    return (SKILLEF*)ResLoadToCon(SKL_RESID,1,g_CBnkPtr) + poff;
 }
 /***********************************************************************
  * 说明:     获取指定地图坐标处的将领脚标
