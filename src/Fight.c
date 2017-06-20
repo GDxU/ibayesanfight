@@ -612,6 +612,7 @@ U8 FgtGetFoucs(void (*chkcondition)(bool*flag))
                 break;
             case VM_TIMER:
                 flag = !flag;
+                FgtShowMap(g_MapSX,g_MapSY);
                 break;
             case VM_TOUCH:
             {
@@ -1177,6 +1178,14 @@ void FgtShowGen(U8 act)
     U8	i,idx,pIdx;
     U8	sx,sy,tx,ty,state;
     JLPOS	*pos;
+
+    IF_HAS_HOOK("drawGenerals") {
+        BIND_U8EX("frame", &act);
+        if (CALL_HOOK() == 0) {
+            HOOK_LEAVE();
+            return;
+        }
+    }
 
     /* 显示可见的将领 */
     for (i = 0; i < FGTA_MAX; i += 1)
