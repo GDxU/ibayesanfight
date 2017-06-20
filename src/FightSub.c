@@ -254,6 +254,7 @@ static U8 _CommonJNAction(SkillID param, U8 aim, U8 sIdx, U8 aIdx, U8 originIdx)
     U16 arms, prov, up;
     U8 bidx, state, buf[25], *ptr;
     SKILLEF	*skl = (SKILLEF	*)FgtGetJNPtr(param);
+    U8 stateChanged;
 
     BuiltAtkAttr(1, aIdx);
 
@@ -261,6 +262,7 @@ static U8 _CommonJNAction(SkillID param, U8 aim, U8 sIdx, U8 aIdx, U8 originIdx)
     if (g_GenPos[aIdx].state == STATE_SW)
         state = STATE_SW;
     CountSklHurt(param, &arms, &prov, originIdx, &state);		/* 计算该技能的兵力和粮草伤害 */
+    stateChanged = g_GenPos[aIdx].state != state;
     g_GenPos[aIdx].state = state;
     if(state == STATE_DS)		/* 定身状态时，设置将领的移动力为1 */
         g_GenPos[aIdx].move = NO_MOV;
@@ -298,8 +300,16 @@ static U8 _CommonJNAction(SkillID param, U8 aim, U8 sIdx, U8 aIdx, U8 originIdx)
             FgtShowSNum2((aim & 1) ? '+' : '-',aIdx,arms);
         GamDelay(SHOW_DLYBASE * 5,false);
     }
-    if(state != STATE_ZC && state != STATE_SW)
+    if(stateChanged && state != STATE_ZC && state != STATE_SW)
     {
+        IF_HAS_HOOK("showStateChanged") {
+            BIND_IDX("generalIndex", &aIdx);
+            BIND_U8(&state);
+            if (CALL_HOOK_A() == 0) {
+                HOOK_LEAVE();
+                goto did;
+            }
+        }
         GetPersonName(TransIdxToGen1(aIdx),buf);
         up = gam_strlen(buf);
         ptr = buf + up;
@@ -308,6 +318,7 @@ static U8 _CommonJNAction(SkillID param, U8 aim, U8 sIdx, U8 aIdx, U8 originIdx)
         FgtLoadToMem2(dFgtState,ptr + 8 + 4);
         GamMsgBox(buf,1);
     }
+did:
     call_hook_a("didShowPKAnimation", NULL);
     return FgtGetExp(arms);
 }
