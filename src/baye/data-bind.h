@@ -123,6 +123,10 @@ void ObjectDef_addFieldGBKArray(ObjectDef* def, const char*name, void* ptr, U32 
 #define CALL_HOOK() call_hook(_hook_name, __v)
 #define CALL_HOOK_A() call_hook_a(_hook_name, __v)
 
+#define BIND_ID BIND_U16
+#define BIND_IDX BIND_U16EX
+
+
 Value* Value_ObjectValue_new(void);
 void Value_ObjectValue_free(Value*value);
 
