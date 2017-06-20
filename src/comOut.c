@@ -83,7 +83,7 @@ FAR void GamMsgBox(const U8 *buf,U8 delay)
  ***********************************************************************/
 FAR void GamShowFrame(U8 *vscr)
 {
-    gam_Picture(0,0,SCR_WID-1,SCR_HGT-1,vscr);
+    gam_Picture(0,0,SCR_WID-1,SCR_HGT-1,vscr,0);
 }
 /***********************************************************************
  * 说明:     显示图片到屏幕
@@ -98,7 +98,7 @@ FAR void GamPicShowS(U8 x,U8 y,U8 wid,U8 hgt,U8 *pic)
 {
     wid-=1;
     hgt-=1;
-    gam_Picture(x,y,x+wid,y+hgt,pic);
+    gam_Picture(x,y,x+wid,y+hgt,pic,0);
 }
 /***********************************************************************
  * 说明:     显示图片到虚拟屏幕
@@ -127,8 +127,11 @@ FAR void GamPicShowV(U8 x,U8 y,U8 wid,U8 hgt,U8 *pic,U8 *vscr)
  ***********************************************************************/
 FAR void GamMPicShowS(U8 x,U8 y,U8 wid,U8 hgt,U8 *pic)
 {
-    gam_Picture(x,y,x+wid,y+hgt,pic);
+    U16 pLen = (wid+7) / 8 * hgt;
+    gam_Picture(x,y,x+wid-1,y+hgt-1,pic,1);
+    gam_Picture(x,y,x+wid-1,y+hgt-1,pic+pLen,2);
 }
+
 /***********************************************************************
  * 说明:     显示mask图片到虚拟屏幕
  * 输入参数: x,y-显示坐标	wid,hgt-图片尺寸	pic-图片数据
@@ -341,7 +344,7 @@ void GamChinese(U8 x,U8 y,U16 Hz)
 
     GetExcHZMCode(Hz,zmCode);
     if(c_VisScr==NULL)
-        gam_Picture(x,y,x+HZ_WID-1,y+HZ_HGT-1,zmCode);
+        gam_Picture(x,y,x+HZ_WID-1,y+HZ_HGT-1,zmCode, 0);
     else
         GamePictureDummy(x,y,x+HZ_WID-1,y+HZ_HGT-1,zmCode,c_VisScr,0);
 }
@@ -373,7 +376,7 @@ void GamAscii(U8 x,U8 y,U8 asc)
     }
 
     if(c_VisScr==NULL)
-        gam_Picture(x,y,x+ASC_WID-1,y+ASC_HGT-1,zmCode);
+        gam_Picture(x,y,x+ASC_WID-1,y+ASC_HGT-1,zmCode,0);
     else
         GamePictureDummy(x,y,x+ASC_WID-1,y+ASC_HGT-1,zmCode,c_VisScr,0);
 }

@@ -333,8 +333,8 @@ U8* bayeGetGBKBuffer(void) {
 }
 
 EMSCRIPTEN_KEEPALIVE
-void bayeLcdDrawImage(U16 resid, U16 item, U8 index, U32 x, U32 y) {
-    return GamDrawImage(resid, item, index+1, x, y);
+void bayeLcdDrawImage(U16 resid, U16 item, U16 index, U32 x, U32 y, U8 flag) {
+    return PlcRPicShowEx(resid, item, index+1, x, y, flag);
 }
 
 EMSCRIPTEN_KEEPALIVE

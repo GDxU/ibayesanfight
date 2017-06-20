@@ -539,6 +539,7 @@ FAR void PlcRPicShowEx(U16 id, U8 item, U8 idx,U8 x,U8 y,U8 flag)
     off *= idx - 1;
     pic += off;
     pic += PICHEAD_LEN;
+
     if(!flag)
     {
         if(mode)
@@ -553,31 +554,6 @@ FAR void PlcRPicShowEx(U16 id, U8 item, U8 idx,U8 x,U8 y,U8 flag)
         else
             GamPicShowS(x,y,wid,high,pic);
     }
-}
-
-FAR void GamDrawImage(U16 id, U8 item, U8 idx, U32 x, U32 y)
-{
-    U8	*pic;
-    U8	wid,high,mode;
-    U16	off;
-
-    pic = ResLoadToCon(id,item+1,g_CBnkPtr);
-    if(NULL == pic)
-        return;
-    if(idx > pic[4])
-        return;
-    wid = pic[0];
-    high = pic[2];
-    mode = pic[5] & 0x01;
-    off = wid >> 3;
-    if(wid & 0x07)
-        off += 1;
-    off *= high;
-    off <<= mode;
-    off *= idx - 1;
-    pic += off;
-    pic += PICHEAD_LEN;
-    SysPictureEx(x, y, x+wid-1, y+high-1, pic, 0);
 }
 
 /***********************************************************************
