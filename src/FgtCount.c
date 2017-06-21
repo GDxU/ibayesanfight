@@ -164,6 +164,14 @@ FAR void CountMoveP(U8 i)
 
     pos = &g_GenPos[i];
 
+    IF_HAS_HOOK("countMove") {
+        BIND_U8EX("generalIndex", &i);
+        if (CALL_HOOK() == 0) {
+            HOOK_LEAVE();
+            return;
+        }
+    }
+
     if (pos->state == STATE_DS) {
         pos->move = 1;
         return;
@@ -507,6 +515,18 @@ FAR void FgtCountPath(U8 idx)
     U8	chi1P,chi2P;
     U8	i,lp,tmp,sidx;
     U8	*ap,*sptr,*aptr;
+    
+    IF_HAS_HOOK("countMoveRange") {
+        BIND_U8EX("generalIndex", &idx);
+        g_PUseSX = 0;
+        g_PUseSY = 0;
+        g_PathSX = g_GenPos[idx].x - 7;
+        g_PathSY = g_GenPos[idx].y - 7;
+        if (CALL_HOOK() == 0) {
+            HOOK_LEAVE();
+            return;
+        }
+    }
 
     CountMoveP(idx);
     FgtGetRelief(idx);
@@ -647,12 +667,27 @@ void FgtTransMove(U8 idx)
 {
     U8	i,type;
     U8	x,lp;
-    U8	*mptr;
+    U8	*mptr = NULL;
+    
+    U8  mbuf[256];
 
     /* 获取被操作的兵种 */
     type = GetArmType(&g_Persons[g_FgtParam.GenArray[idx] - 1]);
-    mptr = ResLoadToCon(IFACE_CONID,dFgtLandR,g_CBnkPtr);
-    mptr += type * FGT_TILMAX;
+
+    IF_HAS_HOOK("countLandResistance") {
+        U8* result = mbuf;
+        BIND_U8EX("generalIndex", &idx);
+        BIND_U8ARR(result, sizeof(mbuf));
+        if (CALL_HOOK() == 0) {
+            mptr = mbuf;
+        }
+    }
+    
+    if (mptr == NULL) {
+        mptr = ResLoadToCon(IFACE_CONID,dFgtLandR,g_CBnkPtr);
+        mptr += type * FGT_TILMAX;
+    }
+    
     /* 将地况转换成移动力消耗 */
     for(lp = 0; lp < FGT_MRG*FGT_MRG; lp += 1)
     {
