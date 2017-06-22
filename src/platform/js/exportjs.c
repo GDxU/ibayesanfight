@@ -338,31 +338,31 @@ void bayeLcdDrawImage(U16 resid, U16 item, U16 index, I32 x, I32 y, U8 flag) {
 }
 
 EMSCRIPTEN_KEEPALIVE
-U32 bayeLcdDrawText(U8*text, U8 x, U8 y) {
+U32 bayeLcdDrawText(U8*text, I32 x, I32 y) {
     return GamStrShowS(x, y, text);
 }
 
 /* 清除屏幕矩形 */
 EMSCRIPTEN_KEEPALIVE
-void bayeLcdClearRect(U8 left, U8 top, U8 right, U8 bottom) {
+void bayeLcdClearRect(I32 left, I32 top, I32 right, I32 bottom) {
     gam_clrlcd(left, top, right, bottom);
 }
 
 /* 反显屏幕 */
 EMSCRIPTEN_KEEPALIVE
-void bayeLcdRevertRect(U8 left, U8 top, U8 right, U8 bottom) {
+void bayeLcdRevertRect(I32 left, I32 top, I32 right, I32 bottom) {
     gam_revlcd(left, top, right, bottom);
 }
 
 /* 画点函数 */
 EMSCRIPTEN_KEEPALIVE
-void bayeLcdDot(U8 x, U8 y, U8 color) {
+void bayeLcdDot(I32 x, I32 y, U8 color) {
     gam_putpixel(x, y, color);
 }
 
 /* 显示直线 */
 EMSCRIPTEN_KEEPALIVE
-void bayeLcdDrawLine(U8 sx, U8 sy, U8 ex, U8 ey, U8 color) {
+void bayeLcdDrawLine(I32 sx, I32 sy, I32 ex, I32 ey, U8 color) {
     if (color) {
         gam_line(sx, sy, ex, ey);
     } else {
@@ -374,7 +374,7 @@ void bayeLcdDrawLine(U8 sx, U8 sy, U8 ex, U8 ey, U8 color) {
 
 /* 显示矩形 */
 EMSCRIPTEN_KEEPALIVE
-void bayeLcdDrawRect(U8 sx, U8 sy, U8 ex, U8 ey, U8 color) {
+void bayeLcdDrawRect(I32 sx, I32 sy, I32 ex, I32 ey, U8 color) {
     if (color) {
         gam_rect(sx, sy, ex, ey);
     } else {

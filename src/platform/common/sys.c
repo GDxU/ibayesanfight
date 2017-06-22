@@ -28,6 +28,10 @@ static char *buffer = static_buffer;
 static char *scr_buffer = static_buffer;
 static size_t buffer_size = sizeof(static_buffer);
 
+static U8 _insideScreen(PT x, PT y) {
+    return x >= 0 && y >= 0 && x < g_screenWidth && y < g_screenHeight;
+}
+
 void GamSetLcdFlushCallback(void(*lcd_fluch_cb)(char*buffer))
 {
     _lcd_fluch_cb = lcd_fluch_cb;
@@ -123,9 +127,11 @@ FAR	void SysLCDVoltage(U8 voltage)		/*voltage: 0 - 63 */
 
 FAR void SysLcdPartClear(PT x1,PT y1,PT x2,PT y2)
 {
-    U8 x, y;
+    PT x, y;
     for (y = y1; y <= y2; y++) {
         for (x = x1; x <= x2; x++) {
+            if (!_insideScreen(x, y)) continue;
+
             int ind = BYTES_PERLINE * y + x;
             buffer[ind] = CLR;
         }
@@ -135,9 +141,11 @@ FAR void SysLcdPartClear(PT x1,PT y1,PT x2,PT y2)
 
 FAR void SysLcdReverse(PT x1,PT y1,PT x2,PT y2)
 {
-    U8 x, y;
+    PT x, y;
     for (y = y1; y <= y2; y++) {
         for (x = x1; x <= x2; x++) {
+            if (!_insideScreen(x, y)) continue;
+
             int ind = BYTES_PERLINE * y + x;
             buffer[ind] = !buffer[ind];
         }
@@ -178,7 +186,10 @@ FAR void SysPicture(PT sX, PT sY, PT eX, PT eY, U8*pic , U8 flag)
                 X = sX + x;
                 unsigned char pixel0, pixel1;
                 int ind = scrPerLine * Y + X;
-                
+                if (!_insideScreen(X, Y)) {
+                    continue;
+                }
+
                 if (flag == 4) {
                     pixel1 = 0;
                 }
@@ -218,35 +229,38 @@ FAR void SysPicture(PT sX, PT sY, PT eX, PT eY, U8*pic , U8 flag)
     flushLcd();
 }
 
-FAR void SysPutPixel(PT x,PT y,U8 data)
+static inline void _pixel(PT x,PT y,U8 data)
 {
+    if (!_insideScreen(x, y)) return;
+
     int ind = BYTES_PERLINE * y + x;
     buffer[ind] = data;
+}
+
+FAR void SysPutPixel(PT x,PT y,U8 data)
+{
+    _pixel(x, y, data);
     flushLcd();
 }
 
 FAR void SysRect(PT x1,PT y1,PT x2,PT y2)
 {
-    U8 x, y;
+    int x, y;
     y = y1;
     for (x = x1; x <= x2; x++) {
-        int ind = BYTES_PERLINE * y + x;
-        buffer[ind] = DOT;
+        _pixel(x, y, DOT);
     }
     y = y2;
     for (x = x1; x <= x2; x++) {
-        int ind = BYTES_PERLINE * y + x;
-        buffer[ind] = DOT;
+        _pixel(x, y, DOT);
     }
     x = x1;
     for (y = y1; y <= y2; y++) {
-        int ind = BYTES_PERLINE * y + x;
-        buffer[ind] = DOT;
+        _pixel(x, y, DOT);
     }
     x = x2;
     for (y = y1; y <= y2; y++) {
-        int ind = BYTES_PERLINE * y + x;
-        buffer[ind] = DOT;
+        _pixel(x, y, DOT);
     }
     flushLcd();
 }
