@@ -88,7 +88,7 @@ FAR void logPicture(U8 wid, U8 hgt, U8* pic)
 }
 
 
-FAR void SysAscii(U8 x,U8 y,U8 asc)
+FAR void SysAscii(PT x,PT y,U8 asc)
 {
 }
 
@@ -121,7 +121,7 @@ FAR	void SysLCDVoltage(U8 voltage)		/*voltage: 0 - 63 */
 {
 }
 
-FAR void SysLcdPartClear(U8 x1,U8 y1,U8 x2,U8 y2)
+FAR void SysLcdPartClear(PT x1,PT y1,PT x2,PT y2)
 {
     U8 x, y;
     for (y = y1; y <= y2; y++) {
@@ -133,7 +133,7 @@ FAR void SysLcdPartClear(U8 x1,U8 y1,U8 x2,U8 y2)
     flushLcd();
 }
 
-FAR void SysLcdReverse(U8 x1,U8 y1,U8 x2,U8 y2)
+FAR void SysLcdReverse(PT x1,PT y1,PT x2,PT y2)
 {
     U8 x, y;
     for (y = y1; y <= y2; y++) {
@@ -145,7 +145,7 @@ FAR void SysLcdReverse(U8 x1,U8 y1,U8 x2,U8 y2)
     flushLcd();
 }
 
-FAR void SysLine(U8 x1,U8 y1,U8 x2,U8 y2)
+FAR void SysLine(PT x1,PT y1,PT x2,PT y2)
 {
 }
 
@@ -163,7 +163,7 @@ FAR	void	SysMemInit(U16 start,U16 len)
     gam_timer2_open(3, timed_flush_lcd);
 }
 
-FAR void SysPictureEx(U32 sX, U32 sY, U32 eX, U32 eY, U8*pic , U8 flag)
+FAR void SysPicture(PT sX, PT sY, PT eX, PT eY, U8*pic , U8 flag)
 {
     int wid = eX - sX + 1;
     int hgt = eY - sY + 1;
@@ -218,19 +218,14 @@ FAR void SysPictureEx(U32 sX, U32 sY, U32 eX, U32 eY, U8*pic , U8 flag)
     flushLcd();
 }
 
-FAR void SysPicture(U8 sX, U8 sY, U8 eX, U8 eY, U8*pic , U8 flag)
-{
-    SysPictureEx(sX, sY, eX, eY, pic, flag);
-}
-
-FAR void SysPutPixel(U8 x,U8 y,U8 data)
+FAR void SysPutPixel(PT x,PT y,U8 data)
 {
     int ind = BYTES_PERLINE * y + x;
     buffer[ind] = data;
     flushLcd();
 }
 
-FAR void SysRect(U8 x1,U8 y1,U8 x2,U8 y2)
+FAR void SysRect(PT x1,PT y1,PT x2,PT y2)
 {
     U8 x, y;
     y = y1;
@@ -256,7 +251,7 @@ FAR void SysRect(U8 x1,U8 y1,U8 x2,U8 y2)
     flushLcd();
 }
 
-FAR void SysRectClear(U8 x1,U8 y1,U8 x2,U8 y2)
+FAR void SysRectClear(PT x1,PT y1,PT x2,PT y2)
 {
     SysLcdPartClear(x1, y1, x2, y2);
     flushLcd();

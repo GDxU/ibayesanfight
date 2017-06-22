@@ -34,7 +34,7 @@ FAR void	gamTracel(U32	num)
  *		任新村		2002.08.21		基本功能完成
  ****************************************************************************************/
 const	U8	gamNumConvTable[]="0123456789ABCDEF";
-FAR void	gamPrintNum(U8	x,U8	y, U32 num, U8 base,U8	sign)
+FAR void	gamPrintNum(PT	x,PT	y, U32 num, U8 base,U8	sign)
 {
     U32		n;
     U16		count ;

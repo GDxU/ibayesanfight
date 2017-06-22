@@ -29,9 +29,9 @@
 /*------------------------------------------*/
 U32	CountHZMAddrOff(U16 Hz);
 void	GamResumeSet(U16 bakBnk);
-void	GamAscii(U8 x,U8 y,U8 asc);
-void	GamChinese(U8 x,U8 y,U16 Hz);
-U32	GamStrShow(U8 x,U8 y,const U8 *buf);
+void	GamAscii(PT x,PT y,U8 asc);
+void	GamChinese(PT x,PT y,U16 Hz);
+U32	GamStrShow(PT x,PT y,const U8 *buf);
 void	GetExcHZMCode(U16 Hz,U8 *hzmCode);
 
 /***********************************************************************
@@ -94,7 +94,7 @@ FAR void GamShowFrame(U8 *vscr)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-FAR void GamPicShowS(U8 x,U8 y,U8 wid,U8 hgt,U8 *pic)
+FAR void GamPicShowS(PT x,PT y,PT wid,PT hgt,U8 *pic)
 {
     wid-=1;
     hgt-=1;
@@ -110,7 +110,7 @@ FAR void GamPicShowS(U8 x,U8 y,U8 wid,U8 hgt,U8 *pic)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-FAR void GamPicShowV(U8 x,U8 y,U8 wid,U8 hgt,U8 *pic,U8 *vscr)
+FAR void GamPicShowV(PT x,PT y,PT wid,PT hgt,U8 *pic,U8 *vscr)
 {
     gam_selectscr(vscr);
     GamPicShowS(x, y, wid, hgt, pic);
@@ -125,7 +125,7 @@ FAR void GamPicShowV(U8 x,U8 y,U8 wid,U8 hgt,U8 *pic,U8 *vscr)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-FAR void GamMPicShowS(U8 x,U8 y,U8 wid,U8 hgt,U8 *pic)
+FAR void GamMPicShowS(PT x,PT y,PT wid,PT hgt,U8 *pic)
 {
     U16 pLen = (wid+7) / 8 * hgt;
     gam_Picture(x,y,x+wid-1,y+hgt-1,pic,1);
@@ -142,7 +142,7 @@ FAR void GamMPicShowS(U8 x,U8 y,U8 wid,U8 hgt,U8 *pic)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-FAR void GamMPicShowV(U8 x,U8 y,U8 wid,U8 hgt,U8 *pic,U8 *vscr)
+FAR void GamMPicShowV(PT x,PT y,PT wid,PT hgt,U8 *pic,U8 *vscr)
 {
     gam_selectscr(vscr);
     GamMPicShowS(x, y, wid, hgt, pic);
@@ -158,7 +158,7 @@ FAR void GamMPicShowV(U8 x,U8 y,U8 wid,U8 hgt,U8 *pic,U8 *vscr)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-FAR void GamPicShowExS(U8 x,U8 y,U8 wid,U8 hgt, U16 idx, U8 *pic)
+FAR void GamPicShowExS(PT x,PT y,PT wid,PT hgt, U16 idx, U8 *pic)
 {
     U8	mask;
     U8	pwid,phgt;
@@ -186,7 +186,7 @@ FAR void GamPicShowExS(U8 x,U8 y,U8 wid,U8 hgt, U16 idx, U8 *pic)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-FAR void GamPicShowExV(U8 x,U8 y,U8 wid,U8 hgt,U8 idx,U8 *pic,U8 *vscr)
+FAR void GamPicShowExV(PT x,PT y,PT wid,PT hgt,U8 idx,U8 *pic,U8 *vscr)
 {
     gam_selectscr(vscr);
     GamPicShowExS(x, y, wid, hgt, idx, pic);
@@ -201,7 +201,7 @@ FAR void GamPicShowExV(U8 x,U8 y,U8 wid,U8 hgt,U8 idx,U8 *pic,U8 *vscr)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-FAR U32 GamStrShowS(U8 x,U8 y,const U8 *str)
+FAR U32 GamStrShowS(PT x,PT y,const U8 *str)
 {
     U16 bakBnk;
     U32 rv;
@@ -219,7 +219,7 @@ FAR U32 GamStrShowS(U8 x,U8 y,const U8 *str)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-FAR U32 GamStrShowV(U8 x,U8 y,U8 *str,U8 *vscr)
+FAR U32 GamStrShowV(PT x,PT y,U8 *str,U8 *vscr)
 {
     U16 bakBnk;
     U32 rv;
@@ -259,7 +259,7 @@ void GamResumeSet(U16 bakBnk)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-U32 GamStrShow(U8 x,U8 y,const U8 *buf)
+U32 GamStrShow(PT x,PT y,const U8 *buf)
 {
     U16	i,wid;
     U16	hzCode;
@@ -315,7 +315,7 @@ U32 GamStrShow(U8 x,U8 y,const U8 *buf)
  *             ------          ----------      -------------
  *             高国军          2004.6.2        基本完成
  ***********************************************************************/
-void GamChinese(U8 x,U8 y,U16 Hz)
+void GamChinese(PT x,PT y,U16 Hz)
 {
     U8 zmCode[24];
 
@@ -331,7 +331,7 @@ void GamChinese(U8 x,U8 y,U16 Hz)
  *             ------          ----------      -------------
  *             高国军          2004.6.2        基本完成
  ***********************************************************************/
-void GamAscii(U8 x,U8 y,U8 asc)
+void GamAscii(PT x,PT y,U8 asc)
 {
     U16 ascCode;
     U8  i,zmCode[24];
@@ -435,7 +435,7 @@ U32 CountHZMAddrOff(U16 Hz)
  *		----		----			-----------
  *		陈泽伟		2005-6-23 16:13	基本功能完成
  ******************************************************************************/
-FAR void GamAsciiS(U8 x,U8 y,U8 asc)
+FAR void GamAsciiS(PT x,PT y,U8 asc)
 {
     GamAscii(x,y,asc);
 }

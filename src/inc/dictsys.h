@@ -55,7 +55,7 @@ typedef U8 SBUF[1024];
 typedef U16 PersonID;
 typedef U16 ToolID;
 typedef U16 SkillID;
-typedef I32 PT;
+typedef I16 PT;
 
 #define PID0 0
 #define PID(n) (n)
@@ -303,19 +303,19 @@ typedef	FAR		void	(*FarDownAppPtrType)(U16 para1 , U16 para2 );
 /*-----------------------------------------------------------------------------------------
 *			屏幕显示函数
 *-----------------------------------------------------------------------------------------*/
-FAR void SysLineClear(U8 x1,U8 y1,U8 x2,U8 y2);
-FAR void SysRectClear(U8 x1,U8 y1,U8 x2,U8 y2);
-FAR void SysCircleClear(U8 x0,U8 y0,U8 r);
-FAR void SysPartPicture(U8 x,U8 y,U8 x0,U8 y0,U8 width,U8 high,U8* BuffPoint);
+FAR void SysLineClear(PT x1,PT y1,PT x2,PT y2);
+FAR void SysRectClear(PT x1,PT y1,PT x2,PT y2);
+FAR void SysCircleClear(PT x0,PT y0,U8 r);
+FAR void SysPartPicture(PT x,PT y,PT x0,PT y0,PT width,PT high,U8* BuffPoint);
 FAR void SysLCDClear();
 
-FAR void SysChinese(U8 x,U8 y,U16 Hz);
-FAR void SysAscii(U8 x,U8 y,U8 asc);
-FAR void SysPrintString(U8 x,U8 y,U8* str);
-FAR void SysLine(U8 x1,U8 y1,U8 x2,U8 y2);
-FAR void SysRect(U8 x1,U8 y1,U8 x2,U8 y2);
-FAR void SysFillRect(U8 x1,U8 y1,U8 x2,U8 y2);
-FAR void SysPutPixel(U8 x,U8 y,U8 data);
+FAR void SysChinese(PT x,PT y,U16 Hz);
+FAR void SysAscii(PT x,PT y,U8 asc);
+FAR void SysPrintString(PT x,PT y,U8* str);
+FAR void SysLine(PT x1,PT y1,PT x2,PT y2);
+FAR void SysRect(PT x1,PT y1,PT x2,PT y2);
+FAR void SysFillRect(PT x1,PT y1,PT x2,PT y2);
+FAR void SysPutPixel(PT x,PT y,U8 data);
 
 FAR void SysCopyScreen(U8*scr);
 FAR void SysSaveScreen(void);
@@ -323,21 +323,17 @@ FAR void SysRestoreScreen(void);
 FAR void SysSelectScreen(U8*scr);
 FAR	void SysRestoreScreenEx();
 FAR	void SysSaveScreenEx();
-FAR void SysPicture(U8 x1,U8 y1,U8 x2,U8 y2,U8* BuffPoint , U8 flag);
-FAR void SysPictureEx(U32 sX, U32 sY, U32 eX, U32 eY, U8*pic , U8 flag);
-FAR void SysCircle(U8 x0,U8 y0,U8 r);
-FAR void SysFillCircle(U8 x0,U8 y0,U8 r);
-FAR void SysCalcScrBufSize(U8 x1,U8 y1,U8 x2,U8 y2,U16* byteNum);
+FAR void SysPicture(PT x1,PT y1,PT x2,PT y2,U8* BuffPoint , U8 flag);
+FAR void SysCircle(PT x0,PT y0,PT r);
+FAR void SysFillCircle(PT x0,PT y0,PT r);
 
-FAR void SysLcdPartClear(U8 x1,U8 y1,U8 x2,U8 y2);
-FAR void SysLcdReverse(U8 x1,U8 y1,U8 x2,U8 y2);
+FAR void SysLcdPartClear(PT x1,PT y1,PT x2,PT y2);
+FAR void SysLcdReverse(PT x1,PT y1,PT x2,PT y2);
 
-FAR void SysChinese12(U8 x,U8 y,U16 Hz);
-FAR void SysAscii12(U8 x,U8 y,U8 asc);
-FAR void SysPrintString12(U8 x,U8 y,U8* str);
+FAR void SysChinese12(PT x,PT y,U16 Hz);
+FAR void SysAscii12(PT x,PT y,U8 asc);
+FAR void SysPrintString12(PT x,PT y,U8* str);
 FAR void SysPictureFill(U8* BuffPoint);
-FAR	void SysPictureDummy(U8 x1,U8 y1,U8 x2,U8 y2,U8* pic,U8* Screen,U8 flag);
-FAR	void SysYinBiao(U8 x,U8 y,U16 Hz);
 FAR void SysAdjustLCDBuffer(int wid, int height);
 
 /*-----------------------------------------------------------------------------------------
