@@ -21,8 +21,8 @@ static void(*_lcd_fluch_cb)(char*buffer);
 
 #define DOT 1
 #define CLR 0
-static char static_buffer[WK_BLEN_MAX * 8];
-static char backup_buffer[WK_BLEN_MAX * 8];
+static char static_buffer[WK_BLEN_MAX];
+static char backup_buffer[WK_BLEN_MAX];
 static char isLcdDirty = 0;
 static char *buffer = static_buffer;
 static char *scr_buffer = static_buffer;
@@ -41,27 +41,27 @@ static void timed_flush_lcd()
     }
 }
 
-FAR void flushLcd()
+FAR void logLcd()
 {
     int x, y;
-    
-    if (buffer != scr_buffer) return;
-    
-    if (_lcd_fluch_cb) {
-        isLcdDirty = 1;
-    }
-    else {
-        int perLine = BYTES_PERLINE;
-        for (y = 0; y < SCR_H; y++) {
-            for (x = 0; x < SCR_W; x++) {
-                bool pixel = scr_buffer[perLine*y + x];
-                printf("%s ", pixel ? "  " : "##");
-            }
-            printf("\n");
+    int perLine = BYTES_PERLINE;
+    for (y = 0; y < SCR_H; y++) {
+        printf("%03d ", y);
+        for (x = 0; x < SCR_W; x++) {
+            bool pixel = buffer[perLine*y + x];
+            printf("%s ", pixel ? "." : "#");
         }
         printf("\n");
-        printf("---------------%dx%d-------------------\n", SCR_W, SCR_H);
-        printf("\n");
+    }
+    printf("\n");
+    printf("---------------%dx%d-------------------\n", SCR_W, SCR_H);
+    printf("\n");
+}
+
+FAR void flushLcd()
+{
+    if (_lcd_fluch_cb && buffer == scr_buffer) {
+        isLcdDirty = 1;
     }
 }
 
@@ -298,7 +298,19 @@ FAR void SysAdjustLCDBuffer(int wid, int height)
     if (scr_buffer && scr_buffer != static_buffer) {
         free(scr_buffer);
     }
+
     scr_buffer = malloc(sz);
     memset(scr_buffer, 0, sz);
     buffer_size = sz;
+}
+
+FAR void SysSelectScreen(U8*scr)
+{
+    buffer = scr ? (char*)scr : scr_buffer;
+}
+
+FAR void SysCopyScreen(U8*scr)
+{
+    memcpy(scr_buffer, scr, buffer_size);
+    flushLcd();
 }

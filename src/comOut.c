@@ -83,7 +83,7 @@ FAR void GamMsgBox(const U8 *buf,U8 delay)
  ***********************************************************************/
 FAR void GamShowFrame(U8 *vscr)
 {
-    gam_Picture(0,0,SCR_WID-1,SCR_HGT-1,vscr,0);
+    gam_copyscr(vscr);
 }
 /***********************************************************************
  * 说明:     显示图片到屏幕
@@ -112,9 +112,9 @@ FAR void GamPicShowS(U8 x,U8 y,U8 wid,U8 hgt,U8 *pic)
  ***********************************************************************/
 FAR void GamPicShowV(U8 x,U8 y,U8 wid,U8 hgt,U8 *pic,U8 *vscr)
 {
-    wid-=1;
-    hgt-=1;
-    GamePictureDummy(x,y,x+wid,y+hgt,pic,vscr,0);			/* 正常显示模式 */
+    gam_selectscr(vscr);
+    GamPicShowS(x, y, wid, hgt, pic);
+    gam_selectscr(NULL);
 }
 /***********************************************************************
  * 说明:     显示mask图片到屏幕
@@ -144,13 +144,9 @@ FAR void GamMPicShowS(U8 x,U8 y,U8 wid,U8 hgt,U8 *pic)
  ***********************************************************************/
 FAR void GamMPicShowV(U8 x,U8 y,U8 wid,U8 hgt,U8 *pic,U8 *vscr)
 {
-    U16 pLen;
-
-    GamePictureDummy(x,y,x+wid-1,y+hgt-1,pic,vscr,1);		/* &显示模式 */
-    pLen=wid>>3;
-    if(wid&0x07) pLen+=1;
-    pLen*=hgt;
-    GamePictureDummy(x,y,x+wid-1,y+hgt-1,(U8 *)(pic+pLen),vscr,2);	/* |显示模式 */
+    gam_selectscr(vscr);
+    GamMPicShowS(x, y, wid, hgt, pic);
+    gam_selectscr(NULL);
 }
 /***********************************************************************
  * 说明:     显示图片到屏幕(功能扩展——可显示图片上面的部分)
@@ -170,13 +166,13 @@ FAR void GamPicShowExS(U8 x,U8 y,U8 wid,U8 hgt, U16 idx, U8 *pic)
 
     pwid = ((PictureHeadType *)pic)->wid;
     phgt = ((PictureHeadType *)pic)->hig;
-    mask = ((PictureHeadType *)pic)->mask;
+    mask = ((PictureHeadType *)pic)->mask & 0x01;
     pLen = pwid >> 3;
     if(pwid&0x07) pLen += 1;
     pLen *= phgt;
     pic += pLen * idx + PICHEAD_LEN;
     if(HV_MASK == mask)
-        return;
+        GamMPicShowS(x, y, wid, hgt, pic);
     else
         GamPicShowS(x,y,wid,hgt,pic);
 }
@@ -192,25 +188,9 @@ FAR void GamPicShowExS(U8 x,U8 y,U8 wid,U8 hgt, U16 idx, U8 *pic)
  ***********************************************************************/
 FAR void GamPicShowExV(U8 x,U8 y,U8 wid,U8 hgt,U8 idx,U8 *pic,U8 *vscr)
 {
-    U8	mask;
-    U8	pwid,phgt;
-    U16	pLen;
-
-    pwid = ((PictureHeadType *)pic)->wid;
-    phgt = ((PictureHeadType *)pic)->hig;
-    mask = ((PictureHeadType *)pic)->mask & 0x01;
-    pLen = pwid >> 3;
-    if(pwid&0x07) pLen += 1;
-    pLen *= phgt;
-    pic += (pLen << mask) * idx + PICHEAD_LEN;
-    if(HV_MASK == mask)
-    {
-        GamePictureDummy(x,y,x+wid-1,y+hgt-1,pic,vscr,1);	/* &显示模式 */
-        pic += pLen;
-        GamePictureDummy(x,y,x+wid-1,y+hgt-1,pic,vscr,2);	/* |显示模式 */
-    }
-    else
-        GamPicShowV(x,y,wid,hgt,pic,vscr);
+    gam_selectscr(vscr);
+    GamPicShowExS(x, y, wid, hgt, idx, pic);
+    gam_selectscr(NULL);
 }
 /***********************************************************************
  * 说明:     显示12字符串到屏幕
@@ -226,8 +206,6 @@ FAR U32 GamStrShowS(U8 x,U8 y,const U8 *str)
     U16 bakBnk;
     U32 rv;
 
-    GetDataBankNumber(9,&bakBnk);
-    c_VisScr=(U8 *)NULL;
     rv = GamStrShow(x,y,str);
     GamResumeSet(bakBnk);
     return rv;
@@ -246,9 +224,9 @@ FAR U32 GamStrShowV(U8 x,U8 y,U8 *str,U8 *vscr)
     U16 bakBnk;
     U32 rv;
 
-    GetDataBankNumber(9,&bakBnk);
-    c_VisScr=vscr;
+    gam_selectscr(vscr);
     rv = GamStrShow(x,y,str);
+    gam_selectscr(NULL);
     GamResumeSet(bakBnk);
     return rv;
 }
@@ -263,7 +241,6 @@ FAR U32 GamStrShowV(U8 x,U8 y,U8 *str,U8 *vscr)
  ***********************************************************************/
 void GamResumeSet(U16 bakBnk)
 {
-    DataBankSwitch(9,4,bakBnk);
     /*恢复字符串显示区域*/
     if(c_ReFlag)
     {
@@ -343,10 +320,7 @@ void GamChinese(U8 x,U8 y,U16 Hz)
     U8 zmCode[24];
 
     GetExcHZMCode(Hz,zmCode);
-    if(c_VisScr==NULL)
-        gam_Picture(x,y,x+HZ_WID-1,y+HZ_HGT-1,zmCode, 0);
-    else
-        GamePictureDummy(x,y,x+HZ_WID-1,y+HZ_HGT-1,zmCode,c_VisScr,0);
+    gam_Picture(x,y,x+HZ_WID-1,y+HZ_HGT-1,zmCode, 0);
 }
 /***********************************************************************
  * 说明:     显示12*12点阵GB2312AscII
@@ -374,11 +348,7 @@ void GamAscii(U8 x,U8 y,U8 asc)
         for(i=0;i<12;i++)
             zmCode[i]=zmCode[i<<1];
     }
-
-    if(c_VisScr==NULL)
-        gam_Picture(x,y,x+ASC_WID-1,y+ASC_HGT-1,zmCode,0);
-    else
-        GamePictureDummy(x,y,x+ASC_WID-1,y+ASC_HGT-1,zmCode,c_VisScr,0);
+    gam_Picture(x,y,x+ASC_WID-1,y+ASC_HGT-1,zmCode,0);
 }
 /***********************************************************************
  * 说明:     获取扩充后的汉字字模数据(18->24)
@@ -467,71 +437,11 @@ U32 CountHZMAddrOff(U16 Hz)
  ******************************************************************************/
 FAR void GamAsciiS(U8 x,U8 y,U8 asc)
 {
-    c_VisScr=(U8 *)NULL;
     GamAscii(x,y,asc);
 }
-/*
- */
 
-FAR	void	GamePictureDummy(U8 sX,U8 sY,U8 eX,U8 eY,U8* pic,U8* scr,U8 flag)
-{
-    int wid = eX - sX + 1;
-    int hgt = eY - sY + 1;
-    int x, y, X, Y;
-    int scrPerLine = SCR_LINE;
-    Rect scrRect = MakeRect(0, 0, SCR_WID, SCR_HGT);
-
-    {
-        int picPerLine = (wid + 7) / 8;
-        for (y = 0; y < hgt; y++) {
-            Y = sY + y;
-            for (x = 0; x < wid; x++) {
-                X = sX + x;
-                if (!touchIsPointInRect(X, Y, scrRect)) {
-                    continue;
-                }
-                unsigned char pixel, pixel1;
-                int ind = scrPerLine * Y + X/8;
-
-                if (flag == 4) {
-                    pixel1 = 0;
-                }
-                else {
-
-                    if (pic) {
-                        pixel = pic[picPerLine*y + x/8] & (128 >> (x%8));
-                    }
-                    else {
-                        pixel = 0;
-                    }
-
-                    {
-                        pixel1 = scr[ind] & (128 >> (X%8));
-                        
-                        switch (flag) {
-                            case 0: // Normal
-                                pixel1 = pixel;
-                                break;
-                            case 1: // &
-                                pixel1 = pixel && pixel1;
-                                break;
-                            case 2: // |
-                                pixel1 = pixel || pixel1;
-                                break;
-                            case 4: // clear
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                }
-                
-                {
-                    int mask = 1 << (7 - X%8);
-                    pixel1 = pixel1 ? mask : 0;
-                    scr[ind] = (scr[ind] & (~mask)) | pixel1;
-                }
-            }
-        }
-    }
+FAR void GamClearScreen(PT l, PT t, PT r, PT b, U8*scr) {
+    gam_selectscr(scr);
+    gam_clrlcd(l, t, r, b);
+    gam_selectscr(NULL);
 }

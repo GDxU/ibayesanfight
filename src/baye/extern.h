@@ -28,7 +28,6 @@ extern gam_FILE	*g_LibFp;		/*资源库文件指针*/
 extern gam_FILE	*g_FontFp;		/*字库文件指针*/
 
 /* in comOut.c */
-extern U8	*c_VisScr;		/*虚拟屏幕指针*/
 extern U8	c_ReFlag;		/* 恢复标志 */
 extern U8	c_Sx,c_Sy,c_Ex,c_Ey;	/*字符串显示区域*/
 extern U16	c_FontBnkS;		/*汉字库存放的起始页号，由调用者初始化*/

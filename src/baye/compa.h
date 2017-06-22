@@ -31,7 +31,6 @@ int gam_seed(void);
 #define	gam_atol(str)		atol((const char*)str)
 /* 屏幕操作函数 */
 #define	gam_clrlcd(l,t,r,b)	SysLcdPartClear(l,t,r,b)		/* 清除屏幕矩形 */
-#define	gam_clrvscr(l,t,r,b,v)	GamePictureDummy(l,t,r,b,(U8*)NULL,v,4)	/* 清空虚拟屏幕指定区域 */
 #define	gam_clslcd()		SysLcdPartClear(0,0,SCR_WID-1,SCR_HGT-1)/* 清除整个屏幕 */
 #define	gam_revlcd(l,t,r,b)	SysLcdReverse(l,t,r,b)			/* 反显屏幕 */
 #define	gam_putpixel(x,y,c)	SysPutPixel(x,y,c)			/* 画点函数 */
@@ -41,6 +40,9 @@ int gam_seed(void);
 #define	gam_rectc(l,t,r,b)	SysRectClear(l,t,r,b)			/* 消隐矩形 */
 #define	gam_getkey()		SysGetKey()				/* 有按键获取，无按键返回 */
 #define	gam_Picture(l,t,r,b,p,f)	SysPicture(l,t,r,b,p,f)	
+#define	gam_selectscr(scr)	SysSelectScreen(scr)
+#define gam_copyscr(scr)    SysCopyScreen(scr)
+#define gam_clrvscr         GamClearScreen
 
 #define gam_savscr() SysSaveScreen()
 #define gam_restorescr() SysRestoreScreen()

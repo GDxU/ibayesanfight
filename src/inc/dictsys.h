@@ -55,6 +55,7 @@ typedef U8 SBUF[1024];
 typedef U16 PersonID;
 typedef U16 ToolID;
 typedef U16 SkillID;
+typedef I32 PT;
 
 #define PID0 0
 #define PID(n) (n)
@@ -316,8 +317,10 @@ FAR void SysRect(U8 x1,U8 y1,U8 x2,U8 y2);
 FAR void SysFillRect(U8 x1,U8 y1,U8 x2,U8 y2);
 FAR void SysPutPixel(U8 x,U8 y,U8 data);
 
+FAR void SysCopyScreen(U8*scr);
 FAR void SysSaveScreen(void);
 FAR void SysRestoreScreen(void);
+FAR void SysSelectScreen(U8*scr);
 FAR	void SysRestoreScreenEx();
 FAR	void SysSaveScreenEx();
 FAR void SysPicture(U8 x1,U8 y1,U8 x2,U8 y2,U8* BuffPoint , U8 flag);

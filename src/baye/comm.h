@@ -95,12 +95,12 @@ typedef	struct {
 /*------------------------
   函数
   ------------------------*/
-FAR	U8	GamConInit(void);						/* 游戏系统环境初始化，根据不同环境调用不同的初始化函数 */
+FAR	U8      GamConInit(void);						/* 游戏系统环境初始化，根据不同环境调用不同的初始化函数 */
 FAR	void	GamConRst(void);						/* 游戏系统环境恢复，根据不同环境调用不同的恢复函数 */
 FAR	void	GamGetMsg(GMType *pMsg);					/* 封装系统的输入，并将其转换成游戏的消息机制 */
 FAR void    GamGetLastMsg(GMType *pMsg);
 FAR void    GamClearLastMsg(void);
-FAR	U8	GamDelay(U16 dly, BOOL keyflag);					/* 1%秒延时 */
+FAR	U8      GamDelay(U16 dly, BOOL keyflag);					/* 1%秒延时 */
 FAR	void	GamMsgBox(const U8 *buf,U8 delay);					/* 信息框 */
 FAR	void	GamShowFrame(U8 *vscr);						/* 将虚拟屏幕show到屏幕上 */
 FAR	void	GamPicShowS(U8 x,U8 y,U8 wid,U8 hgt,U8 *pic);			/* 显示图片到屏幕 */
@@ -109,10 +109,10 @@ FAR	void	GamMPicShowS(U8 x,U8 y,U8 wid,U8 hgt,U8 *pic);			/* 显示mask图片到
 FAR	void	GamMPicShowV(U8 x,U8 y,U8 wid,U8 hgt,U8 *pic,U8 *vscr);		/* 显示mask图片到虚拟屏幕 */
 FAR	void	GamPicShowExS(U8 x,U8 y,U8 wid,U8 hgt, U16 idx,U8 *pic);		/* 显示图片到屏幕(功能扩展——可显示图片的部分) */
 FAR	void	GamPicShowExV(U8 x,U8 y,U8 wid,U8 hgt,U8 idx,U8 *pic,U8 *vscr);	/* 显示图片到虚拟屏幕(功能扩展——可显示图片的部分) */
-FAR	U32	GamStrShowS(U8 x,U8 y,const U8 *str);					/* 显示12汉字到屏幕 */
+FAR	U32     GamStrShowS(U8 x,U8 y,const U8 *str);					/* 显示12汉字到屏幕 */
 FAR	void	GamAsciiS(U8 x,U8 y,U8 asc);					/* 显示6x12ASCII字符到屏幕 */
-FAR	U32	GamStrShowV(U8 x,U8 y,U8 *str,U8 *vscr);			/* 显示12汉字到虚拟屏幕 */
-FAR	void	GamePictureDummy(U8 l,U8 t,U8 r,U8 b,U8* p,U8* s,U8 f);		/* 显示图片到虚拟屏幕 */
+FAR	U32     GamStrShowV(U8 x,U8 y,U8 *str,U8 *vscr);			/* 显示12汉字到虚拟屏幕 */
+FAR void    GamClearScreen(PT l, PT t, PT r, PT b, U8*scr);
 
 FAR void GamSetResourcePath(const U8* datPath, const U8*fontPath);
 FAR void GamSetAltLibPath(const U8* datPath);
