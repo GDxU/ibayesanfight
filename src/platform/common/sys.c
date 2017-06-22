@@ -25,6 +25,7 @@ static char static_buffer[WK_BLEN_MAX * 8];
 static char backup_buffer[WK_BLEN_MAX * 8];
 static char isLcdDirty = 0;
 static char *buffer = static_buffer;
+static char *scr_buffer = static_buffer;
 static size_t buffer_size = sizeof(static_buffer);
 
 void GamSetLcdFlushCallback(void(*lcd_fluch_cb)(char*buffer))
@@ -35,14 +36,17 @@ void GamSetLcdFlushCallback(void(*lcd_fluch_cb)(char*buffer))
 static void timed_flush_lcd()
 {
     if (isLcdDirty && _lcd_fluch_cb) {
-        _lcd_fluch_cb(buffer);
+        _lcd_fluch_cb(scr_buffer);
         isLcdDirty = 0;
     }
 }
 
-FAR void logLcd()
+FAR void flushLcd()
 {
     int x, y;
+    
+    if (buffer != scr_buffer) return;
+    
     if (_lcd_fluch_cb) {
         isLcdDirty = 1;
     }
@@ -50,7 +54,7 @@ FAR void logLcd()
         int perLine = BYTES_PERLINE;
         for (y = 0; y < SCR_H; y++) {
             for (x = 0; x < SCR_W; x++) {
-                bool pixel = buffer[perLine*y + x];
+                bool pixel = scr_buffer[perLine*y + x];
                 printf("%s ", pixel ? "  " : "##");
             }
             printf("\n");
@@ -126,7 +130,7 @@ FAR void SysLcdPartClear(U8 x1,U8 y1,U8 x2,U8 y2)
             buffer[ind] = CLR;
         }
     }
-    logLcd();
+    flushLcd();
 }
 
 FAR void SysLcdReverse(U8 x1,U8 y1,U8 x2,U8 y2)
@@ -138,7 +142,7 @@ FAR void SysLcdReverse(U8 x1,U8 y1,U8 x2,U8 y2)
             buffer[ind] = !buffer[ind];
         }
     }
-    logLcd();
+    flushLcd();
 }
 
 FAR void SysLine(U8 x1,U8 y1,U8 x2,U8 y2)
@@ -211,7 +215,7 @@ FAR void SysPictureEx(U32 sX, U32 sY, U32 eX, U32 eY, U8*pic , U8 flag)
             }
         }
     }
-    logLcd();
+    flushLcd();
 }
 
 FAR void SysPicture(U8 sX, U8 sY, U8 eX, U8 eY, U8*pic , U8 flag)
@@ -223,7 +227,7 @@ FAR void SysPutPixel(U8 x,U8 y,U8 data)
 {
     int ind = BYTES_PERLINE * y + x;
     buffer[ind] = data;
-    logLcd();
+    flushLcd();
 }
 
 FAR void SysRect(U8 x1,U8 y1,U8 x2,U8 y2)
@@ -249,13 +253,13 @@ FAR void SysRect(U8 x1,U8 y1,U8 x2,U8 y2)
         int ind = BYTES_PERLINE * y + x;
         buffer[ind] = DOT;
     }
-    logLcd();
+    flushLcd();
 }
 
 FAR void SysRectClear(U8 x1,U8 y1,U8 x2,U8 y2)
 {
     SysLcdPartClear(x1, y1, x2, y2);
-    logLcd();
+    flushLcd();
 }
 
 FAR void SysSetKeySound(U8 keySoundFlag)
@@ -274,12 +278,12 @@ FAR void SysTimer1Open(U8 times)
 
 FAR void SysSaveScreen()
 {
-    memcpy(backup_buffer, buffer, buffer_size);
+    memcpy(backup_buffer, scr_buffer, buffer_size);
 }
 
 FAR void SysRestoreScreen()
 {
-    memcpy(buffer, backup_buffer, buffer_size);
+    memcpy(scr_buffer, backup_buffer, buffer_size);
 }
 
 FAR void SysAdjustLCDBuffer(int wid, int height)
@@ -287,14 +291,14 @@ FAR void SysAdjustLCDBuffer(int wid, int height)
     size_t sz = wid * height;
 
     if (sz <= buffer_size) {
-        memset(buffer, 0, sz);
+        memset(scr_buffer, 0, sz);
         return;
     }
 
-    if (buffer && buffer != static_buffer) {
-        free(buffer);
+    if (scr_buffer && scr_buffer != static_buffer) {
+        free(scr_buffer);
     }
-    buffer = malloc(sz);
-    memset(buffer, 0, sz);
+    scr_buffer = malloc(sz);
+    memset(scr_buffer, 0, sz);
     buffer_size = sz;
 }

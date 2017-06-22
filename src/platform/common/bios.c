@@ -24,7 +24,6 @@ void GetDataBankNumber(U8 logicStartBank,U16* physicalBankNumber)
 
 #pragma mark - flash
 U8 *_VS_PTR;		/* 虚拟屏幕缓冲 */
-U8 *_BVS_PTR;       /* 二级虚拟屏幕缓冲 */
 U8 *_SHARE_MEM;     /* 共享临时内存 */
 U8 *_FIGHTERS_IDX;      /* 出征武将队列索引(30个字节) */
 U8 *_FIGHTERS;      /* 出征武将队列(30*10=300个字节) */
@@ -35,7 +34,6 @@ static void _shm_init()
 {
     //    char *p = malloc(WK_BLEN + WK_BLEN + 10240 + 30 + 300 + 1200);
     _VS_PTR = malloc(MAX_SCR_BUF_LEN);
-    _BVS_PTR = malloc(MAX_SCR_BUF_LEN);
     _SHARE_MEM = malloc(202400);
     _FIGHTERS_IDX = malloc(30);
     _FIGHTERS = malloc(600);

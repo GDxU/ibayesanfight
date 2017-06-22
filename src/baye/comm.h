@@ -22,14 +22,12 @@
 #define	EXTMEM_BNKNUM		4			/* 外部内存使用空间为内存第4页面(地址 16K~20K) */
 
 #define	VS_PTR _VS_PTR
-#define	BVS_PTR _BVS_PTR
 #define	SHARE_MEM _SHARE_MEM
 #define FIGHTERS_IDX _FIGHTERS_IDX
 #define FIGHTERS _FIGHTERS
 #define	ORDERQUEUE _ORDERQUEUE
 
 extern U8 *_VS_PTR;		/* 虚拟屏幕缓冲 */
-extern U8 *_BVS_PTR;       /* 二级虚拟屏幕缓冲 */
 extern U8 *_SHARE_MEM;     /* 共享临时内存 */
 extern U8 *_FIGHTERS_IDX;      /* 出征武将队列索引(30个字节) */
 extern U8 *_FIGHTERS;      /* 出征武将队列(30*10=300个字节) */

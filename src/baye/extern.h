@@ -34,7 +34,7 @@ extern U8	c_Sx,c_Sy,c_Ex,c_Ey;	/*字符串显示区域*/
 extern U16	c_FontBnkS;		/*汉字库存放的起始页号，由调用者初始化*/
 
 /*引擎变量*/
-extern U8	*g_VisScr,*g_BVisScr;	/*虚拟屏幕指针 二级虚拟屏幕指针*/
+extern U8	*g_VisScr;	/*虚拟屏幕指针 二级虚拟屏幕指针*/
 extern U8	g_RunErr;		/* 运行错误 */
 
 /*变量定义*/

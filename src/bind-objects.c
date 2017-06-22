@@ -87,7 +87,6 @@ void bind_init(void) {
     DEFADD_GBKARR(g_errorString, sizeof(g_errorString));
 
     DEFADD_U8ARR(g_VisScr, WK_BLEN);
-    DEFADD_U8ARR(g_BVisScr, WK_BLEN);
 
     DEFADD_U8ARR(g_FightMapData, FIGHT_MAP_DATA_LEN);
     DEFADD_U8ARR(g_FightMap, FIGHT_MAP_BUFFER_LEN);
