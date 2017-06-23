@@ -89,7 +89,7 @@ FAR void GamPicShow(PT x,PT y,PT wid,PT hgt,U8 *pic)
 {
     wid-=1;
     hgt-=1;
-    SysPicture(x,y,x+wid,y+hgt,pic,0);
+    SysPicture(x,y,x+wid,y+hgt,pic,0, 2);
 }
 
 /***********************************************************************
@@ -126,8 +126,8 @@ FAR void GamPicShowV(PT x,PT y,PT wid,PT hgt,U8 *pic,U8 *vscr)
 FAR void GamMPicShow(PT x,PT y,PT wid,PT hgt,U8 *pic)
 {
     U16 pLen = (wid+7) / 8 * hgt;
-    SysPicture(x,y,x+wid-1,y+hgt-1,pic,1);
-    SysPicture(x,y,x+wid-1,y+hgt-1,pic+pLen,2);
+    SysPicture(x,y,x+wid-1,y+hgt-1,pic,1, 2);
+    SysPicture(x,y,x+wid-1,y+hgt-1,pic+pLen,2, 2);
 }
 /***********************************************************************
  * 说明:     显示mask图片到屏幕
@@ -327,7 +327,7 @@ void GamChinese(PT x,PT y,U16 Hz)
     U8 zmCode[24];
 
     GetExcHZMCode(Hz,zmCode);
-    SysPicture(x,y,x+HZ_WID-1,y+HZ_HGT-1,zmCode, 0);
+    SysPicture(x,y,x+HZ_WID-1,y+HZ_HGT-1,zmCode, 0, 2);
 }
 /***********************************************************************
  * 说明:     显示12*12点阵GB2312AscII
@@ -355,7 +355,7 @@ void GamAscii(PT x,PT y,U8 asc)
         for(i=0;i<12;i++)
             zmCode[i]=zmCode[i<<1];
     }
-    SysPicture(x,y,x+ASC_WID-1,y+ASC_HGT-1,zmCode,0);
+    SysPicture(x,y,x+ASC_WID-1,y+ASC_HGT-1,zmCode,0, 2);
 }
 /***********************************************************************
  * 说明:     获取扩充后的汉字字模数据(18->24)

@@ -17,7 +17,7 @@ static void(*_lcd_fluch_cb)(char*buffer);
 
 #define SCR_W SCR_WID
 #define SCR_H SCR_HGT
-#define BYTES_PERLINE (SCR_LINE * 8)
+#define BYTES_PERLINE (SCR_LINE * 8 * 2)
 
 #define DOT 1
 #define CLR 0
@@ -125,15 +125,35 @@ FAR	void SysLCDVoltage(U8 voltage)		/*voltage: 0 - 63 */
 {
 }
 
+static void _dot(PT x, PT y, U8 color) {
+    x *= 2;
+    y *= 2;
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 2; j++) {
+            int ind = BYTES_PERLINE * (y+i) + (x+j);
+            buffer[ind] = color;
+        }
+    }
+}
+
+static void _rdot(PT x, PT y) {
+    x *= 2;
+    y *= 2;
+    for (int i = 0; i < 2; i++) {
+        for (int j = 0; j < 2; j++) {
+            int ind = BYTES_PERLINE * (y+i) + (x+j);
+            buffer[ind] = !buffer[ind];
+        }
+    }
+}
+
 FAR void SysLcdPartClear(PT x1,PT y1,PT x2,PT y2)
 {
     PT x, y;
     for (y = y1; y <= y2; y++) {
         for (x = x1; x <= x2; x++) {
             if (!_insideScreen(x, y)) continue;
-
-            int ind = BYTES_PERLINE * y + x;
-            buffer[ind] = CLR;
+            _dot(x, y, CLR);
         }
     }
     flushLcd();
@@ -146,8 +166,7 @@ FAR void SysLcdReverse(PT x1,PT y1,PT x2,PT y2)
         for (x = x1; x <= x2; x++) {
             if (!_insideScreen(x, y)) continue;
 
-            int ind = BYTES_PERLINE * y + x;
-            buffer[ind] = !buffer[ind];
+            _rdot(x, y);
         }
     }
     flushLcd();
@@ -171,22 +190,55 @@ FAR	void	SysMemInit(U16 start,U16 len)
     gam_timer2_open(3, timed_flush_lcd);
 }
 
-FAR void SysPicture(PT sX, PT sY, PT eX, PT eY, U8*pic , U8 flag)
+static void _decodePic(U8* dst, const U8*pic, PT w, PT h, U8 scale) {
+    int ppl = (w + 7) / 8;
+    PT x, y, W, H, X, Y;
+
+    W = w * scale;
+    H = h * scale;
+
+    for (y = 0; y < h; y++) {
+        for (x = 0; x < w; x++) {
+            X = x * scale;
+            Y = y * scale;
+            
+            U8 p = pic[ppl*y + x/8] & (128 >> (x%8));
+
+            for (int j = 0; j < scale; j++) {
+                for (int i = 0; i < scale; i++) {
+                    dst[W*(Y+j) + X+i] = p;
+                }
+            }
+        }
+    }
+}
+
+FAR void SysPicture(PT sX, PT sY, PT eX, PT eY, U8*pic , U8 flag, U8 scale)
 {
     int wid = eX - sX + 1;
     int hgt = eY - sY + 1;
     int x, y, X, Y;
     int scrPerLine = BYTES_PERLINE;
+    static U8 _buf[256*256*8];
+
+    if (pic) {
+        _decodePic(_buf, pic, wid, hgt, scale);
+        pic = _buf;
+    }
+
+    wid *= scale;
+    hgt *= scale;
 
     {
-        int picPerLine = (wid + 7) / 8;
+        int picPerLine = wid;
+
         for (y = 0; y < hgt; y++) {
-            Y = sY + y;
+            Y = sY*2 + y;
             for (x = 0; x < wid; x++) {
-                X = sX + x;
+                X = sX*2 + x;
                 unsigned char pixel0, pixel1;
                 int ind = scrPerLine * Y + X;
-                if (!_insideScreen(X, Y)) {
+                if (!_insideScreen(X/2, Y/2)) {
                     continue;
                 }
 
@@ -196,7 +248,7 @@ FAR void SysPicture(PT sX, PT sY, PT eX, PT eY, U8*pic , U8 flag)
                 else {
                     
                     if (pic) {
-                        pixel0 = pic[picPerLine*y + x/8] & (128 >> (x%8));
+                        pixel0 = pic[picPerLine*y + x];
                     }
                     else {
                         pixel0 = 0;
@@ -233,8 +285,7 @@ static inline void _pixel(PT x,PT y,U8 data)
 {
     if (!_insideScreen(x, y)) return;
 
-    int ind = BYTES_PERLINE * y + x;
-    buffer[ind] = data;
+    _dot(x, y, data);
 }
 
 FAR void SysPutPixel(PT x,PT y,U8 data)
