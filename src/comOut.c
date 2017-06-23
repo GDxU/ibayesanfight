@@ -28,7 +28,7 @@
 /*本体函数声明*/
 /*------------------------------------------*/
 U32	CountHZMAddrOff(U16 Hz);
-void	GamResumeSet(U16 bakBnk);
+void	GamResumeSet();
 void	GamAscii(PT x,PT y,U8 asc);
 void	GamChinese(PT x,PT y,U16 Hz);
 U32	GamStrShow(PT x,PT y,const U8 *buf);
@@ -85,6 +85,14 @@ FAR void GamShowFrame(U8 *vscr)
 {
     gam_copyscr(vscr);
 }
+
+FAR void GamPicShow(PT x,PT y,PT wid,PT hgt,U8 *pic)
+{
+    wid-=1;
+    hgt-=1;
+    SysPicture(x,y,x+wid,y+hgt,pic,0);
+}
+
 /***********************************************************************
  * 说明:     显示图片到屏幕
  * 输入参数: x,y-显示坐标	wid,hgt-图片尺寸	pic-图片数据
@@ -96,9 +104,8 @@ FAR void GamShowFrame(U8 *vscr)
  ***********************************************************************/
 FAR void GamPicShowS(PT x,PT y,PT wid,PT hgt,U8 *pic)
 {
-    wid-=1;
-    hgt-=1;
-    gam_Picture(x,y,x+wid,y+hgt,pic,0);
+    gam_selectscr(NULL);
+    GamPicShow(x, y, wid, hgt, pic);
 }
 /***********************************************************************
  * 说明:     显示图片到虚拟屏幕
@@ -113,8 +120,15 @@ FAR void GamPicShowS(PT x,PT y,PT wid,PT hgt,U8 *pic)
 FAR void GamPicShowV(PT x,PT y,PT wid,PT hgt,U8 *pic,U8 *vscr)
 {
     gam_selectscr(vscr);
-    GamPicShowS(x, y, wid, hgt, pic);
-    gam_selectscr(NULL);
+    GamPicShow(x, y, wid, hgt, pic);
+}
+
+
+FAR void GamMPicShow(PT x,PT y,PT wid,PT hgt,U8 *pic)
+{
+    U16 pLen = (wid+7) / 8 * hgt;
+    SysPicture(x,y,x+wid-1,y+hgt-1,pic,1);
+    SysPicture(x,y,x+wid-1,y+hgt-1,pic+pLen,2);
 }
 /***********************************************************************
  * 说明:     显示mask图片到屏幕
@@ -127,9 +141,8 @@ FAR void GamPicShowV(PT x,PT y,PT wid,PT hgt,U8 *pic,U8 *vscr)
  ***********************************************************************/
 FAR void GamMPicShowS(PT x,PT y,PT wid,PT hgt,U8 *pic)
 {
-    U16 pLen = (wid+7) / 8 * hgt;
-    gam_Picture(x,y,x+wid-1,y+hgt-1,pic,1);
-    gam_Picture(x,y,x+wid-1,y+hgt-1,pic+pLen,2);
+    gam_selectscr(NULL);
+    GamMPicShow(x, y, wid, hgt, pic);
 }
 
 /***********************************************************************
@@ -145,8 +158,7 @@ FAR void GamMPicShowS(PT x,PT y,PT wid,PT hgt,U8 *pic)
 FAR void GamMPicShowV(PT x,PT y,PT wid,PT hgt,U8 *pic,U8 *vscr)
 {
     gam_selectscr(vscr);
-    GamMPicShowS(x, y, wid, hgt, pic);
-    gam_selectscr(NULL);
+    GamMPicShow(x, y, wid, hgt, pic);
 }
 /***********************************************************************
  * 说明:     显示图片到屏幕(功能扩展——可显示图片上面的部分)
@@ -158,7 +170,7 @@ FAR void GamMPicShowV(PT x,PT y,PT wid,PT hgt,U8 *pic,U8 *vscr)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-FAR void GamPicShowExS(PT x,PT y,PT wid,PT hgt, U16 idx, U8 *pic)
+FAR void GamPicShowEx(PT x,PT y,PT wid,PT hgt, U16 idx, U8 *pic)
 {
     U8	mask;
     U8	pwid,phgt;
@@ -172,9 +184,15 @@ FAR void GamPicShowExS(PT x,PT y,PT wid,PT hgt, U16 idx, U8 *pic)
     pLen *= phgt;
     pic += pLen * idx + PICHEAD_LEN;
     if(HV_MASK == mask)
-        GamMPicShowS(x, y, wid, hgt, pic);
+        GamMPicShow(x, y, wid, hgt, pic);
     else
-        GamPicShowS(x,y,wid,hgt,pic);
+        GamPicShow(x,y,wid,hgt,pic);
+}
+
+FAR void GamPicShowExS(PT x,PT y,PT wid,PT hgt, U16 idx, U8 *pic)
+{
+    gam_selectscr(NULL);
+    GamPicShowEx(x, y, wid, hgt, idx, pic);
 }
 /***********************************************************************
  * 说明:     显示图片到虚拟屏幕(功能扩展——可显示图片上面的部分)
@@ -189,8 +207,7 @@ FAR void GamPicShowExS(PT x,PT y,PT wid,PT hgt, U16 idx, U8 *pic)
 FAR void GamPicShowExV(PT x,PT y,PT wid,PT hgt,U8 idx,U8 *pic,U8 *vscr)
 {
     gam_selectscr(vscr);
-    GamPicShowExS(x, y, wid, hgt, idx, pic);
-    gam_selectscr(NULL);
+    GamPicShowEx(x, y, wid, hgt, idx, pic);
 }
 /***********************************************************************
  * 说明:     显示12字符串到屏幕
@@ -203,12 +220,8 @@ FAR void GamPicShowExV(PT x,PT y,PT wid,PT hgt,U8 idx,U8 *pic,U8 *vscr)
  ***********************************************************************/
 FAR U32 GamStrShowS(PT x,PT y,const U8 *str)
 {
-    U16 bakBnk;
-    U32 rv;
-
-    rv = GamStrShow(x,y,str);
-    GamResumeSet(bakBnk);
-    return rv;
+    gam_selectscr(NULL);
+    return GamStrShow(x, y, str);
 }
 /***********************************************************************
  * 说明:     显示12字符串到虚拟屏幕
@@ -221,14 +234,8 @@ FAR U32 GamStrShowS(PT x,PT y,const U8 *str)
  ***********************************************************************/
 FAR U32 GamStrShowV(PT x,PT y,U8 *str,U8 *vscr)
 {
-    U16 bakBnk;
-    U32 rv;
-
     gam_selectscr(vscr);
-    rv = GamStrShow(x,y,str);
-    gam_selectscr(NULL);
-    GamResumeSet(bakBnk);
-    return rv;
+    return GamStrShow(x,y,str);
 }
 /***********************************************************************
  * 说明:     初始化游戏引擎所在的机型环境
@@ -239,7 +246,7 @@ FAR U32 GamStrShowV(PT x,PT y,U8 *str,U8 *vscr)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-void GamResumeSet(U16 bakBnk)
+void GamResumeSet()
 {
     /*恢复字符串显示区域*/
     if(c_ReFlag)
@@ -304,6 +311,7 @@ U32 GamStrShow(PT x,PT y,const U8 *buf)
             x+=12;
         }
     }
+    GamResumeSet();
     return i;
 }
 /***********************************************************************
@@ -320,7 +328,7 @@ void GamChinese(PT x,PT y,U16 Hz)
     U8 zmCode[24];
 
     GetExcHZMCode(Hz,zmCode);
-    gam_Picture(x,y,x+HZ_WID-1,y+HZ_HGT-1,zmCode, 0);
+    SysPicture(x,y,x+HZ_WID-1,y+HZ_HGT-1,zmCode, 0);
 }
 /***********************************************************************
  * 说明:     显示12*12点阵GB2312AscII
@@ -348,7 +356,7 @@ void GamAscii(PT x,PT y,U8 asc)
         for(i=0;i<12;i++)
             zmCode[i]=zmCode[i<<1];
     }
-    gam_Picture(x,y,x+ASC_WID-1,y+ASC_HGT-1,zmCode,0);
+    SysPicture(x,y,x+ASC_WID-1,y+ASC_HGT-1,zmCode,0);
 }
 /***********************************************************************
  * 说明:     获取扩充后的汉字字模数据(18->24)
@@ -440,8 +448,50 @@ FAR void GamAsciiS(PT x,PT y,U8 asc)
     GamAscii(x,y,asc);
 }
 
-FAR void GamClearScreen(PT l, PT t, PT r, PT b, U8*scr) {
+FAR void GamClearScreenV(PT l, PT t, PT r, PT b, U8*scr) {
     gam_selectscr(scr);
     gam_clrlcd(l, t, r, b);
     gam_selectscr(NULL);
+}
+
+FAR void gam_clrlcd(PT x1,PT y1,PT x2,PT y2)
+{
+    gam_selectscr(NULL);
+    SysLcdPartClear(x1, y1, x2, y2);
+}
+
+FAR void gam_clslcd(void)
+{
+    gam_selectscr(NULL);
+    SysLcdPartClear(0,0,SCR_WID-1,SCR_HGT-1);
+}
+
+FAR void gam_revlcd(PT x1,PT y1,PT x2,PT y2)
+{
+    gam_selectscr(NULL);
+    SysLcdReverse(x1, y1, x2, y2);
+}
+
+FAR void gam_putpixel(PT x,PT y,U8 data)
+{
+    gam_selectscr(NULL);
+    SysPutPixel(x, y, data);
+}
+
+FAR void gam_line(PT x1,PT y1,PT x2,PT y2)
+{
+    gam_selectscr(NULL);
+    SysLine(x1, y1, x2, y2);
+}
+
+FAR void gam_rect(PT x1,PT y1,PT x2,PT y2)
+{
+    gam_selectscr(NULL);
+    SysRect(x1, y1, x2, y2);
+}
+
+FAR void gam_rectc(PT x1,PT y1,PT x2,PT y2)
+{
+    gam_selectscr(NULL);
+    SysRectClear(x1, y1, x2, y2);
 }

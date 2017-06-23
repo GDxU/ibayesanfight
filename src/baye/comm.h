@@ -112,7 +112,7 @@ FAR	void	GamPicShowExV(PT x,PT y,PT wid,PT hgt,U8 idx,U8 *pic,U8 *vscr);	/* 显�
 FAR	U32     GamStrShowS(PT x,PT y,const U8 *str);					/* 显示12汉字到屏幕 */
 FAR	void	GamAsciiS(PT x,PT y,U8 asc);					/* 显示6x12ASCII字符到屏幕 */
 FAR	U32     GamStrShowV(PT x,PT y,U8 *str,U8 *vscr);			/* 显示12汉字到虚拟屏幕 */
-FAR void    GamClearScreen(PT l, PT t, PT r, PT b, U8*scr);
+FAR void    GamClearScreenV(PT l, PT t, PT r, PT b, U8*scr);
 
 FAR void GamSetResourcePath(const U8* datPath, const U8*fontPath);
 FAR void GamSetAltLibPath(const U8* datPath);

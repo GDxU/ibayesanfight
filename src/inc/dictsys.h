@@ -303,7 +303,6 @@ typedef	FAR		void	(*FarDownAppPtrType)(U16 para1 , U16 para2 );
 /*-----------------------------------------------------------------------------------------
 *			屏幕显示函数
 *-----------------------------------------------------------------------------------------*/
-FAR void SysLineClear(PT x1,PT y1,PT x2,PT y2);
 FAR void SysRectClear(PT x1,PT y1,PT x2,PT y2);
 FAR void SysCircleClear(PT x0,PT y0,U8 r);
 FAR void SysPartPicture(PT x,PT y,PT x0,PT y0,PT width,PT high,U8* BuffPoint);

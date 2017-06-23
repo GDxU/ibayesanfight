@@ -321,5 +321,5 @@ FAR void SysSelectScreen(U8*scr)
 FAR void SysCopyScreen(U8*scr)
 {
     memcpy(scr_buffer, scr, buffer_size);
-    flushLcd();
+    isLcdDirty = 1;
 }

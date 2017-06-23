@@ -29,7 +29,9 @@ int gam_seed(void);
 #define	gam_ltoa(l,str,bdh)	ltoa(l,(char*)str,bdh)
 #define	gam_atoi(str)		atoi((const char*)str)
 #define	gam_atol(str)		atol((const char*)str)
+
 /* 屏幕操作函数 */
+#if 0
 #define	gam_clrlcd(l,t,r,b)	SysLcdPartClear(l,t,r,b)		/* 清除屏幕矩形 */
 #define	gam_clslcd()		SysLcdPartClear(0,0,SCR_WID-1,SCR_HGT-1)/* 清除整个屏幕 */
 #define	gam_revlcd(l,t,r,b)	SysLcdReverse(l,t,r,b)			/* 反显屏幕 */
@@ -38,14 +40,24 @@ int gam_seed(void);
 #define	gam_linec(l,t,r,b)	SysLineClear(l,t,r,b)			/* 消隐直线 */
 #define	gam_rect(l,t,r,b)	SysRect(l,t,r,b)			/* 显示矩形 */
 #define	gam_rectc(l,t,r,b)	SysRectClear(l,t,r,b)			/* 消隐矩形 */
+#else
+FAR void gam_clrlcd(PT x1,PT y1,PT x2,PT y2);
+FAR void gam_clslcd(void);
+FAR void gam_revlcd(PT x1,PT y1,PT x2,PT y2);
+FAR void gam_line(PT x1,PT y1,PT x2,PT y2);
+FAR void gam_rectc(PT x1,PT y1,PT x2,PT y2);
+FAR void gam_rect(PT x1,PT y1,PT x2,PT y2);
+FAR void gam_putpixel(PT x,PT y,U8 data);
+#endif
 #define	gam_getkey()		SysGetKey()				/* 有按键获取，无按键返回 */
-#define	gam_Picture(l,t,r,b,p,f)	SysPicture(l,t,r,b,p,f)	
+
 #define	gam_selectscr(scr)	SysSelectScreen(scr)
 #define gam_copyscr(scr)    SysCopyScreen(scr)
-#define gam_clrvscr         GamClearScreen
 
 #define gam_savscr() SysSaveScreen()
 #define gam_restorescr() SysRestoreScreen()
+
+#define gam_clrvscr         GamClearScreenV
 
 #ifndef HAVE_ITOA
 #include "itoa.h"
