@@ -31,7 +31,6 @@ U32	CountHZMAddrOff(U16 Hz);
 void	GamResumeSet();
 void	GamAscii(PT x,PT y,U8 asc);
 void	GamChinese(PT x,PT y,U16 Hz);
-U32	GamStrShow(PT x,PT y,const U8 *buf);
 void	GetExcHZMCode(U16 Hz,U8 *hzmCode);
 
 /***********************************************************************
@@ -494,4 +493,9 @@ FAR void gam_rectc(PT x1,PT y1,PT x2,PT y2)
 {
     gam_selectscr(NULL);
     SysRectClear(x1, y1, x2, y2);
+}
+
+FAR void gam_usescr(U8 scr)
+{
+    gam_selectscr(scr ? g_VisScr : NULL);
 }

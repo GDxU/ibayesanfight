@@ -333,38 +333,43 @@ U8* bayeGetGBKBuffer(void) {
 }
 
 EMSCRIPTEN_KEEPALIVE
-void bayeLcdDrawImage(U16 resid, U16 item, U16 index, I32 x, I32 y, U8 flag) {
-    return PlcRPicShowEx(resid, item, index+1, x, y, flag);
+void bayeLcdDrawImage(U16 resid, U16 item, U16 index, I32 x, I32 y, U8 scr) {
+    return PlcRPicShowEx(resid, item, index+1, x, y, scr);
 }
 
 EMSCRIPTEN_KEEPALIVE
-U32 bayeLcdDrawText(U8*text, I32 x, I32 y) {
-    return GamStrShowS(x, y, text);
+U32 bayeLcdDrawText(U8*text, I32 x, I32 y, U8 scr) {
+    gam_usescr(scr);
+    return GamStrShow(x, y, text);
 }
 
 /* 清除屏幕矩形 */
 EMSCRIPTEN_KEEPALIVE
-void bayeLcdClearRect(I32 left, I32 top, I32 right, I32 bottom) {
-    gam_clrlcd(left, top, right, bottom);
+void bayeLcdClearRect(I32 left, I32 top, I32 right, I32 bottom, U8 scr) {
+    gam_usescr(scr);
+    SysLcdPartClear(left, top, right, bottom);
 }
 
 /* 反显屏幕 */
 EMSCRIPTEN_KEEPALIVE
-void bayeLcdRevertRect(I32 left, I32 top, I32 right, I32 bottom) {
-    gam_revlcd(left, top, right, bottom);
+void bayeLcdRevertRect(I32 left, I32 top, I32 right, I32 bottom, U8 scr) {
+    gam_usescr(scr);
+    SysLcdReverse(left, top, right, bottom);
 }
 
 /* 画点函数 */
 EMSCRIPTEN_KEEPALIVE
-void bayeLcdDot(I32 x, I32 y, U8 color) {
-    gam_putpixel(x, y, color);
+void bayeLcdDot(I32 x, I32 y, U8 color, U8 scr) {
+    gam_usescr(scr);
+    SysPutPixel(x, y, color);
 }
 
 /* 显示直线 */
 EMSCRIPTEN_KEEPALIVE
-void bayeLcdDrawLine(I32 sx, I32 sy, I32 ex, I32 ey, U8 color) {
+void bayeLcdDrawLine(I32 sx, I32 sy, I32 ex, I32 ey, U8 color, U8 scr) {
+    gam_usescr(scr);
     if (color) {
-        gam_line(sx, sy, ex, ey);
+        SysLine(sx, sy, ex, ey);
     } else {
         // TODO:
         // gam_linec(sx, sy, ex, ey);
@@ -374,11 +379,12 @@ void bayeLcdDrawLine(I32 sx, I32 sy, I32 ex, I32 ey, U8 color) {
 
 /* 显示矩形 */
 EMSCRIPTEN_KEEPALIVE
-void bayeLcdDrawRect(I32 sx, I32 sy, I32 ex, I32 ey, U8 color) {
+void bayeLcdDrawRect(I32 sx, I32 sy, I32 ex, I32 ey, U8 color, U8 scr) {
+    gam_usescr(scr);
     if (color) {
-        gam_rect(sx, sy, ex, ey);
+        SysRect(sx, sy, ex, ey);
     } else {
-        gam_rectc(sx, sy, ex, ey);
+        SysRectClear(sx, sy, ex, ey);
     }
 }
 

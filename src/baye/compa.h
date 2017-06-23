@@ -48,6 +48,7 @@ FAR void gam_line(PT x1,PT y1,PT x2,PT y2);
 FAR void gam_rectc(PT x1,PT y1,PT x2,PT y2);
 FAR void gam_rect(PT x1,PT y1,PT x2,PT y2);
 FAR void gam_putpixel(PT x,PT y,U8 data);
+FAR void gam_usescr(U8 scr);
 #endif
 #define	gam_getkey()		SysGetKey()				/* 有按键获取，无按键返回 */
 
@@ -58,6 +59,8 @@ FAR void gam_putpixel(PT x,PT y,U8 data);
 #define gam_restorescr() SysRestoreScreen()
 
 #define gam_clrvscr         GamClearScreenV
+
+U32	GamStrShow(PT x,PT y,const U8 *buf);
 
 #ifndef HAVE_ITOA
 #include "itoa.h"
