@@ -914,7 +914,6 @@ FAR U8 GetCitySet(CitySetType *pos)
 {
     U8 showflag,tpicflag;
     U8 city = '\0';
-    U8 *dptr;
     GMType Msg;
     Touch touch = {0};
 
@@ -1012,8 +1011,7 @@ FAR U8 GetCitySet(CitySetType *pos)
                 case VK_SEARCH:
                     if (call_hook_a("showMiniMap", NULL) == -1) {
                         gam_clrlcd(WK_SX,WK_SY,WK_EX,WK_EY);
-                        dptr = ResLoadToCon(TACTIC_ICON,1,g_CBnkPtr);
-                        GamPicShowExS(WK_SX + (WK_EX - WK_SX - 84) / 2,WK_SY + (WK_EY - WK_SY - 64) / 2,84,64,0,dptr);
+                        gam_drawpic(TACTIC_ICON, 0, WK_SX + (WK_EX - WK_SX - 84) / 2,WK_SY + (WK_EY - WK_SY - 64) / 2, 1);
                     }
                     tpicflag = 1;
                     break;
@@ -1128,7 +1126,7 @@ U8 ShowCityMap(CitySetType *pos)
 {
     SBUF str,astr;
     U32 h,w,sw,sh;
-    U8 *cdptr,*pdptr,*cicon;
+    U8 *cdptr,*pdptr;
     U16 count;
     U32 c;
 
@@ -1155,15 +1153,15 @@ U8 ShowCityMap(CitySetType *pos)
             if (pos->y + h >= CITYMAP_H)
                 break;
 
-            count = (CITYMAP_TIL_W + 7) / 8 * CITYMAP_TIL_H * ((U16) (pos->y + h) * CITYMAP_W + pos->x);
+            count = ((U16) (pos->y + h) * CITYMAP_W + pos->x);
             for (w = 0;w < SHOWMAP_WS;w ++)
             {
                 if (pos->x + w >= CITYMAP_W)
                     break;
 
                 /*显示地图块pdptr + count*/
-                GamPicShowV(WK_SX + CITYMAP_TIL_W * w,WK_SY + CITYMAP_TIL_H * h,CITYMAP_TIL_W,CITYMAP_TIL_H,pdptr + count,g_VisScr);
-                count += (CITYMAP_TIL_W + 7) / 8 * CITYMAP_TIL_H;
+                gam_drawpic(CITYMAP_TILE, count, WK_SX + CITYMAP_TIL_W * w, WK_SY + CITYMAP_TIL_H * h, 0);
+                count += 1;
             }
         }
 
@@ -1192,8 +1190,7 @@ U8 ShowCityMap(CitySetType *pos)
                     {
                         c = 0;
                     }
-                    cicon = ResLoadToCon(CITY_ICON,1,g_CBnkPtr);
-                    GamPicShowExV(WK_SX + CITYMAP_TIL_W * w + (CITYMAP_TIL_W - CITY_ICON_W) / 2,WK_SY + CITYMAP_TIL_H * h + (CITYMAP_TIL_H - CITY_ICON_H) / 2,CITY_ICON_W,CITY_ICON_H,c,cicon,g_VisScr);
+                    gam_drawpic(CITY_ICON, c, WK_SX + CITYMAP_TIL_W * w + (CITYMAP_TIL_W - CITY_ICON_W) / 2,WK_SY + CITYMAP_TIL_H * h + (CITYMAP_TIL_H - CITY_ICON_H) / 2, 0);
                 }
             }
         }
@@ -1204,20 +1201,16 @@ U8 ShowCityMap(CitySetType *pos)
 
     if (cursorIsInView) {
         /*显示指针图标*/
-        cicon = ResLoadToCon(CITY_POS_ICON,1,g_CBnkPtr);
-        cicon += sizeof(PictureHeadType);
-        GamMPicShowV(WK_SX + CITYMAP_TIL_W * sw + (CITYMAP_TIL_W - CITY_ICON_W) / 2,WK_SY + CITYMAP_TIL_H * sh + CITY_ICON_H,CITY_ICON_W,CITY_ICON_H,cicon,g_VisScr);
+        gam_drawpic(CITY_POS_ICON, 0, WK_SX + CITYMAP_TIL_W * sw + (CITYMAP_TIL_W - CITY_ICON_W) / 2, WK_SY + CITYMAP_TIL_H * sh + CITY_ICON_H, 0);
     }
 
     gam_clrvscr(WK_SX + CITYMAP_TIL_W * SHOWMAP_WS,WK_SY,WK_EX,WK_EY,g_VisScr);
-    cicon = ResLoadToCon(GEN_HEADPIC1 + g_PIdx,1,g_CBnkPtr);
-    GamPicShowExV(WK_SX + CITYMAP_TIL_W * SHOWMAP_WS + ((WK_EX - (WK_SX + CITYMAP_TIL_W * SHOWMAP_WS) - 24) / 2),WK_SY + 4,24,24,g_PlayerKing,cicon,g_VisScr);
-    cicon = ResLoadToCon(MAPFACE_ICON,1,g_CBnkPtr);
-    GamPicShowExV(WK_SX + CITYMAP_TIL_W * SHOWMAP_WS + 2,WK_SY + 4 + 24 + (12 - 9) / 2 + 4,7,9,1,cicon,g_VisScr);
+    gam_drawpic(GEN_HEADPIC1 + g_PIdx, g_PlayerKing, WK_SX + CITYMAP_TIL_W * SHOWMAP_WS + ((WK_EX - (WK_SX + CITYMAP_TIL_W * SHOWMAP_WS) - 24) / 2),WK_SY + 4, 0);
+    gam_drawpic(MAPFACE_ICON, 1, WK_SX + CITYMAP_TIL_W * SHOWMAP_WS + 2,WK_SY + 4 + 24 + (12 - 9) / 2 + 4, 0);
     c = GetKingCitys(g_PlayerKing,str);
     gam_itoa(c,str,10);
     GamStrShowV(WK_SX + CITYMAP_TIL_W * SHOWMAP_WS + 2 + 10,WK_SY + 4 + 24 + (12 - 9) / 2 + 4,str,g_VisScr);
-    GamPicShowExV(WK_SX + CITYMAP_TIL_W * SHOWMAP_WS + 2,WK_SY + 4 + 24 + 12 + (12 - 9) + 4,7,9,0,cicon,g_VisScr);
+    gam_drawpic(MAPFACE_ICON, 0, WK_SX + CITYMAP_TIL_W * SHOWMAP_WS + 2,WK_SY + 4 + 24 + 12 + (12 - 9) + 4, 0);
     c = GetPersonsCount(g_PlayerKing);
     gam_itoa(c,str,10);
     GamStrShowV(WK_SX + CITYMAP_TIL_W * SHOWMAP_WS + 2 + 10,WK_SY + 4 + 24 + 12 + (12 - 9) / 2 + 4,str,g_VisScr);

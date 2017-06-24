@@ -135,7 +135,7 @@ FAR void FgtShowHlp()
         GetPersonName(p,tbuf);
         PlcMidShowStr(x + 26,y + 28,tbuf);
         pic = ResLoadToCon(GEN_HEADPIC1 + g_PIdx,1,g_CBnkPtr);
-        GamPicShowExS(x + 13,y + 2,24,24,idx,pic);
+        gam_drawpic(GEN_HEADPIC1+g_PIdx, idx, x + 13,y + 2, 1);
 
         IF_HAS_HOOK("getFighterInfo") {
             U8* info = pbuf;
@@ -563,23 +563,25 @@ void FgtAtvShowNum(U8 x,U8 y,U16 number)
     U8	pLen,pbuf[10];
     U8	wid,hgt,idx;
     U8	i,j;
-    U8	*pic;
+    U8  *pic;
 
     gam_itoa(number,pbuf,10);
     pLen = gam_strlen(pbuf);
+    
     pic = ResLoadToCon(NUM_PICID,1,g_CBnkPtr);
     wid = ((PictureHeadType *)pic)->wid;
     hgt = ((PictureHeadType *)pic)->hig;
+
     for(i = 0;i < pLen;i += 1)
     {
         idx = pbuf[i] - '0';
         GamDelay(4,false);
-        for(j = 0;j < hgt;j += 1)
+        for(j = 0;j < hgt/2;j += 1)
         {
-            GamPicShowExS(x,y - j,wid,j + 1,idx,pic);
+            gam_drawpic(NUM_PICID, idx, x, y-j, 1);
             GamDelay(1,false);
         }
-        x += wid;
+        x += wid/2;
     }
 }
 /***********************************************************************

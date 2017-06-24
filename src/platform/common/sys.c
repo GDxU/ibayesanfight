@@ -220,6 +220,7 @@ FAR void SysPicture(PT sX, PT sY, PT eX, PT eY, U8*pic , U8 flag, U8 scale)
     int x, y, X, Y;
     int scrPerLine = BYTES_PERLINE;
     static U8 _buf[256*256*8];
+    int pixs = 0;
 
     if (pic) {
         _decodePic(_buf, pic, wid, hgt, scale);
@@ -275,6 +276,7 @@ FAR void SysPicture(PT sX, PT sY, PT eX, PT eY, U8*pic , U8 flag, U8 scale)
                     }
                 }
                 buffer[ind] = !!pixel1;
+                pixs ++;
             }
         }
     }

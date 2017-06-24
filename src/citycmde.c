@@ -339,12 +339,9 @@ FAR void ShowFightLossNote(void)
  ******************************************************************************/
 void ShowFightNoteFace(U8 idx)
 {
-    U8 *pic;
-
     gam_clrlcd(WK_SX + (WK_EX - 120 - WK_SX) / 2,WK_SY + (WK_EY - 84 - WK_SY) / 2,WK_SX + (WK_EX - 120 - WK_SX) / 2 + 120,WK_SY + (WK_EY - 84 - WK_SY) / 2 + 84);
     gam_rect(WK_SX + (WK_EX - 120 - WK_SX) / 2,WK_SY + (WK_EY - 84 - WK_SY) / 2,WK_SX + (WK_EX - 120 - WK_SX) / 2 + 120,WK_SY + (WK_EY - 84 - WK_SY) / 2 + 84);
-    pic = ResLoadToCon(FIGHT_NOTE_ICON,1,g_CBnkPtr);
-    GamPicShowExS(WK_SX + (WK_EX - 84 - WK_SX) / 2,WK_SY + (WK_EY - 84 - WK_SY) / 2 + 2,84,64,idx,pic);
+    gam_drawpic(FIGHT_NOTE_ICON, idx, WK_SX + (WK_EX - 84 - WK_SX) / 2,WK_SY + (WK_EY - 84 - WK_SY) / 2 + 2, 1);
 }
 
 /******************************************************************************

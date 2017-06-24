@@ -51,6 +51,7 @@ FAR void gam_putpixel(PT x,PT y,U8 data);
 FAR void gam_usescr(U8 scr);
 #endif
 #define	gam_getkey()		SysGetKey()				/* 有按键获取，无按键返回 */
+#define gam_drawpic(id, ind, x, y, flag) PlcRPicShowEx(id, 0, ind+1, x, y, flag)
 
 #define	gam_selectscr(scr)	SysSelectScreen(scr)
 #define gam_copyscr(scr)    SysCopyScreen(scr)

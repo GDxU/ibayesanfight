@@ -89,7 +89,7 @@ FAR void GamPicShow(PT x,PT y,PT wid,PT hgt,U8 *pic)
 {
     wid-=1;
     hgt-=1;
-    SysPicture(x,y,x+wid,y+hgt,pic,0, 2);
+    SysPicture(x,y,x+wid,y+hgt,pic,0, 1);
 }
 
 /***********************************************************************
@@ -126,8 +126,8 @@ FAR void GamPicShowV(PT x,PT y,PT wid,PT hgt,U8 *pic,U8 *vscr)
 FAR void GamMPicShow(PT x,PT y,PT wid,PT hgt,U8 *pic)
 {
     U16 pLen = (wid+7) / 8 * hgt;
-    SysPicture(x,y,x+wid-1,y+hgt-1,pic,1, 2);
-    SysPicture(x,y,x+wid-1,y+hgt-1,pic+pLen,2, 2);
+    SysPicture(x,y,x+wid-1,y+hgt-1,pic,1, 1);
+    SysPicture(x,y,x+wid-1,y+hgt-1,pic+pLen,2, 1);
 }
 /***********************************************************************
  * 说明:     显示mask图片到屏幕
@@ -188,26 +188,6 @@ FAR void GamPicShowEx(PT x,PT y,PT wid,PT hgt, U16 idx, U8 *pic)
         GamPicShow(x,y,wid,hgt,pic);
 }
 
-FAR void GamPicShowExS(PT x,PT y,PT wid,PT hgt, U16 idx, U8 *pic)
-{
-    gam_selectscr(NULL);
-    GamPicShowEx(x, y, wid, hgt, idx, pic);
-}
-/***********************************************************************
- * 说明:     显示图片到虚拟屏幕(功能扩展——可显示图片上面的部分)
- * 输入参数: x,y-显示坐标	wid,hgt-图片尺寸	idx-图片序号(从0开始)
- *	  : pic-图片数据(包括图片头)	vscr-虚拟屏幕指针
- * 返回值  : 无
- * 修改历史:
- *               姓名            日期             说明
- *             ------          ----------      -------------
- *             高国军          2005.5.16       完成基本功能
- ***********************************************************************/
-FAR void GamPicShowExV(PT x,PT y,PT wid,PT hgt,U8 idx,U8 *pic,U8 *vscr)
-{
-    gam_selectscr(vscr);
-    GamPicShowEx(x, y, wid, hgt, idx, pic);
-}
 /***********************************************************************
  * 说明:     显示12字符串到屏幕
  * 输入参数: x,y-显示坐标	str-数据缓冲
@@ -449,8 +429,7 @@ FAR void GamAsciiS(PT x,PT y,U8 asc)
 
 FAR void GamClearScreenV(PT l, PT t, PT r, PT b, U8*scr) {
     gam_selectscr(scr);
-    gam_clrlcd(l, t, r, b);
-    gam_selectscr(NULL);
+    SysLcdPartClear(l, t, r, b);
 }
 
 FAR void gam_clrlcd(PT x1,PT y1,PT x2,PT y2)

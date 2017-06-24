@@ -13,9 +13,9 @@
 #include "baye-wrapper-mac.h"
 #include "baye/comm.h"
 
-#define SCR_W SCR_WID
-#define SCR_H SCR_HGT
-#define BYTES_PERLINE (SCR_LINE * 8)
+#define SCR_W (SCR_WID*2)
+#define SCR_H (SCR_HGT*2)
+#define BYTES_PERLINE (SCR_LINE * 8 * 2)
 
 @implementation LCDView
 - (void)keyDown:(NSEvent *)theEvent {
@@ -39,8 +39,8 @@
     CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
     CGContextSetRGBFillColor(context, 0, 0, 0, 1);
 
-    for (y = 0; y < SCR_H; y++) {
-        for (x = 0; x < SCR_W; x++) {
+    for (y = 0; y < SCR_H*2; y++) {
+        for (x = 0; x < SCR_W*2; x++) {
             ind = BYTES_PERLINE*y + x;
             int pixel = self.buffer[ind];
             
@@ -62,7 +62,7 @@
 - (NSPoint)pointInLCD:(NSEvent *)theEvent
 {
     NSPoint pv = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-    return NSMakePoint(pv.x / self.frame.size.width * SCR_W, (self.frame.size.height - pv.y) / self.frame.size.height * SCR_H);
+    return NSMakePoint(pv.x / self.frame.size.width * SCR_W / 2, (self.frame.size.height - pv.y) / self.frame.size.height * SCR_H / 2);
 }
 
 - (void)mouseDown:(NSEvent *)theEvent

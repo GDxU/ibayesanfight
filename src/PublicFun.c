@@ -47,7 +47,7 @@ FAR U8 PlcMovie(U16 speid, U16 index, U8 startfrm,U8 endfrm,U8 keyflag,PT x,PT y
     U16 wid,high,picdatlen,maxdatlen,mode,lenspe;
     U32 i,clsflag,showflag;
     U32 mcount;
-    U32 x1,y1;
+    I32 x1,y1;
     U8 ymount,spem[512],spec[512];
     SPEUNIT  *spe;
 
@@ -109,15 +109,7 @@ FAR U8 PlcMovie(U16 speid, U16 index, U8 startfrm,U8 endfrm,U8 keyflag,PT x,PT y
                     high = phead->hig;
                     x1 = x + spe[i + startfrm].x;
                     y1 = y + spe[i + startfrm].y;
-                    if (y1 >= 0x80)
-                    {
-                        high = high - ((0xff ^ y1) + 1);
-                        y1 = 0;
-                    }
-                    high = y1 + high <= 96 ? high : (96 - y1);
-
-                    if (high < 0x80 && high + 1 > 1)
-                        gam_clrvscr(x1,y1,x1+wid-1,y1+high-1,g_VisScr);
+                    gam_clrvscr(x1,y1,x1+(wid/2)-1,y1+(high/2)-1,g_VisScr);
                 }
                 clsflag = 1;
             }
@@ -422,13 +414,14 @@ FAR void PlcMidShowStr(PT x,PT y,U8 *buf)
  ***********************************************************************/
 FAR void PlcGraMsgBox(U8 *buf,U8 delay,U8 line)
 {
-    U8	x,y,w,h;
+    U16	x,y,w,h;
     U8	*ptr;
 
     ptr = ResLoadToCon(MSGBOX_PIC,1,g_CBnkPtr);
-    w = ptr[0];
-    h = ptr[2];
-    x = (WK_EX - WK_SX - w) >> 1;
+    PictureHeadType *head = (PictureHeadType *)ptr;
+    w = head->wid/2;
+    h = head->wid/2;
+    x = (WK_EX - WK_SX - w) / 2;
     x += WK_SX;
     if(line != 0xFF)
         y = WK_SY + line * HZ_HGT;
@@ -437,7 +430,7 @@ FAR void PlcGraMsgBox(U8 *buf,U8 delay,U8 line)
         y = (WK_EY - WK_SY - h) >> 1;
         y += WK_SY;
     }
-    GamPicShowS(x,y,w,h,ptr + sizeof(PictureHeadType));
+    gam_drawpic(MSGBOX_PIC, 0, x, y, 1);
     GamStrShowS(x + 10,y + 6,buf);
     GamDelay(delay * 100, 2);
 }
@@ -511,14 +504,15 @@ FAR void PlcNumShow(PT x,PT y,U32 num,U8 dig,U8 *vs)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-FAR void PlcRPicShow(U16 id,U8 idx,PT x,PT y,U8 flag) {
+FAR void PlcRPicShow(U16 id,U16 idx,PT x,PT y,U8 flag) {
     PlcRPicShowEx(id, 0, idx, x, y, flag);
 }
 
-FAR void PlcRPicShowEx(U16 id, U8 item, U8 idx,PT x,PT y,U8 flag)
+FAR void PlcRPicShowEx(U16 id, U16 item, U16 idx,PT x,PT y,U8 flag)
 {
     U8	*pic;
-    U8	wid,high,mode;
+    U16	wid,high;
+    U8 mode;
     U16	off;
     PictureHeadType* p;
 

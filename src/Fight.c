@@ -1233,18 +1233,12 @@ void FgtShowGen(U8 act)
  ***********************************************************************/
 void FgtMapUnitShow(U8 tx,U8 ty,U8 flag)
 {
-    U8	*ptr,tile;
-    U16	poff;
+    U8	tile;
 
     tile = (ty - g_MapSY) * SCR_MAPWID + tx - g_MapSX;
-    poff = (U16)g_FightMap[tile] << 5;
-    ptr = FgtLoadToCon(g_TileId,1) + PICHEAD_LEN + poff;
     tx = FgtGetScrX(tx);
     ty = FgtGetScrY(ty);
-    if(flag)
-        GamPicShowS(tx,ty,TIL_WID,TIL_HGT,ptr);
-    else
-        GamPicShowV(tx,ty,TIL_WID,TIL_HGT,ptr,g_VisScr);
+    gam_drawpic(g_TileId, g_FightMap[tile], tx, ty, flag);
 }
 /***********************************************************************
  * 说明:     显示获取的经验值
@@ -1343,19 +1337,17 @@ void FgtShowChgSpe(U8 sfrm,U8 efrm,U8 x,U8 y)
  ***********************************************************************/
 void FgtShowMap(U8 x,U8 y)
 {
-    U8	i,*ptr;
+    U8	i;
     U16	count;
 
     FgtGetMapDat(x,y);
     /* 显示地图 */
-    ptr = FgtLoadToCon(g_TileId,1) + PICHEAD_LEN;
     for(i = 0; i < SCR_MAPWID * SCR_MAPHGT; i += 1)
     {
-        count = g_FightMap[i];
-        count <<= 5;
         y = ((i / SCR_MAPWID) << 4) + WK_SX;
         x = ((i % SCR_MAPWID) << 4) + WK_SY;
-        GamPicShowV(x,y,TIL_WID,TIL_HGT,ptr + count,g_VisScr);
+        count = g_FightMap[i];
+        gam_drawpic(g_TileId, count, x, y, 0);
     }
 }
 /***********************************************************************

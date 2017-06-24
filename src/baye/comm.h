@@ -107,8 +107,6 @@ FAR	void	GamPicShowS(PT x,PT y,PT wid,PT hgt,U8 *pic);			/* 显示图片到屏�
 FAR	void	GamPicShowV(PT x,PT y,PT wid,PT hgt,U8 *pic,U8 *vscr);		/* 显示图片到虚拟屏幕 */
 FAR	void	GamMPicShowS(PT x,PT y,PT wid,PT hgt,U8 *pic);			/* 显示mask图片到屏幕 */
 FAR	void	GamMPicShowV(PT x,PT y,PT wid,PT hgt,U8 *pic,U8 *vscr);		/* 显示mask图片到虚拟屏幕 */
-FAR	void	GamPicShowExS(PT x,PT y,PT wid,PT hgt, U16 idx,U8 *pic);		/* 显示图片到屏幕(功能扩展——可显示图片的部分) */
-FAR	void	GamPicShowExV(PT x,PT y,PT wid,PT hgt,U8 idx,U8 *pic,U8 *vscr);	/* 显示图片到虚拟屏幕(功能扩展——可显示图片的部分) */
 FAR	U32     GamStrShowS(PT x,PT y,const U8 *str);					/* 显示12汉字到屏幕 */
 FAR	void	GamAsciiS(PT x,PT y,U8 asc);					/* 显示6x12ASCII字符到屏幕 */
 FAR	U32     GamStrShowV(PT x,PT y,U8 *str,U8 *vscr);			/* 显示12汉字到虚拟屏幕 */

@@ -871,13 +871,11 @@ U8 FgtCntInterval(U8 x1,U8 y1,U8 x2,U8 y2)
 FAR void FgtShowMvRng(void)
 {
     U8	x,y,dx,dy;
-    U8	tmp,*pic;
+    U8	tmp;
     U8	sx,sy;
 
     dx = g_MapSX + g_PUseSX - g_PathSX;
     dy = g_MapSY + g_PUseSY - g_PathSY;
-    pic = ResLoadToCon(STEP_PIC,1,g_CBnkPtr);
-    pic += PICHEAD_LEN;
     for(x = g_PUseSX;x < FGT_MRG;x += 1)
         for(y = g_PUseSY;y < FGT_MRG;y += 1)
         {
@@ -895,7 +893,7 @@ FAR void FgtShowMvRng(void)
                 sy <<= 4;
                 sx += WK_SX;
                 sy += WK_SY;
-                GamMPicShowV(sx,sy,16,16,pic,g_VisScr);
+                gam_drawpic(STEP_PIC, 0, sx, sy, 0);
             }
         }
 }

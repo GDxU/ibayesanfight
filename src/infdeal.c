@@ -620,10 +620,8 @@ FAR void ShowConstStrMsg(U8 idx)
  ******************************************************************************/
 FAR void ShowPersonHead(U8 x,U8 y, PersonID id)
 {
-    U8 *pic,tbuf[14];
-    /*gam_rect(x,y,x + 50,y + 40);*/
-    pic = ResLoadToCon(GEN_HEADPIC1 + g_PIdx,1,g_CBnkPtr);
-    GamPicShowExS(x + 13,y + 2,24,24,id,pic);
+    U8 tbuf[14];
+    gam_drawpic(GEN_HEADPIC1 + g_PIdx, id, x + 13,y + 2, 1);
     GetPersonName(id, tbuf);
     PlcMidShowStr(x + 26,y + 28,tbuf);
 }
