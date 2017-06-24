@@ -135,7 +135,7 @@ FAR void FgtShowHlp()
         GetPersonName(p,tbuf);
         PlcMidShowStr(x + 26,y + 28,tbuf);
         pic = ResLoadToCon(GEN_HEADPIC1 + g_PIdx,1,g_CBnkPtr);
-        gam_drawpic(GEN_HEADPIC1+g_PIdx, idx, x + 13,y + 2, 1);
+        gam_drawpic(GEN_HEADPIC1+g_PIdx, p, x + 13,y + 2, 1);
 
         IF_HAS_HOOK("getFighterInfo") {
             U8* info = pbuf;
