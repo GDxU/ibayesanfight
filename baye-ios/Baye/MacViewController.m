@@ -52,7 +52,7 @@ FAR void GamBaYeEng(void);
             = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"font.bin"];
 
         if (debug) {
-            GamSetResourcePath((U8*)"/Users/loong/l/lab/baye/BayeCompiler/baye/dat-mod-mod-mod.lib", (U8*)[fontPath UTF8String]);
+            GamSetResourcePath((U8*)"/Users/loong/l/lab/baye/BayeCompiler/baye/libs/dat-mod.lib", (U8*)[fontPath UTF8String]);
             GamSetDataDir((U8*)"/Users/loong/l/lab/baye/sav");
         } else {
             NSString *datPath
