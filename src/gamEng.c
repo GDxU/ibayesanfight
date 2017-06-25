@@ -801,6 +801,7 @@ bool GamSaveRcd(U8 idx)
     
     ResLoadToMem(IFACE_STRID,dWriting,tbuf);
     GamMsgBox(tbuf,0);
+    GamDelay(1, 0);
     ResLoadToMem(IFACE_STRID,dSaveFNam,tbuf);
     
     call_hook("willSaveGame", NULL);
