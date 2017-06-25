@@ -393,8 +393,8 @@ void GetExcHZMCode(U16 Hz,U8 *hzmCode)
     /*转换数据*/
     for(i=0;i<6;i++)
     {
-        j=i<<2;
-        k=(i<<1)+i;
+        j = i * 4;
+        k = i * 3;
         hzmCode[j]=buf[k];
         hzmCode[j+1]=buf[k+1]&0xf0;
         hzmCode[j+2]=(buf[k+1]&0x0f)<<4;
@@ -414,17 +414,10 @@ void GetExcHZMCode(U16 Hz,U8 *hzmCode)
 U32 CountHZMAddrOff(U16 Hz)
 {
     /*计算公式:(94*(HCode-0xA1)+(LCode-0xA1))*18 */
-    U32 offset,pCode;
-
-    pCode=(U8)(Hz>>8)-0xA1;
-    offset=pCode<<6;			/* offset=pCode*64 */
-    offset+=pCode<<5;			/* offset=pCode*64+pCode*32 */
-    offset=offset-(pCode<<1);		/* offset=pCode*94 */
-    offset+=(U8)(Hz)-0xA1;			/* offset=94*(HCode-0xA1)+(LCode-0xA1)*/
-    pCode=offset;
-    offset<<=4;
-    offset+=pCode<<1;
-    return offset;
+    U32 hCode, lCode;
+    hCode = Hz >> 8;
+    lCode = Hz & 0xff;
+    return (94*(hCode - 0xA1) + (lCode-0xA1)) * 18;
 }
 
 /******************************************************************************
