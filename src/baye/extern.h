@@ -85,6 +85,7 @@ extern U8 g_FromSave;
 extern U8 citymap[SHOWMAP_HS_MAX][SHOWMAP_WS_MAX];	/*当前显示城市地图*/
 extern PersonID cavpdb;
 extern U8 cavps;				/*战争俘虏临时变量*/
+extern U8 g_FlipDrawing;   //镜像绘图
 
 void GamSetPersonCount(U32 count);
 U32 GamGetPersonCount(void);

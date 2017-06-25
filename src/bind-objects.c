@@ -69,6 +69,7 @@ void bind_init(void) {
     DEFADDF(c_Ey, U8);
     DEFADDF(g_screenWidth, U16);
     DEFADDF(g_screenHeight, U16);
+    DEFADDF(g_FlipDrawing, U8);
 
     DEFADD_GBKARR(g_errorString, sizeof(g_errorString));
     {

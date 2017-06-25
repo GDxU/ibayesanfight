@@ -27,6 +27,7 @@ static char isLcdDirty = 0;
 static char *buffer = static_buffer;
 static char *scr_buffer = static_buffer;
 static size_t buffer_size = sizeof(static_buffer);
+U8 g_FlipDrawing = 0;
 
 static U8 _insideScreen(PT x, PT y) {
     return x >= 0 && y >= 0 && x < g_screenWidth && y < g_screenHeight;
@@ -249,7 +250,10 @@ FAR void SysPicture(PT sX, PT sY, PT eX, PT eY, U8*pic , U8 flag, U8 scale)
                 else {
                     
                     if (pic) {
-                        pixel0 = pic[picPerLine*y + x];
+                        PT rx, ry;
+                        rx = (g_FlipDrawing & 0x01) ? wid-x-1 : x;
+                        ry = (g_FlipDrawing & 0x02) ? hgt-y-1 : y;
+                        pixel0 = pic[picPerLine*ry + rx];
                     }
                     else {
                         pixel0 = 0;
