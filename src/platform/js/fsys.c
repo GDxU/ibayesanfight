@@ -121,9 +121,9 @@ FAR U8 *gam_freadall(gam_FILE *fhandle)
 static U8 font[] =
 #include "font.bin.c"
 ;
-static U8 dat[] =
-#include "dat.lib.c"
-;
+//static U8 dat[] =
+//#include "dat.lib.c"
+//;
 
 
 typedef struct {
@@ -215,10 +215,11 @@ static gam_FILE *rom_fopen(const U8 *fname,U8 pmode) {
         return (gam_FILE*)fp;
     }
     else if (0 == gam_strcmp(fname, "/rom/dat.lib")) {
-        rom_FILE* fp = rom_fnew();
-        fp->data = dat;
-        fp->length = sizeof(dat);
-        return (gam_FILE*)fp;
+//        rom_FILE* fp = rom_fnew();
+//        fp->data = dat;
+//        fp->length = sizeof(dat);
+//        return (gam_FILE*)fp;
+        return NULL;
     } else {
         return NULL;
     }

@@ -44,7 +44,7 @@ void GamVarRst(void);
 U8 GamMovie(U16 speID);
 bool GamMainChose(void);
 void GamMakerInf(void);
-void GamShowErrInf(U8 idx);
+void GamShowErrInf(U8 *s);
 PersonID GamGetKing(PersonID*kings, U32 num);
 void GamShowKing(U8 pTop);
 void GamRevCity(U8 cycnt,U8 *tbuf,U8 *pos);
@@ -71,14 +71,14 @@ FAR void GamBaYeEng(void)
     /* 初始化游戏环境 */
     if(GamConInit())
     {
-        GamShowErrInf(0);
+        GamShowErrInf((U8*)"load lib failed");
         return;
     }
 
     /* 初始化游戏变量 */
     if(GamVarInit())
     {
-        GamShowErrInf(1);
+        GamShowErrInf((U8*)"init env failed");
         GamVarRst();
         GamConRst();
         return;
@@ -555,12 +555,11 @@ U8 GamMovie(U16 speID)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-void GamShowErrInf(U8 idx)
+void GamShowErrInf(U8 *s)
 {
-    U8	tbuf[50];
-
-    ResLoadToMem(IFACE_STRID,idx + dGamConErr,tbuf);
-    GamMsgBox(tbuf,2);
+    U8 buf[64] = "Error: ";
+    gam_strcat(buf, s);
+    GamMsgBox(buf,2);
 }
 /***********************************************************************
  * 说明:     档案管理（提供存档和读取档案的函数）
