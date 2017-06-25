@@ -21,6 +21,7 @@
 #include "baye/comm.h"
 #include "baye/enghead.h"
 #include "touch.h"
+#include "baye/script.h"
 
 /* 当前所在文件 */
 #define		IN_FILE		21
@@ -356,6 +357,23 @@ void GetExcHZMCode(U16 Hz,U8 *hzmCode)
     /* 当前要显示的汉字不是2312GB中的汉字，调试模式下显示黑块，释放模式下显示白块 */
     if((U8)(Hz>>8) < 0xA1)
     {
+        I32 index = -1;
+        IF_HAS_HOOK("fontImageForChar") {
+            U16 code = Hz;
+            BIND_U16(&code);
+            BIND_U32(&index);
+            CALL_HOOK();
+        }
+        if (index >= 0) {
+            PictureHeadType* head = (PictureHeadType*)ResLoadToCon(MAIN_SPE,2,g_CBnkPtr);
+            if (index < head->count) {
+                U32 len = (head->wid + 7) / 8 * head->hig;
+                U8 *data = (U8*)(&head[1]);
+                gam_memcpy(hzmCode, &data[len * index], len);
+                return;
+            }
+        }
+        
 #if	GAM_VER==GAM_DEBUG_MODE
         gam_memset(hzmCode,0xFF,24);
         return;

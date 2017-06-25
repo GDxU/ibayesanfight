@@ -42,7 +42,7 @@ void script_init(void)
     }
 }
 
-int _call_hook(const char* name, Value* context)
+int call_hook_s(const char* name, Value* context)
 {
     return EM_ASM_INT({
         var name = UTF8ToString($0);
@@ -73,7 +73,7 @@ static void js_callback(int *rv) {
 
 int call_hook_a(const char* name, Value* context)
 {
-    int rv = _call_hook(name, context);
+    int rv = call_hook_s(name, context);
 
     while (g_asyncActionID) {
         U16 action = g_asyncActionID;
