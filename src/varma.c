@@ -90,6 +90,7 @@ U8 g_FromSave = 0;
 U8 citymap[SHOWMAP_HS_MAX][SHOWMAP_WS_MAX];	/*当前显示城市地图*/
 PersonID cavpdb;
 U8 cavps;			/*战争俘虏临时变量*/
+U8 g_MenuTouchComfirm = 0;		/* 恢复标志 */
 
 
 

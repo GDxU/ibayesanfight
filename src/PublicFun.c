@@ -208,6 +208,7 @@ FAR U8 PlcSplMenu(RECT *pRect,U8 pIdx,U8 *buf)
     Touch touch = {0};
     U8 touchStartIndex = 0;
     U8 itemHeight = ASC_HGT;
+    U8 lastInd = 0;
 
     /* 初始化显示范围 */
     c_ReFlag = false;
@@ -215,6 +216,15 @@ FAR U8 PlcSplMenu(RECT *pRect,U8 pIdx,U8 *buf)
     c_Ex = pRect->ex;
     c_Sy = pRect->sy;
     c_Ey = pRect->ey;
+
+    IF_HAS_HOOK("willOpenMenu") {
+        BIND_U8EX("index", &pIdx);
+        CALL_HOOK();
+    }
+    IF_HAS_HOOK("willChangeMenuSelection") {
+        BIND_U8EX("index", &pIdx);
+        CALL_HOOK();
+    }
     /* 计算参数 */
     pLen = (c_Ex - c_Sx) / ASC_WID;
     pICnt = (c_Ey - c_Sy) / itemHeight;
@@ -286,13 +296,16 @@ FAR U8 PlcSplMenu(RECT *pRect,U8 pIdx,U8 *buf)
                         if (index < 0)
                         {
                             pIdx = MNU_EXIT;
+                        } else if (g_MenuTouchComfirm && index != lastInd) {
+                            lastInd = index;
+                            break;
                         }
                         c_ReFlag = true;
                         c_Sx = WK_SX;
                         c_Sy = WK_SY;
                         c_Ex = WK_EX;
                         c_Ey = WK_EY;
-                        return pIdx;
+                        goto RET;
                     }
                     break;
                 }
@@ -372,10 +385,14 @@ FAR U8 PlcSplMenu(RECT *pRect,U8 pIdx,U8 *buf)
                 c_Sy = WK_SY;
                 c_Ex = WK_EX;
                 c_Ey = WK_EY;
-                return pIdx;
+                goto RET;
         }
 UPDATE_UI:
         if(tflag || cflag) {
+            IF_HAS_HOOK("willChangeMenuSelection") {
+                BIND_U8EX("index", &pIdx);
+                CALL_HOOK();
+            }
             gam_clrlcd(c_Sx, c_Sy, c_Ex, c_Ey);
             GamStrShowS(c_Sx,c_Sy,buf + poff);
             if (pIdx >= pSIdx && pIdx < pSIdx + pICnt) {
@@ -384,6 +401,12 @@ UPDATE_UI:
             }
         }
     }
+RET:
+    IF_HAS_HOOK("willCloseMenu") {
+        BIND_U8EX("index", &pIdx);
+        CALL_HOOK();
+    }
+    return pIdx;
 }
 /***********************************************************************
  * 说明:     居中显示指定字符串

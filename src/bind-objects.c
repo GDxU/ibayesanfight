@@ -70,6 +70,7 @@ void bind_init(void) {
     DEFADDF(g_screenWidth, U16);
     DEFADDF(g_screenHeight, U16);
     DEFADDF(g_FlipDrawing, U8);
+    DEFADDF(g_MenuTouchComfirm, U8);
 
     DEFADD_GBKARR(g_errorString, sizeof(g_errorString));
     {
