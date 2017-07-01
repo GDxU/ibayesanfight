@@ -93,7 +93,7 @@ FAR U8 *gam_freadall(gam_FILE *fhandle)
 {
     U32 alloced = 1024*400;
     U8 buf[1024];
-    U8 *rv = malloc(alloced);
+    U8 *rv = gam_malloc(alloced);
     U32 offset = 0;
     U32 cnt = 0;
     
@@ -101,14 +101,14 @@ FAR U8 *gam_freadall(gam_FILE *fhandle)
         cnt = gam_fread(buf, 1, 1024, fhandle);
         if (offset + cnt > alloced) {
             alloced *= 2;
-            rv = realloc(rv, alloced);
+            rv = gam_realloc(rv, alloced);
         }
         memcpy(rv + offset, buf, cnt);
         offset += cnt;
     } while (cnt > 0);
 
     if (offset >= alloced) {
-        rv = realloc(rv, alloced+1);
+        rv = gam_realloc(rv, alloced+1);
     }
     rv[offset] = 0;
         
@@ -247,7 +247,7 @@ static U8* getValue(const U8*key) {
         }
 
         if (value) {
-            var buffer = Module._malloc(value.length+1);
+            var buffer = Module._bayeAlloc(value.length+1);
             Module.stringToUTF8(value, buffer, 1024*1024*10);
             return buffer;
         }
@@ -326,7 +326,7 @@ static U32 sav_fwrite(U8 *buf, U32 size, U16 count, gam_FILE *fp_) {
 
     if (fp->base.cur + len > fp->alloced) {
         U32 new_len = fp->base.cur + len + 1024;
-        fp->base.data = realloc(fp->base.data, new_len);
+        fp->base.data = gam_realloc(fp->base.data, new_len);
         fp->alloced = new_len;
     }
     memcpy(fp->base.data + fp->base.cur, buf, len);
@@ -340,7 +340,7 @@ static void sav_finit_w(sav_write_FILE* fp, const U8*fname) {
     fp->alloced = 1024;
     fp->base.base.fclose = sav_fclose_w;
     fp->base.base.fwrite = sav_fwrite;
-    fp->fname = (U8*)strdup((char*)fname);
+    fp->fname = (U8*)gam_strdup((char*)fname);
 }
 
 static gam_FILE *sav_fopen(const U8 *fname, U8 pmode) {
@@ -349,7 +349,7 @@ static gam_FILE *sav_fopen(const U8 *fname, U8 pmode) {
         if (data) {
             U32 length = 0;
             U8 * f_data = hex_decode(data, &length);
-            free(data);
+            gam_free(data);
 
             if (f_data) {
                 rom_FILE* fp = rom_fnew();

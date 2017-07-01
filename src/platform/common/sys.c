@@ -365,7 +365,7 @@ FAR void SysAdjustLCDBuffer(int wid, int height)
         free(scr_buffer);
     }
 
-    scr_buffer = malloc(sz);
+    scr_buffer = gam_malloc(sz);
     memset(scr_buffer, 0, sz);
     buffer_size = sz;
 }

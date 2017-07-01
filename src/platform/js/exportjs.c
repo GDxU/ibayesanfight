@@ -410,3 +410,9 @@ EMSCRIPTEN_KEEPALIVE
 U16 bayeGetPersonCount(void) {
     return GamGetPersonCount();
 }
+
+EMSCRIPTEN_KEEPALIVE
+void* bayeAlloc(U32 sz) {
+    return gam_malloc(sz);
+}
+

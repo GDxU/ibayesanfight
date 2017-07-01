@@ -62,11 +62,11 @@ void msg_free(struct MsgNode *msg) {
 #else
 
 struct MsgNode *msg_new(void) {
-    return (struct MsgNode *)calloc(1, sizeof(struct MsgNode));
+    return (struct MsgNode *)gam_malloc(sizeof(struct MsgNode));
 }
 
 void msg_free(struct MsgNode *msg) {
-    free(msg);
+    gam_free(msg);
 }
 
 #endif

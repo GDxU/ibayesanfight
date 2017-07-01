@@ -755,7 +755,7 @@ bool GamLoadRcd(U8 idx)
     gam_fread((U8 *)g_PersonsQueue,sizeof(PersonID),personQueueLen,fp);
     gam_fread((U8 *)g_GoodsQueue,1,goodsQueueLen,fp);
 
-    if (customData) free(customData);
+    if (customData) gam_free(customData);
     customData = gam_freadall(fp);
     gam_fclose(fp);
     
@@ -861,7 +861,7 @@ bool GamSaveRcd(U8 idx)
 
 void GamSetDataDir(const U8*dataDir_)
 {
-    dataDir = (U8*)strdup((const char*)dataDir_);
+    dataDir = (U8*)gam_strdup((const char*)dataDir_);
 }
 
 
@@ -921,6 +921,6 @@ U8* gam_getcustomdata() {
 }
 
 void gam_setcustomdata(U8*data) {
-    if (customData) free(customData);
-    customData = (U8*)strdup((char*)data);
+    if (customData) gam_free(customData);
+    customData = (U8*)gam_strdup((char*)data);
 }

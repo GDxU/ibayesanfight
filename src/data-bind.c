@@ -45,13 +45,13 @@ void ValueDef_free(ValueDef*def) {
         case ValueTypeGBKArray:
         {
             ValueDef_free(def->subdef.arrDef);
-            free(def);
+            gam_free(def);
             break;
         }
         case ValueTypeObject:
         {
             ObjectDef_free(def->subdef.objDef);
-            free(def);
+            gam_free(def);
             break;
         }
     }
@@ -59,10 +59,10 @@ void ValueDef_free(ValueDef*def) {
 
 
 ObjectDef* ObjectDef_new(void) {
-    ObjectDef* def = (ObjectDef*)malloc(sizeof(ObjectDef));
+    ObjectDef* def = (ObjectDef*)gam_malloc(sizeof(ObjectDef));
     def->count = 0;
     def->alloced = 8;
-    def->fields = (Field*)malloc(sizeof(*def->fields) * def->alloced);
+    def->fields = (Field*)gam_malloc(sizeof(*def->fields) * def->alloced);
     return def;
 }
 
@@ -71,15 +71,15 @@ void ObjectDef_free(ObjectDef* def) {
     for (int i = 0; i < def->count; i++) {
         ValueDef_free(def->fields[i].value.def);
     }
-    free(def->fields);
-    free(def);
+    gam_free(def->fields);
+    gam_free(def);
 }
 
 void ObjectDef_addField(ObjectDef* def, Field* field)
 {
     if (def->count == def->alloced) {
         def->alloced *= 2;
-        def->fields = (Field*)realloc(def->fields, sizeof(*def->fields)*def->alloced);
+        def->fields = (Field*)gam_realloc(def->fields, sizeof(*def->fields)*def->alloced);
     }
     memcpy(&def->fields[def->count], field, sizeof(*def->fields));
     def->count += 1;
@@ -110,7 +110,7 @@ void ObjectDef_addFieldF(ObjectDef* def, const char*name, ValueType t, void* ptr
         case ValueTypeGBKArray:
         {
             //TODO: Free it
-            ValueDef* arrDef = malloc(sizeof(ValueDef));
+            ValueDef* arrDef = gam_malloc(sizeof(ValueDef));
             arrDef->subdef.arrDef = subdef;
             arrDef->size = arrDef->subdef.arrDef->size * arrLen;
             field.value.def = arrDef;
@@ -120,7 +120,7 @@ void ObjectDef_addFieldF(ObjectDef* def, const char*name, ValueType t, void* ptr
         case ValueTypeObject:
         {
             //TODO: Free it
-            ValueDef* arrDef = malloc(sizeof(ValueDef));
+            ValueDef* arrDef = gam_malloc(sizeof(ValueDef));
             arrDef->subdef.objDef = subdef;
             arrDef->size = arrDef->subdef.objDef->size;
             field.value.def = arrDef;
@@ -162,8 +162,8 @@ void ObjectDef_addFieldArray(ObjectDef* def, const char*name, ValueType t, void*
 
 Value* Value_ObjectValue_new(void) {
     ObjectDef* def = ObjectDef_new();
-    ValueDef* valuedef = malloc(sizeof(ValueDef));
-    Value* value = malloc(sizeof(Value));
+    ValueDef* valuedef = gam_malloc(sizeof(ValueDef));
+    Value* value = gam_malloc(sizeof(Value));
 
     valuedef->size = 0;
     valuedef->subdef.objDef = def;
@@ -179,5 +179,5 @@ void Value_ObjectValue_free(Value*value) {
     if (value == NULL)
         return;
     ValueDef_free(value->def);
-    free(value);
+    gam_free(value);
 }

@@ -19,8 +19,23 @@ int gam_seed(void);
 /* 内存函数 */
 #define	gam_memcpy(a,s,l)	memcpy(a,s,l)			/* 替换A系列系统中常驻的内存拷贝函数 */
 #define	gam_memset(buf,val,len)	memset(buf,val,len)			/* 替换A系列系统中的内存填充函数 */
-#define	gam_malloc(len)		calloc(1, len)			/* 替换A系列系统中堆申请函数 */
-#define	gam_free(ptr)		free(ptr)				/* 替换A系列系统中堆释放函数 */
+
+#ifdef MEM_DEBUG
+#define gam_malloc(sz) _gam_malloc(sz, __func__, __LINE__)
+#define gam_strdup(sz) _gam_strdup(sz, __func__, __LINE__)
+#define gam_realloc(p, sz) _gam_realloc(p, sz, __func__, __LINE__)
+void* _gam_malloc(size_t sz, const char*loc, int line);
+char* _gam_strdup(const char* s, const char*loc, int line);
+void* _gam_realloc(void*p, size_t sz, const char*loc, int line);
+void gam_free(void*p);
+#else
+#define gam_malloc(sz) calloc(1, sz)
+#define gam_strdup strdup
+#define gam_realloc realloc
+#define gam_free free
+#define gam_print_gc()
+#endif
+
 /* 字符串函数 */
 #define	gam_strcmp(str1,str2)	strcmp((const char*)str1,(const char*)str2)
 #define	gam_strcat(str1,str2)	strcat((char*)str1,(const char*)str2)

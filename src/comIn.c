@@ -190,13 +190,13 @@ FAR U8 GamDelay(U16 dly, BOOL keyflag)
 
 FAR void GamSetResourcePath(const U8* datPath, const U8*fontPath)
 {
-    datFilePath = (U8*)strdup((char*)datPath);
-    fontFilePath = (U8*)strdup((char*)fontPath);
+    datFilePath = (U8*)gam_strdup((char*)datPath);
+    fontFilePath = (U8*)gam_strdup((char*)fontPath);
 }
 
 FAR void GamSetAltLibPath(const U8* datPath)
 {
-    altDatFilePath = (U8*)strdup((char*)datPath);
+    altDatFilePath = (U8*)gam_strdup((char*)datPath);
 }
 
 FAR void GamClearLastMsg(void)
@@ -225,3 +225,116 @@ int gam_seed(void)
 {
     return seed;
 }
+
+#ifdef MEM_DEBUG
+typedef unsigned char protect_buf[128];
+
+typedef struct gchead {
+    struct gchead* prev;
+    struct gchead* next;
+    char loc[64];
+    int line;
+    size_t size;
+    protect_buf pbuf;
+} gchead;
+
+typedef struct {
+    protect_buf pbuf;
+} gctail;
+
+struct {
+    gchead head;
+    int alloc_count;
+    int dealloc_count;
+} gcinfo = {0};
+
+static void gc_add_node(gchead*node) {
+    if (!gcinfo.head.next) {
+        gcinfo.head.next = &gcinfo.head;
+        gcinfo.head.prev = &gcinfo.head;
+    }
+    node->prev = &gcinfo.head;
+    node->next = gcinfo.head.next;
+
+    node->prev->next = node;
+    node->next->prev = node;
+    gcinfo.alloc_count++;
+}
+
+static void gc_rm_node(gchead*node) {
+    node->prev->next = node->next;
+    node->next->prev = node->prev;
+    gcinfo.dealloc_count++;
+}
+
+static void protect_buf_init(protect_buf buf) {
+    memset(buf, 0xcc, sizeof(protect_buf));
+}
+
+static int check_protect_buf(protect_buf buf) {
+    for (int i = 0; i < sizeof(protect_buf); i++) {
+        if (buf[i] != 0xcc) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+char* _gam_strdup(const char* s, const char*loc, int line)
+{
+    size_t l = strlen(s);
+    char* p = _gam_malloc(l+1, loc, line);
+    memcpy(p, s, l);
+    p[l] = 0;
+    return p;
+}
+
+void* _gam_malloc(size_t sz, const char*loc, int line)
+{
+    gchead* head = malloc(sizeof(gchead) + sz + sizeof(protect_buf));
+    gctail* tail = (gctail*)(((char*)(head+1))+sz);
+    head->size = sz;
+    head->line = line;
+    strncpy(head->loc, loc, sizeof(head->loc));
+    protect_buf_init(head->pbuf);
+    protect_buf_init(tail->pbuf);
+    gc_add_node(head);
+    return &head[1];
+}
+
+void* _gam_realloc(void*p, size_t sz, const char*loc, int line)
+{
+    gchead* head = ((gchead*)p) - 1;
+    void*newp = _gam_malloc(sz, loc, line);
+    memcpy(newp, p, min(sz, head->size));
+    gam_free(p);
+    return newp;
+}
+
+void gam_free(void*p)
+{
+    gchead* head = ((gchead*)p) - 1;
+    gctail* tail = (gctail*)(((char*)p) + head->size);
+    if (check_protect_buf(head->pbuf) || check_protect_buf(tail->pbuf)) {
+        head->loc[sizeof(head->loc)-1] = 0;
+        printf("Heap memory overflow detected: alloced at %s:%d\n", head->loc, head->line);
+        abort();
+    }
+    gc_rm_node(head);
+    free(head);
+}
+
+void gam_print_gc()
+{
+    printf("================ Allocation summary ================ \n");
+    for (gchead* head = gcinfo.head.next;head != &gcinfo.head; head=head->next)
+    {
+        printf("%s:%d\n", head->loc, head->line);
+    }
+    printf("alloced:%d\n", gcinfo.alloc_count);
+    printf("dealloced:%d\n", gcinfo.dealloc_count);
+    printf("remain:%d\n", gcinfo.alloc_count-gcinfo.dealloc_count);
+}
+
+#endif
+

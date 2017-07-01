@@ -10,17 +10,18 @@
 #include "sem.h"
 #include <stdlib.h>
 #include <emscripten.h>
+#include <baye/compa.h>
 
 GAM_SEM gam_sem_create()
 {
-    int* p = (int*)malloc(sizeof(int));
+    int* p = (int*)gam_malloc(sizeof(int));
     *p = 0;
     return (GAM_SEM)p;
 }
 
 void gam_sem_delete(GAM_SEM sem)
 {
-    free((void*)sem);
+    gam_free((void*)sem);
 }
 
 void gam_sem_signal(GAM_SEM sem)

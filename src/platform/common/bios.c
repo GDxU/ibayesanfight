@@ -32,12 +32,12 @@ U8 *_ORDERQUEUE;        /* 命令队列(12*100=1200个字节) */
 
 static void _shm_init()
 {
-    //    char *p = malloc(WK_BLEN + WK_BLEN + 10240 + 30 + 300 + 1200);
-    _VS_PTR = malloc(MAX_SCR_BUF_LEN);
-    _SHARE_MEM = malloc(202400);
-    _FIGHTERS_IDX = malloc(30);
-    _FIGHTERS = malloc(600);
-    _ORDERQUEUE = malloc(sizeof(OrderType) * ORDER_MAX);
+    //    char *p = gam_malloc(WK_BLEN + WK_BLEN + 10240 + 30 + 300 + 1200);
+    _VS_PTR = gam_malloc(MAX_SCR_BUF_LEN);
+    _SHARE_MEM = gam_malloc(202400);
+    _FIGHTERS_IDX = gam_malloc(30);
+    _FIGHTERS = gam_malloc(600);
+    _ORDERQUEUE = gam_malloc(sizeof(OrderType) * ORDER_MAX);
 }
 
 void FlashInit(void)
