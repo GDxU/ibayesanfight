@@ -6,7 +6,7 @@
 GamEng U8		GamRecordMan(U8 flag);
 
 PublicFun U8		PlcMovie(U16 speid, U16 index,U8 startfrm,U8 endfrm,U8 keyflag,PT x,PT y);
-PublicFun U8		PlcSplMenu(RECT *pRect,U8 pIdx,U8 *buf);
+PublicFun U16		PlcSplMenu(RECT *pRect,U16 pIdx,U8 *buf);
 PublicFun U8		PlcExtract(U16 num);
 PublicFun U16		PlcArmsMax(PersonID id);
 PublicFun U16		PlcArmsMaxP(PersonType* p);

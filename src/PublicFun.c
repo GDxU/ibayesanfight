@@ -195,13 +195,13 @@ FAR U8 PlcMovie(U16 speid, U16 index, U8 startfrm,U8 endfrm,U8 keyflag,PT x,PT y
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-FAR U8 PlcSplMenu(RECT *pRect,U8 pIdx,U8 *buf)
+FAR U16 PlcSplMenu(RECT *pRect,U16 pIdx,U8 *buf)
 {
-    U8	sy,ty,tflag,cflag;
-    U8	pLen;	/* 每个菜单项字符长度 */
-    U8	pItm;	/* 菜单项总数 */
-    U8	pSIdx;	/* 显示起始菜单项 */
-    U8	pICnt;	/* 菜单显示区能显示的项数 */
+    U16	sy,ty,tflag,cflag;
+    U16	pLen;	/* 每个菜单项字符长度 */
+    U16	pItm;	/* 菜单项总数 */
+    U16	pSIdx;	/* 显示起始菜单项 */
+    U16	pICnt;	/* 菜单显示区能显示的项数 */
     U16	poff;	/* 数据偏移 */
     float	tcot;
     GMType	pMsg;	/* 消息 */
@@ -218,11 +218,11 @@ FAR U8 PlcSplMenu(RECT *pRect,U8 pIdx,U8 *buf)
     c_Ey = pRect->ey;
 
     IF_HAS_HOOK("willOpenMenu") {
-        BIND_U8EX("index", &pIdx);
+        BIND_U16EX("index", &pIdx);
         CALL_HOOK();
     }
     IF_HAS_HOOK("willChangeMenuSelection") {
-        BIND_U8EX("index", &pIdx);
+        BIND_U16EX("index", &pIdx);
         CALL_HOOK();
     }
     /* 计算参数 */
@@ -295,7 +295,7 @@ FAR U8 PlcSplMenu(RECT *pRect,U8 pIdx,U8 *buf)
                         I16 index = touchListViewItemIndexAtPoint(touch.currentX, touch.currentY, menuRect, 3, 3, pSIdx, pItm, itemHeight);
                         if (index < 0)
                         {
-                            pIdx = MNU_EXIT;
+                            pIdx = 0xFFFF;
                         } else if (g_MenuTouchComfirm && index != lastInd) {
                             lastInd = index;
                             break;
@@ -378,7 +378,7 @@ FAR U8 PlcSplMenu(RECT *pRect,U8 pIdx,U8 *buf)
                 }
                 break;
             case VK_EXIT:
-                pIdx = MNU_EXIT;
+                pIdx = 0xFFFF;
             case VK_ENTER:
                 c_ReFlag = true;
                 c_Sx = WK_SX;
@@ -390,7 +390,7 @@ FAR U8 PlcSplMenu(RECT *pRect,U8 pIdx,U8 *buf)
 UPDATE_UI:
         if(tflag || cflag) {
             IF_HAS_HOOK("willChangeMenuSelection") {
-                BIND_U8EX("index", &pIdx);
+                BIND_U16EX("index", &pIdx);
                 CALL_HOOK();
             }
             gam_clrlcd(c_Sx, c_Sy, c_Ex, c_Ey);
@@ -403,7 +403,7 @@ UPDATE_UI:
     }
 RET:
     IF_HAS_HOOK("willCloseMenu") {
-        BIND_U8EX("index", &pIdx);
+        BIND_U16EX("index", &pIdx);
         CALL_HOOK();
     }
     return pIdx;

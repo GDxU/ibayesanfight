@@ -1134,7 +1134,7 @@ U8 FunctionMenu(void)
     U8 choosing = 0;
 
     while (1)
-    switch ((choosing = PlcSplMenu(&pRect,choosing,mstr)))
+    switch ((choosing = (U8)PlcSplMenu(&pRect,choosing,mstr)))
     {
         case 0:
             return(1);
@@ -1142,7 +1142,7 @@ U8 FunctionMenu(void)
             GamRecordMan(0);
             return(0);
         case 2:
-            if (PlcSplMenu(&pRectSubMenu, 0, (U8*)exitStr) == MNU_EXIT) {
+            if (((U8)PlcSplMenu(&pRectSubMenu, 0, (U8*)exitStr)) == MNU_EXIT) {
                 ShowMapClear();
                 continue;
             }

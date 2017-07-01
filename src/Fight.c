@@ -225,7 +225,7 @@ void FgtGetPCmd(FGTCMD *pcmd)
         FgtShowFrame();
         FgtGetMPos(idx,&pRect);
         FgtLoadToMem(dFgtMnuCmd,buf);
-        type = PlcSplMenu(&pRect,type,buf);
+        type = (U8)PlcSplMenu(&pRect,type,buf);
         pcmd->type = type;
         param = 0;
         /* 获取命令的目标 */

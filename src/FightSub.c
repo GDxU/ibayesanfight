@@ -813,11 +813,11 @@ FAR U8 FgtMainMenu(void)
     {
         FgtLoadToMem2(dFgtSysMnu,mbuf);
     tagMenu:
-        idx = PlcSplMenu(&pRect,idx,mbuf);
+        idx = (U8)PlcSplMenu(&pRect,idx,mbuf);
         switch(idx)
         {
             case 1:
-                if (PlcSplMenu(&pRectSubMenu, 0, (U8*)backStr) == MNU_EXIT) {
+                if (((U8)PlcSplMenu(&pRectSubMenu, 0, (U8*)backStr)) == MNU_EXIT) {
                     GamShowFrame(g_VisScr);
                     goto tagMenu;
                 }
@@ -843,7 +843,7 @@ FAR U8 FgtMainMenu(void)
         }
         if (var) {
             FgtLoadToMem2(tmp,mbuf);
-            tmp = PlcSplMenu(&pRect2,*var,mbuf);
+            tmp = (U8)PlcSplMenu(&pRect2,*var,mbuf);
             if(tmp != MNU_EXIT)
                 *var = tmp;
             GamShowFrame(g_VisScr);

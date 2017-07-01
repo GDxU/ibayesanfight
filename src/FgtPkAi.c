@@ -416,7 +416,7 @@ FAR SkillID FgtGetJNIdx(U8 idx,RECT *pRect)
         U32 idx;
 
         rngb = 0;
-        idx = PlcSplMenu(pRect,0,sbuf);
+        idx = (U8)PlcSplMenu(pRect,0,sbuf);
         if(MNU_EXIT == idx)
             return SID(0xFFFF);
         param = buf[idx];
