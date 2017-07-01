@@ -156,3 +156,9 @@ int has_hook(const char* name) {
     }, name);
 }
 
+int call_script(const char*script) {
+    return EM_ASM_INT({
+        var scr = UTF8ToString($0);
+        eval(scr);
+    }, script);
+}
