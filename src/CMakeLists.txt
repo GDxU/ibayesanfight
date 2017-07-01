@@ -59,10 +59,11 @@ add_custom_command(
 
 add_custom_target(ver_header ALL DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/baye/version.h)
 
-add_dependencies(bayeliba ver_header)
+add_dependencies(ver_header bayeliba)
 
 add_executable(baye
 platform/js/main.c
+version.c
 )
 
 #target_link_libraries(baye bayeliba msgpackc-static)

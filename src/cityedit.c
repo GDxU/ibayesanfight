@@ -23,7 +23,8 @@
 #include "baye/enghead.h"
 #include "touch.h"
 #include "baye/script.h"
-#include "baye/version.h"
+
+extern U8 g_engineVersion[32];
 
 /*U8 GetCityOutPersons(U8 city,U8 *pqueue);
  U8 GetCityPersons(U8 city,U8 *pqueue);
@@ -1018,7 +1019,7 @@ FAR U8 GetCitySet(CitySetType *pos)
                 case VK_HELP:
                     if (call_hook_a("showMainHelp", NULL) == -1) {
                         U8 ver[64];
-                        sprintf((char*)ver, "Ver %s", BAYE_VERSION);
+                        sprintf((char*)ver, "Ver %s", g_engineVersion);
                         gam_clrlcd(WK_SX,WK_SY,WK_EX,WK_EY);
                         GamStrShowS(WK_SX, WK_SY, ver);
                     }

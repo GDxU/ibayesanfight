@@ -11,9 +11,8 @@
 #include "baye/datman.h"
 #include "baye/comm.h"
 #include "baye/consdef.h"
-#include "baye/version.h"
 
-static U8 g_engineVersion[32] = BAYE_VERSION;
+extern U8 g_engineVersion[32];
 
 void bind_skill_var(ObjectDef* def);
 void bind_show_face(ObjectDef* def);

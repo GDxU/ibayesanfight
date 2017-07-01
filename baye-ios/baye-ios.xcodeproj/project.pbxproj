@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		140939091F07436100802015 /* version.c in Sources */ = {isa = PBXBuildFile; fileRef = 140939081F07436100802015 /* version.c */; };
+		1409390A1F07436100802015 /* version.c in Sources */ = {isa = PBXBuildFile; fileRef = 140939081F07436100802015 /* version.c */; };
 		141D69461D8CD137000F772D /* data-bind.c in Sources */ = {isa = PBXBuildFile; fileRef = 141D69451D8CD137000F772D /* data-bind.c */; };
 		141D69471D8CD137000F772D /* data-bind.c in Sources */ = {isa = PBXBuildFile; fileRef = 141D69451D8CD137000F772D /* data-bind.c */; };
 		141D694B1D8CD1E9000F772D /* bind-objects.c in Sources */ = {isa = PBXBuildFile; fileRef = 141D69491D8CD1E9000F772D /* bind-objects.c */; };
@@ -98,6 +100,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		140939081F07436100802015 /* version.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = version.c; sourceTree = "<group>"; };
 		141D69451D8CD137000F772D /* data-bind.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "data-bind.c"; sourceTree = "<group>"; };
 		141D69481D8CD17F000F772D /* data-bind.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "data-bind.h"; sourceTree = "<group>"; };
 		141D69491D8CD1E9000F772D /* bind-objects.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = "bind-objects.c"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
@@ -331,6 +334,7 @@
 				1444A96B1B7B6F1F0085EC83 /* debug.c */,
 				1444A96C1B7B6F1F0085EC83 /* FgtCount.c */,
 				141D69491D8CD1E9000F772D /* bind-objects.c */,
+				140939081F07436100802015 /* version.c */,
 				1444A96D1B7B6F1F0085EC83 /* FgtPkAi.c */,
 				1444A96E1B7B6F1F0085EC83 /* Fight.c */,
 				1444A96F1B7B6F1F0085EC83 /* FightSub.c */,
@@ -568,6 +572,7 @@
 				143747701B7E68C300939571 /* sem.m in Sources */,
 				143747BA1B7E808700939571 /* timer.m in Sources */,
 				148718631B7F821B00AC88EB /* LCDView.m in Sources */,
+				140939091F07436100802015 /* version.c in Sources */,
 				141D69461D8CD137000F772D /* data-bind.c in Sources */,
 				143747891B7E68C300939571 /* citycmd.c in Sources */,
 				1437478A1B7E68C300939571 /* citycmdb.c in Sources */,
@@ -616,6 +621,7 @@
 				14585C761D26CA8700DCE3BA /* gui.c in Sources */,
 				148718911B7FB87D00AC88EB /* fsys.c in Sources */,
 				148718931B7FB87D00AC88EB /* sem.m in Sources */,
+				1409390A1F07436100802015 /* version.c in Sources */,
 				148718971B7FB87D00AC88EB /* timer.m in Sources */,
 				148718AD1B7FB87D00AC88EB /* citycmd.c in Sources */,
 				148718AE1B7FB87D00AC88EB /* citycmdb.c in Sources */,
