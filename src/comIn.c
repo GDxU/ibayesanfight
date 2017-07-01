@@ -280,6 +280,15 @@ static int check_protect_buf(protect_buf buf) {
     return 0;
 }
 
+static void check_node(gchead*head) {
+    gctail* tail = (gctail*)(((char*)(head+1)) + head->size);
+    if (check_protect_buf(head->pbuf) || check_protect_buf(tail->pbuf)) {
+        head->loc[sizeof(head->loc)-1] = 0;
+        printf("Heap memory overflow detected: alloced at %s:%d size:%zu\n", head->loc, head->line, head->size);
+        abort();
+    }
+}
+
 char* _gam_strdup(const char* s, const char*loc, int line)
 {
     size_t l = strlen(s);
@@ -314,12 +323,7 @@ void* _gam_realloc(void*p, size_t sz, const char*loc, int line)
 void gam_free(void*p)
 {
     gchead* head = ((gchead*)p) - 1;
-    gctail* tail = (gctail*)(((char*)p) + head->size);
-    if (check_protect_buf(head->pbuf) || check_protect_buf(tail->pbuf)) {
-        head->loc[sizeof(head->loc)-1] = 0;
-        printf("Heap memory overflow detected: alloced at %s:%d\n", head->loc, head->line);
-        abort();
-    }
+    check_node(head);
     gc_rm_node(head);
     free(head);
 }
@@ -334,6 +338,15 @@ void gam_print_gc()
     printf("alloced:%d\n", gcinfo.alloc_count);
     printf("dealloced:%d\n", gcinfo.dealloc_count);
     printf("remain:%d\n", gcinfo.alloc_count-gcinfo.dealloc_count);
+}
+
+void gam_gc_check_all()
+{
+    for (gchead* head = gcinfo.head.next;head != &gcinfo.head; head=head->next)
+    {
+        check_node(head);
+    }
+    printf("All check OK\n");
 }
 
 #endif

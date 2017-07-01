@@ -416,3 +416,13 @@ void* bayeAlloc(U32 sz) {
     return gam_malloc(sz);
 }
 
+EMSCRIPTEN_KEEPALIVE
+void bayePrintGC() {
+    gam_print_gc();
+}
+
+EMSCRIPTEN_KEEPALIVE
+void bayeGCCheckAll() {
+    gam_gc_check_all();
+}
+

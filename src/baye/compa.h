@@ -28,12 +28,15 @@ void* _gam_malloc(size_t sz, const char*loc, int line);
 char* _gam_strdup(const char* s, const char*loc, int line);
 void* _gam_realloc(void*p, size_t sz, const char*loc, int line);
 void gam_free(void*p);
+void gam_print_gc();
+void gam_gc_check_all();
 #else
 #define gam_malloc(sz) calloc(1, sz)
 #define gam_strdup strdup
 #define gam_realloc realloc
 #define gam_free free
 #define gam_print_gc()
+#define gam_gc_check_all()
 #endif
 
 /* 字符串函数 */
