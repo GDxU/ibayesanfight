@@ -233,6 +233,9 @@ FAR U16 PlcSplMenu(RECT *pRect,U16 pIdx,U8 *buf)
     if(pICnt < pItm)
         pSIdx = pIdx;
 
+    if (pICnt > pItm)
+        pICnt = pItm;
+
     Rect menuRect = {c_Sx - 3,c_Sy - 3,c_Ex + 2,c_Ey + 2};
     /* 初始化界面 */
     gam_clrlcd(c_Sx - 3,c_Sy - 3,c_Ex + 2,c_Ey + 2);
