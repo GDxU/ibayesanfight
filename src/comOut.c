@@ -362,7 +362,7 @@ void GetExcHZMCode(U16 Hz,U8 *hzmCode)
             U16 code = Hz;
             BIND_U16(&code);
             BIND_U32(&index);
-            CALL_HOOK();
+            CALL_HOOK_S();
         }
         if (index >= 0) {
             PictureHeadType* head = (PictureHeadType*)ResLoadToCon(MAIN_SPE,2,g_CBnkPtr);
