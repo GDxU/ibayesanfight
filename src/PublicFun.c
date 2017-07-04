@@ -707,5 +707,8 @@ U16 GamChoose(U16 x, U16 y, U16 w, U16 h, U16 pIdx, U8* buf)
         .ex = x + w,
         .ey = y + h,
     };
-    return PlcSplMenu(&r, pIdx, buf);
+    U8* s = gam_strdup(buf);
+    U16 rv = PlcSplMenu(&r, pIdx, s);
+    gam_free(s);
+    return rv;
 }

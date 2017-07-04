@@ -32,7 +32,7 @@ void gam_print_gc();
 void gam_gc_check_all();
 #else
 #define gam_malloc(sz) calloc(1, sz)
-#define gam_strdup strdup
+#define gam_strdup(s) (U8*)strdup((const char*)s)
 #define gam_realloc realloc
 #define gam_free free
 #define gam_print_gc()
