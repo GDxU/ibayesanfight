@@ -947,6 +947,7 @@ FAR void FgtShowView(void)
             pcolor = COLOR_WHITE;
         else
             pcolor = COLOR_BLACK;
+        call_hook("didRefreshFightSituation", NULL);
         key = GamDelay(50,true);
         if(!key)
             continue;
@@ -1002,7 +1003,6 @@ FAR void FgtShowView(void)
             }
         }
         FgtViewForce(pForce,pSIdx);
-        call_hook("didRefreshFightSituation", NULL);
     }
 }
 /***********************************************************************
