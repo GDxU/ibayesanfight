@@ -46,7 +46,7 @@ bool GamMainChose(void);
 void GamMakerInf(void);
 void GamShowErrInf(U8 *s);
 PersonID GamGetKing(PersonID*kings, U32 num);
-void GamShowKing(U8 pTop);
+void GamShowKing(U8*names, U8 pTop);
 void GamRevCity(U8 cycnt,U8 *tbuf,U8 *pos);
 U8 GamPicMenu(U16 picID,U16 speID, const Rect *buttonsRect, U8 buttonsCount, U8 exitOnOther);
 void GamRcdIFace(U8 count);
@@ -349,10 +349,12 @@ void GamMakerInf(void)
 PersonID GamGetKing(PersonID*kings, U32 num)
 {
     U8	*pos,tbuf[CITY_MAX];
-    U8	pTop,pIdx,pSLen;
-    U8	cycnt,ry;
+    I32	pTop,pIdx,pSLen;
+    I32	cycnt,ry;
     bool	rflag;
     GMType	pMsg;
+
+    static U8 kingNames[PERSON_MAX*3];
 
     Touch touch = {0};
 
@@ -364,12 +366,12 @@ PersonID GamGetKing(PersonID*kings, U32 num)
     for(pIdx = 0;pIdx < num;pIdx += 1)
     {
         pTop = pIdx * 6;
-        GetPersonName(kings[pIdx],g_FightPath + pTop);
-        pSLen = gam_strlen(g_FightPath);
+        GetPersonName(kings[pIdx],kingNames + pTop);
+        pSLen = (U32)gam_strlen(kingNames);
         if(pSLen < pTop + 6)
-            gam_memset(g_FightPath + pSLen,' ',pTop + 6 - pSLen);
+            gam_memset(kingNames + pSLen,' ',pTop + 6 - pSLen);
     }
-    g_FightPath[pIdx*6] = 0;
+    kingNames[pIdx*6] = 0;
 
     /* 获取城市坐标指针 */
     gam_rect(WK_SX,WK_SY,WK_EX,WK_EY);
@@ -392,7 +394,7 @@ PersonID GamGetKing(PersonID*kings, U32 num)
     pTop = 0;
     pIdx = 0;
     rflag = false;
-    GamShowKing(pTop);
+    GamShowKing(kingNames, pTop);
     ry = (pIdx - pTop) * itemHeight + KING_SY;
     gam_revlcd(KING_SX,ry,KING_EX,ry + itemHeight);
     cycnt = GetKingCitys(kings[pIdx],tbuf); 		/* 获取治下城市队列 */
@@ -438,7 +440,7 @@ PersonID GamGetKing(PersonID*kings, U32 num)
                     return kings[pIdx];
             }
 #define UPDATE_UI() \
-            GamShowKing(pTop);\
+            GamShowKing(kingNames, pTop);\
             ry = (pIdx - pTop) * itemHeight + KING_SY;\
             if (ry >= KING_SY && ry + itemHeight <= KING_SY + itemHeight*itemsPerPage) {\
                 gam_revlcd(KING_SX,ry,KING_EX,ry + itemHeight);\
@@ -525,13 +527,13 @@ void GamRevCity(U8 cycnt,U8 *tbuf,U8 *pos)
  *             ------          ----------      -------------
  *             高国军          2005.5.16       完成基本功能
  ***********************************************************************/
-void GamShowKing(U8 pTop)
+void GamShowKing(U8*names, U8 pTop)
 {
     c_Sx = KING_SX;
     c_Ex = KING_EX;
     c_Sy = KING_SY;
     c_Ey = (WK_EY - 6 - (KING_SY)) / HZ_HGT * HZ_HGT + KING_SY;
-    GamStrShowS(KING_SX,KING_SY,g_FightPath + (pTop * 6));
+    GamStrShowS(KING_SX,KING_SY,names + (pTop * 6));
 }
 /***********************************************************************
  * 说明:     显示游戏开头的动画
