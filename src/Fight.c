@@ -122,6 +122,12 @@ void FgtInit(void)
         return;
     if(FGT_AUTO == g_FgtParam.Mode)
     {
+        IF_HAS_HOOK("fightCountWinner") {
+            if (CALL_HOOK_A() == 0 && FGT_COMON != g_FgtOver) {
+                HOOK_LEAVE();
+                return;
+            }
+        }
         FgtCountWon();
         return;
     }
