@@ -413,13 +413,13 @@ FAR SkillID FgtGetJNIdx(U8 idx,RECT *pRect)
         pRect->ey = pRect->sy + rngb * HZ_HGT;
     while(1)
     {
-        U32 idx;
+        U32 midx;
 
         rngb = 0;
-        idx = (U8)PlcSplMenu(pRect,0,sbuf);
-        if(MNU_EXIT == idx)
+        midx = (U8)PlcSplMenu(pRect,0,sbuf);
+        if(MNU_EXIT == midx)
             return SID(0xFFFF);
-        param = buf[idx];
+        param = buf[midx];
         rngb = FgtCanUse(param,idx);
         if(!rngb) break;
         FgtLoadToMem3(rngb,inf);

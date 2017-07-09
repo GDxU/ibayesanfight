@@ -728,7 +728,7 @@ FAR SKILLEF *FgtGetJNPtr(SkillID param)
 
     poff = sizeof(SKILLEF);
     poff *= param - 1;
-    return (SKILLEF*)ResLoadToCon(SKL_RESID,1,g_CBnkPtr) + poff;
+    return (SKILLEF*)(ResLoadToCon(SKL_RESID,1,g_CBnkPtr) + poff);
 }
 /***********************************************************************
  * 说明:     获取指定地图坐标处的将领脚标
