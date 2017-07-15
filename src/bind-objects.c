@@ -395,6 +395,7 @@ void bind_init(void) {
             _U16ARR_FIELD(mainMenuButtonRects, 16),
             _U16ARR_FIELD(periodMenuButtonRects, 16),
             _U16ARR_FIELD(saveFaceListAnchor, 2),
+            _FIELD_RW(disableExpGrowing, U8),
         };
 
         static ObjectDef _obj_def = {

@@ -211,6 +211,8 @@ typedef struct {
     U8 citiesCount;     //城池个数
     U8 cityMapWidth;    // 主地图宽
     U8 cityMapHeight;    // 主地图高
+    
+    U8 disableExpGrowing;
 } EngineConfig;
 
 extern EngineConfig g_engineConfig;

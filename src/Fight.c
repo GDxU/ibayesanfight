@@ -437,9 +437,11 @@ U8 FgtExeCmd(FGTCMD *pcmd)
     {
         FgtShowMap(g_MapSX,g_MapSY);
         FgtShowGen(0);
-        *g_GenAtt[0].exp += exp;
-        if(idx < FGT_PLAMAX)
-            FgtShowGetExp(exp);
+        if (!g_engineConfig.disableExpGrowing) {
+            *g_GenAtt[0].exp += exp;
+            if(idx < FGT_PLAMAX)
+                FgtShowGetExp(exp);
+        }
         FgtChkAtkEnd();
     }
     return (FgtGetTerrain(g_GenPos[idx].x,g_GenPos[idx].y));
