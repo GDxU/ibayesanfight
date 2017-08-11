@@ -211,7 +211,7 @@ FAR const U8* bayeGetPersonName(U32 personIndex)
 }
 
 EMSCRIPTEN_KEEPALIVE
-FAR const U8* bayeGetToolName(U8 toolIndex)
+FAR const U8* bayeGetToolName(ToolID toolIndex)
 {
     static U8 name[32] = {0};
     name[0] = 0;
@@ -220,7 +220,7 @@ FAR const U8* bayeGetToolName(U8 toolIndex)
 }
 
 EMSCRIPTEN_KEEPALIVE
-FAR const U8* bayeGetSkillName(U8 skillIndex)
+FAR const U8* bayeGetSkillName(U32 skillIndex)
 {
     static U8 name[32] = {0};
     name[0] = 0;
@@ -229,7 +229,7 @@ FAR const U8* bayeGetSkillName(U8 skillIndex)
 }
 
 EMSCRIPTEN_KEEPALIVE
-FAR const U8* bayeGetCityName(U8 cityIndex)
+FAR const U8* bayeGetCityName(U32 cityIndex)
 {
     static U8 name[32] = {0};
     name[0] = 0;
