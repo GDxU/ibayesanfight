@@ -1039,7 +1039,8 @@ FAR U8 AddOrderEnd(OrderType *Order)
 FAR U8 AddFightOrder(OrderType *Order,PersonID *Fighters)
 {
     U32 i;
-    U8 *fiptr,*fptr;
+    U8 *fiptr;
+    PersonID*fptr;
     U16 clen;
     
     fiptr = FIGHTERS_IDX;
@@ -1050,7 +1051,7 @@ FAR U8 AddFightOrder(OrderType *Order,PersonID *Fighters)
             Order->Person = i;
             if (AddOrderEnd(Order)) {
                 fiptr[i] = 1;
-                fptr = FIGHTERS;
+                fptr = (PersonID*)FIGHTERS;
                 clen = 10*sizeof(PersonID);
                 clen *= i;
                 gam_memcpy(&fptr[clen],Fighters,10*sizeof(PersonID));
