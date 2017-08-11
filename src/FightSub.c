@@ -151,7 +151,7 @@ FAR void FgtShowHlp()
         }
 
         FgtLoadToMem2(dFgtHlpGen,pbuf);
-        per = (PersonType *) (&g_Persons[idx]);
+        per = (PersonType *) (&g_Persons[p]);
         if(MAX_LEVEL > per->Level)
             FgtFormatStr(pbuf,per->Level);
         else
