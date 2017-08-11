@@ -1424,6 +1424,7 @@ void FgtShowInf(void)
         GetPersonName(p,sbuf);
     }
     FgtStrShowV(STA_XXX,STA_XXY,sbuf);
+    call_hook_s("didRefreshFightStateBar", NULL);
 #if	(GAM_VER == GAM_DEBUG_MODE)
     itoa(g_FoucsX,buf,10);
     FgtStrShowV(STA_XXX + 30,STA_XXY,buf);
