@@ -932,7 +932,11 @@ FAR void FgtShowView(void)
     pcolor = COLOR_BLACK;
     pForce = 1;
     pSIdx = 0;
-    call_hook("didShowFightSituation", NULL);
+
+    if (call_hook_a("didShowFightSituation", NULL) == 0) {
+        return;
+    }
+    
     while(1)
     {
 
