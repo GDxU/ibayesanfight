@@ -539,7 +539,7 @@ FAR void PlcRPicShowEx(U16 id, U16 item, U16 idx,PT x,PT y,U8 flag)
     U8	*pic;
     U16	wid,high;
     U8 mode;
-    U16	off;
+    U32	off;
     PictureHeadType* p;
 
     pic = ResLoadToCon(id,item+1,g_CBnkPtr);
