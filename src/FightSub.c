@@ -103,6 +103,9 @@ FAR void FgtShowHlp()
     PersonType	*per;
     JLPOS	*pos;
 
+    if (call_hook_a("fightWillShowHelp", NULL) == 0) {
+        return;
+    }
     /* 初始化界面 */
     gam_clrlcd(HLP_SX + 1,HLP_SY + 1,HLP_EX - 1,HLP_EY - 1);
     gam_rect(HLP_SX,HLP_SY,HLP_EX,HLP_EY);
