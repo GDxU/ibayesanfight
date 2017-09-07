@@ -138,6 +138,14 @@ int call_hook_a(const char* name, Value* context)
                 js_callback(&rv);
                 break;
             }
+            case 9: // get num
+            {
+                U32 max = g_asyncActionParams[1];
+                U32 min = g_asyncActionParams[0];
+                g_asyncActionParams[0] = NumOperate(min, max);
+                js_callback(&rv);
+                break;
+            }
             default:
                 break;
         }

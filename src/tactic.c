@@ -1166,11 +1166,11 @@ U8 FunctionMenu(void)
  *		----		----			-----------
  *		陈泽伟		2005-6-23 11:43	基本功能完成
  ******************************************************************************/
-FAR U16 NumOperate(U16 min,U16 max)
+FAR U32 NumOperate(U32 min,U32 max)
 {
-    U8 str[20];
+    U8 str[32];
     U8 showflag,i,bit,maxbit;
-    U16 donum,tnum,num;
+    U32 donum,tnum,num;
     GMType Msg;
 
     Touch touch = {0};
@@ -1297,7 +1297,7 @@ FAR U16 NumOperate(U16 min,U16 max)
                     showflag = 1;
                     break;
                 case VK_EXIT:
-                    return(0xffff);
+                    return(0xffffffff);
             }
         }
         else if (VM_TOUCH == Msg.type) {

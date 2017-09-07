@@ -152,7 +152,7 @@ TACTIC_C U32 GetPeriodKings(U8 period,PersonID *kings);
 TACTIC_C U32 GetAllKing(PersonID *kings);
 TACTIC_C void LoadPeriod(U8 period);
 TACTIC_C U8 FunctionMenu(void);
-TACTIC_C U16 NumOperate(U16 min,U16 max);
+TACTIC_C U32 NumOperate(U32 min,U32 max);
 TACTIC_C void ShowTacticNote(void);
 
 

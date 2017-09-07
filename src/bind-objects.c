@@ -30,7 +30,6 @@ static Value g_var = {0};
 static U8 g_errorString[128] = {0};
 
 U16 g_asyncActionID = 0;
-U32 g_asyncActionParams[32] = {0};
 U8 g_asyncActionStringParam[1024*10] = {0};
 
 
