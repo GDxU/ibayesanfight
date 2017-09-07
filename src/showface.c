@@ -1121,7 +1121,14 @@ FAR U8 ShowCityPro(U8 city)
     U8 str[128];
     GMType Msg;
     Touch touch = {0};
-    
+
+    IF_HAS_HOOK("willShowCityInfo") {
+        BIND_U8(&city);
+        if (CALL_HOOK_A() == 0) {
+            HOOK_RETURN(0);
+        }
+    }
+
     showtop = 0;
     showflag = 1;
     while (1)
