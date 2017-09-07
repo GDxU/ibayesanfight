@@ -151,9 +151,9 @@ void bind_init(void) {
             _FIELD_RW(Thew, U8),
             _FIELD_RW(ArmsType, U8),
             _FIELD_RW(Arms, U16),
-            _FIELD("Tool1", _ST, Equip[0], U8),
-            _FIELD("Tool2", _ST, Equip[1], U8),
-            _U8ARR_FIELD(Equip, 2),
+            _FIELD("Tool1", _ST, Equip[0], U16),
+            _FIELD("Tool2", _ST, Equip[1], U16),
+            _U16ARR_FIELD(Equip, 2),
             _FIELD_RW(Age, U8),
         };
 
@@ -193,8 +193,8 @@ void bind_init(void) {
             _FIELD_RW(MothballArms, U16),
             _FIELD_RW(PersonQueue, U8),
             _FIELD_RW(Persons, U8),
-            _FIELD_RW(ToolQueue, U8),
-            _FIELD_RW(Tools, U8),
+            _FIELD_RW(ToolQueue, U16),
+            _FIELD_RW(Tools, U16),
         };
 
         static ObjectDef _obj_def = {
