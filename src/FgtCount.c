@@ -97,6 +97,7 @@ FAR void CountInitGen(void)
             g_GenPos[i].state = STATE_SW;
             if(cnt == FGT_PLAMAX)
             {
+                printf("fight over\n");
                 g_FgtOver = FGT_LOSE - (i / FGT_PLAMAX);
                 return;
             }

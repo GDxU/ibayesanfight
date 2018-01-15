@@ -146,6 +146,13 @@ int call_hook_a(const char* name, Value* context)
                 js_callback(&rv);
                 break;
             }
+            case 10: // enter battle
+            {
+//                FAR U8 GamFight(void);
+                GamFight();
+                js_callback(&rv);
+                break;
+            }
             default:
                 break;
         }
