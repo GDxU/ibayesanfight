@@ -142,7 +142,8 @@ int call_hook_a(const char* name, Value* context)
             {
                 U32 max = g_asyncActionParams[1];
                 U32 min = g_asyncActionParams[0];
-                g_asyncActionParams[0] = NumOperate(min, max);
+                U32 init = g_asyncActionParams[2];
+                g_asyncActionParams[0] = NumOperate(min, max, init);
                 js_callback(&rv);
                 break;
             }

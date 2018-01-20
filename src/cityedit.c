@@ -1277,7 +1277,7 @@ FAR U16 GetFood(U16 min,U16 max)
     gam_rect((WK_SX + WK_EX - WK_SX  - ASC_WID * 12) / 2 - 1,(WK_SY + WK_EY - WK_SY - ASC_HGT * 3) / 2 - 1,(WK_SX + WK_EX - WK_SX  - ASC_WID * 12) / 2 + ASC_WID * 12 + 1,(WK_SY + WK_EY - WK_SY - ASC_HGT * 3) / 2 + ASC_HGT * 3 + 1);
     ResLoadToMem(STRING_CONST,ATRR_STR60,str);
     GamStrShowS((WK_SX + WK_EX - WK_SX  - ASC_WID * 12) / 2,(WK_SY + WK_EY - WK_SY - ASC_HGT * 3) / 2,str);
-    return(NumOperate(min,max));
+    return(NumOperate(min,max,max));
 }
 
 /******************************************************************************
@@ -1301,7 +1301,7 @@ FAR U16 GetMoney(U16 min,U16 max)
     gam_rect((WK_SX + WK_EX - WK_SX  - ASC_WID * 12) / 2 - 1,(WK_SY + WK_EY - WK_SY - ASC_HGT * 3) / 2 - 1,(WK_SX + WK_EX - WK_SX  - ASC_WID * 12) / 2 + ASC_WID * 12 + 1,(WK_SY + WK_EY - WK_SY - ASC_HGT * 3) / 2 + ASC_HGT * 3 + 1);
     ResLoadToMem(STRING_CONST,ATRR_STR61,str);
     GamStrShowS((WK_SX + WK_EX - WK_SX  - ASC_WID * 12) / 2,(WK_SY + WK_EY - WK_SY - ASC_HGT * 3) / 2,str);
-    return(NumOperate(min,max));
+    return(NumOperate(min,max,max));
 }
 
 /******************************************************************************
@@ -1325,5 +1325,5 @@ FAR U16 GetArmy(U16 min,U16 max)
     gam_rect((WK_SX + WK_EX - WK_SX  - ASC_WID * 12) / 2 - 1,(WK_SY + WK_EY - WK_SY - ASC_HGT * 3) / 2 - 1,(WK_SX + WK_EX - WK_SX  - ASC_WID * 12) / 2 + ASC_WID * 12 + 1,(WK_SY + WK_EY - WK_SY - ASC_HGT * 3) / 2 + ASC_HGT * 3 + 1);
     ResLoadToMem(STRING_CONST,ATRR_STR62,str);
     GamStrShowS((WK_SX + WK_EX - WK_SX  - ASC_WID * 12) / 2,(WK_SY + WK_EY - WK_SY - ASC_HGT * 3) / 2,str);
-    return(NumOperate(min,max));
+    return(NumOperate(min,max,max));
 }

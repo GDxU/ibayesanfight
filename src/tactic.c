@@ -1166,11 +1166,11 @@ U8 FunctionMenu(void)
  *		----		----			-----------
  *		陈泽伟		2005-6-23 11:43	基本功能完成
  ******************************************************************************/
-FAR U32 NumOperate(U32 min,U32 max)
+FAR U32 NumOperate(U32 min,U32 max, U32 donum)
 {
     U8 str[32];
     U8 showflag,i,bit,maxbit;
-    U32 donum,tnum,num;
+    U32 tnum,num;
     GMType Msg;
 
     Touch touch = {0};
@@ -1196,7 +1196,6 @@ FAR U32 NumOperate(U32 min,U32 max)
     touchDrawButton(maxButton, "\xd7\xee\xb4\xf3");
     touchDrawButton(cancelButton, "\xc8\xa1\xcf\xfb");
 
-    donum = max;
     num = 1;
     
     ResLoadToMem(STRING_CONST,ATRR_STR63,str);
