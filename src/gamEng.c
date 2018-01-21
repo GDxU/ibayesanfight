@@ -398,6 +398,21 @@ PersonID GamGetKing(PersonID*kings, U32 num)
     ry = (pIdx - pTop) * itemHeight + KING_SY;
     gam_revlcd(KING_SX,ry,KING_EX,ry + itemHeight);
     cycnt = GetKingCitys(kings[pIdx],tbuf); 		/* 获取治下城市队列 */
+#define UPDATE_UI() \
+            GamShowKing(kingNames, pTop);\
+            ry = (pIdx - pTop) * itemHeight + KING_SY;\
+            if (ry >= KING_SY && ry + itemHeight <= KING_SY + itemHeight*itemsPerPage) {\
+                gam_revlcd(KING_SX,ry,KING_EX,ry + itemHeight);\
+            }\
+            cycnt = GetKingCitys(kings[pIdx],tbuf); \
+            IF_HAS_HOOK("choosingActorUpdate") { \
+                BIND_U8EX("index", &pIdx); \
+                BIND_U8EX("generalIndex", &kings[pIdx]); \
+                CALL_HOOK(); \
+            }
+
+    UPDATE_UI();
+
     while(1)
     {
         GamGetMsg(&pMsg);
@@ -439,14 +454,6 @@ PersonID GamGetKing(PersonID*kings, U32 num)
                 case VK_ENTER:
                     return kings[pIdx];
             }
-#define UPDATE_UI() \
-            GamShowKing(kingNames, pTop);\
-            ry = (pIdx - pTop) * itemHeight + KING_SY;\
-            if (ry >= KING_SY && ry + itemHeight <= KING_SY + itemHeight*itemsPerPage) {\
-                gam_revlcd(KING_SX,ry,KING_EX,ry + itemHeight);\
-            }\
-            cycnt = GetKingCitys(kings[pIdx],tbuf);	/* 获取治下城市队列 */
-
             UPDATE_UI();
         }
         else if (VM_TOUCH == pMsg.type) {
