@@ -942,6 +942,7 @@ FAR U8 GetCitySet(CitySetType *pos)
         {
             city = ShowCityMap(pos);
             showflag = 0;
+            call_hook_a("didShowMainMap", NULL);
         }
 
         GamGetMsg(&Msg);
