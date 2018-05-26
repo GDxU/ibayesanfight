@@ -442,6 +442,29 @@ void bind_init(void) {
         arrfield.value.offset = (U32)ORDERQUEUE;
         ObjectDef_addField(def, &arrfield);
     }
+    {
+#define _ST CitySetType
+        static Field _fields[] = {
+            _FIELD_RW(x, U8),
+            _FIELD_RW(y, U8),
+            _FIELD_RW(setx, U8),
+            _FIELD_RW(sety, U8),
+        };
+
+        static ObjectDef _obj_def = {
+            AL(_fields), 0, sizeof(_ST), _fields
+        };
+
+        static ValueDef _value_def = {
+            .type = ValueTypeObject,
+            .size = sizeof(_ST),
+            .subdef.objDef = &_obj_def,
+        };
+#undef _ST
+        static Field field = {"g_CityPos", {.def=&_value_def, .offset=0}};
+        field.value.offset = (U32)&g_CityPos;
+        ObjectDef_addField(def, &field);
+    }
 
     DEFADD_U8ARR(FIGHTERS_IDX, 30);
     DEFADD_U8ARR(FIGHTERS, 600);
