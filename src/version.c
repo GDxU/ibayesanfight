@@ -7,7 +7,12 @@
 //
 
 #include "baye/consdef.h"
+
+#ifdef EMSCRIPTEN
 #include "baye/version.h"
+#else
+#define BAYE_VERSION "1.0"
+#endif
 
 U8 g_engineVersion[32] = BAYE_VERSION;
 
