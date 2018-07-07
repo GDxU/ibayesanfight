@@ -16,4 +16,6 @@ void gam_timer_open(int interval);
 void gam_timer_close();
 int gam_timer_interval();
 
+void gam_timer2_open(int interval, void(*callback)());
+
 #endif

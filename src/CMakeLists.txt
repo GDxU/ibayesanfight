@@ -46,24 +46,47 @@ platform/js/script.c
 platform/js/sys-js.c
 )
 
+set (bayelib_win_SRCS
+platform/win/fsys.c
+platform/win/game.c
+platform/win/script.c
+platform/win/sem.c
+platform/win/sys.c
+platform/win/timer.c
+)
+
 add_library(bayeliba ${bayelib_SRCS})
 
 if (${CMAKE_SYSTEM_NAME} STREQUAL Emscripten)
-target_sources(bayeliba PRIVATE ${bayelib_js_SRCS})
-endif(${CMAKE_SYSTEM_NAME} STREQUAL Emscripten)
+	target_sources(bayeliba PRIVATE ${bayelib_js_SRCS})
+	add_executable(baye
+		platform/js/main.c
+		version.c
+	)
 
-add_custom_command(
-	OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/baye/version.h
-	COMMAND ./genver.py > ${CMAKE_CURRENT_SOURCE_DIR}/baye/version.h
-)
+	add_custom_command(
+		OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/baye/version.h
+		COMMAND ./genver.py > ${CMAKE_CURRENT_SOURCE_DIR}/baye/version.h
+	)
 
-add_custom_target(ver_header ALL DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/baye/version.h)
+	add_custom_target(ver_header ALL DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/baye/version.h)
 
-add_dependencies(bayeliba ver_header)
+	add_dependencies(ver_header bayeliba)
+endif()
 
-add_executable(baye
-platform/js/main.c
-)
+if (${CMAKE_SYSTEM_NAME} STREQUAL Windows)
+	target_sources(bayeliba PRIVATE ${bayelib_win_SRCS})
+	add_executable(baye
+		platform/win/window.c
+		version.c
+	)
+	find_package (Threads)
+	target_link_libraries (baye ${CMAKE_THREAD_LIBS_INIT})
+	SET_TARGET_PROPERTIES(baye PROPERTIES LINK_FLAGS "-pthread -g")
+	SET_TARGET_PROPERTIES(baye PROPERTIES COMPILE_OPTIONS "-g")
+	SET_TARGET_PROPERTIES(bayeliba PROPERTIES COMPILE_OPTIONS "-g")
+endif()
+
 
 #target_link_libraries(baye bayeliba msgpackc-static)
 target_link_libraries(baye bayeliba)

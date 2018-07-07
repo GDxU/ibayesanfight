@@ -214,12 +214,20 @@ static unsigned int seed = 0;
 
 int gam_rand(void)
 {
+#ifdef _WIN32
+    return rand();
+#else
     return rand_r(&seed);
+#endif
 }
 
 void gam_srand(unsigned int seed_)
 {
+#ifdef _WIN32
+    return srand(seed_);
+#else
     seed = seed_;
+#endif
 }
 
 int gam_seed(void)

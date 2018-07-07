@@ -7,7 +7,7 @@
 //
 
 #include <stdio.h>
-#include "script.h"
+#include "baye/script.h"
 
 void script_init(void) {}
 int has_hook(const char* name) { return 1; }

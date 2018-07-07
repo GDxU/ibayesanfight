@@ -11,8 +11,6 @@
 #include "baye/comm.h"
 #include "timer.h"
 
-void gam_timer_init();
-void gam_timer2_open(int interval, void(*callback));
 static void(*_lcd_fluch_cb)(char*buffer);
 
 #define SCR_W SCR_WID
