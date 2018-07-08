@@ -3,9 +3,8 @@
 #include <stdio.h>
 
 #define IDT_TIMER 100
-#define IDT_TIMER2 101
+#define precise 5
 
-#define ratio 10
 typedef struct
 {
     char*name;
@@ -42,7 +41,7 @@ void gam_timer_init()
 
 void winInitTimer()
 {
-    SetTimer(NULL, IDT_TIMER2, ratio, (TIMERPROC)TimerProc);
+    SetTimer(NULL, IDT_TIMER, precise, (TIMERPROC)TimerProc);
 }
 
 void gam_timer_set_callback(void (*cb)())
