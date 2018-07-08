@@ -19,17 +19,10 @@
 FAR U8 GamConInit(void);
 FAR void GamBaYeEng(void);
 
-void GamSetLcdFlushCallback(void(*lcd_fluch_cb)(char*buffer));
-
-static void _lcd_flush_cb(char*buffer) {
-    printf("lcd flushing\n");
-}
-
 static void baye_init_for_win(void) {
     GamSetResourcePath((U8*)"dat.lib", (U8*)"font.bin");
     // GamSetAltLibPath((U8*)"dat.lib");
     GamSetDataDir((U8*)".");
-    GamSetLcdFlushCallback(_lcd_flush_cb);
     if (GamConInit()) {
         printf("init res failed!\n");
         exit(0);
