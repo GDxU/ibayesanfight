@@ -27,10 +27,13 @@ static void _lcd_flush_cb(char*buffer) {
 
 static void baye_init_for_win(void) {
     GamSetResourcePath((U8*)"dat.lib", (U8*)"font.bin");
-    GamSetAltLibPath((U8*)"dat.lib");
-    GamSetDataDir((U8*)"sav/");
+    // GamSetAltLibPath((U8*)"dat.lib");
+    GamSetDataDir((U8*)".");
     GamSetLcdFlushCallback(_lcd_flush_cb);
-    GamConInit();
+    if (GamConInit()) {
+        printf("init res failed!\n");
+        exit(0);
+    }
 }
 
 void baye_init_for_js(void) {

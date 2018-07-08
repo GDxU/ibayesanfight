@@ -7,8 +7,9 @@
 
 FAR void	gamTraceP(U32	num)
 {
-    gamTracel(num);
-    gamPause();
+    printf("gamTraceP %d\n", num);
+    fflush(stdin);
+    exit(0);
 }
 FAR void	gamTracel(U32	num)
 {

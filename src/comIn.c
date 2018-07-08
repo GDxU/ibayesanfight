@@ -62,8 +62,10 @@ FAR U8 GamConInit(void)
 
     /*文件指针初始化*/
     g_FontFp = gam_fopen(fontFilePath,'r');			/*打开字库文件*/
-    if(NULL == g_FontFp)
+    if(NULL == g_FontFp) {
+        printf("Open %s failed\n", fontFilePath);
         return 1;
+    }
 
     if (altDatFilePath) {
         g_LibFp = gam_fopen(altDatFilePath,'r');			/*打开自定义资源库文件*/
@@ -75,8 +77,13 @@ FAR U8 GamConInit(void)
         printf("Using custom lib\n");
     }
 
-    if(NULL == g_LibFp)
+    if(NULL == g_LibFp) {
+        printf("Can not load lib\n");
+        printf("tried:\n");
+        printf("%s\n", altDatFilePath);
+        printf("%s\n", datFilePath);
         return 1;
+    }
     g_CBnkPtr = gam_freadall(g_LibFp);				/*常量页面指针*/
 
     /*随机函数初始化*/

@@ -60,7 +60,7 @@ FAR U8 PlcMovie(U16 speid, U16 index, U8 startfrm,U8 endfrm,U8 keyflag,U8 x,U8 y
     srsptr = ResLoadToCon(speid,index+1,g_CBnkPtr);
     if (NULL == srsptr)
     {
-        printf("spe %d %d not found", speid, index);
+        printf("spe %d %d not found\n", speid, index);
         gamTraceP(speid);
         return(0xff);
     }

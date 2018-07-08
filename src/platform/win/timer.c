@@ -1,51 +1,76 @@
 #include <timer.h>
 #include <windows.h>
+#include <stdio.h>
 
 #define IDT_TIMER 100
 #define IDT_TIMER2 101
 
 #define ratio 10
-
-static void(*timer_callback)();
-static int timer_interval = 0;
-
-void CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime)
+typedef struct
 {
-    if (timer_callback) {
-        timer_callback();
+    char*name;
+    void (*callback)();
+    int interval;
+    int enabled;
+    int tick;
+} timer_t;
+
+timer_t timer = {"timer"}, timer2 = {"timer2"};
+
+static void run_timer(timer_t *t)
+{
+    if (t->enabled)
+    {
+        if (t->tick == 0 && t->callback)
+        {
+            t->callback();
+            t->tick = t->interval;
+        }
+        t->tick--;
     }
 }
 
-void gam_timer_init() {
-}
-
-void gam_timer_set_callback(void(*cb)()) {
-    timer_callback = cb;
-}
-
-void gam_timer_open(int interval) {
-    timer_interval = interval;
-    SetTimer(NULL, IDT_TIMER, interval * ratio, (TIMERPROC)TimerProc);
-}
-
-void gam_timer_close() {
-    KillTimer(NULL, IDT_TIMER);
-}
-
-int gam_timer_interval() {
-    return timer_interval;
-}
-
-
-static void(*timer2_callback)();
-
-void CALLBACK Timer2Proc(HWND hwnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime)
+void CALLBACK TimerProc(HWND hwnd, UINT uMsg, UINT_PTR idEvent, DWORD dwTime)
 {
-    timer2_callback();
+    run_timer(&timer);
+    run_timer(&timer2);
 }
 
-void gam_timer2_open(int interval, void(*callback)())
+void gam_timer_init()
 {
-    timer2_callback = callback;
-    SetTimer(NULL, IDT_TIMER2, interval * ratio, (TIMERPROC)Timer2Proc);
+}
+
+void winInitTimer()
+{
+    SetTimer(NULL, IDT_TIMER2, ratio, (TIMERPROC)TimerProc);
+}
+
+void gam_timer_set_callback(void (*cb)())
+{
+    timer.callback = cb;
+}
+
+void gam_timer_open(int interval)
+{
+    timer.interval = interval;
+    timer.tick = interval;
+    timer.enabled = 1;
+}
+
+void gam_timer_close()
+{
+    timer.enabled = 0;
+}
+
+int gam_timer_interval()
+{
+    return timer.interval;
+}
+
+void gam_timer2_open(int interval, void (*callback)())
+{
+    timer2.callback = callback;
+    timer2.interval = interval;
+    timer2.tick = interval;
+    timer2.enabled = 1;
 }

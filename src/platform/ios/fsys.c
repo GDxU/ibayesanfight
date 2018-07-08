@@ -18,7 +18,7 @@
 ***********************************************************************/
 FAR gam_FILE *gam_fopen(const U8 *fname,U8 pmode)
 {
-    U8 mode[2] = {pmode};
+    U8 mode[3] = {pmode, 'b'};
     return (gam_FILE *)fopen((char*)fname, (char *)mode);
 }
 /***********************************************************************
