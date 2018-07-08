@@ -38,9 +38,11 @@ typedef struct
     int w, h;
 } UserData;
 
-#define SCR_W (SCR_WID * 2)
-#define SCR_H (SCR_HGT * 2)
-#define BYTES_PERLINE (SCR_LINE * 8 * 2)
+#define SCR_W (SCR_WID)
+#define SCR_H (SCR_HGT)
+#define BYTES_PERLINE (SCR_LINE * 8)
+#define DC_W (SCR_W*2)
+#define DC_H (SCR_H*2)
 
 static HBITMAP _createBitmap(int w, int h, DWORD **pBuffer)
 {
@@ -93,7 +95,7 @@ static inline void _setPixel(UserData* data, int x, int y, COLORREF color)
 
 static void _redrawWindow(HWND hwnd, HDC hDC)
 {
-    UserData *data = _getUserData(hwnd, hDC, SCR_W, SCR_H);
+    UserData *data = _getUserData(hwnd, hDC, DC_W, DC_H);
     int x, y;
     for (y = 0; y < SCR_H; y++)
     {
@@ -101,7 +103,11 @@ static void _redrawWindow(HWND hwnd, HDC hDC)
         {
             int ind = BYTES_PERLINE * (SCR_H - y) + (x);
             COLORREF color = lcdBuffer[ind] ? data->black : data->white;
-            _setPixel(data, x, y, color);
+            int dx = x*2, dy = y*2;
+            _setPixel(data, dx, dy, color);
+            _setPixel(data, dx+1, dy, color);
+            _setPixel(data, dx+1, dy+1, color);
+            _setPixel(data, dx, dy+1, color);
         }
     }
     BitBlt(hDC, 0, 0, data->w, data->h, data->memDC, 0, 0, SRCCOPY);
@@ -109,7 +115,7 @@ static void _redrawWindow(HWND hwnd, HDC hDC)
 
 static void drawCached(HWND hwnd, HDC hDC)
 {
-    UserData *data = _getUserData(hwnd, hDC, SCR_W, SCR_H);
+    UserData *data = _getUserData(hwnd, hDC, DC_W, DC_H);
     BitBlt(hDC, 0, 0, data->w, data->h, data->memDC, 0, 0, SRCCOPY);
 }
 
@@ -219,7 +225,7 @@ HWND CreateMainWindow(HINSTANCE hInstance, int nCmdShow)
     hwnd = CreateWindowEx(
         WS_EX_CLIENTEDGE,
         g_szClassName,
-        "iBaye 预览版",
+        "iBaye - Preview Version",
         WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT, CW_USEDEFAULT, 450, 300,
         NULL, NULL, hInstance, NULL);
@@ -242,12 +248,10 @@ static void _lcd_flush_cb(char *buffer)
     InvalidateRect(hMainWin, NULL, FALSE);
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     MSG msg;
-    HINSTANCE hInstance;
+    HINSTANCE hInstance = GetModuleHandle(0);
 
-    hInstance = GetModuleHandle(0);
     RegisterMainWindow(hInstance);
     hMainWin = CreateMainWindow(hInstance, SW_SHOW);
 
