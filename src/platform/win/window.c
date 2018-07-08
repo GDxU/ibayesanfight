@@ -74,6 +74,7 @@ HWND CreateMainWindow(HINSTANCE hInstance, int nCmdShow)
 }
 
 void bayeStart();
+void winInitTimer();
 
 int main(int argc, char *argv[])
 {
@@ -82,8 +83,9 @@ int main(int argc, char *argv[])
 
     hInstance = GetModuleHandle(0);
     RegisterMainWindow(hInstance);
-    CreateMainWindow(hInstance, SW_SHOW);
+    // CreateMainWindow(hInstance, SW_SHOW);
 
+    winInitTimer();
     bayeStart();
 
     while (1)

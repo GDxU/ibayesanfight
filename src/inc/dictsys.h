@@ -50,6 +50,13 @@ typedef		unsigned	char		U8;
 typedef unsigned short __attribute__((aligned(1))) U16;
 typedef unsigned int __attribute__((aligned(1))) U32;
 
+struct detector{
+    U8 a;
+    U16 b;
+    U32 c;
+};
+typedef int compiler_does_not_support_aligned1[sizeof(struct detector) == 7?0:-1];
+
 typedef U8 SBUF[1024];
 
 typedef U16 PersonID;

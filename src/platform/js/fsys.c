@@ -111,6 +111,7 @@ FAR U8 *gam_freadall(gam_FILE *fhandle)
         rv = gam_realloc(rv, alloced+1);
     }
     rv[offset] = 0;
+    printf("Lib length:%d\n", offset);
         
     return rv;
 }
