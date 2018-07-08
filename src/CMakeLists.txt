@@ -78,7 +78,6 @@ if (${CMAKE_SYSTEM_NAME} STREQUAL Windows)
 	target_sources(bayeliba PRIVATE ${bayelib_win_SRCS})
 	add_executable(baye
 		platform/win/window.c
-		version.c
 	)
 	find_package (Threads)
 	target_link_libraries (baye ${CMAKE_THREAD_LIBS_INIT})
