@@ -163,6 +163,15 @@ int call_hook_a(const char* name, Value* context)
                 js_callback(&rv);
                 break;
             }
+                
+            case 12: // makeCommand
+            {
+                U8 city = g_asyncActionParams[0];
+                U8 cmd = g_asyncActionParams[1];
+                CityCommon(city, cmd);
+                js_callback(&rv);
+                break;
+            }
             default:
                 break;
         }
