@@ -117,7 +117,8 @@ int call_hook_a(const char* name, Value* context)
                 break;
             }
             case 6: // Choose city
-                // TODO:
+                g_asyncActionParams[0] = GamChooseCity();
+                js_callback(&rv);
                 break;
             case 7: // delay
             {
