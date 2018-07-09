@@ -155,6 +155,14 @@ int call_hook_a(const char* name, Value* context)
                 js_callback(&rv);
                 break;
             }
+                
+            case 11: // makeBattle
+            {
+                U8 city = g_asyncActionParams[0];
+                BattleMake(city);
+                js_callback(&rv);
+                break;
+            }
             default:
                 break;
         }

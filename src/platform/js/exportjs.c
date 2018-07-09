@@ -425,4 +425,3 @@ EMSCRIPTEN_KEEPALIVE
 void bayeGCCheckAll() {
     gam_gc_check_all();
 }
-
