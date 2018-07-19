@@ -117,7 +117,8 @@ int call_hook_a(const char* name, Value* context)
                 break;
             }
             case 6: // Choose city
-                // TODO:
+                g_asyncActionParams[0] = GamChooseCity();
+                js_callback(&rv);
                 break;
             case 7: // delay
             {
@@ -151,6 +152,23 @@ int call_hook_a(const char* name, Value* context)
             {
 //                FAR U8 GamFight(void);
                 GamFight();
+                js_callback(&rv);
+                break;
+            }
+                
+            case 11: // makeBattle
+            {
+                U8 city = g_asyncActionParams[0];
+                BattleMake(city);
+                js_callback(&rv);
+                break;
+            }
+                
+            case 12: // makeCommand
+            {
+                U8 city = g_asyncActionParams[0];
+                U8 cmd = g_asyncActionParams[1];
+                CityCommon(city, cmd);
                 js_callback(&rv);
                 break;
             }

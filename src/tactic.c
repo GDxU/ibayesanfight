@@ -729,7 +729,8 @@ FAR U8 GameDevDrv(void)
         /*玩家策略*/
         do
         {
-            PlayerTactic();
+            if (call_hook_a("tacticStageUser", NULL) == -1)
+                PlayerTactic();
             ral = FunctionMenu();
             if (!ral)
             {

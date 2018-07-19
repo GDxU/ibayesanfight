@@ -1110,6 +1110,10 @@ FAR U8 GetCitySet(CitySetType *pos)
     return(0xff);
 }
 
+U8 GamChooseCity(void) {
+    return GetCitySet(&g_CityPos);
+}
+
 /******************************************************************************
  * 函数名:ShowCityMap
  * 说  明:显示城市地图
@@ -1254,7 +1258,8 @@ U8 ShowCityMap(CitySetType *pos)
 FAR void ShowMapClear(void)
 {
     GamShowFrame(g_VisScr);
-    gam_rect(WK_SX + CITYMAP_TIL_W * SHOWMAP_WS,WK_SY,WK_EX,WK_EY);
+    if (!g_engineConfig.hideRightBorder)
+        gam_rect(WK_SX + CITYMAP_TIL_W * SHOWMAP_WS,WK_SY,WK_EX,WK_EY);
 }
 
 /******************************************************************************

@@ -213,6 +213,7 @@ typedef struct {
     U8 cityMapHeight;    // 主地图高
     
     U8 disableExpGrowing;
+    U8 hideRightBorder;
 } EngineConfig;
 
 extern EngineConfig g_engineConfig;
