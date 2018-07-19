@@ -29,11 +29,6 @@
 
 ## 游戏截图
 
-### macOS版
-![](images/macos.png)
-
----
-
 ### iOS原生版
 ![](images/ios.jpg)
 
@@ -54,6 +49,17 @@
 ![](images/ios-h5-k3.png)
 
 ---
+
+### Windows版
+![](images/windows.png)
+
+---
+
+### macOS版
+![](images/macos.png)
+
+---
+
 ### 支持高度定制mod，有丰富的修改mod
 
 即使是农民，也能高度自由定制修改版本。
