@@ -1,10 +1,10 @@
-#iBaye - 步步高三国霸业 iOS & HTML5 移植版
+# iBaye - 步步高三国霸业 iOS & HTML5 移植版
 
 交流QQ群：526266208
 
 贴吧讨论与反馈:[http://tieba.baidu.com/p/3977138152](http://tieba.baidu.com/p/3977138152)
 
-##开发环境配置
+## 开发环境配置
 
 1. 安装emscripten
 
