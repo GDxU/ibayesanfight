@@ -1,3 +1,12 @@
+<style>
+img[alt=m] {
+    max-width: 350px;
+}
+img[alt=b] {
+    max-width: 500px;
+}
+
+</style>
 # iBaye - 步步高三国霸业 iOS & HTML5 移植版
 
 交流QQ群：526266208
@@ -30,7 +39,7 @@
 ## 游戏截图
 
 ### iOS原生版
-![](images/ios.jpg)
+![m](images/ios.jpg)
 
 ---
 
@@ -40,23 +49,24 @@
 ---
 
 ### HTML5 - Mobile端
-![](images/ios-h5.png)
+![m](images/ios-h5.png)
 
-![](images/ios-h5-k.png)
+![m](images/ios-h5-k.png)
 
 单手键盘：
-![](images/ios-h5-k2.png)
-![](images/ios-h5-k3.png)
+
+![m](images/ios-h5-k2.png)
+![m](images/ios-h5-k3.png)
 
 ---
 
 ### Windows版
-![](images/windows.png)
+![b](images/windows.png)
 
 ---
 
 ### macOS版
-![](images/macos.png)
+![b](images/macos.png)
 
 ---
 
@@ -64,6 +74,6 @@
 
 即使是农民，也能高度自由定制修改版本。
 
-![](images/mod1.png)
-![](images/mod2.png)
-![](images/mod.png)
+![b](images/mod1.png)
+![b](images/mod2.png)
+![m](images/mod.png)
