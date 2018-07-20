@@ -26,10 +26,6 @@ void script_init(void)
             window.baye.hooks = {};
         }
 
-        window.baye.callHook = function(name, context) {
-            return window.baye.hooks[name](context);
-        };
-
         window.baye.data = baye_bridge_value(_bayeGetGlobal());
     });
 
@@ -65,9 +61,7 @@ int call_hook_s(const char* name, Value* context)
 
 static void js_callback(int *rv) {
     *rv = EM_ASM_INT({
-        if (baye.callback)
-            return baye.callback();
-        return $0;
+        return baye.callCallback($0);
     }, *rv);
 }
 
