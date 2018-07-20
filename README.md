@@ -7,11 +7,13 @@ img[alt=b] {
 }
 
 </style>
-# iBaye - 步步高三国霸业 iOS & HTML5 移植版
+# iBaye
+
+步步高电子词典经典游戏 -- 三国霸业 多平台移植版本
+
+目前已支持的平台：iOS/macOS/Windows/HTML5/微信小游戏
 
 交流QQ群：526266208
-
-贴吧讨论与反馈:[http://tieba.baidu.com/p/3977138152](http://tieba.baidu.com/p/3977138152)
 
 ## 开发环境配置
 
