@@ -42,6 +42,10 @@ img[alt=b] {
 ![m](images/ios.jpg)
 
 ---
+### 微信小游戏端
+![b](images/wx.png)
+
+---
 
 ### HTML5 - PC端
 ![](images/pc-h5.png)
