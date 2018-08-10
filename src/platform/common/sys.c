@@ -12,10 +12,9 @@
 #include "timer.h"
 
 static void(*_lcd_fluch_cb)(char*buffer);
-
 #define SCR_W SCR_WID
 #define SCR_H SCR_HGT
-#define BYTES_PERLINE (SCR_LINE * 8 * 2)
+#define BYTES_PERLINE (SCR_LINE * 8 * DOTSIZE)
 
 #define DOT 1
 #define CLR 0
@@ -125,10 +124,10 @@ FAR	void SysLCDVoltage(U8 voltage)		/*voltage: 0 - 63 */
 }
 
 static void _dot(PT x, PT y, U8 color) {
-    x *= 2;
-    y *= 2;
-    for (int i = 0; i < 2; i++) {
-        for (int j = 0; j < 2; j++) {
+    x *= DOTSIZE;
+    y *= DOTSIZE;
+    for (int i = 0; i < DOTSIZE; i++) {
+        for (int j = 0; j < DOTSIZE; j++) {
             int ind = BYTES_PERLINE * (y+i) + (x+j);
             buffer[ind] = color;
         }
@@ -136,10 +135,10 @@ static void _dot(PT x, PT y, U8 color) {
 }
 
 static void _rdot(PT x, PT y) {
-    x *= 2;
-    y *= 2;
-    for (int i = 0; i < 2; i++) {
-        for (int j = 0; j < 2; j++) {
+    x *= DOTSIZE;
+    y *= DOTSIZE;
+    for (int i = 0; i < DOTSIZE; i++) {
+        for (int j = 0; j < DOTSIZE; j++) {
             int ind = BYTES_PERLINE * (y+i) + (x+j);
             buffer[ind] = !buffer[ind];
         }
@@ -233,12 +232,12 @@ FAR void SysPicture(PT sX, PT sY, PT eX, PT eY, U8*pic , U8 flag, U8 scale)
         int picPerLine = wid;
 
         for (y = 0; y < hgt; y++) {
-            Y = sY*2 + y;
+            Y = sY*DOTSIZE + y;
             for (x = 0; x < wid; x++) {
-                X = sX*2 + x;
+                X = sX*DOTSIZE + x;
                 unsigned char pixel0, pixel1;
                 int ind = scrPerLine * Y + X;
-                if (!_insideScreen(X/2, Y/2)) {
+                if (!_insideScreen(X/DOTSIZE, Y/DOTSIZE)) {
                     continue;
                 }
 

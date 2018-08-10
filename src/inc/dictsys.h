@@ -566,6 +566,8 @@ FAR	void	TraceNumP(U8	x,U8	y,long num, U8 base,U8	sign);	/* 打印并暂停 */
 	.endasm
 #endif	
 
+#define DOTSIZE 1
+
 /*******************************************************************************************/
 
 #endif

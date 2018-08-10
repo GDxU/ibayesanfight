@@ -308,7 +308,7 @@ void GamChinese(PT x,PT y,U16 Hz)
     U8 zmCode[24];
 
     GetExcHZMCode(Hz,zmCode);
-    SysPicture(x,y,x+HZ_WID-1,y+HZ_HGT-1,zmCode, 0, 2);
+    SysPicture(x,y,x+HZ_WID-1,y+HZ_HGT-1,zmCode, 0, DOTSIZE);
 }
 /***********************************************************************
  * 说明:     显示12*12点阵GB2312AscII
@@ -336,7 +336,7 @@ void GamAscii(PT x,PT y,U8 asc)
         for(i=0;i<12;i++)
             zmCode[i]=zmCode[i<<1];
     }
-    SysPicture(x,y,x+ASC_WID-1,y+ASC_HGT-1,zmCode,0, 2);
+    SysPicture(x,y,x+ASC_WID-1,y+ASC_HGT-1,zmCode,0, DOTSIZE);
 }
 /***********************************************************************
  * 说明:     获取扩充后的汉字字模数据(18->24)

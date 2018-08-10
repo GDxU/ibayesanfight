@@ -12,10 +12,9 @@
 #include "consdef.h"
 #include "baye-wrapper-mac.h"
 #include "baye/comm.h"
-
-#define SCR_W (SCR_WID*2)
-#define SCR_H (SCR_HGT*2)
-#define BYTES_PERLINE (SCR_LINE * 8 * 2)
+#define SCR_W (SCR_WID*DOTSIZE)
+#define SCR_H (SCR_HGT*DOTSIZE)
+#define BYTES_PERLINE (SCR_LINE * 8 * DOTSIZE)
 
 @implementation LCDView
 - (void)keyDown:(NSEvent *)theEvent {
