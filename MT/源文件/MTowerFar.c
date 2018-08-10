@@ -1,4 +1,4 @@
-#include 	"inc\dictsys.h"
+#include 	"inc/dictsys.h"
 #include	"mtower.h"
 
 extern U8	g_GameMTNearEnd,g_GameMTDeadLine,g_GameMTEnd,g_GameMTGameOver,g_GameMTInit,g_GameMTQuit;
@@ -57,7 +57,7 @@ FAR void GameMTChaFloor()
 		GameMTTalk(2,494,0);
 		return;
 	}
-	SysSaveScreen(7,1,121,94,g_GameMTBuf);
+	SysSaveScreenRect(7,1,121,94,g_GameMTBuf);
 	SysLcdPartClear(7,1,121,94);
 	SysRect(7,1,121,94);
 	SysRect(8,2,120,93);
@@ -116,7 +116,7 @@ FAR void GameMTChaFloor()
 					GameMTRefresh();
 					return;
 				}
-	SysRestoreScreen(7,1,121,94,g_GameMTBuf);
+	SysRestoreScreenRect(7,1,121,94,g_GameMTBuf);
 }
 
 /***********************************************************************
@@ -157,7 +157,7 @@ FAR void GameMTCheckMon()
 			}
 		}
 	if(g_GameMTCheck[0]+1==1)return;
-	SysSaveScreen(0,0,158,95,g_GameMTBuf);
+	SysSaveScreenRect(0,0,158,95,g_GameMTBuf);
 	SysLcdPartClear(0,0,158,95);
 	SysRect(0,0,158,95);
 	SysRect(1,1,157,94);
@@ -206,7 +206,7 @@ FAR void GameMTCheckMon()
 			GameMTListMon(scoll);
 		}
 	}
-	SysRestoreScreen(0,0,158,95,g_GameMTBuf);
+	SysRestoreScreenRect(0,0,158,95,g_GameMTBuf);
 	g_GameMTHeroDamige=temp2;
 }
 
@@ -301,7 +301,7 @@ FAR	void GameMTShop(U8 kind)/*商店类型：小升级，大升级，买商人，卖商人，小神殿，
 		case 6:
 			GameMTTalk(4,476,0);
 	}
-	SysSaveScreen(0,5,158,89,g_GameMTBuf);
+	SysSaveScreenRect(0,5,158,89,g_GameMTBuf);
 	SysLcdPartClear(0,5,158,89);
 	SysRect(0,5,158,89);
 	SysRect(2,7,156,87);
@@ -565,7 +565,7 @@ FAR	void GameMTShop(U8 kind)/*商店类型：小升级，大升级，买商人，卖商人，小神殿，
 			}
 		}
 	}
-	SysRestoreScreen(0,5,158,89,g_GameMTBuf);
+	SysRestoreScreenRect(0,5,158,89,g_GameMTBuf);
 	GameMTReNewR();
 }
 

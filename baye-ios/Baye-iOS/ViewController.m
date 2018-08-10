@@ -15,6 +15,7 @@
 #include	"baye/consdef.h"
 FAR void GamBaYeEng(void);
 
+FAR	U8	GameMagicTower();
 
 #define kLcdFlushNotification @"kLcdFlushNotification"
 
@@ -74,7 +75,8 @@ static void _lcd_flush_cb(char*buffer)
         GamSetResourcePath((U8*)[datPath UTF8String], (U8*)[fontPath UTF8String]);
         GamSetDataDir((U8*)[documentsDir UTF8String]);
         GamSetLcdFlushCallback(_lcd_flush_cb);
-        GamBaYeEng();
+//        GamBaYeEng();
+        GameMagicTower();
         exit(0);
     });
 

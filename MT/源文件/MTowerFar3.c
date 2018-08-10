@@ -1,4 +1,4 @@
-#include 	"inc\dictsys.h"
+#include 	"inc/dictsys.h"
 #include	"mtower.h"
 
 extern U8	g_GameMTNearEnd,g_GameMTDeadLine,g_GameMTEnd,g_GameMTGameOver,g_GameMTInit,g_GameMTQuit;
@@ -249,13 +249,13 @@ FAR void	GameMTEvent()
 					GameMTTalk(3,179,0);
 					g_GameMTCurMap[309]=0;
 				}
-				else if(g_GameMTFloor==4&&g_GameMTCurMap[309]+1=1&&g_GameMTCurMap[1462]==31)
+				else if(g_GameMTFloor==4&&g_GameMTCurMap[309]+1==1&&g_GameMTCurMap[1462]==31)
 				{
 					GameMTTalk(2,182,0);
 					GameMTTalk(2,184,0);
 					g_GameMTFloor=4;
 				}
-				else if(g_GameMTFloor==4&&g_GameMTCurMap[309]+1=1&&g_GameMTCurMap[1462]+1==1)
+				else if(g_GameMTFloor==4&&g_GameMTCurMap[309]+1==1&&g_GameMTCurMap[1462]+1==1)
 				{
 					GameMTTalk(2,186,0);
 					GameMTTalk(4,188,0);

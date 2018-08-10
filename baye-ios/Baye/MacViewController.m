@@ -11,7 +11,9 @@
 #include	"baye/comm.h"
 #import "LCDView.h"
 
+FAR	U8	GameMagicTower();
 void GamSetLcdFlushCallback(void(*lcd_fluch_cb)(char*buffer));
+FAR U8 GamConInit(void);
 
 @interface LCDBufferWrapper : NSObject
 @property char *buffer;
@@ -66,8 +68,9 @@ FAR void GamBaYeEng(void);
 
         extern U8 g_engineDebug;
         g_engineDebug = 1;
-        
-        GamBaYeEng();
+        GamConInit();
+        GameMagicTower();
+//        GamBaYeEng();
         exit(0);
     });
     

@@ -350,6 +350,26 @@ FAR void SysRestoreScreen()
     memcpy(scr_buffer, backup_buffer, buffer_size);
 }
 
+FAR void SysSaveScreenRect(PT sX, PT sY, PT eX, PT eY, U8* buf) {
+    int cur = 0;
+    for (int col = sX; col < eX; col++) {
+        for (int row = sY; row < eY; row++) {
+            int ind = BYTES_PERLINE * row + col;
+            buf[cur++] = scr_buffer[ind];
+        }
+    }
+}
+
+FAR void SysRestoreScreenRect(PT sX, PT sY, PT eX, PT eY, U8* buf) {
+    int cur = 0;
+    for (int col = sX; col < eX; col++) {
+        for (int row = sY; row < eY; row++) {
+            int ind = BYTES_PERLINE * row + col;
+            scr_buffer[ind] = buf[cur++];
+        }
+    }
+}
+
 FAR void SysAdjustLCDBuffer(int wid, int height)
 {
     size_t sz = wid * height;
@@ -377,4 +397,21 @@ FAR void SysCopyScreen(U8*scr)
 {
     memcpy(scr_buffer, scr, buffer_size);
     isLcdDirty = 1;
+}
+extern U8	c_Sx,c_Sy,c_Ex,c_Ey;	/* 字符串显示区域 */
+FAR void SysPrintString(PT x,PT y,U8* str)
+{
+    int n = strlen(str);
+
+    c_Sx = x;
+    c_Sy = y;
+    c_Ey = 90;
+    c_Ex = 160;
+    gam_clrlcd(x, y, x + n*8, y+16);
+    GamStrShow(x, y, str);
+}
+
+void SysMemcpy(U8 *dest , U8  *src , U16 len)
+{
+    memcpy(dest, src, len);
 }

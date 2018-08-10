@@ -332,6 +332,8 @@ FAR	void SysSaveScreenEx();
 FAR void SysPicture(PT sX, PT sY, PT eX, PT eY, U8*pic , U8 flag, U8 scale);
 FAR void SysCircle(PT x0,PT y0,PT r);
 FAR void SysFillCircle(PT x0,PT y0,PT r);
+FAR void SysSaveScreenRect(PT sX, PT sY, PT eX, PT eY, U8* buf);
+FAR void SysRestoreScreenRect(PT sX, PT sY, PT eX, PT eY, U8* buf);
 
 FAR void SysLcdPartClear(PT x1,PT y1,PT x2,PT y2);
 FAR void SysLcdReverse(PT x1,PT y1,PT x2,PT y2);

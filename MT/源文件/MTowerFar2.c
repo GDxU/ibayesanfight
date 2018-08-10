@@ -1,4 +1,4 @@
-#include 	"inc\dictsys.h"
+#include 	"inc/dictsys.h"
 #include	"mtower.h"
 
 extern U8	g_GameMTReadKey,g_GameMTTimeOut,g_GameMTTopFloor;

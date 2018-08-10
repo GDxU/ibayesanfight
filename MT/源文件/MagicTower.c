@@ -13,10 +13,10 @@
 *   ----------------------------------------------------
 *	1.0    2005.1.26  罗博明     DEBUGING...
 ***********************************************************************/
-#include	"inc\dictsys.h"
-#include	"inc\keytable.h"
-#include 	"inc\stdlib.h"
+#include	"inc/dictsys.h"
+#include	"inc/keytable.h"
 #include	"mtower.h"
+#include <stdlib.h>
 
 /*游戏进入逃离模式,逃离模式时间,游戏完成标志,游戏结束标志,游戏初始化标志,退出游戏标志*/
 U8	g_GameMTNearEnd,g_GameMTDeadLine,g_GameMTEnd,g_GameMTGameOver,g_GameMTInit,g_GameMTQuit;
@@ -26,7 +26,7 @@ U16	g_GameMTKBState;
 /*单前所见地图x,y坐标,英雄当前x,y坐标,当前判断x,y坐标*/
 U8	g_GameMTMapX,g_GameMTMapY,g_GameMTHeroX,g_GameMTHeroY,g_GameMTJuidgeX,g_GameMTJuidgeY;
 /*图形缓存,英雄拥有的钥匙数,当前层怪信息*/
-U8	g_GameMTBuf[1920],g_GameMTKey[3],g_GameMTCheck[8];
+U8	g_GameMTBuf[19200],g_GameMTKey[3],g_GameMTCheck[8];
 /*英雄攻击、防御、金币、经验*/
 U16	g_GameMTHeroDamige,g_GameMTHeroDefence,g_GameMTHeroMoney,g_GameMTHeroExp;
 /*英雄方向、所在层、地图数据缓存*/
@@ -82,7 +82,7 @@ FAR	U8	GameMagicTower()
 	g_GameMTKBState=GuiGetKbdState();			/* 取键盘状态 */
 	GuiSetInputFilter(INPUT_ENG_ENABLE);
 	GuiSetKbdType(INPUT_ENG_ENABLE);
-	g_GameMTCurMap=SysMemAllocate(2662);
+	g_GameMTCurMap = malloc(2662);
 	SysTimer1Open(8);
 	
 	g_GameMTInit=TRUE;
@@ -97,6 +97,7 @@ FAR	U8	GameMagicTower()
 		if(g_GameMTInit)GameMTInit();
 		GameMTEvent();
 	}
+    return 0;
 }
 
 /***********************************************************************
@@ -146,9 +147,11 @@ FAR void	GameMTGetInput()
 						case CHAR_DOWN:
 							g_GameMTReadKey=4;
 							break;
+                            /*
 						case CHAR_HELP:	
 							GuiDownAppHelp(GameMTHelpData);				
 							break;
+                             */
 						case CHAR_ENTER:					
 							g_GameMTReadKey=6;
 							break;
@@ -204,7 +207,7 @@ FAR void	GameMTTalk(U8 line,U16 number,U8	flag)
 	U8	i,temp[20];
 	if(g_GameMTQuit)return;
 	g_GameMTTimeOut=0;
-	SysSaveScreen(4,5,154,90,g_GameMTBuf);
+	SysSaveScreenRect(4,5,154,90,g_GameMTBuf);
 	/*SysRect(7,7,152,88);
 	SysRect(6,6,153,89);
 	SysRect(5,5,154,90);*/
@@ -242,7 +245,7 @@ FAR void	GameMTTalk(U8 line,U16 number,U8	flag)
 			}
 			else break;
 		}
-	SysRestoreScreen(4,5,154,90,g_GameMTBuf);
+	SysRestoreScreenRect(4,5,154,90,g_GameMTBuf);
 }
 
 /***********************************************************************
@@ -446,7 +449,7 @@ FAR U8	GameMTBattle(U8	number)
 		GameMTTalk(2,443,0);
 		return 0;
 	}
-	SysSaveScreen(8,14,119,81,g_GameMTBuf);
+	SysSaveScreenRect(8,14,119,81,g_GameMTBuf);
 	SysPicture(8,14,119,81,GameMTBattlePad,0);
 	TempL=GameMTMonData[number][0];
 	GameMTPrintNum(1,g_GameMTHeroLife,92,41);
@@ -482,7 +485,7 @@ FAR U8	GameMTBattle(U8	number)
 	g_GameMTCurMap[(U16)g_GameMTFloor*121+g_GameMTJuidgeY*11+g_GameMTJuidgeX]=0;
 	g_GameMTHeroMoney+=GameMTMonData[number][3];
 	g_GameMTHeroExp+=GameMTMonData[number][4];
-	SysRestoreScreen(8,14,119,81,g_GameMTBuf);
+	SysRestoreScreenRect(8,14,119,81,g_GameMTBuf);
 	GameMTReNewR();
 	return 1;
 }

@@ -52,12 +52,43 @@
 		143747B41B7E68C300939571 /* varma.c in Sources */ = {isa = PBXBuildFile; fileRef = 1444A98C1B7B6F1F0085EC83 /* varma.c */; };
 		143747B51B7E68C300939571 /* itoa.c in Sources */ = {isa = PBXBuildFile; fileRef = 1444A9B01B7BA09C0085EC83 /* itoa.c */; };
 		143747BA1B7E808700939571 /* timer.m in Sources */ = {isa = PBXBuildFile; fileRef = 143747B71B7E7AFB00939571 /* timer.m */; };
+		1440C1EE211DAFD50017E4E6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1440C1ED211DAFD50017E4E6 /* main.m */; };
+		1440C1F1211DAFD50017E4E6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1440C1F0211DAFD50017E4E6 /* AppDelegate.m */; };
+		1440C1F4211DAFD50017E4E6 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1440C1F3211DAFD50017E4E6 /* ViewController.m */; };
+		1440C1F7211DAFD50017E4E6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1440C1F5211DAFD50017E4E6 /* Main.storyboard */; };
+		1440C1F9211DAFD50017E4E6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1440C1F8211DAFD50017E4E6 /* Assets.xcassets */; };
+		1440C1FC211DAFD50017E4E6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1440C1FA211DAFD50017E4E6 /* LaunchScreen.storyboard */; };
+		1440C207211DB03D0017E4E6 /* MTowerData.c in Sources */ = {isa = PBXBuildFile; fileRef = 1440C201211DB03D0017E4E6 /* MTowerData.c */; };
+		1440C208211DB03D0017E4E6 /* MTowerFar2.c in Sources */ = {isa = PBXBuildFile; fileRef = 1440C202211DB03D0017E4E6 /* MTowerFar2.c */; };
+		1440C209211DB03D0017E4E6 /* MTowerFar3.c in Sources */ = {isa = PBXBuildFile; fileRef = 1440C203211DB03D0017E4E6 /* MTowerFar3.c */; };
+		1440C20A211DB03D0017E4E6 /* MTowerFar.c in Sources */ = {isa = PBXBuildFile; fileRef = 1440C204211DB03D0017E4E6 /* MTowerFar.c */; };
+		1440C20B211DB03D0017E4E6 /* MagicTower.c in Sources */ = {isa = PBXBuildFile; fileRef = 1440C205211DB03D0017E4E6 /* MagicTower.c */; };
+		1440C20C211DB03D0017E4E6 /* MAIN.C in Sources */ = {isa = PBXBuildFile; fileRef = 1440C206211DB03D0017E4E6 /* MAIN.C */; };
+		1440C20E211DBA0D0017E4E6 /* gui.c in Sources */ = {isa = PBXBuildFile; fileRef = 142D1CED1D22B82800CA443B /* gui.c */; };
+		1440C20F211DBA340017E4E6 /* sem.m in Sources */ = {isa = PBXBuildFile; fileRef = 1437473C1B7CBC2300939571 /* sem.m */; };
+		1440C210211DBA440017E4E6 /* fsys.c in Sources */ = {isa = PBXBuildFile; fileRef = 1444A9AA1B7B79D10085EC83 /* fsys.c */; };
+		1440C211211DBA490017E4E6 /* timer.m in Sources */ = {isa = PBXBuildFile; fileRef = 143747B71B7E7AFB00939571 /* timer.m */; };
+		1440C212211DBA4D0017E4E6 /* sys-ios.c in Sources */ = {isa = PBXBuildFile; fileRef = 14CEE7751DD2037300191612 /* sys-ios.c */; };
+		1440C213211DBA5D0017E4E6 /* bios.c in Sources */ = {isa = PBXBuildFile; fileRef = 142D1CE41D22A3BA00CA443B /* bios.c */; };
+		1440C214211DBA620017E4E6 /* sys.c in Sources */ = {isa = PBXBuildFile; fileRef = 142D1CE51D22A3BA00CA443B /* sys.c */; };
 		1455A6011D37B538005780D7 /* config.c in Sources */ = {isa = PBXBuildFile; fileRef = 1455A6001D37B538005780D7 /* config.c */; };
 		1455A6021D37B538005780D7 /* config.c in Sources */ = {isa = PBXBuildFile; fileRef = 1455A6001D37B538005780D7 /* config.c */; };
 		14585C751D26C04F00DCE3BA /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 143747521B7E67C900939571 /* main.m */; };
 		14585C761D26CA8700DCE3BA /* gui.c in Sources */ = {isa = PBXBuildFile; fileRef = 142D1CED1D22B82800CA443B /* gui.c */; };
 		14585C771D26CA8A00DCE3BA /* bios.c in Sources */ = {isa = PBXBuildFile; fileRef = 142D1CE41D22A3BA00CA443B /* bios.c */; };
 		14585C781D26CA8D00DCE3BA /* sys.c in Sources */ = {isa = PBXBuildFile; fileRef = 142D1CE51D22A3BA00CA443B /* sys.c */; };
+		14867D01211DBB42009B4B93 /* config.c in Sources */ = {isa = PBXBuildFile; fileRef = 1455A6001D37B538005780D7 /* config.c */; };
+		14867D02211DBF7F009B4B93 /* MTowerData.c in Sources */ = {isa = PBXBuildFile; fileRef = 1440C201211DB03D0017E4E6 /* MTowerData.c */; };
+		14867D03211DBF7F009B4B93 /* MTowerFar2.c in Sources */ = {isa = PBXBuildFile; fileRef = 1440C202211DB03D0017E4E6 /* MTowerFar2.c */; };
+		14867D04211DBF7F009B4B93 /* MTowerFar3.c in Sources */ = {isa = PBXBuildFile; fileRef = 1440C203211DB03D0017E4E6 /* MTowerFar3.c */; };
+		14867D05211DBF7F009B4B93 /* MTowerFar.c in Sources */ = {isa = PBXBuildFile; fileRef = 1440C204211DB03D0017E4E6 /* MTowerFar.c */; };
+		14867D06211DBF7F009B4B93 /* MagicTower.c in Sources */ = {isa = PBXBuildFile; fileRef = 1440C205211DB03D0017E4E6 /* MagicTower.c */; };
+		14867D07211DBF7F009B4B93 /* MAIN.C in Sources */ = {isa = PBXBuildFile; fileRef = 1440C206211DB03D0017E4E6 /* MAIN.C */; };
+		14867D08211DC0AB009B4B93 /* MTowerData.c in Sources */ = {isa = PBXBuildFile; fileRef = 1440C201211DB03D0017E4E6 /* MTowerData.c */; };
+		14867D09211DC0AB009B4B93 /* MTowerFar2.c in Sources */ = {isa = PBXBuildFile; fileRef = 1440C202211DB03D0017E4E6 /* MTowerFar2.c */; };
+		14867D0A211DC0AB009B4B93 /* MTowerFar3.c in Sources */ = {isa = PBXBuildFile; fileRef = 1440C203211DB03D0017E4E6 /* MTowerFar3.c */; };
+		14867D0B211DC0AB009B4B93 /* MTowerFar.c in Sources */ = {isa = PBXBuildFile; fileRef = 1440C204211DB03D0017E4E6 /* MTowerFar.c */; };
+		14867D0C211DC0AB009B4B93 /* MagicTower.c in Sources */ = {isa = PBXBuildFile; fileRef = 1440C205211DB03D0017E4E6 /* MagicTower.c */; };
 		148718631B7F821B00AC88EB /* LCDView.m in Sources */ = {isa = PBXBuildFile; fileRef = 148718621B7F821B00AC88EB /* LCDView.m */; };
 		1487186D1B7FB0C000AC88EB /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487186C1B7FB0C000AC88EB /* main.m */; };
 		148718701B7FB0C000AC88EB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1487186F1B7FB0C000AC88EB /* AppDelegate.m */; };
@@ -134,6 +165,23 @@
 		143747571B7E67C900939571 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		1437475A1B7E67C900939571 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		143747B71B7E7AFB00939571 /* timer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = timer.m; sourceTree = "<group>"; };
+		1440C1EA211DAFD50017E4E6 /* MoTa.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MoTa.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1440C1ED211DAFD50017E4E6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		1440C1EF211DAFD50017E4E6 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		1440C1F0211DAFD50017E4E6 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		1440C1F2211DAFD50017E4E6 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		1440C1F3211DAFD50017E4E6 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		1440C1F6211DAFD50017E4E6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		1440C1F8211DAFD50017E4E6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1440C1FB211DAFD50017E4E6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		1440C1FD211DAFD50017E4E6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1440C201211DB03D0017E4E6 /* MTowerData.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = MTowerData.c; path = "../../MT/源文件/MTowerData.c"; sourceTree = "<group>"; };
+		1440C202211DB03D0017E4E6 /* MTowerFar2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = MTowerFar2.c; path = "../../MT/源文件/MTowerFar2.c"; sourceTree = "<group>"; };
+		1440C203211DB03D0017E4E6 /* MTowerFar3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = MTowerFar3.c; path = "../../MT/源文件/MTowerFar3.c"; sourceTree = "<group>"; };
+		1440C204211DB03D0017E4E6 /* MTowerFar.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = MTowerFar.c; path = "../../MT/源文件/MTowerFar.c"; sourceTree = "<group>"; };
+		1440C205211DB03D0017E4E6 /* MagicTower.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = MagicTower.c; path = "../../MT/源文件/MagicTower.c"; sourceTree = "<group>"; };
+		1440C206211DB03D0017E4E6 /* MAIN.C */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MAIN.C; path = "../../MT/源文件/MAIN.C"; sourceTree = "<group>"; };
+		1440C20D211DB2820017E4E6 /* mtower.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = mtower.h; path = "../../MT/源文件/mtower.h"; sourceTree = "<group>"; };
 		1444A94B1B7B6F1F0085EC83 /* attribute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = attribute.h; sourceTree = "<group>"; };
 		1444A94C1B7B6F1F0085EC83 /* comm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = comm.h; sourceTree = "<group>"; };
 		1444A94D1B7B6F1F0085EC83 /* compa.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = compa.h; sourceTree = "<group>"; };
@@ -228,6 +276,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1440C1E7211DAFD50017E4E6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		148718651B7FB0C000AC88EB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -292,12 +347,44 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		1440C1EB211DAFD50017E4E6 /* MoTa */ = {
+			isa = PBXGroup;
+			children = (
+				1440C201211DB03D0017E4E6 /* MTowerData.c */,
+				1440C202211DB03D0017E4E6 /* MTowerFar2.c */,
+				1440C203211DB03D0017E4E6 /* MTowerFar3.c */,
+				1440C204211DB03D0017E4E6 /* MTowerFar.c */,
+				1440C205211DB03D0017E4E6 /* MagicTower.c */,
+				1440C206211DB03D0017E4E6 /* MAIN.C */,
+				1440C1EF211DAFD50017E4E6 /* AppDelegate.h */,
+				1440C1F0211DAFD50017E4E6 /* AppDelegate.m */,
+				1440C1F2211DAFD50017E4E6 /* ViewController.h */,
+				1440C1F3211DAFD50017E4E6 /* ViewController.m */,
+				1440C1F5211DAFD50017E4E6 /* Main.storyboard */,
+				1440C1F8211DAFD50017E4E6 /* Assets.xcassets */,
+				1440C1FA211DAFD50017E4E6 /* LaunchScreen.storyboard */,
+				1440C1FD211DAFD50017E4E6 /* Info.plist */,
+				1440C1EC211DAFD50017E4E6 /* Supporting Files */,
+				1440C20D211DB2820017E4E6 /* mtower.h */,
+			);
+			path = MoTa;
+			sourceTree = "<group>";
+		};
+		1440C1EC211DAFD50017E4E6 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				1440C1ED211DAFD50017E4E6 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		1444A9361B7B6EE60085EC83 = {
 			isa = PBXGroup;
 			children = (
 				1444A9491B7B6F1F0085EC83 /* src */,
 				1437474C1B7E67C900939571 /* Baye-Mac */,
 				148718691B7FB0C000AC88EB /* Baye-iOS */,
+				1440C1EB211DAFD50017E4E6 /* MoTa */,
 				1444A9421B7B6EFE0085EC83 /* Products */,
 				14585C731D26BF9C00DCE3BA /* Baye-iOS copy-Info.plist */,
 			);
@@ -308,6 +395,7 @@
 			children = (
 				1437474B1B7E67C900939571 /* Baye-Mac.app */,
 				148718681B7FB0C000AC88EB /* Baye-iOS.app */,
+				1440C1EA211DAFD50017E4E6 /* MoTa.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -488,6 +576,23 @@
 			productReference = 1437474B1B7E67C900939571 /* Baye-Mac.app */;
 			productType = "com.apple.product-type.application";
 		};
+		1440C1E9211DAFD50017E4E6 /* MoTa */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1440C200211DAFD50017E4E6 /* Build configuration list for PBXNativeTarget "MoTa" */;
+			buildPhases = (
+				1440C1E6211DAFD50017E4E6 /* Sources */,
+				1440C1E7211DAFD50017E4E6 /* Frameworks */,
+				1440C1E8211DAFD50017E4E6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MoTa;
+			productName = MoTa;
+			productReference = 1440C1EA211DAFD50017E4E6 /* MoTa.app */;
+			productType = "com.apple.product-type.application";
+		};
 		148718671B7FB0C000AC88EB /* Baye-iOS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1487188C1B7FB0C000AC88EB /* Build configuration list for PBXNativeTarget "Baye-iOS" */;
@@ -516,6 +621,10 @@
 					1437474A1B7E67C900939571 = {
 						CreatedOnToolsVersion = 6.3.2;
 					};
+					1440C1E9211DAFD50017E4E6 = {
+						CreatedOnToolsVersion = 8.3.3;
+						ProvisioningStyle = Automatic;
+					};
 					148718671B7FB0C000AC88EB = {
 						CreatedOnToolsVersion = 6.3.2;
 					};
@@ -536,6 +645,7 @@
 			targets = (
 				1437474A1B7E67C900939571 /* Baye-Mac */,
 				148718671B7FB0C000AC88EB /* Baye-iOS */,
+				1440C1E9211DAFD50017E4E6 /* MoTa */,
 			);
 		};
 /* End PBXProject section */
@@ -548,6 +658,16 @@
 				143747581B7E67C900939571 /* Images.xcassets in Resources */,
 				14E568F41B84A10800CAE666 /* font.bin in Resources */,
 				1437475B1B7E67C900939571 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1440C1E8211DAFD50017E4E6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1440C1FC211DAFD50017E4E6 /* LaunchScreen.storyboard in Resources */,
+				1440C1F9211DAFD50017E4E6 /* Assets.xcassets in Resources */,
+				1440C1F7211DAFD50017E4E6 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -570,6 +690,7 @@
 			files = (
 				1437476E1B7E68C300939571 /* fsys.c in Sources */,
 				143747701B7E68C300939571 /* sem.m in Sources */,
+				14867D09211DC0AB009B4B93 /* MTowerFar2.c in Sources */,
 				143747BA1B7E808700939571 /* timer.m in Sources */,
 				148718631B7F821B00AC88EB /* LCDView.m in Sources */,
 				140939091F07436100802015 /* version.c in Sources */,
@@ -581,6 +702,7 @@
 				1437478D1B7E68C300939571 /* citycmde.c in Sources */,
 				141D694B1D8CD1E9000F772D /* bind-objects.c in Sources */,
 				1455A6011D37B538005780D7 /* config.c in Sources */,
+				14867D08211DC0AB009B4B93 /* MTowerData.c in Sources */,
 				1437478E1B7E68C300939571 /* cityedit.c in Sources */,
 				1437478F1B7E68C300939571 /* comIn.c in Sources */,
 				143747901B7E68C300939571 /* comOut.c in Sources */,
@@ -591,11 +713,14 @@
 				143747961B7E68C300939571 /* FgtPkAi.c in Sources */,
 				143747971B7E68C300939571 /* Fight.c in Sources */,
 				143747981B7E68C300939571 /* FightSub.c in Sources */,
+				14867D0B211DC0AB009B4B93 /* MTowerFar.c in Sources */,
 				1437479A1B7E68C300939571 /* gamEng.c in Sources */,
 				142D1CEE1D22B82800CA443B /* gui.c in Sources */,
+				14867D0C211DC0AB009B4B93 /* MagicTower.c in Sources */,
 				141D69581DA250D6000F772D /* touch.c in Sources */,
 				143747A91B7E68C300939571 /* infdeal.c in Sources */,
 				143747AB1B7E68C300939571 /* paccount.c in Sources */,
+				14867D0A211DC0AB009B4B93 /* MTowerFar3.c in Sources */,
 				141D69541D9EABA6000F772D /* dummy-script.c in Sources */,
 				141D695C1DA25C9A000F772D /* baye-wrapper-mac.c in Sources */,
 				143747AF1B7E68C300939571 /* PublicFun.c in Sources */,
@@ -613,12 +738,37 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		1440C1E6211DAFD50017E4E6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1440C210211DBA440017E4E6 /* fsys.c in Sources */,
+				1440C20F211DBA340017E4E6 /* sem.m in Sources */,
+				1440C20A211DB03D0017E4E6 /* MTowerFar.c in Sources */,
+				1440C20C211DB03D0017E4E6 /* MAIN.C in Sources */,
+				1440C1F4211DAFD50017E4E6 /* ViewController.m in Sources */,
+				1440C214211DBA620017E4E6 /* sys.c in Sources */,
+				1440C213211DBA5D0017E4E6 /* bios.c in Sources */,
+				1440C212211DBA4D0017E4E6 /* sys-ios.c in Sources */,
+				1440C207211DB03D0017E4E6 /* MTowerData.c in Sources */,
+				1440C211211DBA490017E4E6 /* timer.m in Sources */,
+				1440C208211DB03D0017E4E6 /* MTowerFar2.c in Sources */,
+				1440C20E211DBA0D0017E4E6 /* gui.c in Sources */,
+				1440C209211DB03D0017E4E6 /* MTowerFar3.c in Sources */,
+				1440C1F1211DAFD50017E4E6 /* AppDelegate.m in Sources */,
+				14867D01211DBB42009B4B93 /* config.c in Sources */,
+				1440C1EE211DAFD50017E4E6 /* main.m in Sources */,
+				1440C20B211DB03D0017E4E6 /* MagicTower.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		148718641B7FB0C000AC88EB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				14585C771D26CA8A00DCE3BA /* bios.c in Sources */,
 				14585C761D26CA8700DCE3BA /* gui.c in Sources */,
+				14867D03211DBF7F009B4B93 /* MTowerFar2.c in Sources */,
 				148718911B7FB87D00AC88EB /* fsys.c in Sources */,
 				148718931B7FB87D00AC88EB /* sem.m in Sources */,
 				1409390A1F07436100802015 /* version.c in Sources */,
@@ -630,6 +780,7 @@
 				148718B11B7FB87D00AC88EB /* citycmde.c in Sources */,
 				148718B21B7FB87D00AC88EB /* cityedit.c in Sources */,
 				14E568F21B8494C800CAE666 /* GamTouchPadView.m in Sources */,
+				14867D02211DBF7F009B4B93 /* MTowerData.c in Sources */,
 				141D69471D8CD137000F772D /* data-bind.c in Sources */,
 				14585C781D26CA8D00DCE3BA /* sys.c in Sources */,
 				148718B31B7FB87D00AC88EB /* comIn.c in Sources */,
@@ -640,11 +791,15 @@
 				148718B91B7FB87D00AC88EB /* FgtCount.c in Sources */,
 				148718BA1B7FB87D00AC88EB /* FgtPkAi.c in Sources */,
 				148718BB1B7FB87D00AC88EB /* Fight.c in Sources */,
+				14867D05211DBF7F009B4B93 /* MTowerFar.c in Sources */,
 				148718BC1B7FB87D00AC88EB /* FightSub.c in Sources */,
 				148718BE1B7FB87D00AC88EB /* gamEng.c in Sources */,
+				14867D07211DBF7F009B4B93 /* MAIN.C in Sources */,
+				14867D06211DBF7F009B4B93 /* MagicTower.c in Sources */,
 				148718CD1B7FB87D00AC88EB /* infdeal.c in Sources */,
 				148718CE1B7FB87D00AC88EB /* paccount.c in Sources */,
 				14CEE7771DD2037300191612 /* sys-ios.c in Sources */,
+				14867D04211DBF7F009B4B93 /* MTowerFar3.c in Sources */,
 				148718D01B7FB87D00AC88EB /* PublicFun.c in Sources */,
 				148718D11B7FB87D00AC88EB /* showface.c in Sources */,
 				148718D21B7FB87D00AC88EB /* Size.c in Sources */,
@@ -671,6 +826,22 @@
 				1437475A1B7E67C900939571 /* Base */,
 			);
 			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		1440C1F5211DAFD50017E4E6 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1440C1F6211DAFD50017E4E6 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		1440C1FA211DAFD50017E4E6 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1440C1FB211DAFD50017E4E6 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
 		148718741B7FB0C000AC88EB /* Main.storyboard */ = {
@@ -782,6 +953,108 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		1440C1FE211DAFD50017E4E6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "${PROJECT_DIR}/../src";
+				INFOPLIST_FILE = MoTa/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = loongw.MoTa;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		1440C1FF211DAFD50017E4E6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = "${PROJECT_DIR}/../src";
+				INFOPLIST_FILE = MoTa/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = loongw.MoTa;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
@@ -907,6 +1180,15 @@
 			buildConfigurations = (
 				143747691B7E67C900939571 /* Debug */,
 				1437476A1B7E67C900939571 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1440C200211DAFD50017E4E6 /* Build configuration list for PBXNativeTarget "MoTa" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1440C1FE211DAFD50017E4E6 /* Debug */,
+				1440C1FF211DAFD50017E4E6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
