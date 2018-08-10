@@ -63,7 +63,6 @@
 		1440C209211DB03D0017E4E6 /* MTowerFar3.c in Sources */ = {isa = PBXBuildFile; fileRef = 1440C203211DB03D0017E4E6 /* MTowerFar3.c */; };
 		1440C20A211DB03D0017E4E6 /* MTowerFar.c in Sources */ = {isa = PBXBuildFile; fileRef = 1440C204211DB03D0017E4E6 /* MTowerFar.c */; };
 		1440C20B211DB03D0017E4E6 /* MagicTower.c in Sources */ = {isa = PBXBuildFile; fileRef = 1440C205211DB03D0017E4E6 /* MagicTower.c */; };
-		1440C20C211DB03D0017E4E6 /* MAIN.C in Sources */ = {isa = PBXBuildFile; fileRef = 1440C206211DB03D0017E4E6 /* MAIN.C */; };
 		1440C20E211DBA0D0017E4E6 /* gui.c in Sources */ = {isa = PBXBuildFile; fileRef = 142D1CED1D22B82800CA443B /* gui.c */; };
 		1440C20F211DBA340017E4E6 /* sem.m in Sources */ = {isa = PBXBuildFile; fileRef = 1437473C1B7CBC2300939571 /* sem.m */; };
 		1440C210211DBA440017E4E6 /* fsys.c in Sources */ = {isa = PBXBuildFile; fileRef = 1444A9AA1B7B79D10085EC83 /* fsys.c */; };
@@ -745,7 +744,6 @@
 				1440C210211DBA440017E4E6 /* fsys.c in Sources */,
 				1440C20F211DBA340017E4E6 /* sem.m in Sources */,
 				1440C20A211DB03D0017E4E6 /* MTowerFar.c in Sources */,
-				1440C20C211DB03D0017E4E6 /* MAIN.C in Sources */,
 				1440C1F4211DAFD50017E4E6 /* ViewController.m in Sources */,
 				1440C214211DBA620017E4E6 /* sys.c in Sources */,
 				1440C213211DBA5D0017E4E6 /* bios.c in Sources */,

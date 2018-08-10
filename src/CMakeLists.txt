@@ -46,6 +46,14 @@ platform/js/script.c
 platform/js/sys-js.c
 )
 
+set (mtowerlib_SRCS
+mtower/MTowerData.c
+mtower/MTowerFar.c
+mtower/MTowerFar2.c
+mtower/MTowerFar3.c
+mtower/MagicTower.c
+)
+
 set (bayelib_win_SRCS
 platform/win/fsys.c
 platform/win/game.c
@@ -56,12 +64,17 @@ platform/win/timer.c
 )
 
 add_library(bayeliba ${bayelib_SRCS})
+add_library(mtowerliba ${mtowerlib_SRCS})
 
 if (${CMAKE_SYSTEM_NAME} STREQUAL Emscripten)
 	target_sources(bayeliba PRIVATE ${bayelib_js_SRCS})
 	add_executable(baye
 		platform/js/main.c
 		version.c
+	)
+
+	add_executable(mtower
+		mtower/main.c
 	)
 
 	add_custom_command(
@@ -93,15 +106,19 @@ target_link_libraries(baye bayeliba)
 
 target_include_directories(baye PRIVATE . ./platform/common)
 target_include_directories(bayeliba PRIVATE . ./platform/common)
+target_include_directories(mtowerliba PRIVATE . ./platform/common)
+target_include_directories(mtower PRIVATE . ./platform/common)
+target_link_libraries(mtower bayeliba mtowerliba)
 
 
 #target_include_directories(bayeliba PRIVATE ${msgpack_SOURCE_DIR}/include)
 if (${CMAKE_SYSTEM_NAME} STREQUAL Emscripten)
 	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -s EMTERPRETIFY=1")
 	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -s EMTERPRETIFY_ASYNC=1")
-	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -s ASSERTIONS=0")
-	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -s EMTERPRETIFY_WHITELIST='@whitelist.json'")
+	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -s ASSERTIONS=1")
+	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -s EMTERPRETIFY_BLACKLIST='@black.json'")
 	target_link_libraries(baye "--memory-init-file 0")
+	target_link_libraries(mtower "--memory-init-file 0")
 #	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} --memoryprofiler")
 #	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -s EMTERPRETIFY_ADVISE=1")
 endif (${CMAKE_SYSTEM_NAME} STREQUAL Emscripten)

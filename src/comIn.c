@@ -82,9 +82,9 @@ FAR U8 GamConInit(void)
         printf("tried:\n");
         printf("%s\n", altDatFilePath);
         printf("%s\n", datFilePath);
-        return 1;
     }
-    g_CBnkPtr = gam_freadall(g_LibFp);				/*常量页面指针*/
+    if (g_LibFp)
+        g_CBnkPtr = gam_freadall(g_LibFp);				/*常量页面指针*/
 
     /*随机函数初始化*/
     U8 i;
@@ -104,7 +104,8 @@ FAR U8 GamConInit(void)
     gam_memset(g_VisScr,0,WK_BLEN);
 
     /* 从lib读取引擎参数 */
-    GamLoadEngineConfig();
+    if (g_LibFp)
+        GamLoadEngineConfig();
     return 0;
 }
 /***********************************************************************
