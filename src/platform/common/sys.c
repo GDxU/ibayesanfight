@@ -297,32 +297,36 @@ FAR void SysPutPixel(PT x,PT y,U8 data)
     flushLcd();
 }
 
-FAR void SysRect(PT x1,PT y1,PT x2,PT y2)
+FAR void _SysRect(PT x1,PT y1,PT x2,PT y2, U8 c)
 {
     int x, y;
     y = y1;
     for (x = x1; x <= x2; x++) {
-        _pixel(x, y, DOT);
+        _pixel(x, y, c);
     }
     y = y2;
     for (x = x1; x <= x2; x++) {
-        _pixel(x, y, DOT);
+        _pixel(x, y, c);
     }
     x = x1;
     for (y = y1; y <= y2; y++) {
-        _pixel(x, y, DOT);
+        _pixel(x, y, c);
     }
     x = x2;
     for (y = y1; y <= y2; y++) {
-        _pixel(x, y, DOT);
+        _pixel(x, y, c);
     }
     flushLcd();
 }
 
+FAR void SysRect(PT x1,PT y1,PT x2,PT y2)
+{
+    _SysRect(x1, y1, x2, y2, DOT);
+}
+
 FAR void SysRectClear(PT x1,PT y1,PT x2,PT y2)
 {
-    SysLcdPartClear(x1, y1, x2, y2);
-    flushLcd();
+    _SysRect(x1, y1, x2, y2, CLR);
 }
 
 FAR void SysSetKeySound(U8 keySoundFlag)
