@@ -1,0 +1,1411 @@
+  Wed Jun 18 21:33:37 2003                                                                                               Page    1
+
+
+
+
+
+
+
+               2500 A.D. 6502 Macro Assembler  -  Version 5.02b
+               ------------------------------------------------
+
+                       Input  Filename : main.asm
+                       Output Filename : main.obj
+                       Listing Has Been Relocated                               
+
+
+    1                     	program:	.section
+    2                     	const_data:	.section
+    3                     	init_data:	.section
+    4                     	uninit_data:	.section
+    5                     	bank_table:	.section
+    6                     	bank_table:	.section
+    7                     			.program
+    8  516B                 			.filetype	C
+    9                     			.symbols
+   10                     			.llchar		?
+   11                     			.longchk	off
+   12                     			.extern	page0	__oper1
+   13                     			.extern	page0	__oper1_high8
+   14                     			.extern	page0	__oper2
+   15                     			.extern	page0	__oper2_high8
+   16                     			.extern	page0	__addr_reg
+   17                     			.extern	page0	__stack_ptr
+   18                     			.extern	page0	__lib_temp_ptr
+   19                     	;.filename main.c
+   20                     	;
+   21                     			.filename	main.c
+   22                     	;.filename inc\dictsys.h
+   23                     	;
+   24                     			.filename	inc\dictsys.h
+   25                     	;.filename inc\keytable.h
+   26                     	;
+   27                     			.filename	inc\keytable.h
+   28                     	;.endinc inc\dictsys.h
+   29                     			.filename	inc\dictsys.h
+   30                     	;struct tagMsgType {
+   31                     	;
+   32                     	;	
+   33                     			.strname  _tagMsgType
+   34                     	;unsigned char 		type;
+   35                     	;
+   36                     	;	
+   37                     			.strdef	_type,74,v,c,u,0,g,d,d,d,d,00h
+   38                     	;unsigned int 		param;
+   39                     	;
+   40                     			.strdef	_param,76,v,i,u,1,g,d,d,d,d,00h
+   41                     	;}
+   42                     			.strend	_tagMsgType,3,2
+   43                     	;struct tagMsgByteType {
+   44                     	;
+   45                     	;	
+   46                     			.strname  _tagMsgByteType
+  Wed Jun 18 21:33:37 2003                                                                                               Page    2
+
+
+
+
+   47                     	;unsigned char 		type;
+   48                     	;
+   49                     	;	
+   50                     			.strdef	_type,81,v,c,u,0,g,d,d,d,d,00h
+   51                     	;unsigned char 		prmLow;
+   52                     	;
+   53                     	;	
+   54                     			.strdef	_prmLow,83,v,c,u,1,g,d,d,d,d,00h
+   55                     	;unsigned char 		prmHi;
+   56                     	;
+   57                     			.strdef	_prmHi,85,v,c,u,2,g,d,d,d,d,00h
+   58                     	;}
+   59                     			.strend	_tagMsgByteType,3,3
+   60                     	;struct tagDate {
+   61                     	;
+   62                     	;	
+   63                     			.strname  _tagDate
+   64                     	;unsigned char 	day;			
+   65                     	;
+   66                     	;	
+   67                     			.strdef	_day,121,v,c,u,0,g,d,d,d,d,00h
+   68                     	;unsigned char 	month;
+   69                     	;
+   70                     	;	
+   71                     			.strdef	_month,123,v,c,u,1,g,d,d,d,d,00h
+   72                     	;unsigned char 	year;
+   73                     	;
+   74                     	;	
+   75                     			.strdef	_year,125,v,c,u,2,g,d,d,d,d,00h
+   76                     	;unsigned char 	wday;				
+   77                     	;
+   78                     			.strdef	_wday,127,v,c,u,3,g,d,d,d,d,00h
+   79                     	;}
+   80                     			.strend	_tagDate,4,4
+   81                     	;struct tagTime {
+   82                     	;
+   83                     	;	
+   84                     			.strname  _tagTime
+   85                     	;unsigned char 	second;
+   86                     	;
+   87                     	;	
+   88                     			.strdef	_second,133,v,c,u,0,g,d,d,d,d,00h
+   89                     	;unsigned char 	minute;
+   90                     	;
+   91                     	;	
+   92                     			.strdef	_minute,135,v,c,u,1,g,d,d,d,d,00h
+   93                     	;unsigned char 	hour;
+   94                     	;
+   95                     			.strdef	_hour,137,v,c,u,2,g,d,d,d,d,00h
+   96                     	;}
+   97                     			.strend	_tagTime,3,3
+   98                     	;struct tagGuiMenuItemType {
+   99                     	;
+  100                     	;	
+  101                     			.strname  _tagGuiMenuItemType
+  102                     	;unsigned char 		strLen;				
+  103                     	;
+  Wed Jun 18 21:33:37 2003                                                                                               Page    3
+
+
+
+
+  104                     	;	
+  105                     			.strdef	_strLen,156,v,c,u,0,g,d,d,d,d,00h
+  106                     	;unsigned char 		*str;						
+  107                     	;
+  108                     	;	
+  109                     			.strdef	_str,158,v,pc1,u,1,g,d,d,d,d,00h
+  110                     	;unsigned char 		*bmpData0;			
+  111                     	;
+  112                     	;	
+  113                     			.strdef	_bmpData0,160,v,pc1,u,3,g,d,d,d,d,00h
+  114                     	;unsigned char 		*bmpData1;			
+  115                     	;
+  116                     			.strdef	_bmpData1,162,v,pc1,u,5,g,d,d,d,d,00h
+  117                     	;}
+  118                     			.strend	_tagGuiMenuItemType,7,4
+  119                     	;struct tagGuiMenu {
+  120                     	;
+  121                     	;	
+  122                     			.strname  _tagGuiMenu
+  123                     	;unsigned char 					itemNum;			
+  124                     	;
+  125                     	;	
+  126                     			.strdef	_itemNum,168,v,c,u,0,g,d,d,d,d,00h
+  127                     	;unsigned char 					colNum;				
+  128                     	;
+  129                     	;	
+  130                     			.strdef	_colNum,170,v,c,u,1,g,d,d,d,d,00h
+  131                     	;unsigned char 					*colPos;			
+  132                     	;
+  133                     	;	
+  134                     			.strdef	_colPos,172,v,pc1,u,2,g,d,d,d,d,00h
+  135                     	;unsigned char 					style;				
+  136                     	;
+  137                     	;	
+  138                     			.strdef	_style,174,v,c,u,4,g,d,d,d,d,00h
+  139                     	;struct tagGuiMenuItemType *	*menuItems ;		
+  140                     	;
+  141                     			.strdef	_menuItems,176,v,ps2,_tagGuiMenuItemType,s,5,g,d,d,d,d,00h
+  142                     	;}
+  143                     			.strend	_tagGuiMenu,7,5
+  144                     	;struct tagMenuEnv {
+  145                     	;
+  146                     	;	
+  147                     			.strname  _tagMenuEnv
+  148                     	;unsigned char 		x0;					
+  149                     	;
+  150                     	;	
+  151                     			.strdef	_x0,182,v,c,u,0,g,d,d,d,d,00h
+  152                     	;unsigned char 		x1;					
+  153                     	;
+  154                     	;	
+  155                     			.strdef	_x1,184,v,c,u,1,g,d,d,d,d,00h
+  156                     	;unsigned char 		y0;
+  157                     	;
+  158                     	;	
+  159                     			.strdef	_y0,186,v,c,u,2,g,d,d,d,d,00h
+  160                     	;unsigned char 		y1;
+  Wed Jun 18 21:33:37 2003                                                                                               Page    4
+
+
+
+
+  161                     	;
+  162                     	;	
+  163                     			.strdef	_y1,188,v,c,u,3,g,d,d,d,d,00h
+  164                     	;unsigned char 		startDispItem;		
+  165                     	;
+  166                     	;
+  167                     	;
+  168                     	;	
+  169                     			.strdef	_startDispItem,190,v,c,u,4,g,d,d,d,d,00h
+  170                     	;unsigned char 		maxDispItem;		
+  171                     	;
+  172                     	;	
+  173                     			.strdef	_maxDispItem,194,v,c,u,5,g,d,d,d,d,00h
+  174                     	;unsigned char 		dispItemNum;		
+  175                     	;
+  176                     	;	
+  177                     			.strdef	_dispItemNum,196,v,c,u,6,g,d,d,d,d,00h
+  178                     	;unsigned char 		nFocus;				
+  179                     	;
+  180                     			.strdef	_nFocus,198,v,c,u,7,g,d,d,d,d,00h
+  181                     	;}
+  182                     			.strend	_tagMenuEnv,8,8
+  183                     	;struct tagRect {
+  184                     	;
+  185                     	;	
+  186                     			.strname  _tagRect
+  187                     	;unsigned char 		left;					
+  188                     	;
+  189                     	;	
+  190                     			.strdef	_left,204,v,c,u,0,g,d,d,d,d,00h
+  191                     	;unsigned char 		top;					
+  192                     	;
+  193                     	;	
+  194                     			.strdef	_top,206,v,c,u,1,g,d,d,d,d,00h
+  195                     	;unsigned char 		height;					 
+  196                     	;
+  197                     	;	
+  198                     			.strdef	_height,208,v,c,u,2,g,d,d,d,d,00h
+  199                     	;unsigned char 		width;					
+  200                     	;
+  201                     			.strdef	_width,210,v,c,u,3,g,d,d,d,d,00h
+  202                     	;}
+  203                     			.strend	_tagRect,4,4
+  204                     	;struct tagRandEnv {
+  205                     	;
+  206                     	;	
+  207                     			.strname  _tagRandEnv
+  208                     	;unsigned long  next 	;
+  209                     	;
+  210                     	; 	
+  211                     			.strdef	_next,216,v,l,u,0,g,d,d,d,d,00h
+  212                     	;unsigned int  randMax	;
+  213                     	;
+  214                     			.strdef	_randMax,218,v,i,u,4,g,d,d,d,d,00h
+  215                     	;}
+  216                     			.strend	_tagRandEnv,6,2
+  217                     	;struct tagQryBoxBmp {
+  Wed Jun 18 21:33:37 2003                                                                                               Page    5
+
+
+
+
+  218                     	;
+  219                     	;	
+  220                     			.strname  _tagQryBoxBmp
+  221                     	;unsigned char 		left;					
+  222                     	;
+  223                     	;	
+  224                     			.strdef	_left,224,v,c,u,0,g,d,d,d,d,00h
+  225                     	;unsigned char 		top;					
+  226                     	;
+  227                     	;	
+  228                     			.strdef	_top,226,v,c,u,1,g,d,d,d,d,00h
+  229                     	;unsigned char 		height;					 
+  230                     	;
+  231                     	;	
+  232                     			.strdef	_height,228,v,c,u,2,g,d,d,d,d,00h
+  233                     	;unsigned char 		width;					
+  234                     	;
+  235                     	;	
+  236                     			.strdef	_width,230,v,c,u,3,g,d,d,d,d,00h
+  237                     	;unsigned char 		*bmpData;				
+  238                     	;
+  239                     			.strdef	_bmpData,232,v,pc1,u,4,g,d,d,d,d,00h
+  240                     	;}
+  241                     			.strend	_tagQryBoxBmp,6,5
+  242                     	;struct tagAppSwitchInfo {
+  243                     	;
+  244                     	;	
+  245                     			.strname  _tagAppSwitchInfo
+  246                     	;unsigned int 		currentAppID;							
+  247                     	;
+  248                     	;	
+  249                     			.strdef	_currentAppID,278,v,i,u,0,g,d,d,d,d,00h
+  250                     	;unsigned int 		heirAppID;								
+  251                     	;
+  252                     	;	
+  253                     			.strdef	_heirAppID,280,v,i,u,2,g,d,d,d,d,00h
+  254                     	;unsigned long 		downAppPhyAddr;							
+  255                     	;
+  256                     	;	
+  257                     			.strdef	_downAppPhyAddr,282,v,l,u,4,g,d,d,d,d,00h
+  258                     	;unsigned char 		currentAppAttr;							
+  259                     	;
+  260                     	;	
+  261                     			.strdef	_currentAppAttr,284,v,c,u,8,g,d,d,d,d,00h
+  262                     	;unsigned char 		heirAppAttr;
+  263                     	;
+  264                     			.strdef	_heirAppAttr,286,v,c,u,9,g,d,d,d,d,00h
+  265                     	;}
+  266                     			.strend	_tagAppSwitchInfo,10,5
+  267                     	;struct tagSysIconEnv {
+  268                     	;
+  269                     	;	
+  270                     			.strname  _tagSysIconEnv
+  271                     	;unsigned char 		iconSaveBuf[12];
+  272                     	;
+  273                     			.strdef	_iconSaveBuf,367,v,c,u,0,g,d,d,d,d,0ch,00h
+  274                     	;}
+  Wed Jun 18 21:33:37 2003                                                                                               Page    6
+
+
+
+
+  275                     			.strend	_tagSysIconEnv,12,1
+  276                     	;.macstart 19702,519
+  277                     	;
+  278                     			.c_start  04cf6h,519
+  279                     	;.asm
+  280                     	;	
+  281  516B                 			.CHIP	6502
+  282                     			.LINKLIST
+  283                     			.SYMBOLS
+  284                     			.DEBUG	ASM
+  285                     			.LIST	ON
+  286                     	;.optimize	off
+  287                     	;	
+  288                     	;.endasm
+  289                     	;
+  290                     	;
+  291                     	;.macend 19793,526
+  292                     	;
+  293                     			.c_end	04d51h,526
+  294                     	;.endinc main.c
+  295                     			.filename	main.c
+  296                     	;.filename inc\keytable.h
+  297                     	;
+  298                     			.filename	inc\keytable.h
+  299                     	;.endinc main.c
+  300                     			.filename	main.c
+  301                     	;.filename inc\stdlib.h
+  302                     	;
+  303                     			.filename	inc\stdlib.h
+  304                     	;.endinc main.c
+  305                     			.filename	main.c
+  306                     	;
+  307                     			.f_start  027ah,14
+  308         4237 516B   	_main:		.equal	$
+  309                     			.attrib	_main,15,f,d
+  310                     	;
+  311                     	;
+  312         0000        	?ASC0:		.equal	0
+  313         0002        	?TSC0:		.equal	2
+  314         002D        	?LSC0:		.equal	45
+  315  516B     08          			php
+  316  516C     78          			sei
+  317  516D     38          			sec
+  318  516E     A5 28       			lda	__stack_ptr
+  319  5170     E9 2F       			sbc	#.low.+?LSC0+?TSC0
+  320  5172     85 28       			sta	__stack_ptr
+  321  5174     A5 29       			lda	__stack_ptr+1
+  322  5176     E9 00       			sbc	#.high.+?LSC0+?TSC0
+  323  5178     85 29       			sta	__stack_ptr+1
+  324  517A     28          			plp
+  325                     	;unsigned char 	buf[20]=str[20]=ch	;
+  326                     	;	
+  327                     			.local	_buf,16,v,c,u,d,d,d,d,-20+?LSC0+0,014h,00h
+  328                     			.local	_str,16,v,c,u,d,d,d,d,-40+?LSC0+0,014h,00h
+  329                     			.local	_ch,16,v,c,u,d,d,d,d,-41+?LSC0+0,00h
+  330                     	;unsigned char 		sel;
+  331                     	;	
+  Wed Jun 18 21:33:37 2003                                                                                               Page    7
+
+
+
+
+  332                     			.local	_sel,17,v,c,u,d,d,d,d,-42+?LSC0+0,00h
+  333                     	;struct tagMsgType 		gMsg;
+  334                     	;	
+  335                     	;	
+  336                     			.local	_gMsg,18,s,_tagMsgType,d,d,d,d,-45+?LSC0+0,00h
+  337                     	;SysLine(0,0,140,0)
+  338                     			.c_start  02c3h,20
+  339  517B     A9 00       			lda	#0
+  340  517D     20 AA DA    			jsr	__store_char_funct_arg
+  341  5180     A9 8C       			lda	#.low.140
+  342  5182     85 20       			sta	__oper1
+  343  5184     A9 00       			lda	#.high.140
+  344  5186     85 21       			sta	__oper1+1
+  345  5188     A5 20       			lda	__oper1
+  346  518A     20 AA DA    			jsr	__store_char_funct_arg
+  347  518D     A9 00       			lda	#0
+  348  518F     20 AA DA    			jsr	__store_char_funct_arg
+  349  5192     A9 00       			lda	#0
+  350  5194     A2 94       			ldx	#.low.&SysLine
+  351  5196     86 26       			stx	__addr_reg
+  352  5198     A2 E7       			ldx	#.high.&SysLine+1
+  353  519A     86 27       			stx	__addr_reg+1
+  354                     			.bf_call
+  355  519C     20 F6 D2    			jsr	__banked_function_call
+  356  519F     08          			php
+  357  51A0     78          			sei
+  358  51A1     18          			clc
+  359  51A2     A5 28       			lda	__stack_ptr
+  360  51A4     69 03       			adc	#.low.3
+  361  51A6     85 28       			sta	__stack_ptr
+  362  51A8     A5 29       			lda	__stack_ptr+1
+  363  51AA     69 00       			adc	#.high.3
+  364  51AC     85 29       			sta	__stack_ptr+1
+  365  51AE     28          			plp
+  366                     			.c_end	02d5h,20
+  367                     	;SysAscii(0,0,'a')
+  368                     			.c_start  02d9h,21
+  369  51AF     A9 61       			lda	#61h
+  370  51B1     20 AA DA    			jsr	__store_char_funct_arg
+  371  51B4     A9 00       			lda	#0
+  372  51B6     20 AA DA    			jsr	__store_char_funct_arg
+  373  51B9     A9 00       			lda	#0
+  374  51BB     A2 BB       			ldx	#.low.&SysAscii
+  375  51BD     86 26       			stx	__addr_reg
+  376  51BF     A2 E7       			ldx	#.high.&SysAscii+1
+  377  51C1     86 27       			stx	__addr_reg+1
+  378                     			.bf_call
+  379  51C3     20 F6 D2    			jsr	__banked_function_call
+  380  51C6     08          			php
+  381  51C7     78          			sei
+  382  51C8     18          			clc
+  383  51C9     A5 28       			lda	__stack_ptr
+  384  51CB     69 02       			adc	#.low.2
+  385  51CD     85 28       			sta	__stack_ptr
+  386  51CF     A5 29       			lda	__stack_ptr+1
+  387  51D1     69 00       			adc	#.high.2
+  388  51D3     85 29       			sta	__stack_ptr+1
+  Wed Jun 18 21:33:37 2003                                                                                               Page    8
+
+
+
+
+  389  51D5     28          			plp
+  390                     			.c_end	02eah,21
+  391                     	;str[0] = 0
+  392                     			.c_start  036eh,32
+  393  51D6     18          			clc
+  394  51D7     A5 28       			lda	__stack_ptr
+  395  51D9     69 05       			adc	#.low.-40+0+?LSC0
+  396  51DB     85 20       			sta	__oper1
+  397  51DD     A5 29       			lda	__stack_ptr+1
+  398  51DF     69 00       			adc	#.high.-40+0+?LSC0
+  399  51E1     85 21       			sta	__oper1+1
+  400  51E3     A5 20       			lda	__oper1
+  401  51E5     85 23       			sta	__oper2
+  402  51E7     A5 21       			lda	__oper1+1
+  403  51E9     85 24       			sta	__oper2+1
+  404  51EB     A9 00       			lda	#0
+  405  51ED     A0 00       			ldy	#0
+  406  51EF     91 23       			sta	(__oper2),y
+  407                     			.c_end	0378h,32
+  408                     	;str[0] = 0
+  409                     			.c_start  038dh,33
+  410  51F1     18          			clc
+  411  51F2     A5 28       			lda	__stack_ptr
+  412  51F4     69 05       			adc	#.low.-40+0+?LSC0
+  413  51F6     85 20       			sta	__oper1
+  414  51F8     A5 29       			lda	__stack_ptr+1
+  415  51FA     69 00       			adc	#.high.-40+0+?LSC0
+  416  51FC     85 21       			sta	__oper1+1
+  417  51FE     A5 20       			lda	__oper1
+  418  5200     85 23       			sta	__oper2
+  419  5202     A5 21       			lda	__oper1+1
+  420  5204     85 24       			sta	__oper2+1
+  421  5206     A9 00       			lda	#0
+  422  5208     A0 00       			ldy	#0
+  423  520A     91 23       			sta	(__oper2),y
+  424                     			.c_end	0397h,33
+  425                     	;str[0] = 0
+  426                     			.c_start  039bh,34
+  427  520C     18          			clc
+  428  520D     A5 28       			lda	__stack_ptr
+  429  520F     69 05       			adc	#.low.-40+0+?LSC0
+  430  5211     85 20       			sta	__oper1
+  431  5213     A5 29       			lda	__stack_ptr+1
+  432  5215     69 00       			adc	#.high.-40+0+?LSC0
+  433  5217     85 21       			sta	__oper1+1
+  434  5219     A5 20       			lda	__oper1
+  435  521B     85 23       			sta	__oper2
+  436  521D     A5 21       			lda	__oper1+1
+  437  521F     85 24       			sta	__oper2+1
+  438  5221     A9 00       			lda	#0
+  439  5223     A0 00       			ldy	#0
+  440  5225     91 23       			sta	(__oper2),y
+  441                     			.c_end	03a5h,34
+  442                     	;str[0] = 0
+  443                     			.c_start  03a9h,35
+  444  5227     18          			clc
+  445  5228     A5 28       			lda	__stack_ptr
+  Wed Jun 18 21:33:37 2003                                                                                               Page    9
+
+
+
+
+  446  522A     69 05       			adc	#.low.-40+0+?LSC0
+  447  522C     85 20       			sta	__oper1
+  448  522E     A5 29       			lda	__stack_ptr+1
+  449  5230     69 00       			adc	#.high.-40+0+?LSC0
+  450  5232     85 21       			sta	__oper1+1
+  451  5234     A5 20       			lda	__oper1
+  452  5236     85 23       			sta	__oper2
+  453  5238     A5 21       			lda	__oper1+1
+  454  523A     85 24       			sta	__oper2+1
+  455  523C     A9 00       			lda	#0
+  456  523E     A0 00       			ldy	#0
+  457  5240     91 23       			sta	(__oper2),y
+  458                     			.c_end	03b3h,35
+  459                     	;SysPrintString(0,32,cst_MainLogoStr)
+  460                     			.c_start  03bah,37
+  461  5242     A9 42       			lda	#.low._cst_MainLogoStr
+  462  5244     85 20       			sta	__oper1
+  463  5246     A9 90       			lda	#.high._cst_MainLogoStr
+  464  5248     85 21       			sta	__oper1+1
+  465  524A     20 CA DA    			jsr	__store_int_funct_arg
+  466  524D     A9 20       			lda	#32
+  467  524F     20 AA DA    			jsr	__store_char_funct_arg
+  468  5252     A9 00       			lda	#0
+  469  5254     A2 9A       			ldx	#.low.&SysPrintString
+  470  5256     86 26       			stx	__addr_reg
+  471  5258     A2 E7       			ldx	#.high.&SysPrintString+1
+  472  525A     86 27       			stx	__addr_reg+1
+  473                     			.bf_call
+  474  525C     20 F6 D2    			jsr	__banked_function_call
+  475  525F     08          			php
+  476  5260     78          			sei
+  477  5261     18          			clc
+  478  5262     A5 28       			lda	__stack_ptr
+  479  5264     69 03       			adc	#.low.3
+  480  5266     85 28       			sta	__stack_ptr
+  481  5268     A5 29       			lda	__stack_ptr+1
+  482  526A     69 00       			adc	#.high.3
+  483  526C     85 29       			sta	__stack_ptr+1
+  484  526E     28          			plp
+  485                     			.c_end	03deh,37
+  486                     	;GuiInit()
+  487                     			.c_start  03e5h,39
+  488  526F     A2 32       			ldx	#.low.&GuiInit
+  489  5271     86 26       			stx	__addr_reg
+  490  5273     A2 E9       			ldx	#.high.&GuiInit+1
+  491  5275     86 27       			stx	__addr_reg+1
+  492                     			.bf_call
+  493  5277     20 F6 D2    			jsr	__banked_function_call
+  494                     			.c_end	03eeh,39
+  495                     	;while
+  496         3738 527A   	?TOL0:		.equal	$
+  497                     	;(1)
+  498                     	;	
+  499                     			.whi_top  041eh,?BOL0,1,41
+  500  527A     A9 01       			lda	#1
+  501  527C     D0 03       			bne	+3
+  502  527E     4C A7 56    			jmp	?BOL0
+  Wed Jun 18 21:33:37 2003                                                                                               Page   10
+
+
+
+
+  503         4538 5281   	?PLC0:		.equal	$
+  504                     			.c_end	0427h,42
+  505                     	;(!GuiGetMsg(&gMsg))		
+  506                     			.if_top	042eh,?BOL1,2,43
+  507  5281     18          			clc
+  508  5282     A5 28       			lda	__stack_ptr
+  509  5284     69 00       			adc	#.low.-45+?LSC0
+  510  5286     85 20       			sta	__oper1
+  511  5288     A5 29       			lda	__stack_ptr+1
+  512  528A     69 00       			adc	#.high.-45+?LSC0
+  513  528C     85 21       			sta	__oper1+1
+  514  528E     20 CA DA    			jsr	__store_int_funct_arg
+  515  5291     A2 35       			ldx	#.low.&GuiGetMsg
+  516  5293     86 26       			stx	__addr_reg
+  517  5295     A2 E9       			ldx	#.high.&GuiGetMsg+1
+  518  5297     86 27       			stx	__addr_reg+1
+  519                     			.bf_call
+  520  5299     20 F6 D2    			jsr	__banked_function_call
+  521  529C     AA          			tax
+  522  529D     08          			php
+  523  529E     78          			sei
+  524  529F     18          			clc
+  525  52A0     A5 28       			lda	__stack_ptr
+  526  52A2     69 02       			adc	#.low.2
+  527  52A4     85 28       			sta	__stack_ptr
+  528  52A6     A5 29       			lda	__stack_ptr+1
+  529  52A8     69 00       			adc	#.high.2
+  530  52AA     85 29       			sta	__stack_ptr+1
+  531  52AC     28          			plp
+  532  52AD     8A          			txa
+  533  52AE     38          			sec
+  534  52AF     E9 00       			sbc	#0
+  535  52B1     F0 03       			beq	+3
+  536  52B3     4C B9 52    			jmp	?BOL1
+  537         3343 52B6   	?PLC1:		.equal	$
+  538                     			.c_end	0442h,43
+  539                     	;continue;
+  540                     	;		
+  541  52B6     4C 7A 52    			jmp	?TOL0
+  542                     	;(!GuiTranslateMsg(&gMsg))	
+  543         3643 52B9   	?BOL1:		.equal	$
+  544                     			.if_top	0452h,?BOL2,2,44
+  545  52B9     18          			clc
+  546  52BA     A5 28       			lda	__stack_ptr
+  547  52BC     69 00       			adc	#.low.-45+?LSC0
+  548  52BE     85 20       			sta	__oper1
+  549  52C0     A5 29       			lda	__stack_ptr+1
+  550  52C2     69 00       			adc	#.high.-45+?LSC0
+  551  52C4     85 21       			sta	__oper1+1
+  552  52C6     20 CA DA    			jsr	__store_int_funct_arg
+  553  52C9     A2 3E       			ldx	#.low.&GuiTranslateMsg
+  554  52CB     86 26       			stx	__addr_reg
+  555  52CD     A2 E9       			ldx	#.high.&GuiTranslateMsg+1
+  556  52CF     86 27       			stx	__addr_reg+1
+  557                     			.bf_call
+  558  52D1     20 F6 D2    			jsr	__banked_function_call
+  559  52D4     AA          			tax
+  Wed Jun 18 21:33:37 2003                                                                                               Page   11
+
+
+
+
+  560  52D5     08          			php
+  561  52D6     78          			sei
+  562  52D7     18          			clc
+  563  52D8     A5 28       			lda	__stack_ptr
+  564  52DA     69 02       			adc	#.low.2
+  565  52DC     85 28       			sta	__stack_ptr
+  566  52DE     A5 29       			lda	__stack_ptr+1
+  567  52E0     69 00       			adc	#.high.2
+  568  52E2     85 29       			sta	__stack_ptr+1
+  569  52E4     28          			plp
+  570  52E5     8A          			txa
+  571  52E6     38          			sec
+  572  52E7     E9 00       			sbc	#0
+  573  52E9     F0 03       			beq	+3
+  574  52EB     4C F1 52    			jmp	?BOL2
+  575         4246 52EE   	?PLC2:		.equal	$
+  576                     			.c_end	046ch,44
+  577                     	;continue;
+  578                     	;
+  579                     	;		
+  580  52EE     4C 7A 52    			jmp	?TOL0
+  581                     	;(gMsg.type)
+  582                     	;		
+  583         4546 52F1   	?BOL2:		.equal	$
+  584                     			.c_start  047dh,46
+  585  52F1     A0 00       			ldy	#-45+0+?LSC0
+  586  52F3     B1 28       			lda	(__stack_ptr),y
+  587  52F5     85 23       			sta	__oper2
+  588  52F7     A2 00       			ldx	#0
+  589  52F9     86 24       			stx	__oper2+1
+  590         3947 52FB   	?PLC3:		.equal	$
+  591                     			.c_end	048fh,47
+  592                     	;
+  593                     			.sw_start
+  594                     			.const_data
+  595  9000     0100        	?CGL0:	.word	1
+  596  9002     0200        			.word	2
+  597  9004     0300        			.word	3
+  598  9006     0500        			.word	5
+  599  9008     0400        			.word	4
+  600  900A     0A00        			.word	10
+  601  900C     0600        			.word	6
+  602  900E     0700        			.word	7
+  603  9010     1253        	?CGL1:	.word	?SWL0
+  604                     			.sw_case ?SWL0
+  605  9012     4B53        			.word	?SWL1
+  606                     			.sw_case ?SWL1
+  607  9014     B653        			.word	?SWL2
+  608                     			.sw_case ?SWL2
+  609  9016     1F54        			.word	?SWL3
+  610                     			.sw_case ?SWL3
+  611  9018     5854        			.word	?SWL4
+  612                     			.sw_case ?SWL4
+  613  901A     9154        			.word	?SWL5
+  614                     			.sw_case ?SWL5
+  615  901C     CA54        			.word	?SWL6
+  616                     			.sw_case ?SWL6
+  Wed Jun 18 21:33:37 2003                                                                                               Page   12
+
+
+
+
+  617  901E     B055        			.word	?SWL7
+  618                     			.sw_case ?SWL7
+  619                     			.program
+  620  52FB     A9 00       			lda	#.low.?CGL0
+  621  52FD     85 26       			sta	__addr_reg
+  622  52FF     A9 90       			lda	#.high.?CGL0
+  623  5301     85 27       			sta	__addr_reg+1
+  624                     			.sw_case ?BOL3
+  625  5303     A2 08       			ldx	#.low.8
+  626  5305     A0 00       			ldy	#.high.8
+  627  5307     A9 B0       			lda	#.low.?BOL3
+  628  5309     85 20       			sta	__oper1
+  629  530B     A9 55       			lda	#.high.?BOL3
+  630  530D     85 21       			sta	__oper1+1
+  631  530F     4C 5C DB    			jmp	__switch_comparison
+  632                     			.sw_end
+  633                     	;case	0x01:
+  634                     	;					
+  635         4631 5312   	?SWL0:		.equal	$
+  636                     	;strcpy(buf,cst_MainStrScanCode)
+  637                     			.c_start  04abh,49
+  638  5312     A9 50       			lda	#.low._cst_MainStrScanCode
+  639  5314     85 20       			sta	__oper1
+  640  5316     A9 90       			lda	#.high._cst_MainStrScanCode
+  641  5318     85 21       			sta	__oper1+1
+  642  531A     20 CA DA    			jsr	__store_int_funct_arg
+  643  531D     18          			clc
+  644  531E     A5 28       			lda	__stack_ptr
+  645  5320     69 1B       			adc	#.low.-20+?LSC0+2
+  646  5322     85 20       			sta	__oper1
+  647  5324     A5 29       			lda	__stack_ptr+1
+  648  5326     69 00       			adc	#.high.-20+?LSC0+2
+  649  5328     85 21       			sta	__oper1+1
+  650  532A     20 CA DA    			jsr	__store_int_funct_arg
+  651  532D     A2 1B       			ldx	#.low.&strcpy
+  652  532F     86 26       			stx	__addr_reg
+  653  5331     A2 E7       			ldx	#.high.&strcpy+1
+  654  5333     86 27       			stx	__addr_reg+1
+  655                     			.bf_call
+  656  5335     20 F6 D2    			jsr	__banked_function_call
+  657  5338     08          			php
+  658  5339     78          			sei
+  659  533A     18          			clc
+  660  533B     A5 28       			lda	__stack_ptr
+  661  533D     69 04       			adc	#.low.4
+  662  533F     85 28       			sta	__stack_ptr
+  663  5341     A5 29       			lda	__stack_ptr+1
+  664  5343     69 00       			adc	#.high.4
+  665  5345     85 29       			sta	__stack_ptr+1
+  666  5347     28          			plp
+  667                     			.c_end	04cah,49
+  668                     	;break;
+  669                     	;			
+  670                     			.sw_break
+  671  5348     4C B0 55    			jmp	?BOL3
+  672                     	;case	0x02:
+  673                     	;					
+  Wed Jun 18 21:33:37 2003                                                                                               Page   13
+
+
+
+
+  674         3835 534B   	?SWL1:		.equal	$
+  675                     	;strcpy(buf,"ASCII:")
+  676                     			.c_start  04f5h,52
+  677                     			.const_data
+  678  9020     41 53 43 49 49 	?PLC4:		.byte	"ASCII:",0
+              3A 00 
+  679                     			.program
+  680  534B     A9 20       			lda	#.low.?PLC4
+  681  534D     85 20       			sta	__oper1
+  682  534F     A9 90       			lda	#.high.?PLC4
+  683  5351     85 21       			sta	__oper1+1
+  684  5353     20 CA DA    			jsr	__store_int_funct_arg
+  685  5356     18          			clc
+  686  5357     A5 28       			lda	__stack_ptr
+  687  5359     69 1B       			adc	#.low.-20+?LSC0+2
+  688  535B     85 20       			sta	__oper1
+  689  535D     A5 29       			lda	__stack_ptr+1
+  690  535F     69 00       			adc	#.high.-20+?LSC0+2
+  691  5361     85 21       			sta	__oper1+1
+  692  5363     20 CA DA    			jsr	__store_int_funct_arg
+  693  5366     A2 1B       			ldx	#.low.&strcpy
+  694  5368     86 26       			stx	__addr_reg
+  695  536A     A2 E7       			ldx	#.high.&strcpy+1
+  696  536C     86 27       			stx	__addr_reg+1
+  697                     			.bf_call
+  698  536E     20 F6 D2    			jsr	__banked_function_call
+  699  5371     08          			php
+  700  5372     78          			sei
+  701  5373     18          			clc
+  702  5374     A5 28       			lda	__stack_ptr
+  703  5376     69 04       			adc	#.low.4
+  704  5378     85 28       			sta	__stack_ptr
+  705  537A     A5 29       			lda	__stack_ptr+1
+  706  537C     69 00       			adc	#.high.4
+  707  537E     85 29       			sta	__stack_ptr+1
+  708  5380     28          			plp
+  709                     			.c_end	0509h,52
+  710                     	;SysAscii(0,16,gMsg.param)
+  711                     			.c_start  0511h,53
+  712  5381     A0 01       			ldy	#-45+1+?LSC0
+  713  5383     B1 28       			lda	(__stack_ptr),y
+  714  5385     85 20       			sta	__oper1
+  715  5387     C8          			iny
+  716  5388     B1 28       			lda	(__stack_ptr),y
+  717  538A     85 21       			sta	__oper1+1
+  718  538C     A5 20       			lda	__oper1
+  719  538E     20 AA DA    			jsr	__store_char_funct_arg
+  720  5391     A9 10       			lda	#16
+  721  5393     20 AA DA    			jsr	__store_char_funct_arg
+  722  5396     A9 00       			lda	#0
+  723  5398     A2 BB       			ldx	#.low.&SysAscii
+  724  539A     86 26       			stx	__addr_reg
+  725  539C     A2 E7       			ldx	#.high.&SysAscii+1
+  726  539E     86 27       			stx	__addr_reg+1
+  727                     			.bf_call
+  728  53A0     20 F6 D2    			jsr	__banked_function_call
+  729  53A3     08          			php
+  Wed Jun 18 21:33:37 2003                                                                                               Page   14
+
+
+
+
+  730  53A4     78          			sei
+  731  53A5     18          			clc
+  732  53A6     A5 28       			lda	__stack_ptr
+  733  53A8     69 02       			adc	#.low.2
+  734  53AA     85 28       			sta	__stack_ptr
+  735  53AC     A5 29       			lda	__stack_ptr+1
+  736  53AE     69 00       			adc	#.high.2
+  737  53B0     85 29       			sta	__stack_ptr+1
+  738  53B2     28          			plp
+  739                     			.c_end	052ah,53
+  740                     	;break;
+  741                     	;			
+  742                     			.sw_break
+  743  53B3     4C B0 55    			jmp	?BOL3
+  744                     	;case	0x03:
+  745                     	;					
+  746         3343 53B6   	?SWL2:		.equal	$
+  747                     	;strcpy(buf,cst_MainStrChinese)
+  748                     			.c_start  0554h,56
+  749  53B6     A9 58       			lda	#.low._cst_MainStrChinese
+  750  53B8     85 20       			sta	__oper1
+  751  53BA     A9 90       			lda	#.high._cst_MainStrChinese
+  752  53BC     85 21       			sta	__oper1+1
+  753  53BE     20 CA DA    			jsr	__store_int_funct_arg
+  754  53C1     18          			clc
+  755  53C2     A5 28       			lda	__stack_ptr
+  756  53C4     69 1B       			adc	#.low.-20+?LSC0+2
+  757  53C6     85 20       			sta	__oper1
+  758  53C8     A5 29       			lda	__stack_ptr+1
+  759  53CA     69 00       			adc	#.high.-20+?LSC0+2
+  760  53CC     85 21       			sta	__oper1+1
+  761  53CE     20 CA DA    			jsr	__store_int_funct_arg
+  762  53D1     A2 1B       			ldx	#.low.&strcpy
+  763  53D3     86 26       			stx	__addr_reg
+  764  53D5     A2 E7       			ldx	#.high.&strcpy+1
+  765  53D7     86 27       			stx	__addr_reg+1
+  766                     			.bf_call
+  767  53D9     20 F6 D2    			jsr	__banked_function_call
+  768  53DC     08          			php
+  769  53DD     78          			sei
+  770  53DE     18          			clc
+  771  53DF     A5 28       			lda	__stack_ptr
+  772  53E1     69 04       			adc	#.low.4
+  773  53E3     85 28       			sta	__stack_ptr
+  774  53E5     A5 29       			lda	__stack_ptr+1
+  775  53E7     69 00       			adc	#.high.4
+  776  53E9     85 29       			sta	__stack_ptr+1
+  777  53EB     28          			plp
+  778                     			.c_end	0572h,56
+  779                     	;SysChinese(0,16,gMsg.param)
+  780                     			.c_start  057ah,57
+  781  53EC     A0 01       			ldy	#-45+1+?LSC0
+  782  53EE     B1 28       			lda	(__stack_ptr),y
+  783  53F0     85 20       			sta	__oper1
+  784  53F2     C8          			iny
+  785  53F3     B1 28       			lda	(__stack_ptr),y
+  786  53F5     85 21       			sta	__oper1+1
+  Wed Jun 18 21:33:37 2003                                                                                               Page   15
+
+
+
+
+  787  53F7     20 CA DA    			jsr	__store_int_funct_arg
+  788  53FA     A9 10       			lda	#16
+  789  53FC     20 AA DA    			jsr	__store_char_funct_arg
+  790  53FF     A9 00       			lda	#0
+  791  5401     A2 BE       			ldx	#.low.&SysChinese
+  792  5403     86 26       			stx	__addr_reg
+  793  5405     A2 E7       			ldx	#.high.&SysChinese+1
+  794  5407     86 27       			stx	__addr_reg+1
+  795                     			.bf_call
+  796  5409     20 F6 D2    			jsr	__banked_function_call
+  797  540C     08          			php
+  798  540D     78          			sei
+  799  540E     18          			clc
+  800  540F     A5 28       			lda	__stack_ptr
+  801  5411     69 03       			adc	#.low.3
+  802  5413     85 28       			sta	__stack_ptr
+  803  5415     A5 29       			lda	__stack_ptr+1
+  804  5417     69 00       			adc	#.high.3
+  805  5419     85 29       			sta	__stack_ptr+1
+  806  541B     28          			plp
+  807                     			.c_end	0595h,57
+  808                     	;break;
+  809                     	;			
+  810                     			.sw_break
+  811  541C     4C B0 55    			jmp	?BOL3
+  812                     	;case	0x05:
+  813                     	;					
+  814         4332 541F   	?SWL3:		.equal	$
+  815                     	;strcpy(buf,cst_MainStrFunKey)
+  816                     			.c_start  05c0h,60
+  817  541F     A9 5E       			lda	#.low._cst_MainStrFunKey
+  818  5421     85 20       			sta	__oper1
+  819  5423     A9 90       			lda	#.high._cst_MainStrFunKey
+  820  5425     85 21       			sta	__oper1+1
+  821  5427     20 CA DA    			jsr	__store_int_funct_arg
+  822  542A     18          			clc
+  823  542B     A5 28       			lda	__stack_ptr
+  824  542D     69 1B       			adc	#.low.-20+?LSC0+2
+  825  542F     85 20       			sta	__oper1
+  826  5431     A5 29       			lda	__stack_ptr+1
+  827  5433     69 00       			adc	#.high.-20+?LSC0+2
+  828  5435     85 21       			sta	__oper1+1
+  829  5437     20 CA DA    			jsr	__store_int_funct_arg
+  830  543A     A2 1B       			ldx	#.low.&strcpy
+  831  543C     86 26       			stx	__addr_reg
+  832  543E     A2 E7       			ldx	#.high.&strcpy+1
+  833  5440     86 27       			stx	__addr_reg+1
+  834                     			.bf_call
+  835  5442     20 F6 D2    			jsr	__banked_function_call
+  836  5445     08          			php
+  837  5446     78          			sei
+  838  5447     18          			clc
+  839  5448     A5 28       			lda	__stack_ptr
+  840  544A     69 04       			adc	#.low.4
+  841  544C     85 28       			sta	__stack_ptr
+  842  544E     A5 29       			lda	__stack_ptr+1
+  843  5450     69 00       			adc	#.high.4
+  Wed Jun 18 21:33:37 2003                                                                                               Page   16
+
+
+
+
+  844  5452     85 29       			sta	__stack_ptr+1
+  845  5454     28          			plp
+  846                     			.c_end	05ddh,60
+  847                     	;break;
+  848                     	;			
+  849                     			.sw_break
+  850  5455     4C B0 55    			jmp	?BOL3
+  851                     	;case	0x04:
+  852                     	;					
+  853         3536 5458   	?SWL4:		.equal	$
+  854                     	;strcpy(buf,cst_MainStrMathKey)
+  855                     			.c_start  0609h,63
+  856  5458     A9 66       			lda	#.low._cst_MainStrMathKey
+  857  545A     85 20       			sta	__oper1
+  858  545C     A9 90       			lda	#.high._cst_MainStrMathKey
+  859  545E     85 21       			sta	__oper1+1
+  860  5460     20 CA DA    			jsr	__store_int_funct_arg
+  861  5463     18          			clc
+  862  5464     A5 28       			lda	__stack_ptr
+  863  5466     69 1B       			adc	#.low.-20+?LSC0+2
+  864  5468     85 20       			sta	__oper1
+  865  546A     A5 29       			lda	__stack_ptr+1
+  866  546C     69 00       			adc	#.high.-20+?LSC0+2
+  867  546E     85 21       			sta	__oper1+1
+  868  5470     20 CA DA    			jsr	__store_int_funct_arg
+  869  5473     A2 1B       			ldx	#.low.&strcpy
+  870  5475     86 26       			stx	__addr_reg
+  871  5477     A2 E7       			ldx	#.high.&strcpy+1
+  872  5479     86 27       			stx	__addr_reg+1
+  873                     			.bf_call
+  874  547B     20 F6 D2    			jsr	__banked_function_call
+  875  547E     08          			php
+  876  547F     78          			sei
+  877  5480     18          			clc
+  878  5481     A5 28       			lda	__stack_ptr
+  879  5483     69 04       			adc	#.low.4
+  880  5485     85 28       			sta	__stack_ptr
+  881  5487     A5 29       			lda	__stack_ptr+1
+  882  5489     69 00       			adc	#.high.4
+  883  548B     85 29       			sta	__stack_ptr+1
+  884  548D     28          			plp
+  885                     			.c_end	0627h,63
+  886                     	;break;
+  887                     	;			
+  888                     			.sw_break
+  889  548E     4C B0 55    			jmp	?BOL3
+  890                     	;case	0x0a:
+  891                     	;					
+  892         4539 5491   	?SWL5:		.equal	$
+  893                     	;strcpy(buf,cst_MainStrCmd)
+  894                     			.c_start  0651h,66
+  895  5491     A9 6E       			lda	#.low._cst_MainStrCmd
+  896  5493     85 20       			sta	__oper1
+  897  5495     A9 90       			lda	#.high._cst_MainStrCmd
+  898  5497     85 21       			sta	__oper1+1
+  899  5499     20 CA DA    			jsr	__store_int_funct_arg
+  900  549C     18          			clc
+  Wed Jun 18 21:33:37 2003                                                                                               Page   17
+
+
+
+
+  901  549D     A5 28       			lda	__stack_ptr
+  902  549F     69 1B       			adc	#.low.-20+?LSC0+2
+  903  54A1     85 20       			sta	__oper1
+  904  54A3     A5 29       			lda	__stack_ptr+1
+  905  54A5     69 00       			adc	#.high.-20+?LSC0+2
+  906  54A7     85 21       			sta	__oper1+1
+  907  54A9     20 CA DA    			jsr	__store_int_funct_arg
+  908  54AC     A2 1B       			ldx	#.low.&strcpy
+  909  54AE     86 26       			stx	__addr_reg
+  910  54B0     A2 E7       			ldx	#.high.&strcpy+1
+  911  54B2     86 27       			stx	__addr_reg+1
+  912                     			.bf_call
+  913  54B4     20 F6 D2    			jsr	__banked_function_call
+  914  54B7     08          			php
+  915  54B8     78          			sei
+  916  54B9     18          			clc
+  917  54BA     A5 28       			lda	__stack_ptr
+  918  54BC     69 04       			adc	#.low.4
+  919  54BE     85 28       			sta	__stack_ptr
+  920  54C0     A5 29       			lda	__stack_ptr+1
+  921  54C2     69 00       			adc	#.high.4
+  922  54C4     85 29       			sta	__stack_ptr+1
+  923  54C6     28          			plp
+  924                     			.c_end	066bh,66
+  925                     	;break;
+  926                     	;			
+  927                     			.sw_break
+  928  54C7     4C B0 55    			jmp	?BOL3
+  929                     	;case	0x06:
+  930                     	;					
+  931         3744 54CA   	?SWL6:		.equal	$
+  932                     	;ch = ch+1
+  933                     			.c_start  0693h,69
+  934  54CA     A0 04       			ldy	#-41+?LSC0
+  935  54CC     B1 28       			lda	(__stack_ptr),y
+  936  54CE     18          			clc
+  937  54CF     69 01       			adc	#1
+  938  54D1     A0 04       			ldy	#-41+?LSC0
+  939  54D3     91 28       			sta	(__stack_ptr),y
+  940                     			.c_end	069ch,69
+  941                     	;itoa(ch,str,10)
+  942                     			.c_start  06a4h,70
+  943  54D5     A9 0A       			lda	#.low.10
+  944  54D7     85 20       			sta	__oper1
+  945  54D9     A9 00       			lda	#.high.10
+  946  54DB     85 21       			sta	__oper1+1
+  947  54DD     20 CA DA    			jsr	__store_int_funct_arg
+  948  54E0     18          			clc
+  949  54E1     A5 28       			lda	__stack_ptr
+  950  54E3     69 07       			adc	#.low.-40+?LSC0+2
+  951  54E5     85 20       			sta	__oper1
+  952  54E7     A5 29       			lda	__stack_ptr+1
+  953  54E9     69 00       			adc	#.high.-40+?LSC0+2
+  954  54EB     85 21       			sta	__oper1+1
+  955  54ED     20 CA DA    			jsr	__store_int_funct_arg
+  956  54F0     A0 08       			ldy	#-41+?LSC0+4
+  957  54F2     B1 28       			lda	(__stack_ptr),y
+  Wed Jun 18 21:33:37 2003                                                                                               Page   18
+
+
+
+
+  958  54F4     85 20       			sta	__oper1
+  959  54F6     A9 00       			lda	#0
+  960  54F8     85 21       			sta	__oper1+1
+  961  54FA     20 CA DA    			jsr	__store_int_funct_arg
+  962  54FD     A2 09       			ldx	#.low.&itoa
+  963  54FF     86 26       			stx	__addr_reg
+  964  5501     A2 E7       			ldx	#.high.&itoa+1
+  965  5503     86 27       			stx	__addr_reg+1
+  966                     			.bf_call
+  967  5505     20 F6 D2    			jsr	__banked_function_call
+  968  5508     08          			php
+  969  5509     78          			sei
+  970  550A     18          			clc
+  971  550B     A5 28       			lda	__stack_ptr
+  972  550D     69 06       			adc	#.low.6
+  973  550F     85 28       			sta	__stack_ptr
+  974  5511     A5 29       			lda	__stack_ptr+1
+  975  5513     69 00       			adc	#.high.6
+  976  5515     85 29       			sta	__stack_ptr+1
+  977  5517     28          			plp
+  978                     			.c_end	06b3h,70
+  979                     	;SysPrintString(0,16,"      ")
+  980                     			.c_start  06bbh,71
+  981                     			.const_data
+  982  9027     20 20 20 20 20 	?PLC5:		.byte	"      ",0
+              20 00 
+  983                     			.program
+  984  5518     A9 27       			lda	#.low.?PLC5
+  985  551A     85 20       			sta	__oper1
+  986  551C     A9 90       			lda	#.high.?PLC5
+  987  551E     85 21       			sta	__oper1+1
+  988  5520     20 CA DA    			jsr	__store_int_funct_arg
+  989  5523     A9 10       			lda	#16
+  990  5525     20 AA DA    			jsr	__store_char_funct_arg
+  991  5528     A9 00       			lda	#0
+  992  552A     A2 9A       			ldx	#.low.&SysPrintString
+  993  552C     86 26       			stx	__addr_reg
+  994  552E     A2 E7       			ldx	#.high.&SysPrintString+1
+  995  5530     86 27       			stx	__addr_reg+1
+  996                     			.bf_call
+  997  5532     20 F6 D2    			jsr	__banked_function_call
+  998  5535     08          			php
+  999  5536     78          			sei
+ 1000  5537     18          			clc
+ 1001  5538     A5 28       			lda	__stack_ptr
+ 1002  553A     69 03       			adc	#.low.3
+ 1003  553C     85 28       			sta	__stack_ptr
+ 1004  553E     A5 29       			lda	__stack_ptr+1
+ 1005  5540     69 00       			adc	#.high.3
+ 1006  5542     85 29       			sta	__stack_ptr+1
+ 1007  5544     28          			plp
+ 1008                     			.c_end	06d8h,71
+ 1009                     	;SysPrintString(0,16,str)
+ 1010                     			.c_start  06e0h,72
+ 1011  5545     18          			clc
+ 1012  5546     A5 28       			lda	__stack_ptr
+ 1013  5548     69 05       			adc	#.low.-40+?LSC0
+  Wed Jun 18 21:33:37 2003                                                                                               Page   19
+
+
+
+
+ 1014  554A     85 20       			sta	__oper1
+ 1015  554C     A5 29       			lda	__stack_ptr+1
+ 1016  554E     69 00       			adc	#.high.-40+?LSC0
+ 1017  5550     85 21       			sta	__oper1+1
+ 1018  5552     20 CA DA    			jsr	__store_int_funct_arg
+ 1019  5555     A9 10       			lda	#16
+ 1020  5557     20 AA DA    			jsr	__store_char_funct_arg
+ 1021  555A     A9 00       			lda	#0
+ 1022  555C     A2 9A       			ldx	#.low.&SysPrintString
+ 1023  555E     86 26       			stx	__addr_reg
+ 1024  5560     A2 E7       			ldx	#.high.&SysPrintString+1
+ 1025  5562     86 27       			stx	__addr_reg+1
+ 1026                     			.bf_call
+ 1027  5564     20 F6 D2    			jsr	__banked_function_call
+ 1028  5567     08          			php
+ 1029  5568     78          			sei
+ 1030  5569     18          			clc
+ 1031  556A     A5 28       			lda	__stack_ptr
+ 1032  556C     69 03       			adc	#.low.3
+ 1033  556E     85 28       			sta	__stack_ptr
+ 1034  5570     A5 29       			lda	__stack_ptr+1
+ 1035  5572     69 00       			adc	#.high.3
+ 1036  5574     85 29       			sta	__stack_ptr+1
+ 1037  5576     28          			plp
+ 1038                     			.c_end	06f8h,72
+ 1039                     	;strcpy(buf,"Timer ")
+ 1040                     			.c_start  0700h,73
+ 1041                     			.const_data
+ 1042  902E     54 69 6D 65 72 	?PLC6:		.byte	"Timer ",0
+              20 00 
+ 1043                     			.program
+ 1044  5577     A9 2E       			lda	#.low.?PLC6
+ 1045  5579     85 20       			sta	__oper1
+ 1046  557B     A9 90       			lda	#.high.?PLC6
+ 1047  557D     85 21       			sta	__oper1+1
+ 1048  557F     20 CA DA    			jsr	__store_int_funct_arg
+ 1049  5582     18          			clc
+ 1050  5583     A5 28       			lda	__stack_ptr
+ 1051  5585     69 1B       			adc	#.low.-20+?LSC0+2
+ 1052  5587     85 20       			sta	__oper1
+ 1053  5589     A5 29       			lda	__stack_ptr+1
+ 1054  558B     69 00       			adc	#.high.-20+?LSC0+2
+ 1055  558D     85 21       			sta	__oper1+1
+ 1056  558F     20 CA DA    			jsr	__store_int_funct_arg
+ 1057  5592     A2 1B       			ldx	#.low.&strcpy
+ 1058  5594     86 26       			stx	__addr_reg
+ 1059  5596     A2 E7       			ldx	#.high.&strcpy+1
+ 1060  5598     86 27       			stx	__addr_reg+1
+ 1061                     			.bf_call
+ 1062  559A     20 F6 D2    			jsr	__banked_function_call
+ 1063  559D     08          			php
+ 1064  559E     78          			sei
+ 1065  559F     18          			clc
+ 1066  55A0     A5 28       			lda	__stack_ptr
+ 1067  55A2     69 04       			adc	#.low.4
+ 1068  55A4     85 28       			sta	__stack_ptr
+ 1069  55A6     A5 29       			lda	__stack_ptr+1
+  Wed Jun 18 21:33:37 2003                                                                                               Page   20
+
+
+
+
+ 1070  55A8     69 00       			adc	#.high.4
+ 1071  55AA     85 29       			sta	__stack_ptr+1
+ 1072  55AC     28          			plp
+ 1073                     			.c_end	0714h,73
+ 1074                     	;break;
+ 1075                     	;			
+ 1076                     			.sw_break
+ 1077  55AD     4C B0 55    			jmp	?BOL3
+ 1078                     	;case	0x07:
+ 1079                     	;					
+ 1080                     	;					
+ 1081                     	;		
+ 1082         4442 55B0   	?SWL7:		.equal	$
+ 1083                     	;
+ 1084         4443 55B0   	?BOL3:		.equal	$
+ 1085                     	;
+ 1086                     	;itoa(gMsg.param,str,16)
+ 1087                     			.c_start  075ah,80
+ 1088  55B0     A0 01       			ldy	#-45+1+?LSC0
+ 1089  55B2     B1 28       			lda	(__stack_ptr),y
+ 1090  55B4     85 20       			sta	__oper1
+ 1091  55B6     C8          			iny
+ 1092  55B7     B1 28       			lda	(__stack_ptr),y
+ 1093  55B9     85 21       			sta	__oper1+1
+ 1094  55BB     A0 2D       			ldy	#+0+?LSC0
+ 1095  55BD     A5 20       			lda	__oper1
+ 1096  55BF     91 28       			sta	(__stack_ptr),y
+ 1097  55C1     C8          			iny
+ 1098  55C2     A5 21       			lda	__oper1+1
+ 1099  55C4     91 28       			sta	(__stack_ptr),y
+ 1100  55C6     A9 10       			lda	#.low.16
+ 1101  55C8     85 20       			sta	__oper1
+ 1102  55CA     A9 00       			lda	#.high.16
+ 1103  55CC     85 21       			sta	__oper1+1
+ 1104  55CE     20 CA DA    			jsr	__store_int_funct_arg
+ 1105  55D1     18          			clc
+ 1106  55D2     A5 28       			lda	__stack_ptr
+ 1107  55D4     69 07       			adc	#.low.-40+?LSC0+2
+ 1108  55D6     85 20       			sta	__oper1
+ 1109  55D8     A5 29       			lda	__stack_ptr+1
+ 1110  55DA     69 00       			adc	#.high.-40+?LSC0+2
+ 1111  55DC     85 21       			sta	__oper1+1
+ 1112  55DE     20 CA DA    			jsr	__store_int_funct_arg
+ 1113  55E1     A0 31       			ldy	#+0+?LSC0+4
+ 1114  55E3     B1 28       			lda	(__stack_ptr),y
+ 1115  55E5     85 20       			sta	__oper1
+ 1116  55E7     C8          			iny
+ 1117  55E8     B1 28       			lda	(__stack_ptr),y
+ 1118  55EA     85 21       			sta	__oper1+1
+ 1119  55EC     20 CA DA    			jsr	__store_int_funct_arg
+ 1120  55EF     A2 09       			ldx	#.low.&itoa
+ 1121  55F1     86 26       			stx	__addr_reg
+ 1122  55F3     A2 E7       			ldx	#.high.&itoa+1
+ 1123  55F5     86 27       			stx	__addr_reg+1
+ 1124                     			.bf_call
+ 1125  55F7     20 F6 D2    			jsr	__banked_function_call
+ 1126  55FA     08          			php
+  Wed Jun 18 21:33:37 2003                                                                                               Page   21
+
+
+
+
+ 1127  55FB     78          			sei
+ 1128  55FC     18          			clc
+ 1129  55FD     A5 28       			lda	__stack_ptr
+ 1130  55FF     69 06       			adc	#.low.6
+ 1131  5601     85 28       			sta	__stack_ptr
+ 1132  5603     A5 29       			lda	__stack_ptr+1
+ 1133  5605     69 00       			adc	#.high.6
+ 1134  5607     85 29       			sta	__stack_ptr+1
+ 1135  5609     28          			plp
+ 1136                     			.c_end	0771h,80
+ 1137                     	;strcat(buf,str)
+ 1138                     			.c_start  07a1h,81
+ 1139  560A     18          			clc
+ 1140  560B     A5 28       			lda	__stack_ptr
+ 1141  560D     69 05       			adc	#.low.-40+?LSC0
+ 1142  560F     85 20       			sta	__oper1
+ 1143  5611     A5 29       			lda	__stack_ptr+1
+ 1144  5613     69 00       			adc	#.high.-40+?LSC0
+ 1145  5615     85 21       			sta	__oper1+1
+ 1146  5617     20 CA DA    			jsr	__store_int_funct_arg
+ 1147  561A     18          			clc
+ 1148  561B     A5 28       			lda	__stack_ptr
+ 1149  561D     69 1B       			adc	#.low.-20+?LSC0+2
+ 1150  561F     85 20       			sta	__oper1
+ 1151  5621     A5 29       			lda	__stack_ptr+1
+ 1152  5623     69 00       			adc	#.high.-20+?LSC0+2
+ 1153  5625     85 21       			sta	__oper1+1
+ 1154  5627     20 CA DA    			jsr	__store_int_funct_arg
+ 1155  562A     A2 12       			ldx	#.low.&strcat
+ 1156  562C     86 26       			stx	__addr_reg
+ 1157  562E     A2 E7       			ldx	#.high.&strcat+1
+ 1158  5630     86 27       			stx	__addr_reg+1
+ 1159                     			.bf_call
+ 1160  5632     20 F6 D2    			jsr	__banked_function_call
+ 1161  5635     08          			php
+ 1162  5636     78          			sei
+ 1163  5637     18          			clc
+ 1164  5638     A5 28       			lda	__stack_ptr
+ 1165  563A     69 04       			adc	#.low.4
+ 1166  563C     85 28       			sta	__stack_ptr
+ 1167  563E     A5 29       			lda	__stack_ptr+1
+ 1168  5640     69 00       			adc	#.high.4
+ 1169  5642     85 29       			sta	__stack_ptr+1
+ 1170  5644     28          			plp
+ 1171                     			.c_end	07b0h,81
+ 1172                     	;SysPrintString(0,0,(unsigned char *)"            ")
+ 1173                     			.c_start  07f0h,83
+ 1174                     			.const_data
+ 1175  9035     20 20 20 20 20 	?PLC7:		.byte	"            ",0
+              20 20 20 20 20 
+              20 20 00 
+ 1176                     			.program
+ 1177  5645     A9 35       			lda	#.low.?PLC7
+ 1178  5647     85 20       			sta	__oper1
+ 1179  5649     A9 90       			lda	#.high.?PLC7
+ 1180  564B     85 21       			sta	__oper1+1
+ 1181  564D     20 CA DA    			jsr	__store_int_funct_arg
+  Wed Jun 18 21:33:37 2003                                                                                               Page   22
+
+
+
+
+ 1182  5650     A9 00       			lda	#0
+ 1183  5652     20 AA DA    			jsr	__store_char_funct_arg
+ 1184  5655     A9 00       			lda	#0
+ 1185  5657     A2 9A       			ldx	#.low.&SysPrintString
+ 1186  5659     86 26       			stx	__addr_reg
+ 1187  565B     A2 E7       			ldx	#.high.&SysPrintString+1
+ 1188  565D     86 27       			stx	__addr_reg+1
+ 1189                     			.bf_call
+ 1190  565F     20 F6 D2    			jsr	__banked_function_call
+ 1191  5662     08          			php
+ 1192  5663     78          			sei
+ 1193  5664     18          			clc
+ 1194  5665     A5 28       			lda	__stack_ptr
+ 1195  5667     69 03       			adc	#.low.3
+ 1196  5669     85 28       			sta	__stack_ptr
+ 1197  566B     A5 29       			lda	__stack_ptr+1
+ 1198  566D     69 00       			adc	#.high.3
+ 1199  566F     85 29       			sta	__stack_ptr+1
+ 1200  5671     28          			plp
+ 1201                     			.c_end	0817h,83
+ 1202                     	;SysPrintString(0,0,(unsigned char *)buf)
+ 1203                     			.c_start  081ch,84
+ 1204  5672     18          			clc
+ 1205  5673     A5 28       			lda	__stack_ptr
+ 1206  5675     69 19       			adc	#.low.-20+?LSC0
+ 1207  5677     85 20       			sta	__oper1
+ 1208  5679     A5 29       			lda	__stack_ptr+1
+ 1209  567B     69 00       			adc	#.high.-20+?LSC0
+ 1210  567D     85 21       			sta	__oper1+1
+ 1211  567F     20 CA DA    			jsr	__store_int_funct_arg
+ 1212  5682     A9 00       			lda	#0
+ 1213  5684     20 AA DA    			jsr	__store_char_funct_arg
+ 1214  5687     A9 00       			lda	#0
+ 1215  5689     A2 9A       			ldx	#.low.&SysPrintString
+ 1216  568B     86 26       			stx	__addr_reg
+ 1217  568D     A2 E7       			ldx	#.high.&SysPrintString+1
+ 1218  568F     86 27       			stx	__addr_reg+1
+ 1219                     			.bf_call
+ 1220  5691     20 F6 D2    			jsr	__banked_function_call
+ 1221  5694     08          			php
+ 1222  5695     78          			sei
+ 1223  5696     18          			clc
+ 1224  5697     A5 28       			lda	__stack_ptr
+ 1225  5699     69 03       			adc	#.low.3
+ 1226  569B     85 28       			sta	__stack_ptr
+ 1227  569D     A5 29       			lda	__stack_ptr+1
+ 1228  569F     69 00       			adc	#.high.3
+ 1229  56A1     85 29       			sta	__stack_ptr+1
+ 1230  56A3     28          			plp
+ 1231                     			.c_end	0838h,84
+ 1232                     	;
+ 1233                     			.whi_bot  1,85
+ 1234  56A4     4C 7A 52    			jmp	?TOL0
+ 1235         3442 56A7   	?BOL0:		.equal	$
+ 1236                     	;
+ 1237                     			.f_end	0840h,86
+ 1238         3443 56A7   	?BOF0:		.equal	$
+  Wed Jun 18 21:33:37 2003                                                                                               Page   23
+
+
+
+
+ 1239  56A7     08          			php
+ 1240  56A8     78          			sei
+ 1241  56A9     18          			clc
+ 1242  56AA     A5 28       			lda	__stack_ptr
+ 1243  56AC     69 2F       			adc	#.low.+?LSC0+?TSC0+0
+ 1244  56AE     85 28       			sta	__stack_ptr
+ 1245  56B0     A5 29       			lda	__stack_ptr+1
+ 1246  56B2     69 00       			adc	#.high.+?LSC0+?TSC0+0
+ 1247  56B4     85 29       			sta	__stack_ptr+1
+ 1248  56B6     28          			plp
+ 1249                     			.f_return
+ 1250  56B7     60          			rts
+ 1251                     	
+ 1252                     			.extern	_SysAscii, &SysAscii
+ 1253                     			.extern	_strcat, &strcat
+ 1254                     			.extern	_GuiGetMsg, &GuiGetMsg
+ 1255                     			.extern	_SysChinese, &SysChinese
+ 1256                     			.extern	_GuiInit, &GuiInit
+ 1257                     			.extern	_SysLine, &SysLine
+ 1258                     			.extern	_strcpy, &strcpy
+ 1259                     			.global	_main
+ 1260                     			.extern	_itoa, &itoa
+ 1261                     			.extern	_SysPrintString, &SysPrintString
+ 1262                     			.extern	_cst_MainLogoStr
+ 1263                     			.extern	_GuiTranslateMsg, &GuiTranslateMsg
+ 1264                     			.extern	_cst_MainStrScanCode
+ 1265                     			.extern	_cst_MainStrChinese
+ 1266                     			.extern	_cst_MainStrFunKey
+ 1267                     			.extern	_cst_MainStrMathKey
+ 1268                     			.extern	_cst_MainStrCmd
+ 1269                     			.extern	__store_char_funct_arg
+ 1270                     			.extern	__store_int_funct_arg
+ 1271                     			.extern	__switch_comparison
+ 1272                     			.extern	__banked_function_call
+ 1273                     	
+ 1274                     			.end
+
+
+             Lines Assembled : 1274                  Errors : 0
+
+
+
